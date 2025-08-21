@@ -107,7 +107,7 @@ function AutoComplete<T extends { id: string | number }>({
         <div
           onClick={handleDivClick}
           className={cn(
-            "flex flex-wrap items-center border rounded-md p-2 min-h-10 gap-2 bg-white",
+            "flex flex-wrap items-center border rounded-md p-2 min-h-10 gap-2 bg-(--gray-2)",
             className,
           )}
         >
