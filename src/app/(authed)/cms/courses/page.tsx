@@ -30,10 +30,10 @@ function CMSCoursePage() {
     fetchNextPage,
     hasNextPage,
   } = useCoursePagination({
-    pageSize: 12,
+    page_size: 12,
     search: debouncedSearch,
-    sortBy: "id",
-    sortOrder: "asc",
+    sort_by: "name",
+    sort_order: "asc",
     show: visibility,
   });
 
