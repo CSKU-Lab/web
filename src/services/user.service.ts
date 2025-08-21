@@ -41,7 +41,7 @@ class UserService {
     email: string,
     roles: UserRole[],
   ) {
-    return api.post(this._baseURL + "/oauth", {
+    return api.post(this._baseURL, {
       username,
       display_name,
       email,
