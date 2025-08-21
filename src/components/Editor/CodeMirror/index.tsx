@@ -101,11 +101,9 @@ function CodeMirror(props: CodeMirrorProps) {
     };
   }, [onChange, editable, readOnly, mergedExtensions]);
 
-  const isFirstRender = useRef(true);
   useEffect(() => {
     if (viewRef.current) {
       if (viewRef.current.state.doc.toString() === value) return;
-      if (!isFirstRender.current) return;
 
       viewRef.current.dispatch({
         changes: {
@@ -114,8 +112,6 @@ function CodeMirror(props: CodeMirrorProps) {
           insert: value,
         },
       });
-
-      isFirstRender.current = false;
     }
   }, [value]);
 

@@ -1,5 +1,4 @@
 import { ExternalLink, Import } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "~/components/commons/Button";
 import {
@@ -10,38 +9,42 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/commons/Dialog";
-import type { CreateUser } from "~/types/user";
-import ImportMethod from "./ImportMethod";
-import DataPreview from "./DataPreview";
 import { parseCSV } from "./parse-csv";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { FileUploader } from "~/components/commons/FileUploader";
+import { useQueryClient } from "@tanstack/react-query";
+import { userService } from "~/services/user.service";
+import { toast } from "sonner";
+import { queryKeys } from "~/queryKeys";
+import CodeMirror from "~/components/Editor/CodeMirror";
+
+type Tab = "file" | "editor";
 
 function ImportUser() {
-  const [step, setStep] = useState<"create" | "preview">("create");
-  const [users, setUsers] = useState<CreateUser[]>([]);
-
-  const dialogTitle = {
-    create: "Import Users",
-    preview: "Preview Users",
-  }[step];
-
-  const dialogDescription = {
-    create: "Upload a CSV file or write CSV content directly in the editor.",
-    preview: "Preview the users you are about to import.",
-  }[step];
-
-  const handleDeleteUsers = (usernames: string[]) => {
-    setUsers((prev) =>
-      prev.filter((user) => !usernames.includes(user.username)),
-    );
-  };
-
-  const handleOnImport = (content: string) => {
-    const parsedUsers = parseCSV(content);
-    setUsers(parsedUsers);
-    setStep("preview");
-  };
+  const [rawData, setRawData] = useState("");
+  const [selectedTab, setSelectedTab] = useState<Tab>("file");
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const handleImport = async () => {
+    try {
+      setIsLoading(true);
+      const parsedUsers = parseCSV(rawData);
+      await userService.importUsers(parsedUsers);
+      await queryClient.invalidateQueries({ queryKey: queryKeys.user.all });
+      toast.success("Users imported successfully!");
+      setIsOpen(false);
+      setRawData("");
+    } catch (err) {
+      toast.error("Failed to import users. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  console.log("RAW", rawData);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -54,8 +57,10 @@ function ImportUser() {
       <DialogContent className="min-w-[800px] sm:max-w-fit">
         <DialogHeader className="flex-row justify-between p-4 w-full">
           <div className="space-y-2 w-full">
-            <DialogTitle>{dialogTitle}</DialogTitle>
-            <DialogDescription>{dialogDescription}</DialogDescription>
+            <DialogTitle>Import Users</DialogTitle>
+            <DialogDescription>
+              Upload a CSV file or write CSV content directly in the editor.
+            </DialogDescription>
             <a
               className="inline-flex items-center gap-1.5 hover:text-(--grass-9)"
               href="#"
@@ -66,16 +71,55 @@ function ImportUser() {
           </div>
         </DialogHeader>
         <div className="p-4 space-y-4">
-          {step === "create" ? (
-            <ImportMethod onImport={handleOnImport} />
-          ) : (
-          <DataPreview
-            {...{ users }}
-            onDeleteUsers={handleDeleteUsers}
-            onClose={() => setIsOpen(false)}
-            onBack={() => setStep("create")}
-          />
-          )}
+          <Tabs
+            defaultValue="file"
+            className="mt-4"
+            value={selectedTab}
+            onValueChange={(val) => setSelectedTab(val as Tab)}
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="file">File Upload</TabsTrigger>
+              <TabsTrigger value="editor">Editor</TabsTrigger>
+            </TabsList>
+            <TabsContent value="file" className="mt-4">
+              <FileUploader
+                className="min-h-[300px] border rounded-md"
+                onFileSelect={async (files) => {
+                  const file = files[0];
+                  if (file) {
+                    const content = await file.text();
+                    setRawData(content);
+                    setSelectedTab("editor");
+                  }
+                }}
+                accept={{
+                  "text/csv": [".csv"],
+                }}
+                maxSize={10485760} // 10MB
+              />
+            </TabsContent>
+            <TabsContent value="editor" className="mt-4">
+              <div className="h-[300px] border border-(--gray-4) rounded-lg overflow-hidden">
+                <CodeMirror
+                  className="h-full"
+                  value={rawData}
+                  onChange={setRawData}
+                  placeholder="type,username,password,display_name,email,roles,group"
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+          <div className="flex justify-end mt-2 gap-1.5">
+            <Button
+              {...{ isLoading }}
+              onClick={handleImport}
+              variant="action"
+              className="px-8"
+            >
+              <Import size="1rem" />
+              Import
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
