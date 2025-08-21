@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Popover, PopoverAnchor, PopoverContent } from "../ui/popover";
-import Input from "./Input";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import Loading from "./Loading";
 import { SearchX } from "lucide-react";
@@ -113,12 +112,11 @@ function AutoComplete<T extends { id: string | number }>({
           )}
         >
           {value.map((option) => renderSelected(option))}
-          <Input
-            {...{ isError }}
+          <input
             ref={inputRef}
             value={inputValue}
             autoComplete="off"
-            className="border-none w-fit p-0 h-auto"
+            className="border-none flex-1 p-0 h-auto outline-none"
             onKeyDown={handleOnKeyDown}
             onChange={handleOnChange}
           />
