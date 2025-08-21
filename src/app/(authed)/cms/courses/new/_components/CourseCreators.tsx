@@ -16,9 +16,9 @@ interface Props {
 
 function CourseCreators({ value, onChange, isError }: Props) {
   const queryUsers = async (query: string) => {
-    const res = await userService.getUserPagination({
+    const res = await userService.getPagination({
       search: query,
-      sortBy: "display_name",
+      sort_by: "display_name",
     });
 
     return res.data.map((user) => ({
