@@ -4,20 +4,6 @@ FROM node:18-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-RUN ARCH=$(uname -m) && \
-    if [ "$ARCH" = "aarch64" ]; then \
-      # Optional: check for musl vs gnu
-      if ldd --version 2>&1 | grep -qi musl; then \
-        npm install @next/swc-linux-arm64-musl; \
-      else \
-        npm install @next/swc-linux-arm64-gnu; \
-      fi; \
-    elif [ "$ARCH" = "x86_64" ]; then \
-      npm install @next/swc-linux-x64; \
-    else \
-      echo "Unsupported architecture: $ARCH" && exit 1; \
-    fi
-
 # Install dependencies based on the preferred package manager
 COPY package.json pnpm-lock.yaml* ./
 RUN corepack enable pnpm && pnpm i --frozen-lockfile
