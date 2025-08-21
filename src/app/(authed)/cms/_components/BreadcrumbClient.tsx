@@ -18,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { pathNames } from "~/constants/path-names";
 import type { ClassNameProps } from "~/types/classname-props";
 
 interface PathName {
@@ -27,23 +28,7 @@ interface PathName {
 function BreadcrumbClient({ className }: ClassNameProps) {
   const pathname = usePathname();
 
-  const pathNames: PathName = useMemo(
-    () => ({
-      "/cms": {
-        "/": "CMS",
-        "/courses": {
-          "/": "Courses",
-          "/new": "New Course",
-          "/[courseId]": {
-            "/": "Details",
-            "/settings": "Settings",
-          },
-        },
-        "/users": { "/": "Users Management" },
-      },
-    }),
-    [],
-  );
+  const memoizedPathNames: PathName = useMemo(() => pathNames, []);
 
   if (pathname.endsWith("/cms")) return null;
 
@@ -67,7 +52,7 @@ function BreadcrumbClient({ className }: ClassNameProps) {
           return (acc = acc[curr] as PathName);
         }
         return (acc = acc[curr] as PathName);
-      }, pathNames);
+      }, memoizedPathNames);
 
       return { href: path.join(""), label };
     })
