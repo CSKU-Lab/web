@@ -1,13 +1,12 @@
 "use client";
 
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "~/components/commons/Button";
 import Input from "~/components/commons/Input";
 import Label from "~/components/commons/Label";
-import { api } from "~/lib/api";
 
 function UsernameAndPassword() {
   const [username, setUsername] = useState("");
@@ -27,11 +26,11 @@ function UsernameAndPassword() {
 
     try {
       setIsLoading(true);
-      await api.post("/auth/sign-in/credential", _payload);
+      await axios.post("/api/v1/auth/sign-in/credential", _payload);
       router.push("/");
     } catch (err) {
       if (err instanceof AxiosError) {
-        if (err.response?.data.code === 401) {
+        if (err.response?.status === 401) {
           router.push("/auth/sign-in?error=INVALID_CREDENTIAL");
           return;
         }
