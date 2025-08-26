@@ -26,6 +26,7 @@ import SearchInput from "~/components/commons/SearchInput";
 import { useSession } from "~/providers/SessionProvider";
 import { toast } from "sonner";
 import { queryKeys } from "~/queryKeys";
+import GroupManagementDialog from "./GroupManagement/Dialog";
 
 function TableSection() {
   const [rowSelection, setRowSelection] = useState({});
@@ -180,6 +181,7 @@ function TableSection() {
             .filter((column) => column.getCanFilter())
             .map((col) => ({ ...col, id: mapUserColumnID(col.id) }))}
         />
+        <GroupManagementDialog />
         <AddUser />
         <ImportUser />
       </div>

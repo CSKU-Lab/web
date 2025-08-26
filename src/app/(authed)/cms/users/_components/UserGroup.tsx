@@ -2,7 +2,7 @@
 import { useCallback } from "react";
 import SearchSelect from "~/components/commons/SearchSelect";
 import { cn } from "~/lib/utils";
-import { groupService } from "~/services/group.service";
+import { userGroupService } from "~/services/user-group.service";
 
 type UserGroup = { id: string; name: string };
 
@@ -14,7 +14,7 @@ interface Props {
 
 function UserGroups({ value, onChange, isError }: Props) {
   const queryGroups = useCallback(async (search: string) => {
-    const res = await groupService.getPagination({ search, page_size: 20 });
+    const res = await userGroupService.getPagination({ search, page_size: 20 });
     return res.data;
   }, []);
 

@@ -38,11 +38,6 @@ function SidebarMenus() {
             label: "Users Management",
             href: "/cms/users",
           },
-          {
-            icon: () => <Tags size="1rem" />,
-            label: "Groups Management",
-            href: "/cms/groups",
-          },
         ],
       },
     ],
@@ -69,7 +64,10 @@ function SidebarMenus() {
             <Link
               {...{ href }}
               key={category !== null ? `${category}-${label}` : label}
-              className={cn("flex items-center gap-1.5 text-(--gray-10) p-2 hover:bg-(--gray-4) rounded-lg hover:text-(--gray-11) w-full" , isActive && "bg-(--gray-4) text-(--gray-11)")}
+              className={cn(
+                "flex items-center gap-1.5 text-(--gray-10) p-2 hover:bg-(--gray-4) rounded-lg hover:text-(--gray-11) w-full",
+                isActive && "bg-(--gray-4) text-(--gray-11)",
+              )}
             >
               <Icon key={`${label}-icon`} />
               <p key={`${label}-label`} className="text-xs">
