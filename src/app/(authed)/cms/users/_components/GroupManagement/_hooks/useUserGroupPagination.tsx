@@ -4,7 +4,7 @@ import {
   userGroupService,
   type GetUserGroupPaginationParams,
 } from "~/services/user-group.service";
-import type { UserGroup } from "~/types/user-group";
+import type { UserGroup } from "~/types/cms-user-group";
 
 function useUserGroupPagination(args: GetUserGroupPaginationParams) {
   return useInfinitePagination<UserGroup>({

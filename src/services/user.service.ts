@@ -56,12 +56,14 @@ class UserService {
     password: string | undefined,
     display_name: string,
     roles: UserRole[],
+    group_id: string,
   ) {
     const res = await api.patch(this._baseURL + `/${id}`, {
       username,
       password,
       display_name,
       roles,
+      group_id,
     });
 
     return res.data;

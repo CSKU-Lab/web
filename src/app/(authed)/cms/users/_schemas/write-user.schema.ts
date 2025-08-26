@@ -55,6 +55,7 @@ const isEmail = z.string().email();
 
 export const editUserSchema = z
   .object({
+    group: z.object({ id: z.string(), name: z.string() }).optional(),
     username: z.string().min(1, { message: "username cannot be empty" }),
     password: z.string().optional(),
     display_name: z
@@ -68,6 +69,19 @@ export const editUserSchema = z
       .array(z.enum(["admin", "instructor", "student"]))
       .min(1, { message: "user must has at least one role" }),
   })
+  .refine(
+    (data) => {
+      if (data.type === "oauth") {
+        return true;
+      }
+
+      return data.group !== undefined;
+    },
+    {
+      path: ["email"],
+      message: "email cannot be empty",
+    },
+  )
   .refine(
     (data) => {
       if (data.type === "credential") {

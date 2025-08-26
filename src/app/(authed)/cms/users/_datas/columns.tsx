@@ -120,9 +120,10 @@ export const columns = [
     enableSorting: true,
     header: () => (
       <>
-        <UserPen size="1rem" /> Group 
+        <UserPen size="1rem" /> Group
       </>
     ),
+    cell: ({ cell }) => cell.getValue()?.name,
   }),
   columnHelper.accessor("roles", {
     id: "roles",

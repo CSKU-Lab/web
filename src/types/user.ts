@@ -6,7 +6,7 @@ export interface User {
   profile_image: string | null;
   roles: UserRole[];
   type: UserType;
-  group: string;
+  group: UserGroup;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -22,6 +22,8 @@ export interface JWTUser {
 export type UserType = "credential" | "oauth";
 
 export type UserRole = "admin" | "instructor" | "student";
+
+export type UserGroup = { id: string; name: string };
 
 export interface CreateUser extends Omit<User, "id"> {
   password?: string;

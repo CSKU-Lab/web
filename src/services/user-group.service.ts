@@ -1,6 +1,6 @@
 import { api } from "~/lib/api";
 import { PaginationMixin } from "./pagination.mixin";
-import type { UserGroup } from "~/types/user-group";
+import type { UserGroup } from "~/types/cms-user-group";
 import type { PaginationRequestParams } from "~/types/pagination";
 
 export type GetUserGroupPaginationParams = Partial<

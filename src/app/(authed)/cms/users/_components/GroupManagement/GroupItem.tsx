@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "~/components/commons/Button";
 import { queryKeys } from "~/queryKeys";
 import { userGroupService } from "~/services/user-group.service";
-import type { UserGroup } from "~/types/user-group";
+import type { UserGroup } from "~/types/cms-user-group";
 
 function GroupItem({ id, name: group_name, user_amount }: UserGroup) {
   const [isEdit, setIsEdit] = useState(false);

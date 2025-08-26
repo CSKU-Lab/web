@@ -23,10 +23,11 @@ import UserRole from "./UserRole";
 import UserType from "./UserType";
 import type { User } from "~/types/user";
 import { queryKeys } from "~/queryKeys";
+import UserGroup from "./UserGroup";
 
 type EditUser = Pick<
   User,
-  "id" | "username" | "display_name" | "email" | "type" | "roles"
+  "id" | "username" | "display_name" | "email" | "type" | "roles" | "group"
 >;
 
 interface Props {
@@ -46,6 +47,7 @@ const EditUser = ({ user, onClose }: Props) => {
     resolver: zodResolver(editUserSchema),
     defaultValues: {
       ...user,
+      group: user.group || { id: "", name: "" },
       email: user.email || "",
       password: "",
     },
@@ -67,6 +69,7 @@ const EditUser = ({ user, onClose }: Props) => {
     display_name,
     email,
     roles,
+    group,
   }) => {
     try {
       setIsPending(true);
@@ -77,6 +80,7 @@ const EditUser = ({ user, onClose }: Props) => {
           password,
           display_name,
           roles,
+          group!.id,
         );
       }
 
@@ -130,6 +134,23 @@ const EditUser = ({ user, onClose }: Props) => {
               </p>
             )}
           </div>
+          {isCredential && (
+            <div className="space-y-3">
+              <Label isError={isError("roles")}>Group</Label>
+              <Controller
+                name="group"
+                {...{ control }}
+                render={({ field: { onChange, value } }) => (
+                  <UserGroup value={value!} onChange={onChange} />
+                )}
+              />
+              {isError("group") && (
+                <p className="text-(--red-9) text-sm font-light">
+                  {errors.group?.message}
+                </p>
+              )}
+            </div>
+          )}
           <div className="space-y-3">
             <Label isError={isError("username")}>Username</Label>
             <Input {...register("username")} />

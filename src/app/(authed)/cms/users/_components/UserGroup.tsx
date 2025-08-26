@@ -3,8 +3,7 @@ import { useCallback } from "react";
 import SearchSelect from "~/components/commons/SearchSelect";
 import { cn } from "~/lib/utils";
 import { userGroupService } from "~/services/user-group.service";
-
-type UserGroup = { id: string; name: string };
+import type { UserGroup } from "~/types/user";
 
 interface Props {
   value: UserGroup;
