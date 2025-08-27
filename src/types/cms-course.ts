@@ -1,6 +1,7 @@
 export interface CreateCourse {
   name: string;
   creators: Creator[];
+  type: "public" | "private";
 }
 
 export interface Course {

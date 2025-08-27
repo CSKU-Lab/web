@@ -11,12 +11,14 @@ export type GetCoursePaginationParams = Partial<
 class CMSCourseService {
   _baseURL = "/admin/courses";
 
-  async create({ name, creators }: CreateCourse): Promise<void> {
+  async create({ name, creators, type }: CreateCourse): Promise<Course> {
     const creatorIds = creators.map((creator) => creator.id);
-    return api.post(this._baseURL, {
+    const res = await api.post(this._baseURL, {
       name,
       creators: creatorIds,
+      type,
     });
+    return res.data;
   }
 
   async getById(courseId: string): Promise<Course> {

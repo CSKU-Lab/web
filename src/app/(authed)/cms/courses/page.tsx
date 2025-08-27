@@ -73,7 +73,7 @@ function CMSCoursePage() {
   const router = useRouter();
 
   return (
-    <div className="@container flex flex-col">
+    <div className="@container flex flex-col h-full">
       <h3 className="text-3xl font-medium">Courses</h3>
       <div className="flex justify-end items-center gap-2">
         <SearchInput

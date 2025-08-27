@@ -12,7 +12,8 @@ import { toast } from "sonner";
 import CourseCreator from "./_components/CourseCreators";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Button } from "~/components/commons/Button";
-import UserGroups from "./_components/UserGroups";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 function NewCoursePage() {
   const form = useForm({
@@ -24,12 +25,18 @@ function NewCoursePage() {
     },
   });
 
+  const router = useRouter();
   const mutation = useMutation({
     mutationFn: async (course: CreateCourse) =>
       await cmsCourseService.create(course),
-    onSuccess: () => {
+    onSuccess: (res) => {
       toast.success("Course created successfully!");
-      form.reset();
+      router.push(`/cms/courses/${res.id}`);
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        form.setError("name", { message: err.response?.data.error });
+      }
     },
   });
 
@@ -55,7 +62,7 @@ function NewCoursePage() {
               {...form.register("name")}
             />
             <InlineError isError={!!form.formState.errors.name}>
-              course name is required
+              {form.formState.errors.name?.message}
             </InlineError>
           </div>
           <div className="space-y-2">
