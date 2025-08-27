@@ -28,12 +28,13 @@ class CMSCourseService {
 
   async updateByID(
     courseId: string,
-    { name, creators }: CreateCourse,
+    { name, creators, type }: CreateCourse,
   ): Promise<void> {
     const creatorIds = creators.map((creator) => creator.id);
     return api.patch(`${this._baseURL}/${courseId}`, {
       name,
       creators: creatorIds,
+      type,
     });
   }
 }

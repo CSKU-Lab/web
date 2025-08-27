@@ -29,6 +29,7 @@ function SettingPage() {
     defaultValues: {
       name: course?.name ?? "",
       creators: course?.creators ?? [],
+      type: course?.type ?? "public",
     },
   });
 
@@ -38,9 +39,9 @@ function SettingPage() {
   }, [form, course]);
 
   const queryUsers = useCallback(async (query: string) => {
-    const res = await userService.getUserPagination({
+    const res = await userService.getPagination({
       search: query,
-      sortBy: "display_name",
+      sort_by: "display_name",
     });
 
     return res.data.map((user) => ({
@@ -63,7 +64,11 @@ function SettingPage() {
     },
   });
 
-  const isUpdated = !form.formState.isDirty;
+  const isUpdated =
+    form.watch("name") === course?.name &&
+    JSON.stringify(form.watch("creators")) === JSON.stringify(course?.creators);
+
+  if (!course) return null;
 
   return (
     <div className="w-1/2">
