@@ -92,7 +92,7 @@ function CMSCoursePage() {
         </Button>
       </div>
       <Error
-        isError={isError}
+        isError={isError && !isFetching}
         fallback={
           <ErrorFallback
             icon={<ServerCrash size="2rem" />}
