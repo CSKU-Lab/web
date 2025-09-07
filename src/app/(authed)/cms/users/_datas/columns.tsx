@@ -117,7 +117,7 @@ export const columns = [
   }),
   columnHelper.accessor("group", {
     id: "group",
-    enableSorting: true,
+    enableSorting: false,
     header: () => (
       <>
         <UserPen size="1rem" /> Group
