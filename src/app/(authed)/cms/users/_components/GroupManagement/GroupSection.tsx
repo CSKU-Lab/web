@@ -81,24 +81,27 @@ function GroupSection() {
           />
         }
       >
-        <div className="mt-4 space-y-2 max-h-64 overflow-y-auto">
-          {userGroupPagination.pages.map((page) =>
-            page.data.map((group) => <GroupItem key={group.id} {...group} />),
-          )}
-          <Loading
-            isLoading={isFetching}
-            fallback={Array.from({ length: 4 }).map((_, index) => (
-              <Skeleton key={index} className="h-12" />
-            ))}
-          />
-
-          <div
-            ref={bottomDivRef}
-            className="h-12 flex justify-center items-center"
-          >
-            {!hasNextPage && (
-              <h6 className="text-sm text-(--gray-11)">- No more data -</h6>
+        <div className="relative">
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-(--gray-2) to-transparent h-6"></div>
+          <div className="mt-4 space-y-2 max-h-64 overflow-y-auto">
+            {userGroupPagination.pages.map((page) =>
+              page.data.map((group) => <GroupItem key={group.id} {...group} />),
             )}
+            <Loading
+              isLoading={isFetching}
+              fallback={Array.from({ length: 4 }).map((_, index) => (
+                <Skeleton key={index} className="h-12" />
+              ))}
+            />
+
+            <div
+              ref={bottomDivRef}
+              className="h-12 flex justify-center items-center"
+            >
+              {!hasNextPage && (
+                <h6 className="text-sm text-(--gray-11)">- No more data -</h6>
+              )}
+            </div>
           </div>
         </div>
       </Error>

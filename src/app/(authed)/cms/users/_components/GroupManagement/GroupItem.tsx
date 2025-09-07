@@ -2,11 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Trash, User } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/commons/Button";
+import { numberFormatter } from "~/lib/formatters/numberFormatter";
 import { queryKeys } from "~/queryKeys";
 import { userGroupService } from "~/services/user-group.service";
-import type { UserGroup } from "~/types/cms-user-group";
+import type { CMSUserGroup } from "~/types/cms-user-group";
 
-function GroupItem({ id, name: group_name, user_amount }: UserGroup) {
+function GroupItem({ id, name: group_name, user_amount }: CMSUserGroup) {
   const [isEdit, setIsEdit] = useState(false);
   const [name, setName] = useState(group_name);
 
@@ -35,21 +36,21 @@ function GroupItem({ id, name: group_name, user_amount }: UserGroup) {
 
   return (
     <div className="bg-(--gray-2) border border-(--gray-4) p-2 rounded-lg text-(--gray-11) flex justify-between items-center gap-1.5">
-      {isEdit ? (
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="h-6 outline-none w-full"
-        />
-      ) : (
-        <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
+        {isEdit ? (
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="h-6 outline-none w-full"
+          />
+        ) : (
           <h5>{name}</h5>
-          <div className="inline-flex items-center text-sm gap-1">
-            <User size="1rem" />
-            {user_amount}
-          </div>
+        )}
+        <div className="inline-flex items-center text-xs gap-1 bg-(--gray-12) text-(--gray-6) px-2 py-0.5 rounded-full">
+          <User size="1rem" />
+          {numberFormatter(user_amount)}
         </div>
-      )}
+      </div>
       <div className="space-x-2 pt-0.5 flex">
         {isEdit ? (
           <>
