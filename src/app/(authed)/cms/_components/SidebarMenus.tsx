@@ -1,6 +1,6 @@
 "use client";
 
-import { Book, Tags, UserRound } from "lucide-react";
+import { Book, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment, useMemo } from "react";
@@ -66,7 +66,8 @@ function SidebarMenus() {
               key={category !== null ? `${category}-${label}` : label}
               className={cn(
                 "flex items-center gap-1.5 text-(--gray-10) p-2 hover:bg-(--gray-4) rounded-lg hover:text-(--gray-11) w-full",
-                isActive && "bg-(--blue-9) text-(--text-base-color)",
+                isActive &&
+                  "bg-(--accent-color) text-(--on-accent-color) hover:bg-(--accent-color)/90 rounded-lg hover:text-(--on-accent-color)/90",
               )}
             >
               <Icon key={`${label}-icon`} />

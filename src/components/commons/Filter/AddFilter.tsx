@@ -87,7 +87,7 @@ const AddFilterButton = ({ fields }: Props) => {
               key={field.value}
               onClick={() => handleOnSelectField(field)}
               data-state={selectedIndex === index ? "selected" : "default"}
-              className="w-full text-xs py-1.5 text-left hover:bg-(--gray-3) rounded-md px-2 data-[state=selected]:bg-(--accent-color) data-[state=selected]:text-(--text-base-color)"
+              className="w-full text-xs py-1.5 text-left hover:bg-(--gray-3) rounded-md px-2 data-[state=selected]:bg-(--accent-color) data-[state=selected]:text-(--on-accent-color)"
             >
               {field.display}
             </button>

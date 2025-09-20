@@ -46,7 +46,7 @@ function GroupItem({ id, name: group_name, user_amount }: CMSUserGroup) {
         ) : (
           <h5>{name}</h5>
         )}
-        <div className="inline-flex items-center text-xs gap-1 bg-(--gray-12) text-(--gray-6) px-2 py-0.5 rounded-full">
+        <div className="inline-flex items-center text-xs gap-1 bg-(--accent-color) text-(--on-accent-color) px-2 py-0.5 rounded-full">
           <User size="1rem" />
           {numberFormatter(user_amount)}
         </div>
@@ -55,6 +55,7 @@ function GroupItem({ id, name: group_name, user_amount }: CMSUserGroup) {
         {isEdit ? (
           <>
             <Button
+              key="group-save-button"
               variant="action"
               onClick={editGroup.mutate}
               isLoading={editGroup.isPending}
@@ -66,6 +67,7 @@ function GroupItem({ id, name: group_name, user_amount }: CMSUserGroup) {
         ) : (
           <>
             <Button
+              key="group-edit-button"
               variant="transparent"
               tooltip="Edit"
               onClick={() => setIsEdit(true)}

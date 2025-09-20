@@ -23,7 +23,7 @@ const MenuButton = ({ name, href }: MenuButonProps) => {
       className={cn(
         "px-3 py-2 rounded-lg text-(--gray-11) text-xs",
         isActive
-          ? "font-semibold text-(--gray-1) bg-(--accent-color)"
+          ? "font-semibold text-(--on-accent-color) bg-(--accent-color)"
           : "hover:text-(--gray-12) hover:font-semibold",
       )}
     >

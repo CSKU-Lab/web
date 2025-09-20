@@ -27,7 +27,7 @@ export const Button = ({
   let normalColor =
     "border-(--gray-6) bg-(--gray-2) hover:bg-(--gray-3) text-(--gray-11)";
   let activeColor =
-    "bg-(--gray-12) hover:bg-(--gray-12) hover:text-(--gray-1) text-(--gray-1)";
+    "bg-(--accent-color) hover:bg-(--accent-color)/90 hover:text-(--on-accent-color) text-(--on-accent-color)/90";
 
   switch (variant) {
     case "danger":
@@ -38,7 +38,7 @@ export const Button = ({
       break;
     case "action":
       normalColor =
-        "border-(--gray-6) bg-(--gray-12) hover:bg-(--gray-11) active:bg-(--gray-10) text-(--gray-2) hover:text-(--gray-1)";
+        "border-(--gray-6) bg-(--accent-color) hover:bg-(--accent-color)/70 active:bg-(--accent-color)/80 text-(--on-accent-color) hover:text-(--on-accent-color)/90";
       break;
     case "transparent":
       normalColor = "text-(--gray-11) hover:text-(--gray-12) border-none p-0";

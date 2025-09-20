@@ -39,7 +39,7 @@
 }
 
 @theme {
-	--text-base-color: var(--gray-1);
+	--on-accent-color: var(--gray-1);
 	--accent-color: var(--blue-9);
 }
 
