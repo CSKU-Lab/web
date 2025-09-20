@@ -27,6 +27,7 @@ import { useSession } from "~/providers/SessionProvider";
 import { toast } from "sonner";
 import { queryKeys } from "~/queryKeys";
 import GroupManagementDialog from "./GroupManagement/Dialog";
+import Filter from "~/components/commons/Filter";
 
 function TableSection() {
   const [rowSelection, setRowSelection] = useState({});
@@ -185,6 +186,21 @@ function TableSection() {
         <AddUser />
         <ImportUser />
       </div>
+
+      <Filter
+        className="mt-2"
+        fields={[
+          { display: "Type", value: "type" },
+          { display: "Username", value: "username" },
+          { display: "Email", value: "email" },
+          { display: "Display Name", value: "display_name" },
+          { display: "Group", value: "group" },
+          { display: "Roles", value: "roles" },
+          { display: "Created at", value: "created_at" },
+          { display: "Updated at", value: "updated_at" },
+        ]}
+      />
+
       <DataTable
         {...{ table, isLoading: isFetching, search }}
         totalData={userPagination.pagination.total_rows}

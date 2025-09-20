@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: () => void;
-  variant?: "primary" | "danger" | "action" | "transparent";
+  variant?: "primary" | "danger" | "action" | "transparent" | "ghost";
   className?: string;
   isLoading?: boolean;
   isActive?: boolean;
@@ -42,6 +42,11 @@ export const Button = ({
       break;
     case "transparent":
       normalColor = "text-(--gray-11) hover:text-(--gray-12) border-none p-0";
+      break;
+    case "ghost":
+      normalColor =
+        "bg-transparent text-(--gray-11) hover:bg-(--gray-3)";
+      break;
   }
 
   return (

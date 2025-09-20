@@ -1,14 +1,12 @@
 import { Search } from "lucide-react";
 import { cn } from "~/lib/utils";
+import type { ComponentProps } from "react";
 
-interface Props {
-  value: string;
+interface Props extends Omit<ComponentProps<"input">, "onChange"> {
   onChange: (value: string) => void;
-  className?: string;
-  placeholder?: string;
 }
 
-function SearchInput({ value, onChange, className, placeholder }: Props) {
+function SearchInput({ onChange, className, ...props }: Props) {
   return (
     <div
       className={cn(
@@ -21,7 +19,7 @@ function SearchInput({ value, onChange, className, placeholder }: Props) {
         className="absolute left-1.5 top-1/2 -translate-y-1/2 text-(--gray-9)"
       />
       <input
-        {...{ placeholder, value }}
+        {...props}
         onChange={(e) => onChange(e.target.value)}
         className="block text-xs w-full h-fit outline-hidden bg-transparent"
       />
