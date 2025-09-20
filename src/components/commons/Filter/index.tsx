@@ -3,16 +3,18 @@ import useFilter from "./useFilter";
 import AddFilter from "./AddFilter";
 import FilterBlock from "./FilterBlock";
 import type { FilterField } from "~/types/filter";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { isValidFilter } from "./utils/is-valid-filter";
 
 interface Props {
   className?: string;
   fields: FilterField[];
+  value: string;
+  onChange?: (value: string) => void;
 }
 
-function Filter({ className, fields }: Props) {
+function Filter({ className, fields, onChange }: Props) {
   const { filters } = useFilter();
-  console.log(filters);
 
   const filteredFields = useMemo(
     () =>
@@ -22,6 +24,18 @@ function Filter({ className, fields }: Props) {
       ),
     [fields, filters],
   );
+
+  useEffect(() => {
+    if (filters.some((filter) => !isValidFilter(filter))) return;
+    if (onChange) {
+      const query = filters
+        .map((filter) => {
+          return `${filter.field.value}__${filter.operator}=${encodeURIComponent(filter.value)}`;
+        })
+        .join("&");
+      onChange(query);
+    }
+  }, [filters, onChange]);
 
   return (
     <div

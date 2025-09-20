@@ -34,10 +34,6 @@ const AddFilterButton = ({ fields }: Props) => {
     setSelectedIndex(-1);
   };
 
-  useEffect(() => {
-    setSelectedIndex(-1);
-  }, [filteredFields]);
-
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (filteredFields.length === 0) return;
 
@@ -57,6 +53,11 @@ const AddFilterButton = ({ fields }: Props) => {
     }
   };
 
+  const handleOnChangeInput = (value: string) => {
+    setSearch(value);
+    setSelectedIndex(0);
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -72,7 +73,7 @@ const AddFilterButton = ({ fields }: Props) => {
       >
         <SearchInput
           value={search}
-          onChange={setSearch}
+          onChange={handleOnChangeInput}
           onKeyDown={handleInputKeyDown}
           className="w-full"
         />

@@ -67,12 +67,14 @@ function TableSection() {
     handleOnSearch(globalFilter);
   }, [globalFilter, handleOnSearch]);
 
+  const [filter, setFilter] = useState("");
   const { data: userPagination, isFetching } = useUserPagination({
     page: pagination.pageIndex + 1,
     page_size: pagination.pageSize,
     search,
     sort_by: (sorting[0]?.id as keyof User) ?? "created_at",
     sort_order: sorting[0]?.desc ? "desc" : "asc",
+    filter,
   });
 
   const userAmount = userPagination?.pagination.total_rows ?? 0;
@@ -188,6 +190,8 @@ function TableSection() {
       </div>
 
       <Filter
+        value={filter}
+        onChange={setFilter}
         className="mt-2"
         fields={[
           { display: "Type", value: "type" },

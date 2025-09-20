@@ -13,4 +13,5 @@ export interface PaginationRequestParams<T extends Record<string, any>> {
   search: string;
   sort_by: keyof T | "";
   sort_order: string;
+  filter?: string;
 }

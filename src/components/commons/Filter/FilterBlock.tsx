@@ -49,7 +49,7 @@ function FilterBlock({ filter }: Props) {
   return (
     <Popover open={isOpen} onOpenChange={handleOnOpenChange}>
       <PopoverTrigger asChild>
-        <Button className="flex items-center gap-1.5 text-(--gray-12) text-xs rounded-md bg-(--gray-4) px-2 py-1 font-semibold">
+        <Button className="flex items-center gap-1.5 text-(--gray-12) text-xs rounded-md px-2 py-1 font-semibold">
           {field.display}
           <span className="text-(--gray-11) font-normal">
             {mapDisplayWithValue[operator]}
