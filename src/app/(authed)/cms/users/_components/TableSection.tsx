@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { queryKeys } from "~/queryKeys";
 import GroupManagementDialog from "./GroupManagement/Dialog";
 import Filter from "~/components/commons/Filter";
+import type { IFilter } from "~/types/filter";
 
 function TableSection() {
   const [rowSelection, setRowSelection] = useState({});
@@ -67,7 +68,7 @@ function TableSection() {
     handleOnSearch(globalFilter);
   }, [globalFilter, handleOnSearch]);
 
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState<IFilter[]>([]);
   const { data: userPagination, isFetching } = useUserPagination({
     page: pagination.pageIndex + 1,
     page_size: pagination.pageSize,
@@ -190,7 +191,6 @@ function TableSection() {
       </div>
 
       <Filter
-        value={filter}
         onChange={setFilter}
         className="mt-2"
         fields={[

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   Popover,
   PopoverTrigger,
@@ -15,15 +15,19 @@ interface Props {
 }
 
 const AddFilterButton = ({ fields }: Props) => {
+  const { filters } = useFilter();
   const [search, setSearch] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
+
   const filteredFields = useMemo(
     () =>
-      fields.filter((field) =>
-        field.display.toLowerCase().includes(search.toLowerCase()),
-      ),
-    [fields, search],
+      fields.filter((field) => {
+        if (filters.some((filter) => filter.field.value === field.value))
+          return false;
+        return field.display.toLowerCase().includes(search.toLowerCase());
+      }),
+    [fields, search, filters],
   );
 
   const { add } = useFilter();

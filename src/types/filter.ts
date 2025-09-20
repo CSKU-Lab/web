@@ -1,4 +1,4 @@
-export interface Filter {
+export interface IFilter {
   field: FilterField;
   operator: FilterOperator;
   value: string;

@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { filterAtom } from "./filter.atom";
-import type { Filter, FilterField } from "~/types/filter";
+import type { IFilter, FilterField } from "~/types/filter";
 
 function useFilter() {
   const [filters, setFilters] = useAtom(filterAtom);
@@ -12,7 +12,7 @@ function useFilter() {
     ]);
   };
 
-  const update = (filter: Filter) => {
+  const update = (filter: IFilter) => {
     const copiedFilters = [...filters];
     const filterIndex = copiedFilters.findIndex(
       ({ field }) => field === filter.field,

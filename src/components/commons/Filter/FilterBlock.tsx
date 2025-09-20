@@ -6,14 +6,14 @@ import {
   PopoverTrigger,
 } from "~/components/commons/Popover";
 import useFilter from "./useFilter";
-import type { Filter, FilterOperator } from "~/types/filter";
+import type { IFilter, FilterOperator } from "~/types/filter";
 import Operator from "./Operator";
 import Input from "~/components/commons/Input";
 import { useRef, useState } from "react";
 import { mapDisplayWithValue } from "./utils/map-display-with-value";
 
 interface Props {
-  filter: Filter;
+  filter: IFilter;
 }
 
 function FilterBlock({ filter }: Props) {
@@ -23,14 +23,14 @@ function FilterBlock({ filter }: Props) {
   const [inputValue, setInputValue] = useState("");
   const [isOpen, setIsOpen] = useState(status === "newly-created");
 
-  const handleOnChangeInput = () => {
+  const handleOnApply = () => {
     update({ ...filter, value: inputValue });
   };
 
   const inputValueRef = useRef<HTMLInputElement>(null);
   const handleOnKeyDownInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleOnChangeInput();
+      handleOnApply();
       inputValueRef.current?.blur();
       setIsOpen(false);
     }
@@ -42,7 +42,7 @@ function FilterBlock({ filter }: Props) {
 
   const handleOnOpenChange = (isOpen: boolean) => {
     if (inputValue !== "") {
-      handleOnChangeInput();
+      handleOnApply();
     }
     setIsOpen(isOpen);
   };
@@ -55,7 +55,6 @@ function FilterBlock({ filter }: Props) {
             {mapDisplayWithValue[operator]}
           </span>{" "}
           <div className="truncate">{value}</div>
-          <X size="0.75rem" onClick={() => remove(field.value)} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-2 max-w-100" align="start">
@@ -68,9 +67,17 @@ function FilterBlock({ filter }: Props) {
           className="h-8 bg-white mt-1.5"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onBlur={handleOnChangeInput}
+          onBlur={handleOnApply}
           onKeyDown={handleOnKeyDownInput}
         />
+        <div className="flex gap-2 mt-2">
+          <Button onClick={handleOnApply} variant="action" className="flex-1">
+            Apply
+          </Button>
+          <Button onClick={() => remove(field.value)} className="flex-1">
+            Remove
+          </Button>
+        </div>
       </PopoverContent>
     </Popover>
   );

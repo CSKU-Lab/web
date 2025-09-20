@@ -2,38 +2,23 @@ import { cn } from "~/lib/utils";
 import useFilter from "./useFilter";
 import AddFilter from "./AddFilter";
 import FilterBlock from "./FilterBlock";
-import type { FilterField } from "~/types/filter";
-import { useEffect, useMemo } from "react";
+import type { FilterField, IFilter } from "~/types/filter";
+import { useEffect } from "react";
 import { isValidFilter } from "./utils/is-valid-filter";
 
 interface Props {
   className?: string;
   fields: FilterField[];
-  value: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: IFilter[]) => void;
 }
 
 function Filter({ className, fields, onChange }: Props) {
   const { filters } = useFilter();
 
-  const filteredFields = useMemo(
-    () =>
-      fields.filter(
-        (field) =>
-          !filters.some((filter) => filter.field.value === field.value),
-      ),
-    [fields, filters],
-  );
-
   useEffect(() => {
     if (filters.some((filter) => !isValidFilter(filter))) return;
     if (onChange) {
-      const query = filters
-        .map((filter) => {
-          return `${filter.field.value}__${filter.operator}=${encodeURIComponent(filter.value)}`;
-        })
-        .join("&");
-      onChange(query);
+      onChange(filters);
     }
   }, [filters, onChange]);
 
@@ -47,7 +32,7 @@ function Filter({ className, fields, onChange }: Props) {
           filter={filter}
         />
       ))}
-      <AddFilter fields={filteredFields} />
+      <AddFilter fields={fields} />
     </div>
   );
 }

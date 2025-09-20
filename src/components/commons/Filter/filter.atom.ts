@@ -1,4 +1,4 @@
 import { atom } from "jotai";
-import type { Filter } from "~/types/filter";
+import type { IFilter } from "~/types/filter";
 
-export const filterAtom = atom<Filter[]>([]);
+export const filterAtom = atom<IFilter[]>([]);

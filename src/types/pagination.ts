@@ -1,3 +1,5 @@
+import type { IFilter } from "./filter";
+
 export interface PaginationResponse<T> {
   pagination: {
     page: number;
@@ -13,5 +15,5 @@ export interface PaginationRequestParams<T extends Record<string, any>> {
   search: string;
   sort_by: keyof T | "";
   sort_order: string;
-  filter?: string;
+  filter?: IFilter[];
 }

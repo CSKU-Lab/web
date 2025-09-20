@@ -25,15 +25,26 @@ export const PaginationMixin = <
   };
 
   return class Pagination extends Base {
-    async getPagination(
-      paramsRequest: Partial<PaginationRequestParams<Item>>,
-    ): Promise<PaginationResponse<Item>> {
+    async getPagination({
+      filter,
+      ...paramsRequest
+    }: Partial<PaginationRequestParams<Item>>): Promise<
+      PaginationResponse<Item>
+    > {
       const searchParams = new URLSearchParams();
 
       params = {
         ...params,
         ...paramsRequest,
       };
+
+      if (filter) {
+        filter.forEach((filter) => {
+          const field = `${filter.field.value}__${filter.operator}`;
+          const value = filter.value;
+          searchParams.append(field, value);
+        });
+      }
 
       Object.entries(params).forEach(([key, value]) => {
         if (value === undefined) return;
