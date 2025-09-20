@@ -69,7 +69,12 @@ function TableSection() {
   }, [globalFilter, handleOnSearch]);
 
   const [filter, setFilter] = useState<IFilter[]>([]);
-  const { data: userPagination, isFetching } = useUserPagination({
+  const {
+    data: userPagination,
+    isFetching,
+    isError,
+    refetch,
+  } = useUserPagination({
     page: pagination.pageIndex + 1,
     page_size: pagination.pageSize,
     search,
@@ -206,7 +211,11 @@ function TableSection() {
       />
 
       <DataTable
-        {...{ table, isLoading: isFetching, search }}
+        table={table}
+        isLoading={isFetching}
+        search={search}
+        isError={isError && !isFetching}
+        onRetry={refetch}
         totalData={userPagination.pagination.total_rows}
       />
     </>

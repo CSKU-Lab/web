@@ -26,6 +26,11 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 dayjs.extend(relativeTime);
 
@@ -70,8 +75,24 @@ export const columns = [
       </>
     ),
     cell: ({ cell }) => {
-      if (cell.getValue() === "credential") return <Lock size="1rem" />;
-      return <GoogleIcon className="w-4 h-4" />;
+      if (cell.getValue() === "credential")
+        return (
+          <Tooltip>
+            <TooltipTrigger>
+              <Lock size="1rem" />
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Credential</TooltipContent>
+          </Tooltip>
+        );
+
+      return (
+        <Tooltip>
+          <TooltipTrigger>
+            <GoogleIcon className="w-4 h-4" />
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Oauth</TooltipContent>
+        </Tooltip>
+      );
     },
   }),
   columnHelper.accessor("profile_image", {

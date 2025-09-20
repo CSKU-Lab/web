@@ -5,7 +5,7 @@ interface Props {
   icon: React.ReactNode;
   title: React.ReactNode;
   message: React.ReactNode;
-  onRetry: () => void;
+  onRetry?: () => void;
 }
 
 function ErrorFallback({ icon, title, message, onRetry }: Props) {

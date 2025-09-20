@@ -18,7 +18,7 @@ function useFilter() {
       ({ field }) => field === filter.field,
     );
 
-    copiedFilters[filterIndex] = { ...filter };
+    copiedFilters[filterIndex] = { ...filter, status: "dirty" };
 
     setFilters(copiedFilters);
   };
