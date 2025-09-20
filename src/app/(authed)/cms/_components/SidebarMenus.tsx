@@ -66,7 +66,7 @@ function SidebarMenus() {
               key={category !== null ? `${category}-${label}` : label}
               className={cn(
                 "flex items-center gap-1.5 text-(--gray-10) p-2 hover:bg-(--gray-4) rounded-lg hover:text-(--gray-11) w-full",
-                isActive && "bg-(--gray-4) text-(--gray-11)",
+                isActive && "bg-(--blue-9) text-(--text-base-color)",
               )}
             >
               <Icon key={`${label}-icon`} />
