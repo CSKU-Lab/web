@@ -25,7 +25,7 @@ function SidebarWrapper({ children }: Props) {
   const ToggleButton = () => (
     <button
       onClick={toggleSidebar}
-      className="fixed top-4 left-4 text-(--gray-10) focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 mb-4 hover:text-(--accent-color) rounded-md"
+      className="fixed top-4 left-4 text-(--gray-10) focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 mb-4 hover:text-(--accent-color) rounded-md z-50"
     >
       <PanelLeft size="1.25rem" />
     </button>
@@ -38,7 +38,7 @@ function SidebarWrapper({ children }: Props) {
         <motion.nav
           initial={{ width }}
           animate={{ width }}
-          className="flex flex-col justify-between border-r border-(--gray-4) bg-(--gray-2)"
+          className="top-0 bottom-0 flex flex-col justify-between border-r border-(--gray-4) bg-(--gray-2)"
         >
           {!isCollapse && (
             <>

@@ -12,7 +12,7 @@ interface Props {
 
 function CoreLayout({ children }: Props) {
   return (
-    <div className="h-screen flex flex-col bg-white overflow-auto">
+    <div className="h-screen flex flex-col bg-white">
       <div className="flex min-h-0 h-full">{children}</div>
     </div>
   );
@@ -24,8 +24,10 @@ interface ContentProps extends ChildrenProps {
 
 export function CoreLayoutContent({ className, children }: ContentProps) {
   return (
-    <div className={cn("flex-1 transition-all flex flex-col", className)}>
-      {children}
+    <div className="flex-1 overflow-auto">
+      <div className={cn("flex-1 transition-all flex flex-col mt-4", className)}>
+        {children}
+      </div>
     </div>
   );
 }
