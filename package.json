@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect' next dev --turbopack",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -86,6 +86,7 @@
     "react-hook-form": "^7.56.3",
     "react-lottie": "^1.2.4",
     "react-resizable-panels": "^3.0.2",
+    "react-scan": "^0.4.3",
     "recharts": "^2.15.3",
     "remark-gfm": "^4.0.1",
     "sonner": "^2.0.3",

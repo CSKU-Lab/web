@@ -6,6 +6,7 @@ import AppLoading from "~/components/commons/AppLoading";
 import { Suspense } from "react";
 import { ClientEnv } from "~/lib/client-env";
 import { Toaster } from "~/components/ui/sonner";
+import ReactScan from "~/react-scan";
 
 const onest = Onest({
   subsets: ["latin"],
@@ -48,6 +49,7 @@ export default function RootLayout({
         <ClientEnv />
       </head>
       <body className={`${onest.className} ${anuphan.variable}`}>
+        <ReactScan />
         <Suspense>
           <AppLoading />
           <Toaster richColors />
