@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 
 const useInputDebounce = <T>(value: T, delay: number) => {

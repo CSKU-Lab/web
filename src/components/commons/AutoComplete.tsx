@@ -8,19 +8,32 @@ import { cn } from "~/lib/utils";
 
 interface Props<T extends { id: string | number }> {
   isError?: boolean;
-  value: T[];
+  value?: T[];
   onChange?: (value: T[]) => void;
   queryFn: (query: string) => Promise<T[]>;
-  renderSelected: (option: T) => React.ReactNode;
-  children?: (options: T[]) => React.ReactNode;
+  renderSelected: ({
+    option,
+    handleOnRemove,
+  }: {
+    option: T;
+    handleOnRemove: (option: T) => void;
+  }) => React.ReactNode;
+  children?: ({
+    options,
+    handleOnAdd,
+  }: {
+    options: T[];
+    handleOnAdd: (option: T) => void;
+  }) => React.ReactNode;
   loadingFallback?: React.ReactNode;
   className?: string;
   queryOnRender?: boolean;
+  placeHolder?: string;
 }
 
 function AutoComplete<T extends { id: string | number }>({
   isError,
-  value,
+  value: initialValue,
   onChange,
   queryFn,
   children,
@@ -28,10 +41,12 @@ function AutoComplete<T extends { id: string | number }>({
   loadingFallback,
   className,
   queryOnRender = false,
+  placeHolder,
 }: Props<T>) {
+  const [value, setValue] = useState<T[]>(initialValue ?? []);
   const [inputValue, setInputValue] = useState("");
 
-  const debouncedInput = useInputDebounce(inputValue, 1000);
+  const debouncedInput = useInputDebounce(inputValue, 500);
   const [options, setOptions] = useState<T[]>([]);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -84,6 +99,7 @@ function AutoComplete<T extends { id: string | number }>({
       e.preventDefault();
       if (value.length > 0) {
         const newValue = value.slice(0, -1);
+        setValue(newValue);
         onChange?.(newValue);
       }
     }
@@ -101,6 +117,18 @@ function AutoComplete<T extends { id: string | number }>({
   const isOptionEmpty =
     memoizedOptions.length === 0 && debouncedInput.length > 0 && !isLoading;
 
+  const handleOnAdd = (option: T) => {
+    const newValue = [...value, option];
+    setValue(newValue);
+    onChange?.(newValue);
+  };
+
+  const handleOnRemove = (option: T) => {
+    const newValue = value.filter((v) => v.id !== option.id);
+    setValue(newValue);
+    onChange?.(newValue);
+  };
+
   return (
     <Popover open={isOpen && (isOptionEmpty || memoizedOptions.length > 0)}>
       <PopoverAnchor className="w-full">
@@ -108,14 +136,16 @@ function AutoComplete<T extends { id: string | number }>({
           onClick={handleDivClick}
           className={cn(
             "flex flex-wrap items-center border rounded-md p-2 min-h-10 gap-2 bg-(--gray-2)",
+            isError && "border-(--red-9)",
             className,
           )}
         >
-          {value.map((option) => renderSelected(option))}
+          {value.map((option) => renderSelected({ option, handleOnRemove }))}
           <input
             ref={inputRef}
             value={inputValue}
             autoComplete="off"
+            placeholder={placeHolder}
             className="border-none flex-1 p-0 h-auto outline-none"
             onKeyDown={handleOnKeyDown}
             onChange={handleOnChange}
@@ -135,7 +165,7 @@ function AutoComplete<T extends { id: string | number }>({
               <h6 className="text-sm">No options available</h6>
             </div>
           ) : (
-            !!children && children(memoizedOptions)
+            !!children && children({ options: memoizedOptions, handleOnAdd })
           )}
         </Loading>
       </PopoverContent>

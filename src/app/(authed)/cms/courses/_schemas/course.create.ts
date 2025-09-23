@@ -1,17 +1,9 @@
 import { z } from "zod";
+import { userDataSchema } from "~/schemas/user-data.schema";
 
 export const createCourseSchame = z.object({
   name: z.string().min(1, "Course name is required"),
-  creators: z
-    .array(
-      z.object({
-        id: z.string(),
-        username: z.string(),
-        display_name: z.string(),
-        profile_image: z.string().or(z.null()),
-      }),
-    )
-    .min(1, "Creator is required"),
+  creators: userDataSchema.min(1, "Creator is required"),
   type: z.enum(["public", "private"]).default("public"),
 });
 

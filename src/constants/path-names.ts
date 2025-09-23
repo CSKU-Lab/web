@@ -7,6 +7,10 @@ export const pathNames = {
       "/[courseId]": {
         "/": "Details",
         "/settings": "Settings",
+        "/sections": {
+          "/": "Sections",
+          "/new": "New Section",
+        },
       },
     },
     "/users": { "/": "Users Management" },

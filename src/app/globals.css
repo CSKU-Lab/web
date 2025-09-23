@@ -40,7 +40,7 @@
 
 @theme {
 	--on-accent-color: var(--gray-1);
-	--accent-color: var(--blue-9);
+	--accent-color: var(--gray-12);
 }
 
 @utility container {

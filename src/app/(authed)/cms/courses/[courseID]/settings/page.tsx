@@ -1,7 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save, Trash, X } from "lucide-react";
-import React, { useCallback, useEffect } from "react";
+import { Save, Trash } from "lucide-react";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "~/components/commons/Button";
 import InlineError from "~/components/commons/InlineError";
@@ -12,13 +12,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { CreateCourse } from "~/types/cms-course";
 import { cmsCourseService } from "~/services/cms-course.service";
 import { toast } from "sonner";
-import { userService } from "~/services/user.service";
-import AutoComplete from "~/components/commons/AutoComplete";
-import UserProfileImage from "~/components/Menus/UserProfileImage";
-import { Skeleton } from "~/components/ui/skeleton";
 import useGetCourse from "../_hooks/useGetCourse";
 import { useParams } from "next/navigation";
 import { queryKeys } from "~/queryKeys";
+import UserAutoComplete from "~/components/commons/UserAutoComplete";
 
 function SettingPage() {
   const { courseID } = useParams<{ courseID: string }>();
@@ -37,20 +34,6 @@ function SettingPage() {
     form.setValue("name", course?.name ?? "");
     form.setValue("creators", course?.creators ?? []);
   }, [form, course]);
-
-  const queryUsers = useCallback(async (query: string) => {
-    const res = await userService.getPagination({
-      search: query,
-      sort_by: "display_name",
-    });
-
-    return res.data.map((user) => ({
-      id: user.id,
-      username: user.username,
-      display_name: user.display_name,
-      profile_image: user.profile_image,
-    }));
-  }, []);
 
   const ctx = useQueryClient();
   const updateCourse = useMutation({
@@ -104,68 +87,7 @@ function SettingPage() {
                 name="creators"
                 control={form.control}
                 render={({ field: { onChange, value } }) => (
-                  <AutoComplete
-                    {...{ value, onChange }}
-                    isError={!!form.formState.errors.creators}
-                    renderSelected={(creator) => (
-                      <div
-                        key={creator.id}
-                        className="flex items-center gap-2 shrink-0 bg-(--gray-4) pl-2 pr-3 py-0.5 rounded-full"
-                      >
-                        <UserProfileImage
-                          username={creator.username}
-                          src={creator.profile_image}
-                          size="1.5rem"
-                          textSize="0.5rem"
-                        />
-                        <span className="text-xs">{creator.display_name}</span>
-                        <button
-                          className="text-(--gray-11) hover:text-(--gray-12) focus:outline-none"
-                          type="button"
-                          onClick={() =>
-                            onChange(value.filter((c) => c.id !== creator.id))
-                          }
-                        >
-                          <X size="0.8rem" />
-                        </button>
-                      </div>
-                    )}
-                    queryFn={queryUsers}
-                    loadingFallback={Array.from({ length: 5 }).map(
-                      (_, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center px-2 py-1.5 gap-2"
-                        >
-                          <Skeleton className="w-10 h-10 rounded-full" />
-                          <Skeleton className="w-32 h-4 rounded" />
-                        </div>
-                      ),
-                    )}
-                  >
-                    {(options) =>
-                      options.map((creator) => (
-                        <button
-                          onClick={() => onChange([...value, creator])}
-                          key={creator.id}
-                          className="flex items-center px-2 py-1.5 gap-2 hover:bg-gray-100 cursor-pointer w-full rounded-md"
-                        >
-                          <UserProfileImage
-                            src={creator.profile_image}
-                            username={creator.display_name}
-                          />
-                          <div className="flex-1 space-y-0.5 grid text-left">
-                            <h4 className="text-sm font-medium truncate text-(--gray-12) leading-tight">
-                              {creator.display_name}
-                            </h4>
-                            <h6 className="text-xs font-light text-(--gray-10)">
-                              @{creator.username}
-                            </h6>
-                          </div>
-                        </button>
-                      ))
-                    }
-                  </AutoComplete>
+                  <UserAutoComplete value={value} onChange={onChange} />
                 )}
               />
               <InlineError isError={!!form.formState.errors.creators}>
