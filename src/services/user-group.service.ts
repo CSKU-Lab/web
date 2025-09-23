@@ -1,10 +1,10 @@
 import { api } from "~/lib/api";
 import { PaginationMixin } from "./pagination.mixin";
-import type { UserGroup } from "~/types/cms-user-group";
+import type { CMSUserGroup } from "~/types/cms-user-group";
 import type { PaginationRequestParams } from "~/types/pagination";
 
 export type GetUserGroupPaginationParams = Partial<
-  PaginationRequestParams<UserGroup>
+  PaginationRequestParams<CMSUserGroup>
 >;
 
 class UserGroupService {
@@ -26,6 +26,6 @@ class UserGroupService {
 }
 
 export const userGroupService = new (PaginationMixin<
-  UserGroup,
+  CMSUserGroup,
   typeof UserGroupService
 >(UserGroupService))();
