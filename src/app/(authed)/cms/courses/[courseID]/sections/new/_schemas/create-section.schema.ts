@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { fileSchema } from "~/schemas/file.schema";
 import { userDataSchema } from "~/schemas/user-data.schema";
+
+const isServer = typeof window === "undefined";
 
 export const createSectionSchema = z.object({
   name: z.string().min(1, "Section name is required"),
@@ -16,7 +17,7 @@ export const createSectionSchema = z.object({
       message: "Semester is required",
     }),
   bannerImage: z.object({
-    file: fileSchema.nullable(),
+    file: isServer ? z.any() : z.instanceof(File).nullable(),
     preview: z.string().url().nullable(),
   }),
   students_input: z.array(userDataSchema).optional(),

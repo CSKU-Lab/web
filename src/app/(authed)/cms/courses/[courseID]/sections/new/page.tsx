@@ -14,6 +14,15 @@ import {
 } from "./_schemas/create-section.schema";
 import SearchSelect from "~/components/commons/SearchSelect";
 import StudentImport from "./_components/StudentImport";
+import { useMutation } from "@tanstack/react-query";
+import {
+  cmsSectionService,
+  type CreateSectionPayload,
+} from "~/services/cms-section.service";
+import { useParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
+import { cmsSemesterService } from "~/services/cms-semester.service";
 
 function NewSectionPage() {
   const form = useForm({
@@ -77,19 +86,44 @@ function NewSectionPage() {
   };
 
   const querySemesters = async (query: string) => {
-    const MOCK_SEMESTERS = [
-      { id: "1", name: "Spring 2024" },
-      { id: "2", name: "Summer 2024" },
-      { id: "3", name: "Fall 2024" },
-      { id: "4", name: "Winter 2024" },
-    ];
-    return MOCK_SEMESTERS.filter((semester) =>
-      semester.name.toLowerCase().includes(query.toLowerCase()),
-    );
+    const res = await cmsSemesterService.getPagination({
+      search: query,
+      page_size: 10,
+      page: 1,
+    });
+    return res.data;
   };
 
+  const { courseID } = useParams<{ courseID: string }>();
+  const router = useRouter();
+  const createSection = useMutation({
+    mutationFn: (data: CreateSectionSchema) => {
+      const payload: CreateSectionPayload = {
+        name: data.name,
+        course_id: courseID,
+        semester_id: "0199228b-1735-75d9-8fa0-2714d7c3a309",
+        instructors: data.instructors.map((instructor) => instructor.id),
+        students: data.students_input?.map((student) => student.id) ?? null,
+        banner: (data.bannerImage.file as File) ?? null,
+      };
+
+      return cmsSectionService.create(payload);
+    },
+    onSuccess: (sectionID) => {
+      toast.success("Section created successfully!");
+      router.push(`/cms/courses/${courseID}/sections/${sectionID}`);
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.error);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    },
+  });
+
   const handleOnSubmit = (data: CreateSectionSchema) => {
-    console.log(data);
+    createSection.mutate(data);
   };
 
   return (
