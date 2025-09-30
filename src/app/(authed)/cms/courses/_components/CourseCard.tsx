@@ -33,9 +33,9 @@ function CourseCard({ id, name, creators }: Course) {
   return (
     <Link
       href={`/cms/courses/${id}`}
-      className="block rounded-md overflow-hidden bg-white border border-(--gray-4)"
+      className="block rounded-md overflow-hidden bg-white border border-(--gray-4) hover:bg-(--gray-1)"
     >
-      <div className="bg-linear-to-t from-sky-500 to-indigo-500 h-5"></div>
+      <div className="bg-linear-to-bl from-(--accent-color) to-(--accent-color)/40 h-5"></div>
       <div className="p-4 space-y-2 flex-1">
         <div>
           <h6 className="text-xs leading-tight">Name</h6>
