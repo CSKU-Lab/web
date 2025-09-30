@@ -20,8 +20,8 @@ export const createSectionSchema = z.object({
     file: isServer ? z.any() : z.instanceof(File).nullable(),
     preview: z.string().url().nullable(),
   }),
-  students_input: z.array(userDataSchema).optional(),
-  students_upload: z.array(z.string()).optional(),
+  students_input: z.array(userDataSchema),
+  students_upload: z.array(z.string()),
 });
 
 export type CreateSectionSchema = z.infer<typeof createSectionSchema>;

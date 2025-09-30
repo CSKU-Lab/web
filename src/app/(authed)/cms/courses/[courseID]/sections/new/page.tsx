@@ -98,12 +98,16 @@ function NewSectionPage() {
   const router = useRouter();
   const createSection = useMutation({
     mutationFn: (data: CreateSectionSchema) => {
+      const students = data.students_input
+        .map((student) => student.username)
+        .concat(data.students_upload);
+
       const payload: CreateSectionPayload = {
         name: data.name,
         course_id: courseID,
         semester_id: "0199228b-1735-75d9-8fa0-2714d7c3a309",
         instructors: data.instructors.map((instructor) => instructor.id),
-        students: data.students_input?.map((student) => student.id) ?? null,
+        students,
         banner: (data.bannerImage.file as File) ?? null,
       };
 
