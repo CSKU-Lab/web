@@ -1,4 +1,4 @@
-import { NotebookPen, Upload } from "lucide-react";
+import { ArrowLeft, NotebookPen, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/commons/Button";
 import { type UseFormReturn } from "react-hook-form";
@@ -32,6 +32,8 @@ function StudentImport({ form }: Props) {
     form.setValue("students_upload", parsedStudents);
   }, [editorValue, form]);
 
+  const isEditorPhase = importBy === "editor" || editorValue !== "";
+
   return (
     <div>
       {importBy === null && (
@@ -48,6 +50,16 @@ function StudentImport({ form }: Props) {
         </div>
       )}
 
+      {importBy !== null && (
+        <Button
+          variant="transparent"
+          className="mb-4"
+          onClick={() => setImportBy(null)}
+        >
+          <ArrowLeft size="1rem" /> Back
+        </Button>
+      )}
+
       {importBy === "upload" && editorValue === "" && (
         <FileUploader
           onFileSelect={handleOnUpload}
@@ -56,7 +68,7 @@ function StudentImport({ form }: Props) {
           className="flex-1 h-80"
         />
       )}
-      {(importBy === "editor" || editorValue !== "") && (
+      {isEditorPhase && (
         <div className="border rounded-md overflow-hidden h-80 flex-1">
           <CodeMirror
             className="h-full"
