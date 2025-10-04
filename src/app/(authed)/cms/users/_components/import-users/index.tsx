@@ -44,8 +44,6 @@ function ImportUser() {
     }
   };
 
-  console.log("RAW", rawData);
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>

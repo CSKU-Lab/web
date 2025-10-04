@@ -1,9 +1,23 @@
+"use client";
 import { useAtom } from "jotai";
 import { filterAtom } from "./filter.atom";
 import type { IFilter, FilterField } from "~/types/filter";
+import { useEffect, useRef } from "react";
 
-function useFilter() {
+interface Args {
+  initialFilters?: IFilter[];
+}
+
+function useFilter(args?: Args) {
   const [filters, setFilters] = useAtom(filterAtom);
+  const isAlreadySet = useRef(false);
+
+  useEffect(() => {
+    if (!!args && args.initialFilters && !isAlreadySet.current) {
+      setFilters(args.initialFilters);
+      isAlreadySet.current = true;
+    }
+  }, [setFilters, args]);
 
   const add = (field: FilterField) => {
     setFilters([

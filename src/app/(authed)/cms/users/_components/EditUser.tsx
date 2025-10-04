@@ -19,11 +19,11 @@ import { userService } from "~/services/user.service";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import UserRole from "./UserRole";
-import UserType from "./UserType";
+import UserRole from "./AddUser/UserRole";
+import UserType from "./AddUser/UserType";
 import type { User } from "~/types/user";
 import { queryKeys } from "~/queryKeys";
-import UserGroup from "./UserGroup";
+import UserGroup from "./AddUser/UserGroup";
 
 type EditUser = Pick<
   User,

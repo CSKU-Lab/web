@@ -26,7 +26,7 @@ export const PaginationMixin = <
 
   return class Pagination extends Base {
     async getPagination({
-      filter,
+      filters,
       ...paramsRequest
     }: Partial<PaginationRequestParams<Item>>): Promise<
       PaginationResponse<Item>
@@ -38,8 +38,8 @@ export const PaginationMixin = <
         ...paramsRequest,
       };
 
-      if (filter) {
-        filter.forEach((filter) => {
+      if (filters) {
+        filters.forEach((filter) => {
           const field = `${filter.field.value}__${filter.operator}`;
           const value = filter.value;
           searchParams.append(field, value);

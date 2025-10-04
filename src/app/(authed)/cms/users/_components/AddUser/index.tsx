@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type AddUserSchema,
   addUserSchema,
-} from "../_schemas/write-user.schema";
+} from "../../_schemas/write-user.schema";
 import { cn } from "~/lib/utils";
 import { userService } from "~/services/user.service";
 import { useState } from "react";
