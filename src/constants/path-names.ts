@@ -14,6 +14,7 @@ export const pathNames = {
       },
     },
     "/users": { "/": "Users Management" },
+    "/semesters": { "/": "Semester Management" },
     "/groups": {
       "/": "Groups",
       "/[groupID]": {

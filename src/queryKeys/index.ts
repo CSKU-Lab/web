@@ -21,4 +21,11 @@ export const queryKeys = {
       params,
     ],
   },
+  semester: {
+    all: ["semesters"],
+    allWithParams: (params: Record<string, any>) => [
+      ...queryKeys.semester.all,
+      params,
+    ],
+  },
 } as const;

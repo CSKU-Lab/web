@@ -9,8 +9,9 @@ function Input({ isError = false, ...props }: Props) {
     <ShadcnInput
       {...props}
       className={cn(
-        "bg-(--gray-2) shadow-none h-10 focus-visible:ring-0 placeholder:text-(--gray-9)",
-        isError && "border-red-500 focus:border-red-500 focus-visible:border-red-500",
+        "bg-(--gray-2) shadow-none h-9 focus-visible:ring-0 placeholder:text-(--gray-9) text-(--gray-12)",
+        isError &&
+          "border-red-500 focus:border-red-500 focus-visible:border-red-500",
         props.className,
       )}
     />

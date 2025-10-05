@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Onest, Anuphan } from "next/font/google";
-
-import "./globals.css";
 import AppLoading from "~/components/commons/AppLoading";
 import { Suspense } from "react";
 import { ClientEnv } from "~/lib/client-env";
 import { Toaster } from "~/components/ui/sonner";
 import ReactScan from "~/react-scan";
+
+import "./globals.css";
 
 const onest = Onest({
   subsets: ["latin"],
