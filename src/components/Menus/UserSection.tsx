@@ -47,7 +47,7 @@ function UserSection() {
             <h6 className="text-xs font-light text-(--gray-10)">
               @{user.username}
             </h6>
-            <div className="pt-1 space-x-1.5">
+            <div className="pt-1 flex flex-wrap gap-1">
               {user.roles.map((role) => (
                 <UserRole key={role} {...{ role }} />
               ))}
