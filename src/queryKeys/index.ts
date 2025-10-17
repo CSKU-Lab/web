@@ -27,5 +27,10 @@ export const queryKeys = {
       ...queryKeys.semester.all,
       params,
     ],
+    affectedSections: (semesterId: string) => [
+      ...queryKeys.semester.all,
+      semesterId,
+      "affected_sections",
+    ],
   },
 } as const;

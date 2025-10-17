@@ -36,6 +36,20 @@ class SemesterService {
     });
     return res.data;
   }
+
+  async getAffectedSections(id: string) {
+    const res = await api.get<
+      {
+        course_name: string;
+        sections: string[];
+      }[]
+    >(`${this._baseURL}/${id}/affected-sections`);
+    return res.data;
+  }
+
+  async delete(id: string): Promise<void> {
+    await api.delete(`${this._baseURL}/${id}`);
+  }
 }
 
 export const cmsSemesterService = new (PaginationMixin<

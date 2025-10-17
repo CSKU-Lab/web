@@ -9,52 +9,18 @@ import {
   SquareAsterisk,
   Trash,
 } from "lucide-react";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import utc from "dayjs/plugin/utc";
-import { Checkbox } from "~/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { dateFormatter } from "~/lib/formatters/dateFormatter";
 import type { CMSSemester } from "~/types/cms-semester";
-
-dayjs.extend(relativeTime);
-dayjs.extend(utc);
 
 const columnHelper = createColumnHelper<CMSSemester>();
 
 export const columns = [
-  columnHelper.display({
-    id: "select",
-    size: 20,
-    enableSorting: false,
-    enableColumnFilter: false,
-    header: ({ table }) => (
-      <div className="mx-auto">
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="flex justify-center items-center">
-        <Checkbox
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          onCheckedChange={row.getToggleSelectedHandler()}
-          aria-label="Select row"
-        />
-      </div>
-    ),
-  }),
   columnHelper.accessor("name", {
     id: "name",
     enableSorting: true,
@@ -87,7 +53,7 @@ export const columns = [
     ),
     cell: ({ cell }) => {
       const date = cell.getValue();
-      return dayjs(date).format("DD MMM YYYY");
+      return dateFormatter(date);
     },
   }),
   columnHelper.display({

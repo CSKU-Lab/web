@@ -7,7 +7,6 @@ import SearchInput from "~/components/commons/SearchInput";
 import useTable from "~/hooks/useTable";
 import type { IFilter } from "~/types/filter";
 import { columns } from "./_columns";
-import DeleteManySemestersButton from "./_components/DeleteManySemestersButton";
 import AddSemester from "./_components/AddSemester";
 import useTableState from "~/hooks/useTableState";
 import useSemesterPagination from "./_hooks/useSemesterPagination";
@@ -24,10 +23,11 @@ function SemesterManagementPage() {
 
   const memoizedColumns = useMemo(() => columns, []);
 
-  const [editSemester, setEditSemester] = useState<CMSSemester | null>(null);
-  const [deleteSemester, setDeleteSemester] = useState<CMSSemester | null>(
+  const [editSemesterRow, setEditSemesterRow] = useState<CMSSemester | null>(
     null,
   );
+  const [deleteSemesterRow, setDeleteSemesterRow] =
+    useState<CMSSemester | null>(null);
 
   const {
     data: semesterPagination,
@@ -37,6 +37,7 @@ function SemesterManagementPage() {
   } = useSemesterPagination({
     page: pagination.pageIndex + 1,
     page_size: pagination.pageSize,
+    filters,
   });
 
   const table = useTable({
@@ -56,7 +57,7 @@ function SemesterManagementPage() {
             (semester) => semester.id === id,
           );
           if (semester) {
-            setEditSemester(semester);
+            setEditSemesterRow(semester);
           }
         },
         deleteUser: (id: string) => {
@@ -64,28 +65,25 @@ function SemesterManagementPage() {
             (semester) => semester.id === id,
           );
           if (semester) {
-            setDeleteSemester(semester);
+            setDeleteSemesterRow(semester);
           }
         },
       },
     },
   });
 
-  const isRowSelected =
-    table.getIsSomeRowsSelected() || table.getIsAllRowsSelected();
-
   return (
     <>
-      {editSemester !== null && (
+      {editSemesterRow !== null && (
         <EditSemester
-          semester={editSemester}
-          onClose={() => setEditSemester(null)}
+          semester={editSemesterRow}
+          onClose={() => setEditSemesterRow(null)}
         />
       )}
-      {deleteSemester !== null && (
+      {deleteSemesterRow !== null && (
         <DeleteSemeseterDialog
-          semester={deleteSemester}
-          onClose={() => setDeleteSemester(null)}
+          semester={deleteSemesterRow}
+          onClose={() => setDeleteSemesterRow(null)}
         />
       )}
       <div>
@@ -94,9 +92,6 @@ function SemesterManagementPage() {
         </h5>
 
         <div className="flex flex-wrap md:justify-end items-center gap-2 mt-4">
-          {isRowSelected && (
-            <DeleteManySemestersButton onConfirm={() => {}} semesters={[]} />
-          )}
           <SearchInput
             placeholder="Search semesters..."
             className="h-full w-full md:w-fit"
