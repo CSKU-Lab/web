@@ -13,6 +13,7 @@ import useSemesterPagination from "./_hooks/useSemesterPagination";
 import type { CMSSemester } from "~/types/cms-semester";
 import DeleteSemeseterDialog from "./_components/DeleteSemesterDialog";
 import EditSemester from "./_components/EditSemester";
+import useInputDebounce from "~/hooks/useInputDebounce";
 
 function SemesterManagementPage() {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -29,6 +30,8 @@ function SemesterManagementPage() {
   const [deleteSemesterRow, setDeleteSemesterRow] =
     useState<CMSSemester | null>(null);
 
+  const debouncedSearch = useInputDebounce(globalFilter, 300);
+
   const {
     data: semesterPagination,
     isError,
@@ -37,6 +40,7 @@ function SemesterManagementPage() {
   } = useSemesterPagination({
     page: pagination.pageIndex + 1,
     page_size: pagination.pageSize,
+    search: debouncedSearch,
     filters,
   });
 
@@ -47,6 +51,7 @@ function SemesterManagementPage() {
     state: {
       rowSelection,
       pagination,
+      globalFilter,
     },
     onPaginationChange: setPagination,
     onRowSelectionChange: setRowSelection,
