@@ -8,7 +8,7 @@ import useSectionPagination from "./_hooks/useSectionPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import {
   FallbackSectionCard,
-  SectionCard,
+  CMSSectionCard,
 } from "~/components/commons/SectionCard";
 import { Skeleton } from "~/components/ui/skeleton";
 import type { IFilter } from "~/types/filter";
@@ -72,8 +72,9 @@ function CourseMainPage() {
               <hr className="my-2" />
               <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max mt-4">
                 {data.sections.map((section) => (
-                  <SectionCard
+                  <CMSSectionCard
                     key={section.id}
+                    id={section.id}
                     name={section.name}
                     instructors={section.instructors.map(
                       (instructor) => instructor.display_name,
