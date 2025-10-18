@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
 } from "~/components/commons/Popover";
 import { cn } from "~/lib/utils";
+import type { DayPicker } from "react-day-picker";
 
 interface Props {
   value: Date | undefined;
@@ -16,7 +17,12 @@ interface Props {
   isError?: boolean;
 }
 
-export function DatePicker({ value, onChange, isError }: Props) {
+export function DatePicker({
+  value,
+  onChange,
+  isError,
+  ...dayPickerProps
+}: Props & React.ComponentProps<typeof DayPicker>) {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -37,6 +43,7 @@ export function DatePicker({ value, onChange, isError }: Props) {
         align="start"
       >
         <Calendar
+          {...dayPickerProps}
           className="w-full"
           mode="single"
           selected={value}

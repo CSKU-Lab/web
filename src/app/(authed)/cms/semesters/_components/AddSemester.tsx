@@ -12,7 +12,7 @@ import Input from "~/components/commons/Input";
 import Label from "~/components/commons/Label";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryKeys } from "~/queryKeys";
@@ -24,6 +24,7 @@ import {
 import { cmsSemesterService } from "~/services/cms-semester.service";
 import { DatePicker } from "~/components/commons/DatePicker";
 import SemesterType from "./SemesterType";
+import dayjs from "dayjs";
 
 const AddSemester = () => {
   const {
@@ -70,6 +71,14 @@ const AddSemester = () => {
       setIsPending(false);
     }
   };
+
+  const startSemesterMonth = useMemo(() => {
+    return new Date();
+  }, []);
+
+  const endSemesterMonth = useMemo(() => {
+    return dayjs().add(10, "year").toDate();
+  }, []);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -123,6 +132,8 @@ const AddSemester = () => {
                     <DatePicker
                       value={value}
                       onChange={onChange}
+                      startMonth={startSemesterMonth}
+                      endMonth={endSemesterMonth}
                       isError={isError("started_date")}
                     />
                   )}
