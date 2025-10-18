@@ -15,6 +15,10 @@ const nextConfig = {
       {
         hostname: "yt3.ggpht.com",
       },
+      {
+        hostname: "localhost",
+        port: "9000",
+      },
     ],
   },
   // Optionally, add any other Next.js config below
