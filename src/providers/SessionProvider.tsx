@@ -44,15 +44,6 @@ function SessionProvider({ user, children }: Props) {
   }, [router]);
 
   useEffect(() => {
-    setInterval(
-      () => {
-        refreshToken();
-      },
-      3 * 60 * 1000,
-    );
-  }, [refreshToken]);
-
-  useEffect(() => {
     return () => {
       refreshToken();
     };
