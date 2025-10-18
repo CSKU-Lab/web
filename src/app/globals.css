@@ -72,8 +72,7 @@
 	::backdrop,
 	::file-selector-button {
 		border-color: var(--color-gray-200, currentcolor);
-		text-box-trim: trim-start;
-		text-box-edge: cap alphabetic
+		text-box-trim: trim-both;
 	}
 
 	button {
