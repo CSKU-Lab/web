@@ -1,11 +1,6 @@
 import { api } from "~/lib/api";
 import { PaginationMixin } from "./pagination.mixin";
-import type { PaginationRequestParams } from "~/types/pagination";
 import type { CMSSection } from "~/types/cms-section";
-
-export type GetSectionPaginationParams = Partial<
-  PaginationRequestParams<CMSSection>
->;
 
 export type CreateSectionPayload = {
   name: string;
@@ -35,5 +30,10 @@ class SectionService {
 
 export const cmsSectionService = new (PaginationMixin<
   CMSSection,
-  typeof SectionService
+  typeof SectionService,
+  "started_date"
 >(SectionService))();
+
+export type GetSectionPaginationParams = Parameters<
+  typeof cmsSectionService.getPagination
+>[0];

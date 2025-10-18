@@ -14,6 +14,9 @@ export const queryKeys = {
     ],
     getById: (courseId: string) => [...queryKeys.course.all, courseId],
   },
+  section: {
+    all: ["sections"],
+  },
   user_group: {
     all: ["user_groups"],
     allWithParams: (params: Record<string, any>) => [

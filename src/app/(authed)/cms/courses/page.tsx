@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import CourseCard from "~/app/(authed)/cms/courses/_components/CourseCard";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -15,6 +15,7 @@ import CourseVisibility from "./_components/CourseVisibility";
 import type { VisibilityKey } from "~/types/visibilities";
 import { Button } from "~/components/commons/Button";
 import { useRouter } from "next/navigation";
+import useOnElementAppear from "~/hooks/useOnElementAppear";
 
 function CMSCoursePage() {
   const [search, setSearch] = useState("");
@@ -43,34 +44,12 @@ function CMSCoursePage() {
 
   const isSearchNoData = search.length > 0 && isNoData;
 
-  const bottomDivRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!bottomDivRef.current) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !isFetching) {
-            fetchNextPage();
-          }
-        });
-      },
-      {
-        threshold: 0.3,
-      },
-    );
-
-    if (!hasNextPage) {
-      observer.disconnect();
-      return;
-    }
-
-    observer.observe(bottomDivRef.current);
-
-    return () => observer.disconnect();
-  }, [isFetching, fetchNextPage, hasNextPage]);
-
   const router = useRouter();
+
+  const bottomDivRef = useOnElementAppear({
+    onAppear: () => fetchNextPage(),
+    enabled: hasNextPage,
+  });
 
   return (
     <div className="@container flex flex-col h-full">

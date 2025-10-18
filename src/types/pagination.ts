@@ -9,11 +9,14 @@ export interface PaginationResponse<T> {
   data: T[];
 }
 
-export interface PaginationRequestParams<T extends Record<string, any>> {
+export interface PaginationRequestParams<
+  T extends Record<string, any>,
+  CustomSortByKey = never,
+> {
   page: number;
   page_size: number;
   search: string;
-  sort_by: keyof T | "";
+  sort_by: [CustomSortByKey] extends [never] ? keyof T | "" : CustomSortByKey;
   sort_order: string;
   filters?: IFilter[];
 }

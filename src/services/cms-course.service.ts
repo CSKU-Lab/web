@@ -1,12 +1,7 @@
 import { api } from "~/lib/api";
 import type { Course, CreateCourse } from "~/types/cms-course";
-import type { PaginationRequestParams } from "~/types/pagination";
 import type { VisibilityKey } from "~/types/visibilities";
 import { PaginationMixin } from "./pagination.mixin";
-
-export type GetCoursePaginationParams = Partial<
-  PaginationRequestParams<Course>
-> & { show: VisibilityKey };
 
 class CMSCourseService {
   _baseURL = "/admin/courses";
@@ -42,3 +37,7 @@ export const cmsCourseService = new (PaginationMixin<
   Course,
   typeof CMSCourseService
 >(CMSCourseService, { show: "all" }))();
+
+export type GetCoursePaginationParams = Parameters<
+  typeof cmsCourseService.getPagination
+>[0] & { show?: VisibilityKey };

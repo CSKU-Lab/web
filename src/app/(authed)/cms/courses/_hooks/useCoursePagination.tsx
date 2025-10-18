@@ -4,10 +4,9 @@ import {
   cmsCourseService,
   type GetCoursePaginationParams,
 } from "~/services/cms-course.service";
-import type { Course } from "~/types/cms-course";
 
 export default function useCoursePagination(args: GetCoursePaginationParams) {
-  return useInfinitePagination<Course>({
+  return useInfinitePagination({
     queryKey: queryKeys.course.allWithParams(args),
     queryFn: ({ pageParam }) =>
       cmsCourseService.getPagination({

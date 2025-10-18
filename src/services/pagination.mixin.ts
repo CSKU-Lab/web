@@ -13,6 +13,7 @@ type Constructor<
 export const PaginationMixin = <
   Item extends Record<string, any>,
   T extends Constructor,
+  CustomSortByKeys = never,
 >(
   Base: T,
   extraParams?: Record<string, string | number>,
@@ -28,7 +29,7 @@ export const PaginationMixin = <
     async getPagination({
       filters,
       ...paramsRequest
-    }: Partial<PaginationRequestParams<Item>>): Promise<
+    }: Partial<PaginationRequestParams<Item, CustomSortByKeys>>): Promise<
       PaginationResponse<Item>
     > {
       const searchParams = new URLSearchParams();
