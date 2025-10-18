@@ -16,6 +16,10 @@ export const queryKeys = {
   },
   section: {
     all: ["sections"],
+    allWithParams: (params: Record<string, any>) => [
+      ...queryKeys.section.all,
+      params,
+    ],
   },
   user_group: {
     all: ["user_groups"],

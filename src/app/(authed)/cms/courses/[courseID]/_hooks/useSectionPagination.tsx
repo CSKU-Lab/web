@@ -7,7 +7,7 @@ import {
 
 function useSectionPagination(args: GetSectionPaginationParams) {
   return useInfinitePagination({
-    queryKey: queryKeys.section.all,
+    queryKey: queryKeys.section.allWithParams(args),
     queryFn: ({ pageParam }) =>
       cmsSectionService.getPagination({ ...args, page: pageParam }),
   });

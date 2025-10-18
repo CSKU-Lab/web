@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { dateFormatter } from "~/lib/formatters/dateFormatter";
+import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import type { CMSSemester } from "~/types/cms-semester";
 
 const columnHelper = createColumnHelper<CMSSemester>();
@@ -40,7 +41,7 @@ export const columns = [
     ),
     cell: (cell) => {
       const value = cell.getValue();
-      return value.charAt(0).toUpperCase() + value.slice(1);
+      return titleFormatter(value);
     },
   }),
   columnHelper.accessor("started_date", {
