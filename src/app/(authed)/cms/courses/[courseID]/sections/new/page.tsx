@@ -105,7 +105,7 @@ function NewSectionPage() {
       const payload: CreateSectionPayload = {
         name: data.name,
         course_id: courseID,
-        semester_id: "0199228b-1735-75d9-8fa0-2714d7c3a309",
+        semester_id: data.semester.id,
         instructors: data.instructors.map((instructor) => instructor.id),
         students,
         banner: (data.bannerImage.file as File) ?? null,
