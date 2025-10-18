@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "~/components/commons/Button";
 import useResolvePath from "~/hooks/useResolvePath";
-import useSectionPagination from "./_hooks/useSectionPagination";
+import useSectionPagination from "../_hooks/useSectionPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import {
   FallbackSectionCard,

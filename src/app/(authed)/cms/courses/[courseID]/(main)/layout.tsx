@@ -1,9 +1,9 @@
 "use client"
 import type { ChildrenProps } from "~/types/children-props";
-import useGetCourse from "./_hooks/useGetCourse";
+import useGetCourse from "../_hooks/useGetCourse";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
-import NavigationMenus from "../../_components/NavigationMenus";
+import NavigationMenus from "../../../_components/NavigationMenus";
 import { useParams } from "next/navigation";
 
 function CourseLayout({ children }: ChildrenProps) {
