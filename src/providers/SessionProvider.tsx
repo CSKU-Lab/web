@@ -44,9 +44,7 @@ function SessionProvider({ user, children }: Props) {
   }, [router]);
 
   useEffect(() => {
-    return () => {
-      refreshToken();
-    };
+    refreshToken();
   }, [pathname, searchParams, refreshToken]);
 
   return (
