@@ -28,3 +28,8 @@ export type UserGroup = { id: string; name: string };
 export interface CreateUser extends Omit<User, "id"> {
   password?: string;
 }
+
+export type UserDetail = Pick<
+  User,
+  "id" | "username" | "display_name" | "profile_image"
+>;
