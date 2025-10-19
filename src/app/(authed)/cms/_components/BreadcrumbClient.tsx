@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { pathNames } from "~/constants/path-names";
+import { cn } from "~/lib/utils";
 import type { ClassNameProps } from "~/types/classname-props";
 
 interface PathName {
@@ -64,7 +65,7 @@ function BreadcrumbClient({ className }: ClassNameProps) {
     });
 
   return (
-    <Breadcrumb {...{ className }}>
+    <Breadcrumb className={cn("transition-all", className)}>
       <BreadcrumbList>
         {renderPaths.map(({ label, href }, index) => {
           if (renderPaths.length > 3) {

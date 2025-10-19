@@ -14,8 +14,8 @@ async function Layout({ children }: ChildrenProps) {
         <h6 className="text-(--gray-11) text-xs font-light py-2">CMS</h6>
         <SidebarMenus />
       </CoreLayoutSidebar>
-      <CoreLayoutContent className="pl-10 py-4 pr-4 min-h-0 gap-2 w-full max-w-[1920px] mx-auto">
-        <BreadcrumbClient />
+      <CoreLayoutContent>
+        <BreadcrumbClient className="pl-4 mt-4" />
         {children}
       </CoreLayoutContent>
     </CoreLayout>

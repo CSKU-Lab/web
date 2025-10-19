@@ -23,7 +23,7 @@ function UserSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.25 }}
-          className="m-4 p-2 flex items-center gap-3 hover:bg-(--gray-4) rounded-lg"
+          className="p-2 flex items-center gap-3 hover:bg-(--gray-4) rounded-lg"
         >
           <UserProfileImage src={user.profileImage} username={user.username} />
           <div className="flex-1 space-y-0.5 grid text-left">

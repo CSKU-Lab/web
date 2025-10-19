@@ -66,7 +66,7 @@ function DataTable({
   return (
     <div
       className={cn(
-        "rounded-md border border-(--gray-4) overflow-hidden mt-4 h-full flex flex-col relative",
+        "border border-(--gray-4) overflow-hidden mt-4 h-full flex flex-col relative 2xl:rounded-md border-l-0 2xl:border-l",
         className,
       )}
     >

@@ -8,13 +8,12 @@ import { cn } from "~/lib/utils";
 interface Props {
   children: ReactNode;
   homePath?: string;
+  className?: string;
 }
 
-function CoreLayout({ children }: Props) {
+function CoreLayout({ children, className }: Props) {
   return (
-    <div className="h-screen flex flex-col bg-white">
-      <div className="flex min-h-0 h-full">{children}</div>
-    </div>
+    <div className={cn("h-screen flex bg-white", className)}>{children}</div>
   );
 }
 
@@ -24,8 +23,15 @@ interface ContentProps extends ChildrenProps {
 
 export function CoreLayoutContent({ className, children }: ContentProps) {
   return (
-    <div className={cn("flex-1 overflow-auto", className)}>
-      <div className="flex-1 transition-all flex flex-col">{children}</div>
+    <div className="flex-1 transition-all overflow-auto min-h-0">
+      <div
+        className={cn(
+          "max-w-[1920px] mx-auto h-full min-h-0 flex flex-col",
+          className,
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 }

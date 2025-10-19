@@ -13,6 +13,12 @@ export const pathNames = {
         },
       },
     },
+    "/materials": {
+      "/": "Materials",
+      "/[sectionID]": {
+        "/": "Details",
+      },
+    },
     "/users": { "/": "Users Management" },
     "/semesters": { "/": "Semester Management" },
     "/groups": {

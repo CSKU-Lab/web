@@ -1,6 +1,6 @@
 "use client";
 
-import { Book, CalendarDays, UserRound } from "lucide-react";
+import { Book, CalendarDays, Library, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment, useMemo } from "react";
@@ -27,6 +27,11 @@ function SidebarMenus() {
             icon: () => <Book size="1rem" />,
             label: "Courses",
             href: "/cms/courses",
+          },
+          {
+            icon: () => <Library size="1rem" />,
+            label: "Materials",
+            href: "/cms/materials",
           },
         ],
       },

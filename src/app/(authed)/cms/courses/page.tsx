@@ -16,6 +16,7 @@ import type { VisibilityKey } from "~/types/visibilities";
 import { Button } from "~/components/commons/Button";
 import { useRouter } from "next/navigation";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
+import PageTitle from "~/components/commons/PageTitle";
 
 function CMSCoursePage() {
   const [search, setSearch] = useState("");
@@ -52,57 +53,59 @@ function CMSCoursePage() {
   });
 
   return (
-    <div className="@container flex flex-col h-full">
-      <h3 className="text-3xl font-medium">Courses</h3>
-      <div className="flex justify-end items-center gap-2">
-        <SearchInput
-          value={search}
-          onChange={setSearch}
-          placeholder="Search courses..."
-          className=""
-        />
-        <CourseVisibility selected={visibility} onChange={setVisibility} />
-        <Button
-          onClick={() => router.push("/cms/courses/new")}
-          className="my-4 shrink-0 px-3 py-1.5"
-        >
-          <Plus size="1rem" />
-          New course
-        </Button>
-      </div>
-      <Error
-        isError={isError && !isFetching}
-        fallback={
-          <ErrorFallback
-            icon={<ServerCrash size="2rem" />}
-            onRetry={refetch}
-            title="Cannot get the courses"
-            message="There was an error to get the courses. Please try again later or report issue"
+    <>
+      <PageTitle>Courses</PageTitle>
+      <div className="@container flex flex-col h-full px-4">
+        <div className="flex justify-end items-center gap-2">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search courses..."
+            className=""
           />
-        }
-      >
-        {isNoData || isSearchNoData ? (
-          <NoDataAvailable />
-        ) : (
-          <>
-            <div className="mt-4 grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @6xl:grid-cols-4 gap-4 auto-rows-max">
-              {coursePagination.pages.map((page) =>
-                page.data.map((course) => (
-                  <CourseCard key={course.name} {...course} />
-                )),
-              )}
-              <Loading
-                isLoading={isFetching}
-                fallback={Array.from({ length: 12 }).map((_, index) => (
-                  <Skeleton key={index} className="h-40" />
-                ))}
-              />
-            </div>
-            <div ref={bottomDivRef} className="h-20" />
-          </>
-        )}
-      </Error>
-    </div>
+          <CourseVisibility selected={visibility} onChange={setVisibility} />
+          <Button
+            onClick={() => router.push("/cms/courses/new")}
+            className="my-4 shrink-0 px-3 py-1.5"
+          >
+            <Plus size="1rem" />
+            New course
+          </Button>
+        </div>
+        <Error
+          isError={isError && !isFetching}
+          fallback={
+            <ErrorFallback
+              icon={<ServerCrash size="2rem" />}
+              onRetry={refetch}
+              title="Cannot get the courses"
+              message="There was an error to get the courses. Please try again later or report issue"
+            />
+          }
+        >
+          {isNoData || isSearchNoData ? (
+            <NoDataAvailable />
+          ) : (
+            <>
+              <div className="mt-4 grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @6xl:grid-cols-4 gap-4 auto-rows-max">
+                {coursePagination.pages.map((page) =>
+                  page.data.map((course) => (
+                    <CourseCard key={course.name} {...course} />
+                  )),
+                )}
+                <Loading
+                  isLoading={isFetching}
+                  fallback={Array.from({ length: 12 }).map((_, index) => (
+                    <Skeleton key={index} className="h-40" />
+                  ))}
+                />
+              </div>
+              <div ref={bottomDivRef} className="h-20" />
+            </>
+          )}
+        </Error>
+      </div>
+    </>
   );
 }
 

@@ -18,14 +18,13 @@ function SidebarWrapper({ children }: Props) {
     setSidebar((prev) => ({
       ...prev,
       isCollapse: !prev.isCollapse,
-      width: prev.isCollapse ? SIDEBAR_WIDTH : 0,
     }));
   };
 
   const ToggleButton = () => (
     <button
       onClick={toggleSidebar}
-      className="fixed top-4 left-4 text-(--gray-10) focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 mb-4 hover:text-(--accent-color) rounded-md z-50"
+      className="text-(--gray-10) focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 mb-4 hover:text-(--accent-color) rounded-md z-50 w-fit"
     >
       <PanelLeft size="1.25rem" />
     </button>
@@ -33,20 +32,20 @@ function SidebarWrapper({ children }: Props) {
 
   return (
     <>
-      <ToggleButton />
       <AnimatePresence>
         <motion.nav
-          initial={{ width }}
-          animate={{ width }}
-          className="top-0 bottom-0 flex flex-col justify-between border-r border-(--gray-4) bg-(--gray-2)"
+          initial={{ width: isCollapse ? 54 : SIDEBAR_WIDTH }}
+          animate={{ width: isCollapse ? 54 : SIDEBAR_WIDTH }}
+          className="flex flex-col justify-between border-r border-(--gray-4) bg-(--gray-2) p-4"
         >
+          <ToggleButton />
           {!isCollapse && (
             <>
               <motion.section
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.25 }}
-                className="px-4 flex-1 overflow-y-auto pt-12 pb-10"
+                className="flex-1 overflow-y-auto pb-10"
               >
                 {children}
               </motion.section>

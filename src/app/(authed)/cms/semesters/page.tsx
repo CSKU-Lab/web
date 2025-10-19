@@ -14,6 +14,7 @@ import type { CMSSemester } from "~/types/cms-semester";
 import DeleteSemeseterDialog from "./_components/DeleteSemesterDialog";
 import EditSemester from "./_components/EditSemester";
 import useInputDebounce from "~/hooks/useInputDebounce";
+import PageTitle from "~/components/commons/PageTitle";
 
 function SemesterManagementPage() {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -91,41 +92,37 @@ function SemesterManagementPage() {
           onClose={() => setDeleteSemesterRow(null)}
         />
       )}
-      <div>
-        <h5 className="text-(--gray-12) text-2xl font-medium">
-          Semesters Management
-        </h5>
+      <PageTitle>Semester Management</PageTitle>
+      <div className="flex flex-wrap md:justify-end items-center gap-2 mt-4 px-4">
+        <SearchInput
+          placeholder="Search semesters..."
+          className="h-full w-full md:w-fit"
+          value={globalFilter}
+          onChange={setGlobalFilter}
+        />
+        <AddSemester />
+      </div>
 
-        <div className="flex flex-wrap md:justify-end items-center gap-2 mt-4">
-          <SearchInput
-            placeholder="Search semesters..."
-            className="h-full w-full md:w-fit"
-            value={globalFilter}
-            onChange={setGlobalFilter}
-          />
-          <AddSemester />
-        </div>
-
+      <div className="flex justify-end px-4 mt-2">
         <Filter
           value={filters}
           onChange={setFilters}
-          className="mt-2"
           fields={[
             { display: "Name", value: "name" },
             { display: "Type", value: "type" },
             { display: "Started Date", value: "started_date" },
           ]}
         />
-
-        <DataTable
-          table={table}
-          isError={isError && !isFetching}
-          isLoading={isFetching}
-          onRetry={refetch}
-          search={globalFilter}
-          totalData={semesterPagination.pagination.total_rows}
-        />
       </div>
+
+      <DataTable
+        table={table}
+        isError={isError && !isFetching}
+        isLoading={isFetching}
+        onRetry={refetch}
+        search={globalFilter}
+        totalData={semesterPagination.pagination.total_rows}
+      />
     </>
   );
 }

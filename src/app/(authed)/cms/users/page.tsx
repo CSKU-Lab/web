@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { userService } from "~/services/user.service";
 import { queryKeys } from "~/queryKeys";
 import { mapUserColumnID } from "./_utils/mapColumnID";
+import PageTitle from "~/components/commons/PageTitle";
 
 function UsersManagementPage() {
   const {
@@ -137,68 +138,69 @@ function UsersManagementPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
-      <h4 className="text-(--gray-12) text-2xl font-medium">
-        Users Management
-      </h4>
+    <>
+      <PageTitle>Users Management</PageTitle>
+      <div className="flex-1 flex flex-col">
+        {!!editUser && (
+          <EditUser user={editUser} onClose={() => setEditUser(null)} />
+        )}
 
-      {!!editUser && (
-        <EditUser user={editUser} onClose={() => setEditUser(null)} />
-      )}
-
-      {!!deleteUser && (
-        <DeleteUserDialog
-          user={deleteUser}
-          onClose={() => setDeleteUser(null)}
-        />
-      )}
-
-      <div className="flex flex-wrap md:justify-end items-center gap-2 mt-4">
-        {isRowSelected && (
-          <DeleteManyUsersButton
-            onConfirm={handleOnDeleteManyUsers}
-            users={userPagination.data
-              .filter((user) => Object.keys(rowSelection).includes(user.id))
-              .map(({ display_name, username, profile_image }) => ({
-                display_name,
-                username,
-                profile_image,
-              }))}
+        {!!deleteUser && (
+          <DeleteUserDialog
+            user={deleteUser}
+            onClose={() => setDeleteUser(null)}
           />
         )}
-        <SearchInput
-          placeholder="Search users..."
-          className="h-full w-full md:w-fit"
-          value={search}
-          onChange={setSearch}
+
+        <div className="flex flex-wrap md:justify-end items-center gap-2 mt-4 px-4">
+          {isRowSelected && (
+            <DeleteManyUsersButton
+              onConfirm={handleOnDeleteManyUsers}
+              users={userPagination.data
+                .filter((user) => Object.keys(rowSelection).includes(user.id))
+                .map(({ display_name, username, profile_image }) => ({
+                  display_name,
+                  username,
+                  profile_image,
+                }))}
+            />
+          )}
+          <SearchInput
+            placeholder="Search users..."
+            className="h-full w-full md:w-fit"
+            value={search}
+            onChange={setSearch}
+          />
+          <FilterColumns
+            columns={table
+              .getAllColumns()
+              .filter((column) => column.getCanFilter())
+              .map((col) => ({ ...col, id: mapUserColumnID(col.id) }))}
+          />
+          <GroupManagementDialog />
+          <AddUser />
+          <ImportUser />
+        </div>
+
+        <div className="flex justify-end px-4">
+          <Filters
+            value={filters}
+            onChange={setFilters}
+            className="mt-2"
+            fields={filterFields}
+          />
+        </div>
+
+        <DataTable
+          table={table}
+          isLoading={isFetching}
+          search={search}
+          isError={isError && !isFetching}
+          onRetry={refetch}
+          totalData={userPagination.pagination.total_rows}
         />
-        <FilterColumns
-          columns={table
-            .getAllColumns()
-            .filter((column) => column.getCanFilter())
-            .map((col) => ({ ...col, id: mapUserColumnID(col.id) }))}
-        />
-        <GroupManagementDialog />
-        <AddUser />
-        <ImportUser />
       </div>
-
-      <Filters
-        value={filters}
-        onChange={setFilters}
-        className="mt-2"
-        fields={filterFields}
-      />
-
-      <DataTable
-        table={table}
-        isLoading={isFetching}
-        search={search}
-        isError={isError && !isFetching}
-        onRetry={refetch}
-        totalData={userPagination.pagination.total_rows}
-      />
-    </div>
+    </>
   );
 }
 

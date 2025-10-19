@@ -52,7 +52,7 @@ function CourseMainPage() {
   });
 
   return (
-    <div className="@container">
+    <div className="@container px-4">
       <div className="flex justify-end items-center gap-2">
         <Button onClick={handleOnAddSection}>
           <Plus size="1rem" /> Add Section

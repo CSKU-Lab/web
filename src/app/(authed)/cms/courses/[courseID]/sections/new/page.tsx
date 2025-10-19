@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { cmsSemesterService } from "~/services/cms-semester.service";
 import { PreviewCMSSectionCard } from "~/components/commons/SectionCard";
+import PageTitle from "~/components/commons/PageTitle";
 
 function NewSectionPage() {
   const form = useForm({
@@ -132,7 +133,7 @@ function NewSectionPage() {
 
   return (
     <>
-      <h2 className="text-xl font-medium">New Section</h2>
+      <PageTitle>New Section</PageTitle>
       <form onSubmit={form.handleSubmit(handleOnSubmit)}>
         <div className="relative mt-4">
           <div className="absolute left-4.5 w-1 h-130 bg-(--gray-5)"></div>
