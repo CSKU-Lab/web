@@ -5,6 +5,9 @@
 @import "@radix-ui/colors/lime";
 @import "@radix-ui/colors/amber";
 @import "@radix-ui/colors/blue";
+@import '../styles/_variables.scss';
+@import '../styles/_keyframe-animations.scss';
+
 @source "../node_modules/@ferrucc-io/emoji-picker";
 
 @plugin "@tailwindcss/typography";

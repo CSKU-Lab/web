@@ -1,0 +1,276 @@
+{
+	"type": "doc",
+	"content": [
+		{
+			"type": "heading",
+			"attrs": {
+				"textAlign": null,
+				"level": 2
+			},
+			"content": [
+				{
+					"type": "text",
+					"text": "The "
+				},
+				{
+					"type": "text",
+					"marks": [
+						{
+							"type": "code"
+						}
+					],
+					"text": "for"
+				},
+				{
+					"type": "text",
+					"text": " Loop in Go"
+				}
+			]
+		},
+		{
+			"type": "paragraph",
+			"attrs": {
+				"textAlign": null
+			}
+		},
+		{
+			"type": "paragraph",
+			"attrs": {
+				"textAlign": null
+			},
+			"content": [
+				{
+					"type": "text",
+					"text": "In Go, the "
+				},
+				{
+					"type": "text",
+					"marks": [
+						{
+							"type": "code"
+						}
+					],
+					"text": "for"
+				},
+				{
+					"type": "text",
+					"text": " loop is the "
+				},
+				{
+					"type": "text",
+					"marks": [
+						{
+							"type": "bold"
+						}
+					],
+					"text": "only looping construct"
+				},
+				{
+					"type": "text",
+					"text": " available. It's versatile and can be used in several ways to achieve the functionality of "
+				},
+				{
+					"type": "text",
+					"marks": [
+						{
+							"type": "code"
+						}
+					],
+					"text": "for"
+				},
+				{
+					"type": "text",
+					"text": ", "
+				},
+				{
+					"type": "text",
+					"marks": [
+						{
+							"type": "code"
+						}
+					],
+					"text": "while"
+				},
+				{
+					"type": "text",
+					"text": ", and "
+				},
+				{
+					"type": "text",
+					"marks": [
+						{
+							"type": "code"
+						}
+					],
+					"text": "do-while"
+				},
+				{
+					"type": "text",
+					"text": " loops found in other languages."
+				}
+			]
+		},
+		{
+			"type": "horizontalRule"
+		},
+		{
+			"type": "heading",
+			"attrs": {
+				"textAlign": null,
+				"level": 3
+			},
+			"content": [
+				{
+					"type": "text",
+					"text": "1. The Complete "
+				},
+				{
+					"type": "text",
+					"marks": [
+						{
+							"type": "code"
+						}
+					],
+					"text": "for"
+				},
+				{
+					"type": "text",
+					"text": " Loop (C-style)"
+				}
+			]
+		},
+		{
+			"type": "paragraph",
+			"attrs": {
+				"textAlign": null
+			}
+		},
+		{
+			"type": "paragraph",
+			"attrs": {
+				"textAlign": null
+			},
+			"content": [
+				{
+					"type": "text",
+					"text": "This is the most traditional form, similar to "
+				},
+				{
+					"type": "text",
+					"marks": [
+						{
+							"type": "code"
+						}
+					],
+					"text": "for"
+				},
+				{
+					"type": "text",
+					"text": " loops in C, Java, or JavaScript. It consists of three components separated by semicolons:"
+				}
+			]
+		},
+		{
+			"type": "bulletList",
+			"content": [
+				{
+					"type": "listItem",
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"textAlign": null
+							},
+							"content": [
+								{
+									"type": "text",
+									"marks": [
+										{
+											"type": "bold"
+										}
+									],
+									"text": "Init statement:"
+								},
+								{
+									"type": "text",
+									"text": " Executed once before the first iteration. Often used to declare and initialize a loop counter."
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "listItem",
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"textAlign": null
+							},
+							"content": [
+								{
+									"type": "text",
+									"marks": [
+										{
+											"type": "bold"
+										}
+									],
+									"text": "Condition expression:"
+								},
+								{
+									"type": "text",
+									"text": " Evaluated before every iteration. The loop continues as long as this condition is "
+								},
+								{
+									"type": "text",
+									"marks": [
+										{
+											"type": "code"
+										}
+									],
+									"text": "true"
+								},
+								{
+									"type": "text",
+									"text": "."
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "listItem",
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"textAlign": null
+							},
+							"content": [
+								{
+									"type": "text",
+									"marks": [
+										{
+											"type": "bold"
+										}
+									],
+									"text": "Post statement:"
+								},
+								{
+									"type": "text",
+									"text": " Executed at the end of every iteration. Typically used to increment the loop counter."
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "paragraph",
+			"attrs": {
+				"textAlign": null
+			}
+		}
+	]
+}
