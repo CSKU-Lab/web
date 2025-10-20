@@ -29,43 +29,36 @@ function useDrag({ initialSize = 500, direction = "horizontal" }: Props) {
     if (!isDrag) return;
 
     const dragHandler = (position: { x: number; y: number }) => {
+      const container = containerRef.current;
+      const button = buttonRef.current;
+
+      if (!container || !button) return;
+
+      const containerRect = container.getBoundingClientRect();
+
       if (direction === "horizontal") {
         const pointerPosition = position.x;
-        const containerOffset =
-          containerRef.current?.getBoundingClientRect().x ?? 0;
-        const dragButtonWidth = buttonRef.current?.clientWidth ?? 0;
-        const buttonMargin = window.getComputedStyle(
-          buttonRef.current!,
-        ).marginLeft;
-
-        const buttonMarginAmount =
-          parseInt(buttonMargin.slice(0, buttonMargin.length - 2)) / 2;
+        const containerOffset = containerRect.x;
+        const dragButtonWidth = button.clientWidth;
+        const buttonMargin =
+          parseFloat(window.getComputedStyle(button).marginLeft) || 0;
 
         setSize(
           pointerPosition -
             containerOffset -
             dragButtonWidth -
-            buttonMarginAmount,
+            buttonMargin / 2,
         );
       }
 
       if (direction === "vertical") {
         const pointerPosition = position.y;
-        const containerOffset =
-          containerRef.current?.getBoundingClientRect().y ?? 0;
-        const dragButtonHeight = buttonRef.current?.clientHeight ?? 0;
-        const buttonMargin = window.getComputedStyle(
-          buttonRef.current!,
-        ).marginTop;
-
-        const buttonMarginAmount =
-          parseInt(buttonMargin.slice(0, buttonMargin.length - 2)) / 2;
+        const containerBottom = containerRect.bottom;
+        const buttonMargin =
+          parseFloat(window.getComputedStyle(button).marginTop) || 0;
 
         setSize(
-          pointerPosition -
-            containerOffset -
-            dragButtonHeight -
-            buttonMarginAmount,
+          Math.max(0, containerBottom - pointerPosition - buttonMargin / 2),
         );
       }
     };
