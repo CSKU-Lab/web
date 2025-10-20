@@ -21,7 +21,7 @@ function MaterialPage() {
   const router = useRouter();
 
   return (
-    <div>
+    <>
       <PageTitle>Materials</PageTitle>
       <div className="flex justify-end px-4">
         <Button
@@ -34,7 +34,7 @@ function MaterialPage() {
       </div>
 
       <DataTable table={table} />
-    </div>
+    </>
   );
 }
 

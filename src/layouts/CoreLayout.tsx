@@ -26,7 +26,7 @@ export function CoreLayoutContent({ className, children }: ContentProps) {
     <div className="flex-1 transition-all overflow-auto min-h-0">
       <div
         className={cn(
-          "max-w-[1920px] mx-auto h-full min-h-0 flex flex-col",
+          "max-w-[1920px] mx-auto flex flex-col",
           className,
         )}
       >

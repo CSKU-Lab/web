@@ -167,7 +167,7 @@ function UsersManagementPage() {
           )}
           <SearchInput
             placeholder="Search users..."
-            className="h-full w-full md:w-fit"
+            className="w-full md:w-fit"
             value={search}
             onChange={setSearch}
           />

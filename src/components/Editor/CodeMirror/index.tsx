@@ -5,13 +5,14 @@ import {
 } from "@codemirror/view";
 import { basicSetup } from "codemirror";
 import { EditorState, type Extension } from "@codemirror/state";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { getLang } from "./utils/getLang";
 import { vim } from "@replit/codemirror-vim";
 import readOnlyRangeExtension from "codemirror-readonly-ranges";
 import { getReadOnlyRanges } from "./utils/getReadOnlyRanges";
 import { highlightExtension } from "./extensions/highlightRanges";
 import { githubLight } from "@uiw/codemirror-theme-github";
+import ReactCodeMirror from "@uiw/react-codemirror";
 
 interface CodeMirrorProps {
   value?: string;
@@ -35,21 +36,15 @@ const theme = EditorView.theme({
 
 function CodeMirror(props: CodeMirrorProps) {
   const {
-    value = "",
     onChange,
     lang,
     vimMode,
-    extensions = [],
     editable = true,
     readOnly = false,
-    className = "",
-    style,
     initialCode = "",
     placeholder,
+    ...others
   } = props;
-
-  const editorRef = useRef<HTMLDivElement>(null);
-  const viewRef = useRef<EditorView | null>(null);
 
   const mergedExtensions = useMemo(
     () =>
@@ -67,12 +62,10 @@ function CodeMirror(props: CodeMirrorProps) {
     [lang, vimMode, initialCode, placeholder],
   );
 
-  useEffect(() => {
-    if (!editorRef.current) return;
-
-    const state = EditorState.create({
-      doc: "",
-      extensions: [
+  return (
+    <ReactCodeMirror
+      {...others}
+      extensions={[
         basicSetup,
         theme,
         githubLight,
@@ -83,39 +76,9 @@ function CodeMirror(props: CodeMirrorProps) {
           }
         }),
         EditorState.readOnly.of(readOnly || !editable),
-      ],
-    });
-
-    const view = new EditorView({
-      state: state,
-      parent: editorRef.current,
-    });
-
-    viewRef.current = view;
-
-    return () => {
-      if (viewRef.current) {
-        viewRef.current.destroy();
-        viewRef.current = null;
-      }
-    };
-  }, [onChange, editable, readOnly, mergedExtensions]);
-
-  useEffect(() => {
-    if (viewRef.current) {
-      if (viewRef.current.state.doc.toString() === value) return;
-
-      viewRef.current.dispatch({
-        changes: {
-          from: 0,
-          to: viewRef.current.state.doc.length,
-          insert: value,
-        },
-      });
-    }
-  }, [value]);
-
-  return <div ref={editorRef} className={className} {...{ style }} />;
+      ]}
+    />
+  );
 }
 
 export default CodeMirror;

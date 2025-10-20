@@ -71,7 +71,7 @@
     "@tiptap/starter-kit": "^3.7.2",
     "@types/mdx": "^2.0.13",
     "@uiw/codemirror-theme-github": "^4.23.0",
-    "@uiw/react-codemirror": "^4.24.0",
+    "@uiw/react-codemirror": "^4.25.2",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

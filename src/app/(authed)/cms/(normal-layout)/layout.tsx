@@ -4,8 +4,8 @@ import CoreLayout, {
   CoreLayoutSidebar,
 } from "~/layouts/CoreLayout";
 import type { ChildrenProps } from "~/types/children-props";
-import BreadcrumbClient from "./_components/BreadcrumbClient";
-import SidebarMenus from "./_components/SidebarMenus";
+import SidebarMenus from "../_components/SidebarMenus";
+import BreadcrumbClient from "../_components/BreadcrumbClient";
 
 async function Layout({ children }: ChildrenProps) {
   return (

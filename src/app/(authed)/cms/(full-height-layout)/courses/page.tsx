@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import CourseCard from "~/app/(authed)/cms/courses/_components/CourseCard";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
 import Error from "~/components/commons/Error";
@@ -17,6 +16,7 @@ import { Button } from "~/components/commons/Button";
 import { useRouter } from "next/navigation";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import PageTitle from "~/components/commons/PageTitle";
+import CourseCard from "./_components/CourseCard";
 
 function CMSCoursePage() {
   const [search, setSearch] = useState("");
