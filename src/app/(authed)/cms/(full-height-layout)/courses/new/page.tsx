@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Button } from "~/components/commons/Button";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import PageTitle from "~/components/commons/PageTitle";
 
 function NewCoursePage() {
   const form = useForm({
@@ -42,10 +43,10 @@ function NewCoursePage() {
 
   return (
     <div>
-      <h4 className="text-xl font-medium">New Course</h4>
+      <PageTitle>New Course</PageTitle>
       <form
         onSubmit={form.handleSubmit((course) => mutation.mutate(course))}
-        className="md:w-4/5 mt-4 space-y-10"
+        className="md:w-4/5 mt-4 space-y-10 p-4"
       >
         <div className="space-y-4">
           <div className="space-y-1.5">
