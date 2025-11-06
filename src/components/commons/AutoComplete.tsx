@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Popover, PopoverAnchor, PopoverContent } from "../ui/popover";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import Loading from "./Loading";
@@ -29,9 +29,10 @@ interface Props<T extends { id: string | number }> {
   className?: string;
   queryOnRender?: boolean;
   placeHolder?: string;
+  allowAdditionalOptions?: boolean;
 }
 
-function AutoComplete<T extends { id: string | number }>({
+function AutoComplete<T extends { id: string | number; display?: string }>({
   isError,
   value: initialValue,
   onChange,
@@ -42,6 +43,7 @@ function AutoComplete<T extends { id: string | number }>({
   className,
   queryOnRender = false,
   placeHolder,
+  allowAdditionalOptions,
 }: Props<T>) {
   const [value, setValue] = useState<T[]>(initialValue ?? []);
   const [inputValue, setInputValue] = useState("");
@@ -103,6 +105,22 @@ function AutoComplete<T extends { id: string | number }>({
         onChange?.(newValue);
       }
     }
+
+    if (
+      allowAdditionalOptions &&
+      e.key === "Enter" &&
+      inputValue.trim().length > 0
+    ) {
+      e.preventDefault();
+      const currentTime = Date.now();
+      const newOption = {
+        id: `additional-${currentTime}`,
+        display: inputValue.trim(),
+      } as T;
+      const newValue = [...value, newOption];
+      setValue(newValue);
+      onChange?.(newValue);
+    }
   };
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,7 +153,7 @@ function AutoComplete<T extends { id: string | number }>({
         <div
           onClick={handleDivClick}
           className={cn(
-            "flex flex-wrap items-center border rounded-md p-2 min-h-10 gap-2 bg-(--gray-2)",
+            "flex flex-wrap items-center border rounded-md px-3 py-1 h-9 gap-2 bg-white",
             isError && "border-(--red-9)",
             className,
           )}

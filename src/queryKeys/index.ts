@@ -40,4 +40,11 @@ export const queryKeys = {
       "affected_sections",
     ],
   },
+  material: {
+    all: ["materials"],
+    allWithParams: (params: Record<string, any>) => [
+      ...queryKeys.material.all,
+      params,
+    ],
+  },
 } as const;

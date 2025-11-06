@@ -20,10 +20,11 @@ function SearchInput({ onChange, className, isError, ...props }: Props) {
         size="1rem"
         className="absolute left-1.5 top-1/2 -translate-y-1/2 text-(--gray-9)"
       />
+
       <input
         {...props}
         onChange={(e) => onChange(e.target.value)}
-        className="block text-xs w-full h-fit outline-hidden bg-transparent"
+        className="block text-xs placeholder:text-xs w-full h-4 outline-hidden bg-transparent"
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Onest, Anuphan } from "next/font/google";
+import { Anuphan, Poppins } from "next/font/google";
 import AppLoading from "~/components/commons/AppLoading";
 import { Suspense } from "react";
 import { ClientEnv } from "~/lib/client-env";
@@ -8,9 +8,9 @@ import ReactScan from "~/react-scan";
 
 import "./globals.css";
 
-const onest = Onest({
+const onest = Poppins({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "900"],
 });
 
 const anuphan = Anuphan({
