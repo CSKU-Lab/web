@@ -3,9 +3,9 @@ import type { ChildrenProps } from "~/types/children-props";
 import useGetCourse from "../_hooks/useGetCourse";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
-import NavigationMenus from "../../../_components/NavigationMenus";
 import { useParams } from "next/navigation";
 import PageTitle from "~/components/commons/PageTitle";
+import NavigationMenus from "~/app/(authed)/cms/_components/NavigationMenus";
 
 function CourseLayout({ children }: ChildrenProps) {
   const { courseID } = useParams<{ courseID: string }>();
