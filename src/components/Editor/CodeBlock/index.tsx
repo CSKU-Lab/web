@@ -30,7 +30,6 @@ function CodeBlock({ problemId }: Props) {
         <CodeHeader />
         <div className="h-64">
           <CodeMirror
-            height="100%"
             style={{ fontSize }}
             lang={selectedLanguage}
             value={code}

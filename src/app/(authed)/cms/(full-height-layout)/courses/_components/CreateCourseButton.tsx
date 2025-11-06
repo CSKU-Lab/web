@@ -49,9 +49,9 @@ function CreateCourseButton() {
   });
 
   const queryUsers = async (query: string) => {
-    const res = await userService.getUserPagination({
+    const res = await userService.getPagination({
       search: query,
-      sortBy: "display_name",
+      sort_by: "display_name",
     });
 
     return res.data.map((user) => ({
@@ -103,24 +103,22 @@ function CreateCourseButton() {
                   <AutoComplete
                     {...{ value, onChange }}
                     isError={!!form.formState.errors.creators}
-                    renderSelected={(creator) => (
+                    renderSelected={({ option, handleOnRemove }) => (
                       <div
-                        key={creator.id}
+                        key={option.id}
                         className="flex items-center gap-2 shrink-0 bg-(--gray-4) pl-2 pr-3 py-0.5 rounded-full"
                       >
                         <UserProfileImage
-                          username={creator.username}
-                          src={creator.profile_image}
+                          username={option.username}
+                          src={option.profile_image}
                           size="1.5rem"
                           textSize="0.5rem"
                         />
-                        <span className="text-xs">{creator.display_name}</span>
+                        <span className="text-xs">{option.display_name}</span>
                         <button
                           className="text-(--gray-11) hover:text-(--gray-12) focus:outline-none"
                           type="button"
-                          onClick={() =>
-                            onChange(value.filter((c) => c.id !== creator.id))
-                          }
+                          onClick={() => handleOnRemove(option)}
                         >
                           <X size="0.8rem" />
                         </button>
@@ -139,10 +137,10 @@ function CreateCourseButton() {
                       ),
                     )}
                   >
-                    {(options) =>
+                    {({ options, handleOnAdd }) =>
                       options.map((creator) => (
                         <button
-                          onClick={() => onChange([...value, creator])}
+                          onClick={() => handleOnAdd(creator)}
                           key={creator.id}
                           className="flex items-center px-2 py-1.5 gap-2 hover:bg-gray-100 cursor-pointer w-full rounded-md"
                         >

@@ -1,12 +1,7 @@
 import { CirclePlay, LoaderCircle } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import { playgroundAtom } from "../store/playground";
 import { useAtom, useAtomValue } from "jotai";
@@ -51,7 +46,9 @@ function Playground({ className }: Props) {
       )}
     >
       <div className="flex items-center gap-2 p-2">
-        <h4 className="font-medium text-(--gray-12) text-sm leading-tight">Playground</h4>
+        <h4 className="font-medium text-(--gray-12) text-sm leading-tight">
+          Playground
+        </h4>
         <Button
           onClick={handleOnRun}
           className="space-x-2 w-fit"
@@ -75,14 +72,12 @@ function Playground({ className }: Props) {
         </TabsList>
         <TabsContent value="input" className="flex-1 overflow-auto">
           <CodeMirror
-            height="100%"
             value={input}
             onChange={(value) => handleOnChange("input", value)}
           />
         </TabsContent>
         <TabsContent value="output" className="flex-1 overflow-auto">
           <CodeMirror
-            height="100%"
             value={output}
             onChange={(value) => handleOnChange("output", value)}
           />

@@ -4,10 +4,10 @@ import {
   userGroupService,
   type GetUserGroupPaginationParams,
 } from "~/services/user-group.service";
-import type { UserGroup } from "~/types/cms-user-group";
+import type { CMSUserGroup } from "~/types/cms-user-group";
 
 function useUserGroupPagination(args: GetUserGroupPaginationParams) {
-  return useInfinitePagination<UserGroup>({
+  return useInfinitePagination<CMSUserGroup>({
     queryKey: queryKeys.user_group.allWithParams(args),
     queryFn: ({ pageParam }) =>
       userGroupService.getPagination({ ...args, page: pageParam }),

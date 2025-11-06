@@ -33,7 +33,9 @@ function CodeBlock() {
   return (
     <div className="mt-4 mb-2 space-y-2">
       <div className="flex justify-between items-center">
-        <h6 className="text-sm font-semibold text-(--gray-11)">Code | Python3</h6>
+        <h6 className="text-sm font-semibold text-(--gray-11)">
+          Code | Python3
+        </h6>
         <Button
           onClick={handleCopy}
           variant="secondary"
@@ -47,14 +49,17 @@ function CodeBlock() {
           )}
 
           <span
-            className={cn("text-xs font-medium", isCopied && "text-(--grass-10)")}
+            className={cn(
+              "text-xs font-medium",
+              isCopied && "text-(--grass-10)",
+            )}
           >
             {isCopied ? "Copied!" : "Copy"}
           </span>
         </Button>
       </div>
       <div className="border rounded-lg h-64 overflow-y-auto">
-        <CodeMirror readOnly lang="python3" value={hardCode} height="100%" />
+        <CodeMirror readOnly lang="python3" value={hardCode} />
       </div>
     </div>
   );
