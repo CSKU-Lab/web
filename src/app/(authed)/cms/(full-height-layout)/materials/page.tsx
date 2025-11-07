@@ -68,7 +68,7 @@ function MaterialPage() {
       <PageTitle>Materials</PageTitle>
       <div className="flex justify-end items-center gap-2 px-4 my-4">
         <SearchInput
-          placeholder="Search users..."
+          placeholder="Search materials..."
           className="w-full md:w-fit"
           value={search}
           onChange={setSearch}
