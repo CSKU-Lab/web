@@ -1,3 +1,4 @@
+"use client"
 import type { PropsWithChildren } from "react";
 import { type Tab, useMaterial } from "../_providers/MaterialProvider";
 import { cn } from "~/lib/tiptap-utils";

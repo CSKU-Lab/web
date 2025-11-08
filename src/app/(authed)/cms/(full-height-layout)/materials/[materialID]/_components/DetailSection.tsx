@@ -1,3 +1,4 @@
+"use client";
 import { Globe, Trash, Lock } from "lucide-react";
 import { useMaterial } from "../_providers/MaterialProvider";
 import Loading from "~/components/commons/Loading";
@@ -9,6 +10,13 @@ function DetailSection() {
 
   const renderStatus = () => {
     switch (status) {
+      case "UnSaved":
+        return (
+          <div className="flex gap-1.5 items-center">
+            <div className="w-2 h-2 rounded-full bg-(--gray-9)"></div>
+            <h4 className="font-medium">Unsaved</h4>
+          </div>
+        );
       case "Saved":
         return (
           <div className="flex gap-1.5 items-center">
@@ -40,7 +48,7 @@ function DetailSection() {
     }
   };
   return (
-    <div className="border border-l-0 2xl:border-l  p-4 mt-4 flex justify-between">
+    <div className="border border-l-0 2xl:border-l p-4 mt-4 flex justify-between">
       <div className="flex gap-4">
         <div>
           <h6 className="text-xs text-(--gray-11)">Name</h6>
@@ -52,8 +60,15 @@ function DetailSection() {
           </Loading>
         </div>
         <div>
-          <h6 className="text-xs text-(--gray-11)">Tags</h6>
-          <h4 className="font-medium">Test</h4>
+          <h6 className="text-xs text-(--gray-11)">Type</h6>
+          <Loading
+            isLoading={isDetailLoading}
+            fallback={<Skeleton className="w-32 h-6" />}
+          >
+            <h4 className="font-medium">
+              {titleFormatter(detail?.type ?? "")}
+            </h4>
+          </Loading>
         </div>
         <div>
           <h6 className="text-xs text-(--gray-11)">Submissions</h6>

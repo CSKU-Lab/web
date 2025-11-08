@@ -6,4 +6,5 @@ export interface CMSMaterial {
   visibility: "public" | "private";
   created_by: string;
   created_at: Date;
+  payload: Record<string, any>;
 }

@@ -1,7 +1,11 @@
-"use client";
-
 import * as React from "react";
-import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
+import {
+  type Content,
+  EditorContent,
+  EditorContext,
+  useEditor,
+  JSONContent,
+} from "@tiptap/react";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
@@ -70,7 +74,6 @@ import { handleImageUpload, MAX_FILE_SIZE } from "~/lib/tiptap-utils";
 // --- Styles ---
 import "~/components/tiptap-templates/simple/simple-editor.scss";
 
-import content from "~/components/tiptap-templates/simple/data/content.json";
 import type { ClassNameProps } from "~/types/classname-props";
 import { cn } from "~/lib/utils";
 
@@ -178,7 +181,16 @@ const MobileToolbarContent = ({
   </>
 );
 
-export function SimpleEditor({ className }: ClassNameProps) {
+interface Props extends ClassNameProps {
+  initialValue?: JSONContent | null;
+  onChange?: (content: JSONContent) => void;
+}
+
+export function SimpleEditor({
+  className,
+  initialValue = null,
+  onChange = () => {},
+}: Props) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
@@ -224,8 +236,20 @@ export function SimpleEditor({ className }: ClassNameProps) {
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content,
+    content: initialValue,
+    onUpdate: ({ editor }) => {
+      onChange(editor.getJSON());
+    },
   });
+
+  const isSetInitialValue = React.useRef(false);
+  React.useEffect(() => {
+    if (isSetInitialValue.current) return;
+    if (initialValue && editor && editor.getJSON() !== initialValue) {
+      editor.commands.setContent(initialValue);
+      isSetInitialValue.current = true;
+    }
+  }, [initialValue, editor]);
 
   const rect = useCursorVisibility({
     editor,

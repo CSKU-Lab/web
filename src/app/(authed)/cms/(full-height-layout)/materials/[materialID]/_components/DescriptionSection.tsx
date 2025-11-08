@@ -1,3 +1,4 @@
+"use client";
 import { GripVertical } from "lucide-react";
 import useDrag from "~/app/(authed)/(core)/course/[courseId]/lab/hooks/useDrag";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
@@ -27,7 +28,10 @@ function DescriptionSection() {
         <h4 className="text-xs text-(--gray-11)">Description</h4>
       </div>
       <div className="flex-1 max-h-full overflow-auto">
-        <SimpleEditor value={description} onChange={onChangeDescription} />
+        <SimpleEditor
+          initialValue={description}
+          onChange={onChangeDescription}
+        />
       </div>
     </div>
   );

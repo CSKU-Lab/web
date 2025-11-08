@@ -46,5 +46,6 @@ export const queryKeys = {
       ...queryKeys.material.all,
       params,
     ],
+    getById: (materialId: string) => [...queryKeys.material.all, materialId],
   },
 } as const;
