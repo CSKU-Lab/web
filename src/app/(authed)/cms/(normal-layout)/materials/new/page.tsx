@@ -12,7 +12,10 @@ import {
   createMaterialSchema,
 } from "./_schemas/create-material.schema";
 import { useMutation } from "@tanstack/react-query";
-import { cmsMaterialService } from "~/services/cms-material.service";
+import {
+  cmsMaterialService,
+  type CreateMaterialPayload,
+} from "~/services/cms-material.service";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
@@ -30,7 +33,8 @@ function NewMaterialPage() {
 
   const router = useRouter();
   const createMaterial = useMutation({
-    mutationFn: cmsMaterialService.create,
+    mutationFn: (payload: CreateMaterialPayload) =>
+      cmsMaterialService.create(payload),
     onSuccess: (materialId) => {
       toast.success("Material created successfully");
       router.push(`/cms/materials/${materialId}`);
