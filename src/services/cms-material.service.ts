@@ -1,6 +1,6 @@
-import { api } from "~/lib/api";
 import { PaginationMixin } from "./pagination.mixin";
 import type { CMSMaterial } from "~/types/cms-material";
+import { BaseService } from "./base.service";
 
 export type CreateMaterialPayload = {
   name: string;
@@ -9,20 +9,27 @@ export type CreateMaterialPayload = {
   visibility: "public" | "private";
 };
 
-class CMSMaterialService {
-  _baseURL: string = "/cms/materials";
+class CMSMaterialService extends BaseService {
+  constructor() {
+    super("/cms/materials");
+  }
 
   async create(payload: CreateMaterialPayload) {
-    const res = await api.post<{ id: string }>(this._baseURL, payload);
+    const res = await this.api.post<{ id: string }>(this._baseURL, payload);
     return res.data.id;
   }
 
+  async getById(id: string): Promise<CMSMaterial> {
+    const res = await this.api.get<CMSMaterial>(`${this._baseURL}/${id}`);
+    return res.data;
+  }
+
   async update(id: string, payload: Partial<CreateMaterialPayload>) {
-    return api.patch(`${this._baseURL}/${id}`, payload);
+    return this.api.patch(`${this._baseURL}/${id}`, payload);
   }
 
   async delete(id: string) {
-    return api.delete(`${this._baseURL}/${id}`);
+    return this.api.delete(`${this._baseURL}/${id}`);
   }
 }
 

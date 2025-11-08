@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect } from "react";
-import { api } from "~/lib/api";
+import { api } from "~/lib/api.client";
 import type { ChildrenProps } from "~/types/children-props";
 import type { JWTUser } from "~/types/user";
 

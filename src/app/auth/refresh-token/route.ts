@@ -2,7 +2,7 @@ import type { AxiosHeaderValue } from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { NextRequest } from "next/server";
-import { api } from "~/lib/api";
+import { serverApi } from "~/lib/api.server";
 import { verifyJWT } from "~/lib/verify-jwt";
 
 export const dynamic = "force-dynamic";
@@ -24,11 +24,7 @@ export const GET = async (req: NextRequest) => {
   let resCookies: AxiosHeaderValue = [];
 
   try {
-    const res = await api.post("/auth/refresh-token", null, {
-      headers: {
-        Cookie: `refresh_token=${refreshToken}`,
-      },
-    });
+    const res = await serverApi.post("/auth/refresh-token");
 
     resCookies = res.headers["set-cookie"] || [];
   } catch (err) {

@@ -1,12 +1,15 @@
-import { api } from "~/lib/api";
+import { api } from "~/lib/api.client";
 import type { PaginationRequestParams } from "~/types/pagination";
 import type { CreateUser, User, UserRole } from "~/types/user";
 import { PaginationMixin } from "./pagination.mixin";
+import { BaseService } from "./base.service";
 
 export type GetUserPaginationParams = PaginationRequestParams<User>;
 
-class UserService {
-  _baseURL = "/admin/users";
+class UserService extends BaseService {
+  constructor() {
+    super("/admin/users");
+  }
 
   async deleteUser(id: string) {
     await api.delete(this._baseURL + `/${id}`);

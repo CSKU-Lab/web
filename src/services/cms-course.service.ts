@@ -1,10 +1,13 @@
-import { api } from "~/lib/api";
+import { api } from "~/lib/api.client";
 import type { Course, CreateCourse } from "~/types/cms-course";
 import type { VisibilityKey } from "~/types/visibilities";
 import { PaginationMixin } from "./pagination.mixin";
+import { BaseService } from "./base.service";
 
-class CMSCourseService {
-  _baseURL = "/admin/courses";
+class CMSCourseService extends BaseService {
+  constructor() {
+    super("/admin/courses");
+  }
 
   async create({ name, creators, type }: CreateCourse): Promise<Course> {
     const creatorIds = creators.map((creator) => creator.id);

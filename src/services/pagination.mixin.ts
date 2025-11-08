@@ -1,4 +1,4 @@
-import { api } from "~/lib/api";
+import type { AxiosInstance } from "axios";
 import type {
   PaginationRequestParams,
   PaginationResponse,
@@ -7,6 +7,7 @@ import type {
 type Constructor<
   T = {
     _baseURL: string;
+    api: AxiosInstance;
   },
 > = new (...args: any[]) => T;
 
@@ -26,6 +27,10 @@ export const PaginationMixin = <
   };
 
   return class Pagination extends Base {
+    constructor(...args: any) {
+      super(args);
+    }
+
     async getPagination({
       filters,
       ...paramsRequest
@@ -52,7 +57,7 @@ export const PaginationMixin = <
         searchParams.append(key, value.toString());
       });
 
-      const res = await api.get<PaginationResponse<Item>>(
+      const res = await this.api.get<PaginationResponse<Item>>(
         this._baseURL + "?" + searchParams.toString(),
       );
 
