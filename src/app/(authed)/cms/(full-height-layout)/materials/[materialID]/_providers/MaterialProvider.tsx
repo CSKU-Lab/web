@@ -8,6 +8,7 @@ import {
   use,
   useEffect,
   useDeferredValue,
+  useRef,
 } from "react";
 import useGetMaterial from "../_hooks/useGetMaterial";
 import type { CMSMaterial } from "~/types/cms-material";
@@ -20,7 +21,7 @@ export type Tab = "Editor" | "TestCase" | "Config";
 interface MaterialContext {
   detail: CMSMaterial | undefined;
   isDetailLoading: boolean;
-  description: JSONContent | null;
+  description: JSONContent | null | undefined;
   onChangeDescription: (content: JSONContent) => Promise<void>;
   status: MaterialStatus;
   activeTab: Tab;
@@ -39,13 +40,15 @@ export function useMaterial() {
   return context;
 }
 
+const DELAYED_SAVE_MS = 1000;
+
 export function Provider({ children }: PropsWithChildren) {
   const Provider = materialContext.Provider;
   const [description, setDescription] = useState<
     JSONContent | null | undefined
   >(undefined);
   const deferredDescription = useDeferredValue(description);
-  const debouncedDescription = useInputDebounce(description, 2000);
+  const debouncedDescription = useInputDebounce(description, DELAYED_SAVE_MS);
 
   const [status, setStatus] = useState<MaterialStatus>("Saved");
   const [activeTab, setActiveTab] = useState<Tab>("Editor");
@@ -58,21 +61,20 @@ export function Provider({ children }: PropsWithChildren) {
 
   const { data: detail, isFetching } = useGetMaterial();
 
+  const isSetInitialDescription = useRef(false);
   useEffect(() => {
     if (isFetching) return;
 
     if (detail) {
       setDescription(JSON.parse(detail.payload.description));
+      isSetInitialDescription.current = true;
     }
   }, [detail, isFetching]);
-
-  console.log({ debouncedDescription, detail });
 
   useEffect(() => {
     if (detail == null) return;
     if (debouncedDescription == undefined) return;
-    if (JSON.stringify(debouncedDescription) === detail.payload.description)
-      return;
+    if (isSetInitialDescription.current === false) return;
 
     const handleOnSave = async () => {
       setStatus("Saving");
