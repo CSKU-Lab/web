@@ -27,6 +27,7 @@ function SelectValue({
 function SelectTrigger({
   size = "default",
   children,
+  className,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "default";
@@ -35,6 +36,10 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
+      className={cn(
+        "border bg-(--gray-2) rounded-md text-left px-2 h-9 text-sm flex justify-between items-center text-(--gray-12)",
+        className,
+      )}
       {...props}
     >
       {children}

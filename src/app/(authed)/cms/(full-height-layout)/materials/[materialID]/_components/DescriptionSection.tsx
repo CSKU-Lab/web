@@ -1,6 +1,6 @@
 "use client";
 import { GripVertical } from "lucide-react";
-import useDrag from "~/app/(authed)/(core)/course/[courseId]/lab/hooks/useDrag";
+import useDrag from "~/hooks/useDrag";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 import { useMaterial } from "../_providers/MaterialProvider";
 

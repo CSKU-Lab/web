@@ -48,4 +48,9 @@ export const queryKeys = {
     ],
     getById: (materialId: string) => [...queryKeys.material.all, materialId],
   },
+  config: {
+    runners: {
+      all: ["config", "runners"],
+    },
+  },
 } as const;

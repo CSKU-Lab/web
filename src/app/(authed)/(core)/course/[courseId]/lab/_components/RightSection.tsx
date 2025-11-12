@@ -1,6 +1,6 @@
 "use client";
 
-import useDrag from "../hooks/useDrag";
+import useDrag from "../../../../../../../hooks/useDrag";
 import { cn } from "~/lib/utils";
 import { useCallback, useEffect, type RefObject } from "react";
 import useEditor, {

@@ -2,7 +2,7 @@
 
 import { NotebookText, History } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import useDrag from "../hooks/useDrag";
+import useDrag from "../../../../../../../hooks/useDrag";
 import { cn } from "~/lib/utils";
 
 import SubmissionsTab from "./SubmissionsTab";
