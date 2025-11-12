@@ -30,6 +30,7 @@ interface Props<T extends { id: string | number }> {
   queryOnRender?: boolean;
   placeHolder?: string;
   allowAdditionalOptions?: boolean;
+  popoverContentClasses?: string;
 }
 
 function AutoComplete<T extends { id: string | number; display?: string }>({
@@ -44,6 +45,7 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
   queryOnRender = false,
   placeHolder,
   allowAdditionalOptions,
+  popoverContentClasses,
 }: Props<T>) {
   const [value, setValue] = useState<T[]>(initialValue ?? []);
   const [inputValue, setInputValue] = useState("");
@@ -153,7 +155,7 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
         <div
           onClick={handleDivClick}
           className={cn(
-            "flex flex-wrap items-center border rounded-md px-3 py-1 h-9 gap-2 bg-white",
+            "flex flex-wrap items-center border rounded-md px-3 py-1 min-h-9 gap-2 bg-white",
             isError && "border-(--red-9)",
             className,
           )}
@@ -174,7 +176,10 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
         onInteractOutside={() => setIsOpen(false)}
         onOpenAutoFocus={(e) => e.preventDefault()}
         onWheel={(e) => e.stopPropagation()}
-        className="w-(--radix-popper-anchor-width) p-2 max-h-40 overflow-y-auto"
+        className={cn(
+          "w-(--radix-popper-anchor-width) p-2 max-h-40 overflow-y-auto",
+          popoverContentClasses,
+        )}
       >
         <Loading {...{ isLoading }} fallback={loadingFallback}>
           {isOptionEmpty ? (
