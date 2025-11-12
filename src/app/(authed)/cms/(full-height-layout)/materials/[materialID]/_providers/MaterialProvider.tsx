@@ -16,7 +16,7 @@ import { api } from "~/lib/api.client";
 import useInputDebounce from "~/hooks/useInputDebounce";
 
 type MaterialStatus = "UnSaved" | "Saved" | "Saving" | "SaveFailed" | "Offline";
-export type Tab = "Editor" | "TestCase" | "Config";
+export type Tab = "Editor" | "Test Cases" | "Config";
 
 interface MaterialContext {
   detail: CMSMaterial | undefined;
