@@ -27,3 +27,5 @@ export const playgroundStore = atom(
 
 export const codeStore = atom("");
 export const runnerStore = atom("");
+
+export const errorStore = atom<"NO_RUNNER" | null>(null);

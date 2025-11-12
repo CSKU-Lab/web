@@ -9,9 +9,10 @@ import IOButton from "./IOButton";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import useDrag from "~/hooks/useDrag";
 import { useState } from "react";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   codeStore,
+  errorStore,
   playgroundStore,
   runnerStore,
 } from "../../_stores/editor.store";
@@ -41,13 +42,18 @@ function Playground() {
 
   const runnerID = useAtomValue(runnerStore);
   const code = useAtomValue(codeStore);
+  const setError = useSetAtom(errorStore);
   const [result, setResult] = useState<CodeExecutionResult | null>(null);
   const isRunning =
     result?.status === "STATUS_RUNNING" || result?.status === "STATUS_QUEUED";
 
   const handleRunCode = async () => {
+    if (runnerID === "") {
+      setError("NO_RUNNER");
+      return;
+    }
     setResult(null);
-    const res = await fetch(env("API_URL") + "/cms/playground/execute", {
+    const res = await fetch(env("API_URL") + "/playground/execute", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
