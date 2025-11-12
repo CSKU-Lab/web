@@ -50,7 +50,12 @@ export const queryKeys = {
   },
   config: {
     runners: {
-      all: ["config", "runners"],
+      all: (opts?: { includeScript?: boolean }) => {
+        if (opts?.includeScript) {
+          return ["config", "runners", "includeScript"];
+        }
+        return ["config", "runners"];
+      },
     },
   },
 } as const;

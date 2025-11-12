@@ -12,7 +12,7 @@ import Loading from "./Loading";
 import useInputDebounce from "~/hooks/useInputDebounce";
 
 interface Props<T> extends ClassNameProps {
-  value: T;
+  value?: T;
   options?: T[];
   placeholder?: string;
   children?: (options: T[]) => React.ReactNode;
@@ -84,13 +84,15 @@ function SearchSelect<T extends { id: string; name: string }>({
       <PopoverTrigger
         ref={triggerRef}
         className={cn(
-          "relative w-40 border bg-(--gray-2) rounded-md text-left px-2 h-9",
+          "relative w-40 border bg-white rounded-md text-left px-2 h-9",
           isError && "border-(--red-9)",
           className,
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <h5 className="text-sm w-10/12 truncate">{value.name}</h5>
+        {value !== undefined && (
+          <h5 className="text-sm w-10/12 truncate">{value.name}</h5>
+        )}
         <ChevronDown
           size="1rem"
           id="search-select-chevron"
@@ -114,7 +116,7 @@ function SearchSelect<T extends { id: string; name: string }>({
           e.stopPropagation();
         }}
       >
-        <div className="relative bg-(--gray-2) px-2 py-1.5">
+        <div className="relative bg-white px-2 py-1.5">
           <Search
             size="0.9rem"
             className="absolute left-1.5 top-1/2 -translate-y-1/2"

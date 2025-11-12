@@ -4,6 +4,7 @@ import { type Tab, useMaterial } from "../_providers/MaterialProvider";
 import { cn } from "~/lib/tiptap-utils";
 import EditorTab from "./EditorTab";
 import TestcaseTab from "./TestCaseTab";
+import ConfigTab from "./ConfigTab";
 
 const TabButton = ({ children }: PropsWithChildren) => {
   const { activeTab, onChangeTab } = useMaterial();
@@ -42,6 +43,7 @@ function MultipleTabsSection() {
       <div className="flex-1 min-h-0 overflow-auto flex flex-col">
         {activeTab === "Editor" && <EditorTab />}
         {activeTab === "Test Cases" && <TestcaseTab />}
+        {activeTab === "Config" && <ConfigTab />}
       </div>
     </div>
   );
