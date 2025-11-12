@@ -13,6 +13,7 @@ import { getReadOnlyRanges } from "./utils/getReadOnlyRanges";
 import { highlightExtension } from "./extensions/highlightRanges";
 import { githubLight } from "@uiw/codemirror-theme-github";
 import ReactCodeMirror from "@uiw/react-codemirror";
+import { indentWithTab } from "./extensions/indentWithTab";
 
 interface CodeMirrorProps {
   value?: string;
@@ -65,11 +66,13 @@ function CodeMirror(props: CodeMirrorProps) {
   return (
     <ReactCodeMirror
       {...others}
+      indentWithTab={false}
       extensions={[
         basicSetup,
         theme,
         githubLight,
         ...mergedExtensions,
+        indentWithTab,
         EditorView.updateListener.of((update) => {
           if (update.docChanged && onChange) {
             onChange(update.state.doc.toString());
