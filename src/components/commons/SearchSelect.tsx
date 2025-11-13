@@ -12,7 +12,7 @@ import Loading from "./Loading";
 import useInputDebounce from "~/hooks/useInputDebounce";
 
 interface Props<T> extends ClassNameProps {
-  value?: T;
+  value?: T | null;
   options?: T[];
   placeholder?: string;
   children?: (options: T[]) => React.ReactNode;
@@ -90,7 +90,7 @@ function SearchSelect<T extends { id: string; name: string }>({
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
-        {value !== undefined && (
+        {value !== null && value !== undefined && (
           <h5 className="text-sm w-10/12 truncate">{value.name}</h5>
         )}
         <ChevronDown

@@ -11,10 +11,10 @@ import useDrag from "~/hooks/useDrag";
 import { useState } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
-  codeStore,
-  errorStore,
-  playgroundStore,
-  runnerStore,
+  codeAtom,
+  errorAtom,
+  playgroundAtom,
+  runnerAtom,
 } from "../../_stores/editor.store";
 import type { CodeExecutionResult } from "~/types/code-execution-result";
 import { env } from "~/lib/env";
@@ -27,7 +27,7 @@ const kiloToMegaBytes = (kilobyte: number): number => {
 
 function Playground() {
   const [selectedTab, setSelectedTab] = useState<"input" | "output">("input");
-  const [{ input, output }, update] = useAtom(playgroundStore);
+  const [{ input, output }, update] = useAtom(playgroundAtom);
 
   const { buttonRef, containerRef, size, events } = useDrag({
     initialSize: 200,
@@ -40,9 +40,9 @@ function Playground() {
     }
   };
 
-  const runnerID = useAtomValue(runnerStore);
-  const code = useAtomValue(codeStore);
-  const setError = useSetAtom(errorStore);
+  const runnerID = useAtomValue(runnerAtom);
+  const code = useAtomValue(codeAtom);
+  const setError = useSetAtom(errorAtom);
   const [result, setResult] = useState<CodeExecutionResult | null>(null);
   const isRunning =
     result?.status === "STATUS_RUNNING" || result?.status === "STATUS_QUEUED";

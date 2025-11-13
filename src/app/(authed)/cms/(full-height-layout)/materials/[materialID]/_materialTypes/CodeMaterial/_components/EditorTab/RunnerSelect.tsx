@@ -5,9 +5,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/commons/Select";
-import { useGetRunners } from "../../_hooks/useGetRunners";
-import { useAtom, useAtomValue } from "jotai";
-import { errorStore, runnerStore } from "../../_stores/editor.store";
+import { useGetRunners } from "../../../../_hooks/useGetRunners";
+import { useAtom } from "jotai";
+import { errorAtom, runnerAtom } from "../../_stores/editor.store";
 import { cn } from "~/lib/tiptap-utils";
 import {
   Tooltip,
@@ -17,8 +17,8 @@ import {
 
 function RunnerSelect() {
   const { data: runners, isFetching } = useGetRunners();
-  const [runner, setRunner] = useAtom(runnerStore);
-  const [error, setError] = useAtom(errorStore);
+  const [runner, setRunner] = useAtom(runnerAtom);
+  const [error, setError] = useAtom(errorAtom);
   const isError = error === "NO_RUNNER";
 
   const handleOnValueChange = (value: string) => {
@@ -45,11 +45,13 @@ function RunnerSelect() {
               Loading...
             </div>
           )}
-          {runners?.map((runner) => (
-            <SelectItem key={runner.id} value={runner.id}>
-              {runner.name}
-            </SelectItem>
-          ))}
+          {runners
+            ?.filter((runner) => runner.name.toLowerCase().includes("py"))
+            .map((runner) => (
+              <SelectItem key={runner.id} value={runner.id}>
+                {runner.name}
+              </SelectItem>
+            ))}
         </SelectContent>
       </Select>
       <TooltipContent>You forget to set a runner</TooltipContent>

@@ -3,10 +3,10 @@ import { Button } from "~/components/commons/Button";
 import TestCaseBlock from "./TestCaseBlock";
 import { Fragment } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { addTestCaseAtom, testcasesAtom } from "../../_stores/testcases.store";
+import { addTestCaseAtom, testCasesAtom } from "../../_stores/testcases.store";
 
 function TestCaseTab() {
-  const testcases = useAtomValue(testcasesAtom);
+  const testcases = useAtomValue(testCasesAtom);
   const handleAddTestCase = useSetAtom(addTestCaseAtom);
 
   return (

@@ -2,7 +2,7 @@ import SearchSelect from "~/components/commons/SearchSelect";
 import { configService } from "~/services/config.service";
 
 interface Props {
-  value: { id: string; name: string };
+  value: { id: string; name: string } | null;
   onChange: (value: { id: string; name: string }) => void;
 }
 function CompareScript({ value, onChange }: Props) {

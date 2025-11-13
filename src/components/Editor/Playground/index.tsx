@@ -11,6 +11,7 @@ import { cn } from "~/lib/utils";
 interface Props {
   className?: string;
 }
+
 function Playground({ className }: Props) {
   const { code, problemId, selectedLanguage } = useAtomValue(problemAtom);
   const [{ input, output }, setPlayground] = useAtom(playgroundAtom);

@@ -1,13 +1,14 @@
 "use client";
 import type { PropsWithChildren } from "react";
-import { type Tab, useMaterial } from "../_providers/MaterialProvider";
 import { cn } from "~/lib/tiptap-utils";
 import EditorTab from "./EditorTab";
 import TestcaseTab from "./TestCaseTab";
 import ConfigTab from "./ConfigTab";
+import { useAtom, useAtomValue } from "jotai";
+import { type Tab, tabAtom } from "../_stores/tab.store";
 
 const TabButton = ({ children }: PropsWithChildren) => {
-  const { activeTab, onChangeTab } = useMaterial();
+  const [activeTab, setActiveTab] = useAtom(tabAtom);
 
   if (typeof children !== "string") {
     throw new Error("TabButton children must be a string");
@@ -17,7 +18,7 @@ const TabButton = ({ children }: PropsWithChildren) => {
 
   return (
     <button
-      onClick={() => onChangeTab(children as Tab)}
+      onClick={() => setActiveTab(children as Tab)}
       className={cn(
         "text-xs px-4 py-2 rounded",
         isActive && "text-(--gray-1) bg-(--gray-12)",
@@ -30,7 +31,7 @@ const TabButton = ({ children }: PropsWithChildren) => {
   );
 };
 function MultipleTabsSection() {
-  const { activeTab } = useMaterial();
+  const activeTab = useAtomValue(tabAtom);
   return (
     <div className="flex-1 border-t-0 border-l-0 border flex flex-col min-h-0 min-w-[300px] overflow-hidden">
       <div className="flex flex-col">

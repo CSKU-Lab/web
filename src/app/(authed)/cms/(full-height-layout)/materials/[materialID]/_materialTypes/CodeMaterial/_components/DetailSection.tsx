@@ -1,15 +1,21 @@
 "use client";
-import { Globe, Trash, Lock } from "lucide-react";
-import { useMaterial } from "../_providers/MaterialProvider";
+import { Globe, Lock, Save } from "lucide-react";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
+import useGetMaterial from "../../../_hooks/useGetMaterial";
+import { useAtomValue } from "jotai";
+import { saveStatusAtom } from "../_stores/save-status.store";
+import SaveButton from "./SaveButton";
 
 function DetailSection() {
-  const { status, detail, isDetailLoading } = useMaterial();
+  const { data: detail, isFetching } = useGetMaterial();
+  const saveStatus = useAtomValue(saveStatusAtom);
+
+  const handleSave = () => {};
 
   const renderStatus = () => {
-    switch (status) {
+    switch (saveStatus) {
       case "UnSaved":
         return (
           <div className="flex gap-1.5 items-center">
@@ -48,12 +54,12 @@ function DetailSection() {
     }
   };
   return (
-    <div className="border border-l-0 2xl:border-l p-4 mt-4 flex justify-between">
+    <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 mt-4 flex justify-between items-center">
       <div className="flex gap-4">
         <div>
           <h6 className="text-xs text-(--gray-11)">Name</h6>
           <Loading
-            isLoading={isDetailLoading}
+            isLoading={isFetching}
             fallback={<Skeleton className="w-32 h-6" />}
           >
             <h4 className="font-medium">{detail?.name}</h4>
@@ -62,7 +68,7 @@ function DetailSection() {
         <div>
           <h6 className="text-xs text-(--gray-11)">Type</h6>
           <Loading
-            isLoading={isDetailLoading}
+            isLoading={isFetching}
             fallback={<Skeleton className="w-32 h-6" />}
           >
             <h4 className="font-medium">
@@ -77,7 +83,7 @@ function DetailSection() {
         <div>
           <h6 className="text-xs text-(--gray-11)">Created By</h6>
           <Loading
-            isLoading={isDetailLoading}
+            isLoading={isFetching}
             fallback={<Skeleton className="w-32 h-6" />}
           >
             <h4 className="font-medium">{detail?.created_by}</h4>
@@ -87,7 +93,7 @@ function DetailSection() {
           <h6 className="text-xs text-(--gray-11)">Visibility</h6>
           <div className="flex gap-1.5 items-center">
             <Loading
-              isLoading={isDetailLoading}
+              isLoading={isFetching}
               fallback={<Skeleton className="w-32 h-6" />}
             >
               {detail?.visibility === "public" && <Globe size="0.9rem" />}
@@ -103,12 +109,7 @@ function DetailSection() {
           {renderStatus()}
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <button className="flex items-center gap-1.5 bg-(--red-9)/10 hover:bg-(--red-9)/20 text-(--red-9) px-3 py-1.5 rounded text-sm transition-colors">
-          <Trash size="1rem" />
-          Delete
-        </button>
-      </div>
+      <SaveButton />
     </div>
   );
 }

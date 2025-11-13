@@ -9,6 +9,10 @@ export type CreateMaterialPayload = {
   visibility: "public" | "private";
 };
 
+export type UpdateMaterialPayload = Partial<CreateMaterialPayload> & {
+  payload: any;
+};
+
 class CMSMaterialService extends BaseService {
   constructor() {
     super("/cms/materials");
@@ -24,7 +28,7 @@ class CMSMaterialService extends BaseService {
     return res.data;
   }
 
-  async update(id: string, payload: Partial<CreateMaterialPayload>) {
+  async update(id: string, payload: UpdateMaterialPayload) {
     return this.api.patch(`${this._baseURL}/${id}`, payload);
   }
 

@@ -1,9 +1,6 @@
 import { cmsMaterialService } from "~/services/cms-material.service";
-import DescriptionSection from "./_components/DescriptionSection";
-import DetailSection from "./_components/DetailSection";
-import MultipleTabsSection from "./_components/MultipleTabsSection";
-import MaterialProvider from "./_providers/MaterialProvider";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
+import CodeMaterial from "./_materialTypes/CodeMaterial";
 
 async function MaterialPage(props: {
   params: Promise<{ materialID: string }>;
@@ -12,17 +9,7 @@ async function MaterialPage(props: {
   const material = await cmsMaterialService.getById(params.materialID);
 
   if (material.type === "code") {
-    return (
-      <>
-        <MaterialProvider>
-          <DetailSection />
-          <div className="flex flex-1 min-h-0">
-            <DescriptionSection />
-            <MultipleTabsSection />
-          </div>
-        </MaterialProvider>
-      </>
-    );
+    return <CodeMaterial />;
   }
 
   return (

@@ -2,7 +2,8 @@
 import { GripVertical } from "lucide-react";
 import useDrag from "~/hooks/useDrag";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
-import { useMaterial } from "../_providers/MaterialProvider";
+import { useAtom } from "jotai";
+import { descriptionAtom } from "../_stores/description.store";
 
 function DescriptionSection() {
   const { buttonRef, containerRef, size, events } = useDrag({
@@ -10,7 +11,7 @@ function DescriptionSection() {
     direction: "horizontal",
   });
 
-  const { description, onChangeDescription } = useMaterial();
+  const [description, setDescription] = useAtom(descriptionAtom);
   return (
     <div
       className="flex flex-col min-h-0 border border-t-0 border-l-0 2xl:border-l relative min-w-[300px]"
@@ -28,10 +29,7 @@ function DescriptionSection() {
         <h4 className="text-xs text-(--gray-11)">Description</h4>
       </div>
       <div className="flex-1 max-h-full overflow-auto">
-        <SimpleEditor
-          initialValue={description}
-          onChange={onChangeDescription}
-        />
+        <SimpleEditor initialValue={description} onChange={setDescription} />
       </div>
     </div>
   );

@@ -1,10 +1,11 @@
 import { useAtom } from "jotai";
 import CodeMirror from "~/components/Editor/CodeMirror";
-import { codeStore } from "../../_stores/editor.store";
+import { codeAtom } from "../../_stores/editor.store";
 import RunnerSelect from "./RunnerSelect";
 
 function Code() {
-  const [code, setCode] = useAtom(codeStore);
+  const [code, setCode] = useAtom(codeAtom);
+
   return (
     <div className="flex-1 min-h-0 flex relative">
       <RunnerSelect />

@@ -1,0 +1,24 @@
+import { atom } from "jotai";
+import { saveStatusAtom } from "./save-status.store";
+import type { JSONContent } from "@tiptap/react";
+
+const internalDescriptionAtom = atom<JSONContent | null>(null);
+
+export const initialDescriptionAtom = atom(
+  null,
+  (_get, set, description: JSONContent) => {
+    set(internalDescriptionAtom, description);
+  },
+);
+
+export const descriptionAtom = atom(
+  (get) => get(internalDescriptionAtom),
+  (get, set, newDescription: JSONContent) => {
+    const currentDescription = get(internalDescriptionAtom);
+    if (JSON.stringify(currentDescription) === JSON.stringify(newDescription)) {
+      return;
+    }
+    set(internalDescriptionAtom, newDescription);
+    set(saveStatusAtom, "UnSaved");
+  },
+);

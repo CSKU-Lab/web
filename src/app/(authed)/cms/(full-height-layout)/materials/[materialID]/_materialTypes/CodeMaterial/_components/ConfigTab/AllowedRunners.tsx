@@ -21,7 +21,6 @@ function AllowedRunners({ value, onChange }: Props) {
       queryFn={(query) =>
         configService.getRunners({ search: query, includeScript: true })
       }
-      queryOnRender
       renderSelected={({ option, handleOnRemove }) => (
         <HoverCard key={option.id}>
           <HoverCardTrigger asChild>
