@@ -1,4 +1,5 @@
 "use client";
+import { Quote } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import BG1 from "~/assets/quotes_bg/bg1.jpeg";
@@ -46,11 +47,10 @@ function QuotesSection() {
       <div className="absolute top-0 bottom-0 left-0 right-0 backdrop-blur-xs bg-black/40 z-10">
         {isHasQuote && (
           <div className="flex flex-col justify-end pb-10 h-full gap-4">
-            <div className="px-10">
-              <h1 className="text-2xl lg:text-4xl font-medium text-white lg:leading-12">
-                {quote}
-              </h1>
-              <p className="mt-4 text-lg text-white self-start">- {author}</p>
+            <div className="px-10 text-white relative">
+              <Quote className="absolute opacity-30 left-8 -top-18 rotate-180" size="4rem" />
+              <h1 className="text-2xl font-semibold lg:leading-12">{quote}</h1>
+              <p className="mt-4 text-lg self-start">- {author}</p>
             </div>
           </div>
         )}

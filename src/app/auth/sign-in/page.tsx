@@ -60,16 +60,24 @@ async function SignInPage({ searchParams }: Props) {
           <UsernameAndPassword />
         </div>
 
-        <p className="text-xs lg:text-sm">
-          Made with ☕ for Kasetsart University{" "}
+        <div className="flex items-center text-xs gap-1">
+          <p className="text-xs lg:text-sm">Made with 🍵</p>
           <a
-            className="text-grass-10 font-semibold"
+            className="font-semibold"
             href="https://github.com/SornchaiTheDev"
             target="_blank"
           >
             @SornchaiTheDev
           </a>
-        </p>
+          <span>and</span>
+          <a
+            className="font-semibold"
+            href="https://github.com/XEFF09"
+            target="_blank"
+          >
+            @XEFF09
+          </a>
+        </div>
       </div>
       <QuotesSection />
     </div>

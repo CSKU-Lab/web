@@ -3,10 +3,11 @@
 import axios, { AxiosError } from "axios";
 import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { Button } from "~/components/commons/Button";
 import Input from "~/components/commons/Input";
 import Label from "~/components/commons/Label";
+import { env } from "~/lib/env";
 
 function UsernameAndPassword() {
   const [username, setUsername] = useState("");
@@ -18,7 +19,8 @@ function UsernameAndPassword() {
 
   const router = useRouter();
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (e: FormEvent) => {
+    e.preventDefault();
     const _payload = {
       username,
       password,
@@ -26,7 +28,7 @@ function UsernameAndPassword() {
 
     try {
       setIsLoading(true);
-      await axios.post("/api/v1/auth/sign-in/credential", _payload);
+      await axios.post(env("API_URL") + "/auth/sign-in/credential", _payload);
       router.push("/");
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -66,8 +68,8 @@ function UsernameAndPassword() {
       </div>
       <Button
         variant="action"
+        type="submit"
         disabled={isLoading || isEmpty}
-        onClick={handleSignIn}
         className="w-full mt-4 h-12"
       >
         {isLoading ? <LoaderCircle className="animate-spin" /> : "Sign In"}

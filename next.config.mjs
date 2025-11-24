@@ -21,7 +21,14 @@ const nextConfig = {
       },
     ],
   },
-  // Optionally, add any other Next.js config below
+  async rewrites() {
+    return [
+      {
+        source: "/api/v1/:path*",
+        destination: `${process.env.SERVER_API_URL}/:path*`, // Proxy to Backend
+      },
+    ];
+  },
 };
 
 const withMDX = createMDX({

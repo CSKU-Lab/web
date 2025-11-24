@@ -3,8 +3,11 @@ import { rolesAllowlistMiddleware } from "./middlewares/roles-allowlist";
 import { verifyJWT } from "./lib/verify-jwt";
 
 export async function middleware(req: NextRequest) {
-  if (req.nextUrl.pathname.startsWith("/auth/")) {
-    return;
+  if (
+    req.nextUrl.pathname.startsWith("/auth/") ||
+    req.nextUrl.pathname.startsWith("/api/")
+  ) {
+    return NextResponse.next();
   }
 
   if (req.nextUrl.pathname.startsWith("/")) {
