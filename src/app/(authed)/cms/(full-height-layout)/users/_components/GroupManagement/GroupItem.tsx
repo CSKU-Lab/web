@@ -46,7 +46,7 @@ function GroupItem({ id, name: group_name, user_amount }: CMSUserGroup) {
         ) : (
           <h5>{name}</h5>
         )}
-        <div className="inline-flex items-center text-xs gap-1 bg-(--accent-color) text-(--on-accent-color) px-2 py-0.5 rounded-full">
+        <div className="inline-flex items-center text-xs gap-1 bg-accent text-accent-foreground px-2 py-0.5 rounded-full">
           <User size="1rem" />
           {numberFormatter(user_amount)}
         </div>

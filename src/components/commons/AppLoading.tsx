@@ -31,7 +31,7 @@ function AppLoading() {
           <motion.div
             animate={{ width: ["0%", "80%"] }}
             transition={{ duration: 1 }}
-            className="h-1 bg-(--accent-color)"
+            className="h-1 bg-accent"
           ></motion.div>
         )}
       </AnimatePresence>
