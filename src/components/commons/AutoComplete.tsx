@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Popover, PopoverAnchor, PopoverContent } from "../ui/popover";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import Loading from "./Loading";
@@ -11,7 +11,7 @@ interface Props<T extends { id: string | number }> {
   value?: T[];
   onChange?: (value: T[]) => void;
   queryFn: (query: string) => Promise<T[]>;
-  renderSelected: ({
+  renderSelected?: ({
     option,
     handleOnRemove,
   }: {
@@ -21,9 +21,13 @@ interface Props<T extends { id: string | number }> {
   children?: ({
     options,
     handleOnAdd,
+    highlightedIndex,
+    getItemId,
   }: {
     options: T[];
     handleOnAdd: (option: T) => void;
+    highlightedIndex: number;
+    getItemId: (index: number) => string;
   }) => React.ReactNode;
   loadingFallback?: React.ReactNode;
   className?: string;
@@ -55,8 +59,36 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [isFirstRender, setIsFirstRender] = useState(true);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const id = useId();
+
+  const memoizedOptions = useMemo(
+    () => options.filter((option) => !value.some((v) => v.id === option.id)),
+    [options, value],
+  );
+
+  const isOptionEmpty =
+    memoizedOptions.length === 0 && debouncedInput.length > 0 && !isLoading;
+
+  const getItemId = useCallback(
+    (index: number) => `${id}-option-${index}`,
+    [id],
+  );
+
+  const handleOnAdd = (option: T) => {
+    const newValue = [...value, option];
+    setValue(newValue);
+    onChange?.(newValue);
+  };
+
+  const handleOnRemove = (option: T) => {
+    const newValue = value.filter((v) => v.id !== option.id);
+    setValue(newValue);
+    onChange?.(newValue);
+  };
 
   useEffect(() => {
     setInputValue("");
@@ -89,7 +121,18 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
     query();
   }, [queryFn, debouncedInput, isFirstRender, queryOnRender]);
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (highlightedIndex > -1) {
+      const element = document.getElementById(getItemId(highlightedIndex));
+      if (element) {
+        element.scrollIntoView({ block: "nearest" });
+      }
+    }
+  }, [highlightedIndex, getItemId]);
+
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [memoizedOptions]);
 
   const handleDivClick = () => {
     setIsOpen(true);
@@ -99,54 +142,57 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
   };
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && inputValue.length === 0) {
-      e.preventDefault();
-      if (value.length > 0) {
-        const newValue = value.slice(0, -1);
-        setValue(newValue);
-        onChange?.(newValue);
-      }
-    }
-
-    if (
-      allowAdditionalOptions &&
-      e.key === "Enter" &&
-      inputValue.trim().length > 0
-    ) {
-      e.preventDefault();
-      const currentTime = Date.now();
-      const newOption = {
-        id: `additional-${currentTime}`,
-        display: inputValue.trim(),
-      } as T;
-      const newValue = [...value, newOption];
-      setValue(newValue);
-      onChange?.(newValue);
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        if (memoizedOptions.length > 0) {
+          setHighlightedIndex((prev) =>
+            prev < memoizedOptions.length - 1 ? prev + 1 : 0,
+          );
+        }
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        if (memoizedOptions.length > 0) {
+          setHighlightedIndex((prev) =>
+            prev > 0 ? prev - 1 : memoizedOptions.length - 1,
+          );
+        }
+        break;
+      case "Enter":
+        if (highlightedIndex >= 0 && highlightedIndex < memoizedOptions.length) {
+          e.preventDefault();
+          handleOnAdd(memoizedOptions[highlightedIndex]);
+        } else if (
+          allowAdditionalOptions &&
+          inputValue.trim().length > 0
+        ) {
+          e.preventDefault();
+          const currentTime = Date.now();
+          const newOption = {
+            id: `additional-${currentTime}`,
+            display: inputValue.trim(),
+          } as T;
+          const newValue = [...value, newOption];
+          setValue(newValue);
+          onChange?.(newValue);
+        }
+        break;
+      case "Backspace":
+        if (inputValue.length === 0 && value.length > 0) {
+          e.preventDefault();
+          const newValue = value.slice(0, -1);
+          setValue(newValue);
+          onChange?.(newValue);
+        }
+        break;
+      default:
+        break;
     }
   };
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
-  };
-
-  const memoizedOptions = useMemo(
-    () => options.filter((option) => !value.some((v) => v.id === option.id)),
-    [options, value],
-  );
-
-  const isOptionEmpty =
-    memoizedOptions.length === 0 && debouncedInput.length > 0 && !isLoading;
-
-  const handleOnAdd = (option: T) => {
-    const newValue = [...value, option];
-    setValue(newValue);
-    onChange?.(newValue);
-  };
-
-  const handleOnRemove = (option: T) => {
-    const newValue = value.filter((v) => v.id !== option.id);
-    setValue(newValue);
-    onChange?.(newValue);
   };
 
   return (
@@ -160,7 +206,16 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
             className,
           )}
         >
-          {value.map((option) => renderSelected({ option, handleOnRemove }))}
+          {value.map((option) =>
+            renderSelected ? (
+              renderSelected({ option, handleOnRemove })
+            ) : (
+              <DefaultSelectedOption
+                key={option.id}
+                {...{ option, handleOnRemove }}
+              />
+            ),
+          )}
           <input
             ref={inputRef}
             value={inputValue}
@@ -173,7 +228,10 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
         </div>
       </PopoverAnchor>
       <PopoverContent
-        onInteractOutside={() => setIsOpen(false)}
+        onInteractOutside={() => {
+          setIsOpen(false);
+          setHighlightedIndex(-1);
+        }}
         onOpenAutoFocus={(e) => e.preventDefault()}
         onWheel={(e) => e.stopPropagation()}
         className={cn(
@@ -187,8 +245,23 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
               <SearchX size="1.5rem" />
               <h6 className="text-sm">No options available</h6>
             </div>
+          ) : children ? (
+            children({
+              options: memoizedOptions,
+              handleOnAdd,
+              highlightedIndex,
+              getItemId,
+            })
           ) : (
-            !!children && children({ options: memoizedOptions, handleOnAdd })
+            memoizedOptions.map((option, index) => (
+              <DefaultOption
+                key={option.id}
+                id={getItemId(index)}
+                option={option}
+                handleOnAdd={handleOnAdd}
+                isHighlighted={highlightedIndex === index}
+              />
+            ))
           )}
         </Loading>
       </PopoverContent>
@@ -197,3 +270,48 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
 }
 
 export default AutoComplete;
+
+const DefaultSelectedOption = <
+  T extends { id: string | number; display?: string },
+>({
+  option,
+  handleOnRemove,
+}: {
+  option: T;
+  handleOnRemove: (option: T) => void;
+}) => (
+  <div className="bg-gray-200 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full flex items-center">
+    {option.display || String(option.id)}
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        handleOnRemove(option);
+      }}
+      className="ml-2 text-gray-500 hover:text-gray-700"
+    >
+      &times;
+    </button>
+  </div>
+);
+
+const DefaultOption = <T extends { id: string | number; display?: string }>({
+  option,
+  handleOnAdd,
+  isHighlighted,
+  id,
+}: {
+  option: T;
+  handleOnAdd: (option: T) => void;
+  isHighlighted: boolean;
+  id: string;
+}) => (
+  <div
+    id={id}
+    onClick={() => handleOnAdd(option)}
+    className={`p-2 cursor-pointer rounded ${
+      isHighlighted ? "bg-gray-100" : ""
+    }`}
+  >
+    {option.display || String(option.id)}
+  </div>
+);

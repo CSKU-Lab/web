@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { userService } from "~/services/user.service";
 import { Skeleton } from "../ui/skeleton";
 import { X } from "lucide-react";
+import { cn } from "~/lib/tiptap-utils";
 
 export type UserData = Pick<
   User,
@@ -67,12 +68,16 @@ function UserAutoComplete({ value, onChange, isError, placeHolder }: Props) {
         </div>
       ))}
     >
-      {({ options, handleOnAdd }) =>
-        options.map((creator) => (
+      {({ options, handleOnAdd, highlightedIndex, getItemId }) =>
+        options.map((creator, index) => (
           <button
             onClick={() => handleOnAdd(creator)}
             key={creator.id}
-            className="flex items-center px-2 py-1.5 gap-2 hover:bg-gray-100 cursor-pointer w-full rounded-md"
+            id={getItemId(index)}
+            className={cn(
+              "flex items-center px-2 py-1.5 gap-2 hover:bg-gray-100 cursor-pointer w-full rounded-md",
+              index === highlightedIndex && "bg-(--gray-3)",
+            )}
           >
             <UserProfileImage
               src={creator.profile_image}
