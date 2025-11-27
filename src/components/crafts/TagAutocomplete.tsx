@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import AutoComplete from "../commons/AutoComplete";
+import { cn } from "~/lib/tiptap-utils";
 
 type Tag = { id: string; display: string };
 interface Props {
@@ -40,9 +41,14 @@ function TagAutocomplete({ value, onChange, isError }: Props) {
       queryFn={queryTags}
       allowAdditionalOptions
     >
-      {({ options, handleOnAdd }) =>
-        options.map((tag) => (
-          <button key={tag.id} onClick={() => handleOnAdd(tag)}>
+      {({ options, handleOnAdd, highlightedIndex, getItemId }) =>
+        options.map((tag, index) => (
+          <button
+            key={getItemId(index)}
+            id={getItemId(index)}
+            onClick={() => handleOnAdd(tag)}
+            className={cn(index === highlightedIndex ? "bg-(--gray-3)" : null)}
+          >
             {tag.display}
           </button>
         ))
