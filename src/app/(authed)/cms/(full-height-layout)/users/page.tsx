@@ -194,7 +194,7 @@ function UsersManagementPage() {
         <DataTable
           table={table}
           isLoading={isFetching}
-          search={search}
+          search={debouncedSearch}
           isError={isError && !isFetching}
           onRetry={refetch}
           totalData={userPagination.pagination.total_rows}
