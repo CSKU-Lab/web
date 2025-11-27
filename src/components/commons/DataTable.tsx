@@ -181,7 +181,7 @@ function DataTable({
                             <SearchX size="2.5rem" />
                             <p className="text-sm font-medium">
                               No results found for &ldquo;
-                              {table.getState().globalFilter}&rdquo;
+                              {search}&rdquo;
                             </p>
                             <p className="text-xs text-(--gray-9)">
                               Try adjusting your search or filter to find what
