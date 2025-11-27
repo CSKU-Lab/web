@@ -3,7 +3,7 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "~/components/commons/Popover";
+} from "~/components/ui/popover";
 import SearchInput from "~/components/commons/SearchInput";
 import useFilter from "./useFilter";
 import { Button } from "~/components/commons/Button";
@@ -87,7 +87,7 @@ const AddFilterButton = ({ fields }: Props) => {
               key={field.value}
               onClick={() => handleOnSelectField(field)}
               data-state={selectedIndex === index ? "selected" : "default"}
-              className="w-full text-xs py-1.5 text-left hover:bg-(--gray-3) rounded-md px-2 data-[state=selected]:bg-(--accent-color) data-[state=selected]:text-(--on-accent-color)"
+              className="w-full text-xs py-1.5 text-left hover:bg-(--gray-3) rounded-md px-2 data-[state=selected]:bg-accent data-[state=selected]:text-accent-foreground"
             >
               {field.display}
             </button>

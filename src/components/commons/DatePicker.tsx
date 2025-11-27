@@ -7,7 +7,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "~/components/commons/Popover";
+} from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 import type { DayPicker } from "react-day-picker";
 
@@ -38,13 +38,9 @@ export function DatePicker({
           <ChevronDown size="1rem" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-(--radix-popover-trigger-width) overflow-hidden p-0"
-        align="start"
-      >
+      <PopoverContent className="w-auto overflow-hidden p-0" align="start">
         <Calendar
           {...dayPickerProps}
-          className="w-full"
           mode="single"
           selected={value}
           captionLayout="dropdown"

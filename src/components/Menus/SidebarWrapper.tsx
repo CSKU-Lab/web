@@ -24,7 +24,7 @@ function SidebarWrapper({ children }: Props) {
   const ToggleButton = () => (
     <button
       onClick={toggleSidebar}
-      className="text-(--gray-10) focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 mb-4 hover:text-(--accent-color) rounded-md z-50 w-fit"
+      className="text-(--gray-10) focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 mb-4 hover:text-accent rounded-md z-50 w-fit"
     >
       <PanelLeft size="1.25rem" />
     </button>

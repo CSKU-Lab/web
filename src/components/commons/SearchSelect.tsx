@@ -4,7 +4,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "~/components/commons/Popover";
+} from "~/components/ui/popover";
 import type { ClassNameProps } from "~/types/classname-props";
 import { cn } from "~/lib/utils";
 import { ChevronDown, Loader, Search } from "lucide-react";

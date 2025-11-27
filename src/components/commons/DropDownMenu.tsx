@@ -25,7 +25,7 @@ function DropdownMenuContent({
   return (
     <ShadcnDropdownMenuContent
       {...props}
-      className={cn(className, "bg-(--gray-2) text-(--gray-11)")}
+      className={cn(className, "bg-white text-(--gray-11)")}
     />
   );
 }

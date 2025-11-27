@@ -18,7 +18,7 @@ function CourseVisibility({ selected, onChange }: Props) {
   return (
     <Select value={selected} onValueChange={onChange}>
       <SelectTrigger asChild>
-        <Button className="my-4 shrink-0 px-3 py-1.5">
+        <Button className="shrink-0 px-3 py-1.5 text-xs">
           <SlidersHorizontal size="1rem" />
           Show : {visibilities[selected]}
         </Button>

@@ -3,7 +3,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "~/components/commons/Popover";
+} from "~/components/ui/popover";
 import useFilter from "./useFilter";
 import type { IFilter } from "~/types/filter";
 import Operator from "./Operator";

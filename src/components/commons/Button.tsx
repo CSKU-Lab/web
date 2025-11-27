@@ -25,9 +25,9 @@ export const Button = ({
   ...props
 }: Props) => {
   let normalColor =
-    "border-(--gray-6) bg-(--gray-2) hover:bg-(--gray-3) text-(--gray-11)";
+    "border-(--gray-6) bg-white hover:bg-(--gray-3) text-(--gray-11)";
   let activeColor =
-    "bg-(--accent-color) hover:bg-(--accent-color)/90 hover:text-(--on-accent-color) text-(--on-accent-color)/90";
+    "bg-accent hover:bg-accent/90 hover:text-accent-foreground text-accent-foreground/90";
 
   switch (variant) {
     case "danger":
@@ -38,7 +38,7 @@ export const Button = ({
       break;
     case "action":
       normalColor =
-        "border-(--gray-6) bg-(--accent-color) hover:bg-(--accent-color)/70 active:bg-(--accent-color)/80 text-(--on-accent-color) hover:text-(--on-accent-color)/90";
+        "border-(--gray-6) bg-accent hover:bg-accent/70 active:bg-accent/80 text-accent-foreground hover:text-accent-foreground/90";
       break;
     case "transparent":
       normalColor = "text-(--gray-11) hover:text-(--gray-12) border-none p-0";
@@ -56,7 +56,7 @@ export const Button = ({
           type="button"
           {...{ onClick, ...props }}
           className={cn(
-            "px-3 py-1.5 border text-xs rounded-md flex justify-center items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 transition-colors",
+            "px-3 py-1.5 border text-xs rounded-md flex justify-center items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 transition-colors cursor-pointer",
             normalColor,
             isActive && activeColor,
             className,

@@ -77,7 +77,7 @@ function SidebarMenus() {
               className={cn(
                 "flex items-center gap-1.5 text-(--gray-10) p-2 hover:bg-(--gray-4) rounded-lg hover:text-(--gray-11) w-full",
                 isActive &&
-                  "bg-(--accent-color) text-(--on-accent-color) hover:bg-(--accent-color)/90 rounded-lg hover:text-(--on-accent-color)/90",
+                  "bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg hover:text-accent-foreground/90",
               )}
             >
               <Icon key={`${label}-icon`} />

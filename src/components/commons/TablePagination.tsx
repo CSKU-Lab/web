@@ -108,7 +108,7 @@ const PageNumber = ({ children, isActive, onClick }: PageNumberProps) => {
       className={cn(
         "rounded-lg p-2 w-6 h-6 flex justify-center items-center text-(--gray-9) text-xs",
         isActive
-          ? "text-(--on-accent-color) bg-(--accent-color)"
+          ? "text-accent-foreground bg-accent"
           : "hover:bg-(--gray-2) hover:text-(--gray-12)",
       )}
     >
