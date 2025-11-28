@@ -22,6 +22,7 @@ function StudentImport({ form }: Props) {
     const studentsData = textContent;
 
     setEditorValue(studentsData);
+    setImportBy("editor");
   };
 
   useEffect(() => {
@@ -31,8 +32,6 @@ function StudentImport({ form }: Props) {
       .filter((line) => line !== "");
     form.setValue("students_upload", parsedStudents);
   }, [editorValue, form]);
-
-  const isEditorPhase = importBy === "editor" || editorValue !== "";
 
   return (
     <div>
@@ -60,7 +59,7 @@ function StudentImport({ form }: Props) {
         </Button>
       )}
 
-      {importBy === "upload" && editorValue === "" && (
+      {importBy === "upload" && (
         <FileUploader
           onFileSelect={handleOnUpload}
           accept={{ "text/csv": [".csv"] }}
@@ -68,7 +67,7 @@ function StudentImport({ form }: Props) {
           className="flex-1 h-80"
         />
       )}
-      {isEditorPhase && (
+      {importBy === "editor" && (
         <div className="border rounded-md overflow-hidden h-80 flex-1">
           <CodeMirror
             className="h-full"
