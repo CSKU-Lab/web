@@ -103,10 +103,15 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
   useEffect(() => {
     if (isFirstRender) {
       setIsFirstRender(false);
+      if (!queryOnRender && debouncedInput.length === 0) {
+        return;
+      }
+    } else {
+      if (debouncedInput.length === 0) {
+        setOptions([]);
+        return;
+      }
     }
-
-    if (isFirstRender && !queryOnRender) return;
-    if (debouncedInput.length === 0 && !queryOnRender) return;
 
     const query = async () => {
       try {
