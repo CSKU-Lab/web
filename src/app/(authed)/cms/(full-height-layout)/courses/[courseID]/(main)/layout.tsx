@@ -21,15 +21,15 @@ function CourseLayout({ children }: ChildrenProps) {
         </Loading>
       </PageTitle>
       <NavigationMenus
-        className="mt-4 mb-8 ml-4 transition-all"
+        className="mt-4 mb-8 ml-4 transition-all space-x-4"
         menus={[
           {
             name: "Sections",
             href: "/cms/courses/:courseID",
           },
           {
-            name: "Materials",
-            href: "/cms/courses/:courseID/materials",
+            name: "Labs",
+            href: "/cms/courses/:courseID/labs",
           },
           {
             name: "Settings",
