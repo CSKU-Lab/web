@@ -18,7 +18,7 @@ function SemesterType({ value, onChange, isError }: Props) {
     <Select onValueChange={onChange} value={value}>
       <SelectTrigger
         className={cn(
-          "relative w-full",
+          "relative w-full h-9",
           isError && "border-(--red-9)",
         )}
       >
