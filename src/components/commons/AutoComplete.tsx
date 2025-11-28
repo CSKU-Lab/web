@@ -201,7 +201,7 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
         <div
           onClick={handleDivClick}
           className={cn(
-            "flex flex-wrap items-center border rounded-md px-3 py-1 min-h-9 gap-2 bg-white",
+            "flex flex-wrap items-center border border-(--gray-6) rounded-md px-3 py-1 min-h-9 gap-2 bg-white",
             isError && "border-(--red-9)",
             className,
           )}
@@ -241,27 +241,36 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
       >
         <Loading {...{ isLoading }} fallback={loadingFallback}>
           {isOptionEmpty ? (
-            <div className="flex flex-col justify-center items-center gap-2 text-(--gray-11) my-2">
-              <SearchX size="1.5rem" />
-              <h6 className="text-sm">No options available</h6>
-            </div>
-          ) : children ? (
-            children({
-              options: memoizedOptions,
-              handleOnAdd,
-              highlightedIndex,
-              getItemId,
-            })
+            <DefaultEmptyState
+              searchTerm={debouncedInput}
+              allowAdditionalOptions={allowAdditionalOptions}
+              onCreateNew={() => {
+                const newOption = {
+                  id: `additional-${Date.now()}`,
+                  display: debouncedInput.trim(),
+                } as T;
+                handleOnAdd(newOption);
+              }}
+            />
           ) : (
-            memoizedOptions.map((option, index) => (
-              <DefaultOption
-                key={option.id}
-                id={getItemId(index)}
-                option={option}
-                handleOnAdd={handleOnAdd}
-                isHighlighted={highlightedIndex === index}
-              />
-            ))
+            <>
+              {children
+                ? children({
+                    options: memoizedOptions,
+                    handleOnAdd,
+                    highlightedIndex,
+                    getItemId,
+                  })
+                : memoizedOptions.map((option, index) => (
+                    <DefaultOption
+                      key={option.id}
+                      id={getItemId(index)}
+                      option={option}
+                      handleOnAdd={handleOnAdd}
+                      isHighlighted={highlightedIndex === index}
+                    />
+                  ))}
+            </>
           )}
         </Loading>
       </PopoverContent>
@@ -315,3 +324,32 @@ const DefaultOption = <T extends { id: string | number; display?: string }>({
     {option.display || String(option.id)}
   </div>
 );
+
+const DefaultEmptyState = ({
+  searchTerm,
+  allowAdditionalOptions,
+  onCreateNew,
+}: {
+  searchTerm: string;
+  allowAdditionalOptions?: boolean;
+  onCreateNew: () => void;
+}) => {
+  if (allowAdditionalOptions && searchTerm.length > 0) {
+    return (
+      <div
+        onClick={onCreateNew}
+        className="p-2 cursor-pointer rounded hover:bg-gray-100 text-sm text-gray-700"
+      >
+        + Create "{searchTerm}"
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col justify-center items-center gap-2 text-gray-500 my-4">
+      <SearchX size="2rem" />
+      <h6 className="text-sm font-medium">No results for "{searchTerm}"</h6>
+      <p className="text-xs text-gray-400">Try a different keyword.</p>
+    </div>
+  );
+};
