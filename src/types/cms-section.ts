@@ -5,7 +5,7 @@ type Instructor = Pick<
   "id" | "username" | "display_name" | "profile_image"
 >;
 
-interface Section {
+export interface Section {
   id: string;
   name: string;
   banner: string;

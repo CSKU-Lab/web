@@ -1,10 +1,9 @@
 "use client";
 import { Plus } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "~/components/commons/Button";
 import useResolvePath from "~/hooks/useResolvePath";
-import useSectionPagination from "../_hooks/useSectionPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import {
   FallbackSectionCard,
@@ -15,9 +14,11 @@ import type { IFilter } from "~/types/filter";
 import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
 import Filters from "~/components/commons/Filters";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
+import useSectionsByCourseIdPagination from "../_hooks/useSectionsByCoursePagination";
 
 function CourseMainPage() {
   const router = useRouter();
+  const { courseID } = useParams();
 
   const generatePath = useResolvePath();
   const handleOnAddSection = () =>
@@ -39,11 +40,14 @@ function CourseMainPage() {
     fetchNextPage,
     hasNextPage,
     isFetching,
-  } = useSectionPagination({
-    page_size: 3,
-    sort_by: "started_date",
-    sort_order: "desc",
-    filters,
+  } = useSectionsByCourseIdPagination({
+    course_id: courseID!.toString(),
+    args: {
+      page_size: 3,
+      sort_by: "started_date",
+      sort_order: "desc",
+      filters,
+    },
   });
 
   const bottomDivRef = useOnElementAppear({

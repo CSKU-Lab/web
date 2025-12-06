@@ -1,6 +1,6 @@
 import { api } from "~/lib/api.client";
 import { PaginationMixin } from "./pagination.mixin";
-import type { CMSSection } from "~/types/cms-section";
+import type { CMSSection, Section } from "~/types/cms-section";
 import { BaseService } from "./base.service";
 
 export type CreateSectionPayload = {
