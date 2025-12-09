@@ -11,10 +11,10 @@ import AddSemester from "./_components/AddSemester";
 import useTableState from "~/hooks/useTableState";
 import useSemesterPagination from "./_hooks/useSemesterPagination";
 import type { CMSSemester } from "~/types/cms-semester";
-import DeleteSemeseterDialog from "./_components/DeleteSemesterDialog";
 import EditSemester from "./_components/EditSemester";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import PageTitle from "~/components/commons/PageTitle";
+import DeleteSemesterDialog from "./_components/DeleteSemesterDialog";
 
 function SemesterManagementPage() {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -78,6 +78,21 @@ function SemesterManagementPage() {
     },
   });
 
+  // const deleteSemester = useMutation({
+  //   mutationFn: (id: string) => cmsSemesterService.delete(id),
+  //   onSuccess: async () => {
+  //     toast.success("Semester deleted successfully");
+  //     await queryClient.refetchQueries({ queryKey: queryKeys.semester.all });
+  //     onClose();
+  //   },
+  //   onError: (err) => {
+  //     if (err instanceof AxiosError && err.response?.data?.message) {
+  //       toast.error(err.response?.data?.error);
+  //       return;
+  //     }
+  //   },
+  // });
+
   return (
     <>
       {editSemesterRow !== null && (
@@ -87,7 +102,7 @@ function SemesterManagementPage() {
         />
       )}
       {deleteSemesterRow !== null && (
-        <DeleteSemeseterDialog
+        <DeleteSemesterDialog
           semester={deleteSemesterRow}
           onClose={() => setDeleteSemesterRow(null)}
         />
