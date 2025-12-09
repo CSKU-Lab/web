@@ -34,11 +34,6 @@ export const queryKeys = {
       ...queryKeys.semester.all,
       params,
     ],
-    affectedSections: (semesterId: string) => [
-      ...queryKeys.semester.all,
-      semesterId,
-      "affected_sections",
-    ],
   },
   material: {
     all: ["materials"],
@@ -57,5 +52,12 @@ export const queryKeys = {
         return ["config", "runners"];
       },
     },
+  },
+  affectedEntities: {
+    get: (type: "course" | "semester", id: string) => [
+      "affectedEntities",
+      type,
+      id,
+    ],
   },
 } as const;
