@@ -1,7 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save, Trash, Eye, EyeOff, Users } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "~/components/commons/Button";
 import InlineError from "~/components/commons/InlineError";
@@ -18,6 +18,7 @@ import { queryKeys } from "~/queryKeys";
 import UserAutoComplete from "~/components/commons/UserAutoComplete";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import PageTitle from "~/components/commons/PageTitle";
+import DeleteCourseDialog from "./_components/DeleteCourseDialog";
 
 function SettingPage() {
   const { courseID } = useParams<{ courseID: string }>();
@@ -56,16 +57,25 @@ function SettingPage() {
       JSON.stringify(course?.creators) &&
     form.watch("type") === course?.type;
 
+  const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
+  const handleDeleteCourse = () => setConfirmDeleteVisible(true);
+  const onCloseDeleteDialog = () => setConfirmDeleteVisible(false);
+
   if (!course) return null;
 
   return (
     <>
+      {confirmDeleteVisible && (
+        <DeleteCourseDialog onClose={onCloseDeleteDialog} />
+      )}
       <PageTitle>Settings</PageTitle>
       <div className="flex justify-center py-8">
         <div className="w-full max-w-4xl space-y-8 2xl:mt-10">
           <div className="bg-white border border-gray-200 rounded-lg p-6">
             <div className="space-y-1.5 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">Course Settings</h2>
+              <h2 className="text-xl font-semibold text-gray-900">
+                Course Settings
+              </h2>
               <p className="text-sm text-gray-600">
                 Manage your course details and visibility.
               </p>
@@ -120,7 +130,9 @@ function SettingPage() {
 
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <h3 className="text-lg font-medium text-gray-900">Visibility</h3>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    Visibility
+                  </h3>
                   <p className="text-sm text-gray-600">
                     Choose who can see this course.
                   </p>
@@ -182,14 +194,20 @@ function SettingPage() {
           </div>
           <div className="bg-red-50 border border-red-200 rounded-lg p-6">
             <div className="space-y-1.5 mb-6">
-              <h2 className="text-xl font-semibold text-red-900">Danger Zone</h2>
+              <h2 className="text-xl font-semibold text-red-900">
+                Danger Zone
+              </h2>
               <p className="text-sm text-red-700">
-                Deleting this course will permanently remove all associated data.
-                This action cannot be undone.
+                Deleting this course will permanently remove all associated
+                data. This action cannot be undone.
               </p>
               <hr />
             </div>
-            <Button variant="danger" className="h-10">
+            <Button
+              variant="danger"
+              className="h-10"
+              onClick={handleDeleteCourse}
+            >
               <Trash size="1rem" className="mr-2" />
               Delete Course
             </Button>
