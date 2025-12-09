@@ -34,6 +34,10 @@ class CMSCourseService extends BaseService {
       creators: creatorIds,
     });
   }
+
+  async deleteByID(courseId: string): Promise<void> {
+    return api.delete(`${this._baseURL}/${courseId}`);
+  }
 }
 
 export const cmsCourseService = new (PaginationMixin<
