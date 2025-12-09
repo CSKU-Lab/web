@@ -62,7 +62,10 @@ function ConfirmDeleteDialog({
   ) => {
     if (entity.data.every((e) => e.children === null)) {
       return (
-        <Collapsible key={entity.type} className="ml-4">
+        <Collapsible
+          key={entity.type}
+          className={cn("text-(--gray-12)", depth === 0 ? "" : "ml-4")}
+        >
           <CollapsibleTrigger className="flex items-center gap-1 mt-1 group">
             <ChevronRight
               size="1rem"
