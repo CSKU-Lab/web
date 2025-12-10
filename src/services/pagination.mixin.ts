@@ -38,10 +38,10 @@ export const PaginationMixin = <
     ): Promise<PaginationResponse<Item>> {
       const searchParams = new URLSearchParams();
 
-      const { filters } = paramsRequest;
+      const { filters, ...other } = paramsRequest;
       params = {
         ...params,
-        ...paramsRequest,
+        ...other,
       };
 
       if (filters) {
