@@ -17,7 +17,7 @@ function useSectionsByCourseIdPagination(params: Params) {
     queryFn: ({ pageParam }) =>
       cmsSectionService.getPagination(
         { ...args, page: pageParam },
-        "/cms/course",
+        "/cms/courses",
         `/${course_id}/sections`,
       ),
   });
