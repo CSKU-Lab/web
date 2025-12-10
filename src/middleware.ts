@@ -33,6 +33,18 @@ export async function middleware(req: NextRequest) {
   if (req.nextUrl.pathname.startsWith("/cms")) {
     return await rolesAllowlistMiddleware(req, ["admin", "instructor"]);
   }
+
+  for (const path of ["/cms/semesters", "/cms/users"]) {
+    if (req.nextUrl.pathname.startsWith(path)) {
+      return await rolesAllowlistMiddleware(req, ["admin"]);
+    }
+  }
+
+  for (const path of ["/cms/courses", "/cms/materials"]) {
+    if (req.nextUrl.pathname.startsWith(path)) {
+      return await rolesAllowlistMiddleware(req, ["admin", "instructor"]);
+    }
+  }
 }
 
 export const config = {
