@@ -31,17 +31,17 @@ export const PaginationMixin = <
       super(args);
     }
 
-    async getPagination({
-      filters,
-      ...paramsRequest
-    }: Partial<PaginationRequestParams<Item, CustomSortByKeys>>): Promise<
-      PaginationResponse<Item>
-    > {
+    async getPagination(
+      paramsRequest: Partial<PaginationRequestParams<Item, CustomSortByKeys>>,
+      url = this._baseURL,
+      query = "",
+    ): Promise<PaginationResponse<Item>> {
       const searchParams = new URLSearchParams();
 
+      const { filters, ...other } = paramsRequest;
       params = {
         ...params,
-        ...paramsRequest,
+        ...other,
       };
 
       if (filters) {
@@ -58,7 +58,7 @@ export const PaginationMixin = <
       });
 
       const res = await this.api.get<PaginationResponse<Item>>(
-        this._baseURL + "?" + searchParams.toString(),
+        url + `${query}` + "?" + searchParams.toString(),
       );
 
       return res.data;
