@@ -1,64 +1,21 @@
 "use client";
 
-import { Book, CalendarDays, Library, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Fragment, useMemo } from "react";
+import { Fragment } from "react";
 import { cn } from "~/lib/utils";
+import type { SidebarMenuCategory } from "~/types/sidebar-menu";
 
-interface Menu {
-  icon: () => React.ReactNode;
-  label: string;
-  href: string;
+interface Props {
+  config: SidebarMenuCategory[];
 }
 
-interface Category {
-  category: string | null;
-  menus: Menu[];
-}
-
-function SidebarMenus() {
-  const categories: Category[] = useMemo(
-    () => [
-      {
-        category: null,
-        menus: [
-          {
-            icon: () => <Book size="1rem" />,
-            label: "Courses",
-            href: "/cms/courses",
-          },
-          {
-            icon: () => <Library size="1rem" />,
-            label: "Materials",
-            href: "/cms/materials",
-          },
-        ],
-      },
-      {
-        category: "Management",
-        menus: [
-          {
-            icon: () => <UserRound size="1rem" />,
-            label: "Users Management",
-            href: "/cms/users",
-          },
-          {
-            icon: () => <CalendarDays size="1rem" />,
-            label: "Semesters Management",
-            href: "/cms/semesters",
-          },
-        ],
-      },
-    ],
-    [],
-  );
-
+function SidebarMenus({ config }: Props) {
   const pathname = usePathname();
 
   return (
     <div className="space-y-3">
-      {categories.map(({ category, menus }) => {
+      {config.map(({ category, menus }) => {
         const render = [];
         if (category) {
           render.push(
@@ -68,7 +25,7 @@ function SidebarMenus() {
           );
         }
 
-        menus.forEach(({ label, icon: Icon, href }) => {
+        menus.forEach(({ label, icon, href }) => {
           const isActive = pathname.startsWith(href);
           render.push(
             <Link
@@ -80,7 +37,7 @@ function SidebarMenus() {
                   "bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg hover:text-accent-foreground/90",
               )}
             >
-              <Icon key={`${label}-icon`} />
+              {icon}
               <p key={`${label}-label`} className="text-xs">
                 {label}
               </p>
