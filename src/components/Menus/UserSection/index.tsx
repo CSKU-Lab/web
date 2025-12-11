@@ -1,20 +1,26 @@
-import { motion } from "motion/react";
-import { DoorOpen, EllipsisVertical, SquareTerminal } from "lucide-react";
-import { useRouter } from "next/navigation";
+"use client";
+import { EllipsisVertical } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
+import UserProfileImage from "../UserProfileImage";
+import UserRole from "~/components/commons/UserRole";
+import SignoutButton from "./SignoutButton";
+import CMSButton from "./CMSButton";
+import BackToHomeButton from "./BackToHomeButton";
 import { useSession } from "~/providers/SessionProvider";
-import UserProfileImage from "./UserProfileImage";
-import UserRole from "../commons/UserRole";
+import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
 
 function UserSection() {
-  const { user, signOut } = useSession();
+  const { user } = useSession();
+  const pathname = usePathname();
 
-  const router = useRouter();
-  const handleGoToCMS = () => router.push("/cms");
+  const isCMS = pathname.startsWith("/cms");
+  const hasCMSAccess =
+    user.roles.includes("admin") || user.roles.includes("instructor");
 
   return (
     <Popover>
@@ -56,20 +62,8 @@ function UserSection() {
         </div>
         <hr />
         <div className="p-2">
-          <button
-            onClick={handleGoToCMS}
-            className="flex items-center gap-1 hover:bg-(--gray-2) w-full pl-1.5 pr-4 py-2 rounded-lg"
-          >
-            <SquareTerminal size="1rem" />
-            <h6 className="text-sm">Go to CMS</h6>
-          </button>
-          <button
-            onClick={signOut}
-            className="flex items-center gap-1 hover:bg-(--gray-2) w-full pl-1.5 pr-4 py-2 rounded-lg"
-          >
-            <DoorOpen size="1rem" />
-            <h6 className="text-sm">Sign out</h6>
-          </button>
+          {hasCMSAccess ? isCMS ? <BackToHomeButton /> : <CMSButton /> : null}
+          <SignoutButton />
         </div>
       </PopoverContent>
     </Popover>
