@@ -4,9 +4,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { useAtom } from "jotai";
 import { sidebarAtom } from "~/globalStore/sidebar";
 import type { ReactNode } from "react";
-import UserSection from "./UserSection";
 import { PanelLeft } from "lucide-react";
 import { SIDEBAR_WIDTH } from "~/constants";
+import UserSection from "./UserSection";
 
 interface Props {
   children: ReactNode;
