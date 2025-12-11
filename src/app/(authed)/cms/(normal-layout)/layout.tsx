@@ -14,7 +14,7 @@ async function Layout({ children }: ChildrenProps) {
   const sidebarMenus = getSidebarMenus(user.roles);
 
   return (
-    <CoreLayout homePath="/cms">
+    <CoreLayout>
       <CoreLayoutSidebar>
         <h6 className="text-(--gray-11) text-xs font-light py-2">CMS</h6>
         <SidebarMenus config={sidebarMenus} />
