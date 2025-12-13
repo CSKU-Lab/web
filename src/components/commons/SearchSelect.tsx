@@ -18,6 +18,7 @@ interface Props<T> extends ClassNameProps {
   children?: (options: T[]) => React.ReactNode;
   queryFn?: (query: string) => Promise<T[]>;
   isError?: boolean;
+  customValueRender?: (value: T) => string;
 }
 
 function SearchSelect<T extends { id: string; name: string }>({
@@ -28,6 +29,7 @@ function SearchSelect<T extends { id: string; name: string }>({
   children,
   queryFn,
   isError,
+  customValueRender,
 }: Props<T>) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -91,7 +93,9 @@ function SearchSelect<T extends { id: string; name: string }>({
         onClick={() => setIsOpen(!isOpen)}
       >
         {value !== null && value !== undefined && (
-          <h5 className="text-sm w-10/12 truncate">{value.name}</h5>
+          <h5 className="text-sm w-10/12 truncate">
+            {customValueRender ? customValueRender(value) : value.name}
+          </h5>
         )}
         <ChevronDown
           size="1rem"
