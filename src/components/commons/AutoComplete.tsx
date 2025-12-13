@@ -68,8 +68,9 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
 }: Props<T>) {
   const [internalValue, setInternalValue] = useState<T[]>([]);
 
-  const value = initialValue ?? internalValue;
-  const setValue = initialValue ? onChange : setInternalValue;
+  const isControlled = initialValue !== undefined;
+  const value = isControlled ? initialValue : internalValue;
+  const setValue = isControlled ? onChange! : setInternalValue;
 
   const [inputValue, setInputValue] = useState("");
 
@@ -100,13 +101,11 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
   const handleOnAdd = (option: T) => {
     const newValue = [...value, option];
     setValue(newValue);
-    onChange?.(newValue);
   };
 
   const handleOnRemove = (option: T) => {
     const newValue = value.filter((v) => v.id !== option.id);
     setValue(newValue);
-    onChange?.(newValue);
   };
 
   useEffect(() => {
@@ -199,7 +198,6 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
           } as T;
           const newValue = [...value, newOption];
           setValue(newValue);
-          onChange?.(newValue);
         }
         break;
       case "Backspace":
@@ -207,7 +205,6 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
           e.preventDefault();
           const newValue = value.slice(0, -1);
           setValue(newValue);
-          onChange?.(newValue);
         }
         break;
       default:
@@ -364,7 +361,7 @@ const DefaultEmptyState = ({
         onClick={onCreateNew}
         className="p-2 cursor-pointer rounded hover:bg-gray-100 text-sm text-gray-700"
       >
-        + Create &ldquo;{searchTerm}&ldquo;
+        + Create &ldquo;{searchTerm}&rdquo;
       </div>
     );
   }
