@@ -203,6 +203,7 @@ function NewSectionPage() {
                       value={value}
                       queryFn={querySemesters}
                       className="w-full"
+                      customValueRender={(sem) => `${sem.name}/${sem.type}`}
                     >
                       {(options) =>
                         options.map((option) => (
@@ -211,7 +212,7 @@ function NewSectionPage() {
                             onClick={() => onChange(option)}
                             className="block text-sm mb-2 px-2 py-1 hover:bg-(--gray-3) rounded-md w-full text-left"
                           >
-                            {option.name}
+                            {`${option.name}/${option.type}`}
                           </button>
                         ))
                       }
