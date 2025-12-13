@@ -1,14 +1,14 @@
-export interface CreateCourse {
+export interface WriteCourse {
   name: string;
   creators: Creator[];
-  type: CourseType;
+  visibility: Visibility;
 }
 
 export interface Course {
   id: string;
   name: string;
   creators: Creator[];
-  type: CourseType;
+  visibility: Visibility;
 }
 
 interface Creator {
@@ -18,4 +18,4 @@ interface Creator {
   profile_image: string | null;
 }
 
-type CourseType = "public" | "private";
+type Visibility = "public" | "private";
