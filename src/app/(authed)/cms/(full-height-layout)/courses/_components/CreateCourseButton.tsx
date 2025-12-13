@@ -18,7 +18,7 @@ import Input from "~/components/commons/Input";
 import { cmsCourseService } from "~/services/cms-course.service";
 import { createCourseSchame } from "../_schemas/course.create";
 import { useState } from "react";
-import type { CreateCourse } from "~/types/cms-course";
+import type { WriteCourse } from "~/types/cms-course";
 import { toast } from "sonner";
 import Label from "~/components/commons/Label";
 import InlineError from "~/components/commons/InlineError";
@@ -39,7 +39,7 @@ function CreateCourseButton() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (course: CreateCourse) =>
+    mutationFn: async (course: WriteCourse) =>
       await cmsCourseService.create(course),
     onSuccess: () => {
       toast.success("Course created successfully!");
