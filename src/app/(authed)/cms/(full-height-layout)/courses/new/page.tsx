@@ -6,7 +6,7 @@ import Input from "~/components/commons/Input";
 import Label from "~/components/commons/Label";
 import { createCourseSchame } from "../_schemas/course.create";
 import { useMutation } from "@tanstack/react-query";
-import type { CreateCourse } from "~/types/cms-course";
+import type { WriteCourse } from "~/types/cms-course";
 import { cmsCourseService } from "~/services/cms-course.service";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
@@ -28,7 +28,7 @@ function NewCoursePage() {
 
   const router = useRouter();
   const mutation = useMutation({
-    mutationFn: async (course: CreateCourse) =>
+    mutationFn: async (course: WriteCourse) =>
       await cmsCourseService.create(course),
     onSuccess: (res) => {
       toast.success("Course created successfully!");
