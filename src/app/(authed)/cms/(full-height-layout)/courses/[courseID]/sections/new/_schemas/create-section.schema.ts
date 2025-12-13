@@ -12,6 +12,7 @@ export const createSectionSchema = z.object({
     .object({
       id: z.string(),
       name: z.string(),
+      type: z.string(),
     })
     .refine((data) => data.id !== "" && data.name !== "", {
       message: "Semester is required",
