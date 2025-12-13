@@ -13,11 +13,12 @@ export type UserData = Pick<
 >;
 
 interface Props {
-  value?: UserData[];
-  onChange?: (users: UserData[]) => void;
+  value: UserData[];
+  onChange: (users: UserData[]) => void;
   isError?: boolean;
   placeHolder?: string;
 }
+
 function UserAutoComplete({ value, onChange, isError, placeHolder }: Props) {
   const queryUsers = useCallback(async (query: string) => {
     const res = await userService.getPagination({

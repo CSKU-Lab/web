@@ -1,6 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save, Trash, Eye, EyeOff, Users } from "lucide-react";
+import { Save, Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "~/components/commons/Button";
@@ -9,7 +9,7 @@ import Input from "~/components/commons/Input";
 import Label from "~/components/commons/Label";
 import { createCourseSchame } from "../../_schemas/course.create";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { CreateCourse } from "~/types/cms-course";
+import type { WriteCourse } from "~/types/cms-course";
 import { cmsCourseService } from "~/services/cms-course.service";
 import { toast } from "sonner";
 import useGetCourse from "../_hooks/useGetCourse";
@@ -26,22 +26,17 @@ function SettingPage() {
 
   const form = useForm({
     resolver: zodResolver(createCourseSchame),
-    defaultValues: {
-      name: course?.name ?? "",
-      creators: course?.creators ?? [],
-      type: course?.type ?? "public",
-    },
   });
 
   useEffect(() => {
     form.setValue("name", course?.name ?? "");
     form.setValue("creators", course?.creators ?? []);
-    form.setValue("type", course?.type ?? "public");
+    form.setValue("visibility", course?.visibility ?? "public");
   }, [form, course]);
 
   const ctx = useQueryClient();
   const updateCourse = useMutation({
-    mutationFn: async (course: CreateCourse) =>
+    mutationFn: async (course: WriteCourse) =>
       await cmsCourseService.updateByID(courseID, course),
     onSuccess: async () => {
       toast.success("Course updated successfully!");
@@ -55,7 +50,7 @@ function SettingPage() {
     form.watch("name") === course?.name &&
     JSON.stringify(form.watch("creators")) ===
       JSON.stringify(course?.creators) &&
-    form.watch("type") === course?.type;
+    form.watch("visibility") === course?.visibility;
 
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const handleDeleteCourse = () => setConfirmDeleteVisible(true);
@@ -139,7 +134,7 @@ function SettingPage() {
                 </div>
                 <Controller
                   control={form.control}
-                  name="type"
+                  name="visibility"
                   render={({ field: { value, onChange } }) => (
                     <RadioGroup
                       value={value}
