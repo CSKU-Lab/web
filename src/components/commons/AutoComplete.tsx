@@ -70,7 +70,7 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
 
   const isControlled = initialValue !== undefined;
   const value = isControlled ? initialValue : internalValue;
-  const setValue = isControlled ? onChange! : setInternalValue;
+  const setValue = isControlled ? onChange : setInternalValue;
 
   const [inputValue, setInputValue] = useState("");
 
