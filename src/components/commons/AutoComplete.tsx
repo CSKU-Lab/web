@@ -1,15 +1,30 @@
 "use client";
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Popover, PopoverAnchor, PopoverContent } from "../ui/popover";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import Loading from "./Loading";
 import { SearchX } from "lucide-react";
 import { cn } from "~/lib/utils";
 
-interface Props<T extends { id: string | number }> {
+type ControlledOrUncontrolledProps<T> =
+  | {
+      value: T[];
+      onChange: (value: T[]) => void;
+    }
+  | {
+      value?: undefined;
+      onChange?: undefined;
+    };
+
+type Props<T extends { id: string | number }> = {
   isError?: boolean;
-  value?: T[];
-  onChange?: (value: T[]) => void;
   queryFn: (query: string) => Promise<T[]>;
   renderSelected?: ({
     option,
@@ -35,7 +50,7 @@ interface Props<T extends { id: string | number }> {
   placeHolder?: string;
   allowAdditionalOptions?: boolean;
   popoverContentClasses?: string;
-}
+} & ControlledOrUncontrolledProps<T>;
 
 function AutoComplete<T extends { id: string | number; display?: string }>({
   isError,
@@ -51,7 +66,11 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
   allowAdditionalOptions,
   popoverContentClasses,
 }: Props<T>) {
-  const [value, setValue] = useState<T[]>(initialValue ?? []);
+  const [internalValue, setInternalValue] = useState<T[]>([]);
+
+  const value = initialValue ?? internalValue;
+  const setValue = initialValue ? onChange : setInternalValue;
+
   const [inputValue, setInputValue] = useState("");
 
   const debouncedInput = useInputDebounce(inputValue, 500);
@@ -165,13 +184,13 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
         }
         break;
       case "Enter":
-        if (highlightedIndex >= 0 && highlightedIndex < memoizedOptions.length) {
+        if (
+          highlightedIndex >= 0 &&
+          highlightedIndex < memoizedOptions.length
+        ) {
           e.preventDefault();
           handleOnAdd(memoizedOptions[highlightedIndex]);
-        } else if (
-          allowAdditionalOptions &&
-          inputValue.trim().length > 0
-        ) {
+        } else if (allowAdditionalOptions && inputValue.trim().length > 0) {
           e.preventDefault();
           const currentTime = Date.now();
           const newOption = {
@@ -345,7 +364,7 @@ const DefaultEmptyState = ({
         onClick={onCreateNew}
         className="p-2 cursor-pointer rounded hover:bg-gray-100 text-sm text-gray-700"
       >
-        + Create "{searchTerm}"
+        + Create &ldquo;{searchTerm}&ldquo;
       </div>
     );
   }
@@ -353,7 +372,9 @@ const DefaultEmptyState = ({
   return (
     <div className="flex flex-col justify-center items-center gap-2 text-gray-500 my-4">
       <SearchX size="2rem" />
-      <h6 className="text-sm font-medium">No results for "{searchTerm}"</h6>
+      <h6 className="text-sm font-medium">
+        No results for &ldquo;{searchTerm}&rdquo;
+      </h6>
       <p className="text-xs text-gray-400">Try a different keyword.</p>
     </div>
   );
