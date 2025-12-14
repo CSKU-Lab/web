@@ -13,12 +13,17 @@ serverApi.interceptors.request.use(async function onRequest(config) {
   const accessToken = cookieJar.get("access_token")?.value;
   const refreshToken = cookieJar.get("refresh_token")?.value;
 
-  if (accessToken && refreshToken) {
-    config.headers.set(
-      "Cookie",
-      `access_token=${accessToken}; refresh_token=${refreshToken}`,
-    );
+  let cookieValue = "";
+
+  if (accessToken) {
+    cookieValue += `access_token=${accessToken}; `;
   }
+
+  if (refreshToken) {
+    cookieValue += `refresh_token=${refreshToken}; `;
+  }
+
+  config.headers.set("Cookie", cookieValue);
 
   return config;
 });

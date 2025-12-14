@@ -13,7 +13,9 @@ api.interceptors.response.use(
   async function onRejected(error) {
     const originalRequest = error.config;
     if (error.response?.status === 401) {
-      await api.post("/auth/refresh-token");
+      await axios.get(
+        `/auth/refresh-token?redirect_to=${window.location.pathname}`,
+      );
 
       return api(originalRequest);
     }
