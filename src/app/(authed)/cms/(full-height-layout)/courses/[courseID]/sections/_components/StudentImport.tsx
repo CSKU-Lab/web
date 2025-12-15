@@ -1,17 +1,16 @@
 import { ArrowLeft, NotebookPen, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/commons/Button";
-import { type UseFormReturn } from "react-hook-form";
 import { FileUploader } from "~/components/commons/FileUploader";
 import CodeMirror from "~/components/Editor/CodeMirror";
-import type { CreateSectionSchema } from "../_schemas/create-section.schema";
 
 interface Props {
-  form: UseFormReturn<CreateSectionSchema>;
+  value: string[];
+  onChange: (users: string[]) => void;
 }
 
-function StudentImport({ form }: Props) {
-  const [editorValue, setEditorValue] = useState("");
+function StudentImport({ value, onChange }: Props) {
+  const [editorValue, setEditorValue] = useState(value.join("\n"));
   const [importBy, setImportBy] = useState<"upload" | "editor" | null>(null);
 
   const handleOnUpload = async (files: File[]) => {
@@ -30,8 +29,9 @@ function StudentImport({ form }: Props) {
       .split("\n")
       .map((line) => line.trim())
       .filter((line) => line !== "");
-    form.setValue("students_upload", parsedStudents);
-  }, [editorValue, form]);
+    onChange(parsedStudents);
+  }, [editorValue, onChange]);
+  console.log(editorValue);
 
   return (
     <div>
