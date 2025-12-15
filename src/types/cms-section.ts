@@ -16,3 +16,10 @@ export interface CMSSection {
   semester: { name: string; type: string };
   sections: Section[];
 }
+
+export interface Student {
+  id: string;
+  username: string;
+  display_name: string;
+  profile_image: string | null;
+}
