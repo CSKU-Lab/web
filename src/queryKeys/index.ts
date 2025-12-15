@@ -20,6 +20,11 @@ export const queryKeys = {
       ...queryKeys.section.all,
       params,
     ],
+    getById: (sectionId: string) => [...queryKeys.section.all, sectionId],
+    getStudents: (sectionId: string) => [
+      ...queryKeys.section.getById(sectionId),
+      "students",
+    ],
   },
   user_group: {
     all: ["user_groups"],
