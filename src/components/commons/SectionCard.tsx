@@ -27,13 +27,13 @@ export const PreviewCMSSectionCard = ({
         className,
       )}
     >
-      <div className="flex-1 text-6xl bg-linear-to-br from-(--gray-3) to-(--gray-4) min-h-50 relative overflow-hidden">
+      <div className="flex-1 bg-linear-to-br from-(--gray-3) to-(--gray-4) min-h-50 relative overflow-hidden">
         {bannerImage !== null && (
           <Image
             src={bannerImage}
             alt={`Section ${name} banner image`}
             fill
-            className="group-hover:scale-105 transition-transform"
+            className="group-hover:scale-105 transition-transform text-center"
           />
         )}
       </div>
@@ -63,13 +63,13 @@ export const CMSSectionCard = ({
         className,
       )}
     >
-      <div className="flex-1 text-6xl bg-linear-to-br from-(--gray-3) to-(--gray-4) min-h-50 relative overflow-hidden">
+      <div className="flex-1 bg-linear-to-br from-(--gray-3) to-(--gray-4) min-h-50 relative overflow-hidden">
         {bannerImage !== null && (
           <Image
             src={bannerImage}
             alt={`Section ${name} banner image`}
             fill
-            className="group-hover:scale-105 transition-transform"
+            className="group-hover:scale-105 transition-transform text-center"
           />
         )}
       </div>
