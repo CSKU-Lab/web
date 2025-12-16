@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ["next-mdx-remote"],
   poweredByHeader: false,
   images: {
+    dangerouslyAllowLocalIP: true, // need to be disable in production
     remotePatterns: [
       {
         hostname: "lh3.googleusercontent.com",
@@ -13,8 +14,10 @@ const nextConfig: NextConfig = {
         hostname: "yt3.ggpht.com",
       },
       {
+        protocol: "http",
         hostname: "localhost",
         port: "9000",
+        pathname: "/cs-lab/**",
       },
     ],
   },
