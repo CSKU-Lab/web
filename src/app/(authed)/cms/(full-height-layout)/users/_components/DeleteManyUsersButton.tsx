@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/ui/dialog";
+} from "~/components/commons/Dialog";
 
 interface UserPreview {
   username: string;
@@ -49,14 +49,14 @@ function DeleteManyUsersButton({ users, onConfirm }: Props) {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
+        <DialogHeader className="p-4">
           <DialogTitle>Confirm Delete ?</DialogTitle>
           <DialogDescription>
             Are you sure you want to delete these users? This action cannot be
             undone.
           </DialogDescription>
         </DialogHeader>
-        <div className="max-h-[300px] overflow-auto space-y-1.5">
+        <div className="max-h-[300px] overflow-auto space-y-1.5 p-4">
           {users.map(({ display_name, profile_image, username }) => (
             <div key={username} className="flex items-center gap-2.5">
               <UserProfileImage src={profile_image} username={username} />

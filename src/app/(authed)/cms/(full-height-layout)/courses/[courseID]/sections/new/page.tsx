@@ -12,7 +12,7 @@ import {
   createSectionSchema,
 } from "./_schemas/create-section.schema";
 import SearchSelect from "~/components/commons/SearchSelect";
-import StudentImport from "./_components/StudentImport";
+import StudentImport from "../_components/StudentImport";
 import { useMutation } from "@tanstack/react-query";
 import {
   cmsSectionService,
@@ -278,7 +278,11 @@ function NewSectionPage() {
           <div className="flex items-center gap-2">
             <h6 className="text-sm text-(--gray-11)">or import by username</h6>
           </div>
-          <StudentImport form={form} />
+          <Controller
+            control={form.control}
+            name="students_upload"
+            render={({ field }) => <StudentImport {...field} />}
+          />
         </div>
         <Button
           type="submit"
