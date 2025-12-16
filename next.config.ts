@@ -1,10 +1,7 @@
-import createMDX from "@next/mdx";
+import type { NextConfig } from "next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // Configure `pageExtensions`` to include MDX files
-  turbopack: true,
-  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+const nextConfig: NextConfig = {
+  pageExtensions: ["js", "jsx", "ts", "tsx"],
   transpilePackages: ["next-mdx-remote"],
   poweredByHeader: false,
   images: {
@@ -31,13 +28,4 @@ const nextConfig = {
   },
 };
 
-const withMDX = createMDX({
-  // Add markdown plugins here, as desired
-  options: {
-    remarkPlugins: [["remark-gfm"]],
-    rehypePlugins: [],
-  },
-});
-
-// Wrap MDX and Next.js config with each other
-export default withMDX(nextConfig);
+export default nextConfig;
