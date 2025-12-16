@@ -10,6 +10,9 @@ export const pathNames = {
         "/sections": {
           "/": "Sections",
           "/new": "New Section",
+          "/[sectionID]": {
+            "/": "Details",
+          },
         },
       },
     },

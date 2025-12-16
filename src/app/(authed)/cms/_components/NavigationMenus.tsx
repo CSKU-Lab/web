@@ -42,7 +42,7 @@ interface NavigationMenusProps {
 
 function NavigationMenus({ menus, className }: NavigationMenusProps) {
   return (
-    <div {...{ className }}>
+    <div className={cn("mt-4 mb-8 ml-4 transition-all space-x-4", className)}>
       {menus.map((menu) => (
         <MenuButton key={menu.name} {...menu} />
       ))}

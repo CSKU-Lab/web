@@ -242,7 +242,7 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
             value={inputValue}
             autoComplete="off"
             placeholder={placeHolder}
-            className="border-none flex-1 p-0 h-auto outline-none"
+            className="border-none flex-1 p-0 h-auto outline-none text-xs"
             onKeyDown={handleOnKeyDown}
             onChange={handleOnChange}
           />
