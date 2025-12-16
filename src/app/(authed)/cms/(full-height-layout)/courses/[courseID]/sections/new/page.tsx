@@ -24,6 +24,7 @@ import { AxiosError } from "axios";
 import { cmsSemesterService } from "~/services/cms-semester.service";
 import { PreviewCMSSectionCard } from "~/components/commons/SectionCard";
 import PageTitle from "~/components/commons/PageTitle";
+import { cmsUserExistanceService } from "~/services/cms-user-existances.service";
 
 function NewSectionPage() {
   const form = useForm({
@@ -127,8 +128,32 @@ function NewSectionPage() {
     },
   });
 
-  const handleOnSubmit = (data: CreateSectionSchema) => {
-    createSection.mutate(data);
+  const handleOnSubmit = async (data: CreateSectionSchema) => {
+    try {
+      const students = data.students_input
+        .map((student) => student.username)
+        .concat(data.students_upload);
+
+      const res = await cmsUserExistanceService.check({
+        find_by: "username",
+        role: "student",
+        users: students,
+      });
+
+      if (res.code === "INVALID_USERS") {
+        toast.error("Error", { description: "Some students do not exist" });
+        return;
+      }
+
+      createSection.mutate(data);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error("Error", {
+          description:
+            err.response?.data.error || "An unexpected error occurred",
+        });
+      }
+    }
   };
 
   return (
@@ -203,7 +228,11 @@ function NewSectionPage() {
                       value={value}
                       queryFn={querySemesters}
                       className="w-full"
-                      customValueRender={(sem) => `${sem.name}/${sem.type}`}
+                      customValueRender={(sem) =>
+                        sem.id === "" && sem.name === ""
+                          ? ""
+                          : `${sem.name}/${sem.type}`
+                      }
                     >
                       {(options) =>
                         options.map((option) => (
