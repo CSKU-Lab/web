@@ -12,6 +12,13 @@ export type CreateSectionPayload = {
   course_id: string;
 };
 
+export type UpdateSectionPayload = {
+  name?: string;
+  instructors?: string[];
+  banner?: File | null;
+  semester_id?: string;
+};
+
 class SectionService extends BaseService {
   constructor() {
     super("/cms/sections");
@@ -22,7 +29,7 @@ class SectionService extends BaseService {
     return res.data.id;
   }
 
-  async getByID(id: string) {
+  async getByID(id: string): Promise<Section> {
     const res = await api.get<Section>(`${this._baseURL}/${id}`);
     return res.data;
   }
@@ -46,8 +53,8 @@ class SectionService extends BaseService {
     return res.data.data;
   }
 
-  async update(id: string, name: string) {
-    return api.patch(`${this._baseURL}/${id}`, { name });
+  async update(id: string, payload: UpdateSectionPayload) {
+    return api.patchForm(`${this._baseURL}/${id}`, payload);
   }
 
   async delete(id: string) {

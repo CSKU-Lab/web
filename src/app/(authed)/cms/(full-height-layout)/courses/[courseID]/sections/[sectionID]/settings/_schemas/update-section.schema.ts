@@ -2,7 +2,10 @@ import { z } from "zod";
 import { isServer } from "~/lib/is-server";
 import { userDataSchema } from "~/schemas/user-data.schema";
 
-export const createSectionSchema = z.object({
+export const updateSectionSchema = z.object({
+  banner: isServer
+    ? z.any()
+    : z.instanceof(File).nullable().or(z.string().url()).nullable(),
   name: z.string().min(1, "Section name is required"),
   instructors: z
     .array(userDataSchema)
@@ -16,16 +19,6 @@ export const createSectionSchema = z.object({
     .refine((data) => data.id !== "" && data.name !== "", {
       message: "Semester is required",
     }),
-  bannerImage: z.object({
-    file: isServer ? z.any() : z.instanceof(File).nullable(),
-    preview: z.string().url().nullable(),
-  }),
-  students_input: z.array(userDataSchema),
-  students_upload: z.array(z.string()),
 });
 
-export type CreateSectionSchema = z.infer<typeof createSectionSchema>;
-
-export type CreateSectionBannerImage = z.infer<
-  typeof createSectionSchema.shape.bannerImage
->;
+export type UpdateSectionSchema = z.infer<typeof updateSectionSchema>;
