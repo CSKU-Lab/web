@@ -8,7 +8,10 @@ import { useParams } from "next/navigation";
 import NavigationMenus from "~/app/(authed)/cms/_components/NavigationMenus";
 
 function Layout({ children }: ChildrenProps) {
-  const { sectionID } = useParams<{ sectionID: string }>();
+  const { courseID, sectionID } = useParams<{
+    courseID: string;
+    sectionID: string;
+  }>();
   const { data, isFetching } = useGetSection(sectionID);
   return (
     <>
@@ -24,23 +27,23 @@ function Layout({ children }: ChildrenProps) {
         menus={[
           {
             name: "Students",
-            href: `/cms/courses/sections/${sectionID}`,
+            href: `/cms/courses/${courseID}/sections/${sectionID}`,
           },
           {
             name: "Labs",
-            href: `/cms/courses/sections/${sectionID}/labs`,
+            href: `/cms/courses/${courseID}/sections/${sectionID}/labs`,
           },
           {
             name: "Gradebook",
-            href: `/cms/courses/sections/${sectionID}/labs`,
+            href: `/cms/courses/${courseID}/sections/${sectionID}/labs`,
           },
           {
             name: "Logs",
-            href: `/cms/courses/sections/${sectionID}/logs`,
+            href: `/cms/courses/${courseID}/sections/${sectionID}/logs`,
           },
           {
             name: "Settings",
-            href: `/cms/courses/sections/${sectionID}/settings`,
+            href: `/cms/courses/${courseID}/sections/${sectionID}/settings`,
           },
         ]}
       />

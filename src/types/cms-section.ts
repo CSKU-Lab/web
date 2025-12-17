@@ -10,6 +10,7 @@ export interface Section {
   name: string;
   banner: string;
   instructors: Instructor[];
+  semester: { id: string; name: string; type: string };
 }
 
 export interface CMSSection {

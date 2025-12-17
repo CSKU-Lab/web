@@ -18,6 +18,18 @@ import UserAutoComplete from "~/components/commons/UserAutoComplete";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import DeleteCourseDialog from "./_components/DeleteCourseDialog";
 import { createCourseSchame } from "../../../_schemas/course.create";
+import {
+  SettingCard,
+  SettingDescription,
+  SettingDivider,
+  SettingHeader,
+  SettingLayout,
+  SettingSection,
+  SettingSectionDescription,
+  SettingSectionHeader,
+  SettingSectionTitle,
+  SettingTitle,
+} from "~/components/crafts/Settings";
 
 function SettingPage() {
   const { courseID } = useParams<{ courseID: string }>();
@@ -120,93 +132,107 @@ function SettingPage() {
                   </InlineError>
                 </div>
               </div>
-
-              <div className="space-y-4">
-                <div className="space-y-1.5">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    Visibility
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Choose who can see this course.
-                  </p>
-                </div>
+              <div className="space-y-2">
+                <Label
+                  isError={!!form.formState.errors.creators}
+                  htmlFor="creators"
+                >
+                  Creators
+                </Label>
                 <Controller
+                  name="creators"
                   control={form.control}
-                  name="visibility"
-                  render={({ field: { value, onChange } }) => (
-                    <RadioGroup
-                      value={value}
-                      onValueChange={onChange}
-                      defaultValue="public"
-                      className="space-y-2"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="public" id="public" />
-                        <div className="flex flex-col">
-                          <Label
-                            htmlFor="public"
-                            className="font-medium text-gray-900"
-                          >
-                            Public
-                          </Label>
-                          <p className="text-xs text-gray-500">
-                            Everyone can see this course
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="private"
-                          id="private"
-                          className="font-medium"
-                        />
-                        <div className="flex flex-col">
-                          <Label htmlFor="private" className="font-medium">
-                            Private
-                          </Label>
-                          <p className="text-xs text-gray-500">
-                            Only invited users would see this course
-                          </p>
-                        </div>
-                      </div>
-                    </RadioGroup>
+                  render={({ field: { onChange, value } }) => (
+                    <UserAutoComplete value={value} onChange={onChange} />
                   )}
                 />
+                <InlineError isError={!!form.formState.errors.creators}>
+                  Course creators are required
+                </InlineError>
               </div>
+            </SettingSection>
 
-              <Button
-                type="submit"
-                variant="action"
-                className="w-full h-10"
-                disabled={isUpdated}
-              >
-                <Save size="1rem" className="mr-2" />
-                Save Changes
-              </Button>
-            </form>
-          </div>
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-            <div className="space-y-1.5 mb-6">
-              <h2 className="text-xl font-semibold text-red-900">
-                Danger Zone
-              </h2>
-              <p className="text-sm text-red-700">
-                Deleting this course will permanently remove all associated
-                data. This action cannot be undone.
-              </p>
-              <hr />
-            </div>
+            <SettingSection>
+              <SettingSectionHeader>
+                <SettingSectionTitle>Visibility</SettingSectionTitle>
+                <SettingSectionDescription>
+                  Choose who can see this course.
+                </SettingSectionDescription>
+              </SettingSectionHeader>
+              <Controller
+                control={form.control}
+                name="visibility"
+                render={({ field: { value, onChange } }) => (
+                  <RadioGroup
+                    value={value}
+                    onValueChange={onChange}
+                    defaultValue="public"
+                    className="space-y-2"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="public" id="public" />
+                      <div className="flex flex-col">
+                        <Label
+                          htmlFor="public"
+                          className="font-medium text-gray-900"
+                        >
+                          Public
+                        </Label>
+                        <p className="text-xs text-gray-500">
+                          Everyone can see this course
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value="private"
+                        id="private"
+                        className="font-medium"
+                      />
+                      <div className="flex flex-col">
+                        <Label htmlFor="private" className="font-medium">
+                          Private
+                        </Label>
+                        <p className="text-xs text-gray-500">
+                          Only invited users would see this course
+                        </p>
+                      </div>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+            </SettingSection>
+
             <Button
-              variant="danger"
-              className="h-10"
-              onClick={handleDeleteCourse}
+              type="submit"
+              variant="action"
+              className="w-full h-10"
+              disabled={isUpdated}
             >
-              <Trash size="1rem" className="mr-2" />
-              Delete Course
+              <Save size="1rem" className="mr-2" />
+              Save Changes
             </Button>
-          </div>
-        </div>
-      </div>
+          </form>
+        </SettingCard>
+        <SettingCard variant="danger">
+          <SettingHeader>
+            <SettingTitle variant="danger">Danger Zone</SettingTitle>
+            <SettingDescription variant="danger">
+              Deleting this course will permanently remove all associated data.
+              This action cannot be undone.
+            </SettingDescription>
+            <SettingDivider variant="danger" />
+          </SettingHeader>
+          <Button
+            variant="danger"
+            className="h-10"
+            onClick={handleDeleteCourse}
+          >
+            <Trash size="1rem" className="mr-2" />
+            Delete Course
+          </Button>
+        </SettingCard>
+      </SettingLayout>
     </>
   );
 }
