@@ -11,7 +11,8 @@ export const pathNames = {
           "/": "Sections",
           "/new": "New Section",
           "/[sectionID]": {
-            "/": "Details",
+            "/": "Section",
+            "/settings": "Settings",
           },
         },
       },
