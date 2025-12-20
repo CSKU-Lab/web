@@ -1,5 +1,5 @@
 import { ChevronRight, Loader, Trash } from "lucide-react";
-import React, { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { Button } from "~/components/commons/Button";
 import {
   Dialog,
@@ -7,37 +7,39 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "~/components/ui/dialog";
+  DialogTrigger,
+} from "~/components/commons/Dialog";
 import useGetAffectedEntities from "~/hooks/useGetAffectedEntities";
 import type {
   AffectedEntities,
   AffectedType,
 } from "~/types/cms-affected-entities";
-import Input from "../commons/Input";
+import Input from "../../commons/Input";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../ui/collapsible";
-import Loading from "../commons/Loading";
+} from "../../ui/collapsible";
+import Loading from "../../commons/Loading";
 import { cn } from "~/lib/utils";
+import type { ChildrenProps } from "~/types/children-props";
+import CopyButton from "./CopyButton";
 
-interface Props {
+interface Props extends ChildrenProps {
   type: AffectedType;
   entitiyDetail?: ReactNode;
   confirmText: string;
   id: string;
-  onClose: () => void;
   onConfirm: () => void;
 }
 
 function ConfirmDeleteDialog({
   type,
   id,
-  onClose,
   onConfirm,
   confirmText,
   entitiyDetail,
+  children,
 }: Props) {
   const [confirmInput, setConfirmInput] = useState("");
   const [isDeletable, setIsDeletable] = useState(false);
@@ -121,12 +123,13 @@ function ConfirmDeleteDialog({
   };
 
   return (
-    <Dialog open onOpenChange={onClose}>
+    <Dialog>
+      {children}
       <DialogContent className="max-h-[500px]">
-        <DialogHeader>
+        <DialogHeader className="p-4">
           <DialogTitle>Confirm Delete ?</DialogTitle>
         </DialogHeader>
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 p-4">
           {entitiyDetail}
           <h6 className="text-sm text-(--gray-11) font-medium mt-3">
             This will permanently delete the {type} itself and including:
@@ -143,14 +146,14 @@ function ConfirmDeleteDialog({
             {affectedEntities?.map((data) => renderAffectedEntities(data))}
           </Loading>
         </div>
-        <DialogFooter className="sm:flex-col">
-          <p className="text-(--gray-11) text-sm">
-            Please type{" "}
-            <span className="text-accent px-1.5 py-0.5 bg-(--gray-6) rounded text-xs font-semibold">
-              {confirmText}
-            </span>{" "}
-            to confirm delete
-          </p>
+        <DialogFooter className="sm:flex-col p-4">
+          <div className="flex gap-1.5">
+            <p className="text-(--gray-11) text-sm shrink-0">Please type</p>
+            <CopyButton confirmText={confirmText} />
+            <p className="text-(--gray-11) text-sm shrink-0">
+              to confirm delete
+            </p>
+          </div>
           <Input
             placeholder={confirmText}
             value={confirmInput}
@@ -170,5 +173,7 @@ function ConfirmDeleteDialog({
     </Dialog>
   );
 }
+
+export const ConfirmDeleteDialogTrigger = DialogTrigger;
 
 export default ConfirmDeleteDialog;

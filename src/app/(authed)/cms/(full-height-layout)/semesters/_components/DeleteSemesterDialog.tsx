@@ -1,18 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import ConfirmDeleteDialog from "~/components/crafts/ConfirmDeleteDialog";
+import ConfirmDeleteDialog, { ConfirmDeleteDialogTrigger } from "~/components/crafts/ConfirmDeleteDialog/index";
 import { dateFormatter } from "~/lib/formatters/dateFormatter";
 import { queryKeys } from "~/queryKeys";
 import { cmsSemesterService } from "~/services/cms-semester.service";
+import type { ChildrenProps } from "~/types/children-props";
 import type { CMSSemester } from "~/types/cms-semester";
 
-interface Props {
+interface Props extends ChildrenProps {
   semester: CMSSemester;
-  onClose: () => void;
 }
 
-function DeleteSemesterDialog({ semester, onClose }: Props) {
+function DeleteSemesterDialog({ semester, children }: Props) {
   const queryClient = useQueryClient();
 
   const deleteSemester = useMutation({
@@ -20,7 +20,6 @@ function DeleteSemesterDialog({ semester, onClose }: Props) {
     onSuccess: async () => {
       toast.success("Semester deleted successfully");
       await queryClient.refetchQueries({ queryKey: queryKeys.semester.all });
-      onClose();
     },
     onError: (err) => {
       if (err instanceof AxiosError && err.response?.data?.message) {
@@ -51,10 +50,13 @@ function DeleteSemesterDialog({ semester, onClose }: Props) {
       }
       type="semester"
       id={semester.id}
-      onClose={onClose}
       onConfirm={deleteSemester.mutate}
-    />
+    >
+      {children}
+    </ConfirmDeleteDialog>
   );
 }
+
+export const DeleteSemesterDialogTrigger = ConfirmDeleteDialogTrigger;
 
 export default DeleteSemesterDialog;

@@ -1,18 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import ConfirmDeleteDialog from "~/components/crafts/ConfirmDeleteDialog";
-import { queryKeys } from "~/queryKeys";
+import ConfirmDeleteDialog, {
+  ConfirmDeleteDialogTrigger,
+} from "~/components/crafts/ConfirmDeleteDialog/index";
 import { cmsCourseService } from "~/services/cms-course.service";
 import useGetCourse from "../../_hooks/useGetCourse";
+import type { ChildrenProps } from "~/types/children-props";
 
-interface Props {
-  onClose: () => void;
-}
-
-function DeleteCourseDialog({ onClose }: Props) {
-  const queryClient = useQueryClient();
+function DeleteCourseDialog({ children }: ChildrenProps) {
   const { courseID } = useParams<{ courseID: string }>();
   const { data: course } = useGetCourse({ courseID });
 
@@ -21,7 +18,6 @@ function DeleteCourseDialog({ onClose }: Props) {
     mutationFn: () => cmsCourseService.deleteByID(courseID),
     onSuccess: async () => {
       toast.success("Course deleted successfully");
-      await queryClient.refetchQueries({ queryKey: queryKeys.course.all });
       router.push("/cms/courses");
     },
     onError: (err) => {
@@ -37,10 +33,13 @@ function DeleteCourseDialog({ onClose }: Props) {
       confirmText={course!.name}
       type="course"
       id={courseID}
-      onClose={onClose}
       onConfirm={deleteSemester.mutate}
-    />
+    >
+      {children}
+    </ConfirmDeleteDialog>
   );
 }
+
+export const DeleteCourseDialogTrigger = ConfirmDeleteDialogTrigger;
 
 export default DeleteCourseDialog;
