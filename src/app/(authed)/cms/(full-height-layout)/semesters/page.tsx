@@ -66,32 +66,10 @@ function SemesterManagementPage() {
             setEditSemesterRow(semester);
           }
         },
-        deleteUser: (id: string) => {
-          const semester = semesterPagination.data.find(
-            (semester) => semester.id === id,
-          );
-          if (semester) {
-            setDeleteSemesterRow(semester);
-          }
-        },
+        deleteUser: (id: string) => {},
       },
     },
   });
-
-  // const deleteSemester = useMutation({
-  //   mutationFn: (id: string) => cmsSemesterService.delete(id),
-  //   onSuccess: async () => {
-  //     toast.success("Semester deleted successfully");
-  //     await queryClient.refetchQueries({ queryKey: queryKeys.semester.all });
-  //     onClose();
-  //   },
-  //   onError: (err) => {
-  //     if (err instanceof AxiosError && err.response?.data?.message) {
-  //       toast.error(err.response?.data?.error);
-  //       return;
-  //     }
-  //   },
-  // });
 
   return (
     <>
@@ -99,12 +77,6 @@ function SemesterManagementPage() {
         <EditSemester
           semester={editSemesterRow}
           onClose={() => setEditSemesterRow(null)}
-        />
-      )}
-      {deleteSemesterRow !== null && (
-        <DeleteSemesterDialog
-          semester={deleteSemesterRow}
-          onClose={() => setDeleteSemesterRow(null)}
         />
       )}
       <PageTitle>Semester Management</PageTitle>
