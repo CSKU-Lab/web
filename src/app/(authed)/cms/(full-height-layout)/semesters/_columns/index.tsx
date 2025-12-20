@@ -18,6 +18,9 @@ import {
 import { dateFormatter } from "~/lib/formatters/dateFormatter";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import type { CMSSemester } from "~/types/cms-semester";
+import DeleteSemesterDialog, {
+  DeleteSemesterDialogTrigger,
+} from "../_components/DeleteSemesterDialog";
 
 const columnHelper = createColumnHelper<CMSSemester>();
 
@@ -64,36 +67,35 @@ export const columns = [
     size: 10,
     cell: ({ table, row }) => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex justify-center items-center">
-            <EllipsisVertical size="1rem" className="text-(--gray-12)" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="left"
-            align="start"
-            sideOffset={-2}
-            alignOffset={200}
-          >
-            <DropdownMenuItem
-              onClick={() =>
-                table.options.meta?.addUser!.editUser(row.original.id)
-              }
-              className="flex items-center gap-2"
+        <DeleteSemesterDialog semester={row.original}>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex justify-center items-center">
+              <EllipsisVertical size="1rem" className="text-(--gray-12)" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="left"
+              align="start"
+              sideOffset={-2}
+              alignOffset={200}
             >
-              <Pencil size="1rem" />
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                table.options.meta?.addUser!.deleteUser(row.original.id)
-              }
-              className="flex items-center gap-2 text-red-9 focus:text-red-10"
-            >
-              <Trash size="1rem" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem
+                onClick={() =>
+                  table.options.meta?.addUser!.editUser(row.original.id)
+                }
+                className="flex items-center gap-2"
+              >
+                <Pencil size="1rem" />
+                Edit
+              </DropdownMenuItem>
+              <DeleteSemesterDialogTrigger asChild>
+                <DropdownMenuItem className="flex items-center gap-2 text-(--red-9) focus:text-(--red-10)">
+                  <Trash size="1rem" className="text-current" />
+                  Delete
+                </DropdownMenuItem>
+              </DeleteSemesterDialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </DeleteSemesterDialog>
       );
     },
   }),

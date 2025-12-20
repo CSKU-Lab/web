@@ -16,8 +16,10 @@ import { useParams } from "next/navigation";
 import { queryKeys } from "~/queryKeys";
 import UserAutoComplete from "~/components/commons/UserAutoComplete";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import DeleteCourseDialog from "./_components/DeleteCourseDialog";
-import { createCourseSchame } from "../../../_schemas/course.create";
+import PageTitle from "~/components/commons/PageTitle";
+import DeleteCourseDialog, {
+  DeleteCourseDialogTrigger,
+} from "./_components/DeleteCourseDialog";
 import {
   SettingCard,
   SettingDescription,
@@ -30,6 +32,7 @@ import {
   SettingSectionTitle,
   SettingTitle,
 } from "~/components/crafts/Settings";
+import { DeleteSemesterDialogTrigger } from "../../../semesters/_components/DeleteSemesterDialog";
 
 function SettingPage() {
   const { courseID } = useParams<{ courseID: string }>();
@@ -63,74 +66,46 @@ function SettingPage() {
       JSON.stringify(course?.creators) &&
     form.watch("visibility") === course?.visibility;
 
-  const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
-  const handleDeleteCourse = () => setConfirmDeleteVisible(true);
-  const onCloseDeleteDialog = () => setConfirmDeleteVisible(false);
-
   if (!course) return null;
 
   return (
     <>
-      {confirmDeleteVisible && (
-        <DeleteCourseDialog onClose={onCloseDeleteDialog} />
-      )}
-      <div className="flex justify-center py-8">
-        <div className="w-full max-w-4xl space-y-8 2xl:mt-10">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <div className="space-y-1.5 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Course Settings
-              </h2>
-              <p className="text-sm text-gray-600">
-                Manage your course details and visibility.
-              </p>
-              <hr />
-            </div>
-            <form
-              onSubmit={form.handleSubmit((course) =>
-                updateCourse.mutate(course),
-              )}
-              className="space-y-6"
-            >
-              <div className="space-y-4">
-                <div className="space-y-1.5">
-                  <h3 className="text-lg font-medium text-gray-900">General</h3>
-                  <p className="text-sm text-gray-600">
-                    Fill in the details of your course.
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <Label isError={!!form.formState.errors.name} htmlFor="name">
-                    Course Name
-                  </Label>
-                  <Input
-                    isError={!!form.formState.errors.name}
-                    id="name"
-                    className="text-sm"
-                    {...form.register("name")}
-                  />
-                  <InlineError isError={!!form.formState.errors.name}>
-                    Course name is required
-                  </InlineError>
-                </div>
-                <div className="space-y-2">
-                  <Label
-                    isError={!!form.formState.errors.creators}
-                    htmlFor="creators"
-                  >
-                    Creators
-                  </Label>
-                  <Controller
-                    name="creators"
-                    control={form.control}
-                    render={({ field: { onChange, value } }) => (
-                      <UserAutoComplete value={value} onChange={onChange} />
-                    )}
-                  />
-                  <InlineError isError={!!form.formState.errors.creators}>
-                    Course creators are required
-                  </InlineError>
-                </div>
+      <PageTitle>Settings</PageTitle>
+      <SettingLayout>
+        <SettingCard>
+          <SettingHeader>
+            <SettingTitle>Course Settings</SettingTitle>
+            <SettingDescription>
+              Manage your course details and visibility.
+            </SettingDescription>
+            <SettingDivider />
+          </SettingHeader>
+          <form
+            onSubmit={form.handleSubmit((course) =>
+              updateCourse.mutate(course),
+            )}
+            className="space-y-6"
+          >
+            <SettingSection>
+              <SettingSectionHeader>
+                <SettingSectionTitle>General</SettingSectionTitle>
+                <SettingSectionDescription>
+                  Fill in the details of your course.
+                </SettingSectionDescription>
+              </SettingSectionHeader>
+              <div className="space-y-2">
+                <Label isError={!!form.formState.errors.name} htmlFor="name">
+                  Course Name
+                </Label>
+                <Input
+                  isError={!!form.formState.errors.name}
+                  id="name"
+                  className="text-sm"
+                  {...form.register("name")}
+                />
+                <InlineError isError={!!form.formState.errors.name}>
+                  Course name is required
+                </InlineError>
               </div>
               <div className="space-y-2">
                 <Label
@@ -223,14 +198,14 @@ function SettingPage() {
             </SettingDescription>
             <SettingDivider variant="danger" />
           </SettingHeader>
-          <Button
-            variant="danger"
-            className="h-10"
-            onClick={handleDeleteCourse}
-          >
-            <Trash size="1rem" className="mr-2" />
-            Delete Course
-          </Button>
+          <DeleteCourseDialog>
+            <DeleteCourseDialogTrigger asChild>
+              <Button variant="danger" className="h-10">
+                <Trash size="1rem" className="mr-2" />
+                Delete Course
+              </Button>
+            </DeleteCourseDialogTrigger>
+          </DeleteCourseDialog>
         </SettingCard>
       </SettingLayout>
     </>
