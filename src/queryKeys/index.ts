@@ -1,3 +1,5 @@
+import type { AffectedType } from "~/types/cms-affected-entities";
+
 export const queryKeys = {
   user: {
     all: ["users"],
@@ -59,10 +61,6 @@ export const queryKeys = {
     },
   },
   affectedEntities: {
-    get: (type: "course" | "semester", id: string) => [
-      "affectedEntities",
-      type,
-      id,
-    ],
+    get: (type: AffectedType, id: string) => ["affectedEntities", type, id],
   },
 } as const;

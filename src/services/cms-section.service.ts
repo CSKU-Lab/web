@@ -57,7 +57,7 @@ class SectionService extends BaseService {
     return api.patchForm(`${this._baseURL}/${id}`, payload);
   }
 
-  async delete(id: string) {
+  async deleteByID(id: string) {
     return api.delete(`${this._baseURL}/${id}`);
   }
 }

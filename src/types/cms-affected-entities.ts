@@ -1,4 +1,4 @@
-export type AffectedType = "semester" | "course";
+export type AffectedType = "semester" | "course" | "section";
 
 export interface AffectedEntities {
   type: string;
