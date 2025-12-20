@@ -134,15 +134,17 @@ function NewSectionPage() {
         .map((student) => student.username)
         .concat(data.students_upload);
 
-      const res = await cmsUserExistanceService.check({
-        find_by: "username",
-        role: "student",
-        users: students,
-      });
+      if (students.length > 0) {
+        const res = await cmsUserExistanceService.check({
+          find_by: "username",
+          role: "student",
+          users: students,
+        });
 
-      if (res.code === "INVALID_USERS") {
-        toast.error("Error", { description: "Some students do not exist" });
-        return;
+        if (res.code === "INVALID_USERS") {
+          toast.error("Error", { description: "Some students do not exist" });
+          return;
+        }
       }
 
       createSection.mutate(data);
