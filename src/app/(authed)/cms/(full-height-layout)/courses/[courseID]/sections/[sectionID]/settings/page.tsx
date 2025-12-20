@@ -33,6 +33,9 @@ import { cmsSemesterService } from "~/services/cms-semester.service";
 import useGetSection from "../_hooks/useGetSection";
 import { useEffect } from "react";
 import { queryKeys } from "~/queryKeys";
+import DeleteSectionDialog, {
+  DeleteSectionDialogTrigger,
+} from "./_components/DeleteSectionDialog";
 
 function SettingsPage() {
   const { data: section, isFetching } = useGetSection();
@@ -202,10 +205,14 @@ function SettingsPage() {
           <SettingDivider />
         </SettingHeader>
         <SettingSection>
-          <Button variant="danger" className="h-9">
-            <Trash size="1rem" />
-            Delete Section
-          </Button>
+          <DeleteSectionDialog>
+            <DeleteSectionDialogTrigger asChild>
+              <Button variant="danger" className="h-9">
+                <Trash size="1rem" />
+                Delete Section
+              </Button>
+            </DeleteSectionDialogTrigger>
+          </DeleteSectionDialog>
         </SettingSection>
       </SettingCard>
     </SettingLayout>
