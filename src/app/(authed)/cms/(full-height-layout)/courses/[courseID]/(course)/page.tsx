@@ -1,7 +1,7 @@
 "use client";
 import { Plus } from "lucide-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "~/components/commons/Button";
 import useResolvePath from "~/hooks/useResolvePath";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
@@ -14,7 +14,7 @@ import type { IFilter } from "~/types/filter";
 import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
 import Filters from "~/components/commons/Filters";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
-import useSectionsByCourseIdPagination from "../_hooks/useSectionsByCoursePagination";
+import useSectionsByCourseIdPagination from "./_hooks/useSectionsByCourseIdPagination";
 
 function CourseMainPage() {
   const router = useRouter();
