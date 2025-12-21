@@ -1,6 +1,6 @@
 "use client";
 import type { ChildrenProps } from "~/types/children-props";
-import useGetCourse from "../_hooks/useGetCourse";
+import useGetCourse from "./_hooks/useGetCourse";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useParams } from "next/navigation";

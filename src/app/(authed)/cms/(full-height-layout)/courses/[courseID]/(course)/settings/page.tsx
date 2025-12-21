@@ -1,13 +1,12 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save, Trash } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "~/components/commons/Button";
 import InlineError from "~/components/commons/InlineError";
 import Input from "~/components/commons/Input";
 import Label from "~/components/commons/Label";
-import { createCourseSchame } from "../../_schemas/course.create";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { WriteCourse } from "~/types/cms-course";
 import { cmsCourseService } from "~/services/cms-course.service";
@@ -17,8 +16,8 @@ import { useParams } from "next/navigation";
 import { queryKeys } from "~/queryKeys";
 import UserAutoComplete from "~/components/commons/UserAutoComplete";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import PageTitle from "~/components/commons/PageTitle";
 import DeleteCourseDialog from "./_components/DeleteCourseDialog";
+import { createCourseSchame } from "../../../_schemas/course.create";
 
 function SettingPage() {
   const { courseID } = useParams<{ courseID: string }>();
@@ -63,7 +62,6 @@ function SettingPage() {
       {confirmDeleteVisible && (
         <DeleteCourseDialog onClose={onCloseDeleteDialog} />
       )}
-      <PageTitle>Settings</PageTitle>
       <div className="flex justify-center py-8">
         <div className="w-full max-w-4xl space-y-8 2xl:mt-10">
           <div className="bg-white border border-gray-200 rounded-lg p-6">

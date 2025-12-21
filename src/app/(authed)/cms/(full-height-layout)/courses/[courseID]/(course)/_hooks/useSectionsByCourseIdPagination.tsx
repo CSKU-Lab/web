@@ -2,7 +2,7 @@ import useInfinitePagination from "~/hooks/useInfinitePagination";
 import { queryKeys } from "~/queryKeys";
 import {
   cmsSectionService,
-  GetSectionPaginationParams,
+  type GetSectionPaginationParams,
 } from "~/services/cms-section.service";
 
 interface Params {
