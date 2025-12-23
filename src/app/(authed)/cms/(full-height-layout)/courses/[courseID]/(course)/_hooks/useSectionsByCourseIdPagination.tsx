@@ -1,25 +1,20 @@
+import { useParams } from "next/navigation";
 import useInfinitePagination from "~/hooks/useInfinitePagination";
 import { queryKeys } from "~/queryKeys";
 import {
-  cmsSectionService,
+  cmsCourseService,
   type GetSectionPaginationParams,
-} from "~/services/cms-section.service";
+} from "~/services/cms-course.service";
 
-interface Params {
-  course_id: string;
-  args: GetSectionPaginationParams;
-}
-
-function useSectionsByCourseIdPagination(params: Params) {
-  const { course_id, args } = params;
+function useSectionsByCourseIdPagination(params: GetSectionPaginationParams) {
+  const { courseID } = useParams<{ courseID: string }>();
   return useInfinitePagination({
     queryKey: queryKeys.section.allWithParams(params),
     queryFn: ({ pageParam }) =>
-      cmsSectionService.getPagination(
-        { ...args, page: pageParam },
-        "/cms/courses",
-        `/${course_id}/sections`,
-      ),
+      cmsCourseService.getSectionsByCourseIDPagination(courseID, {
+        ...params,
+        page: pageParam,
+      }),
   });
 }
 

@@ -1,6 +1,6 @@
-import { PaginationMixin } from "./pagination.mixin";
 import type { CMSMaterial } from "~/types/cms-material";
 import { BaseService } from "./base.service";
+import type { PaginationRequestParams } from "~/types/pagination";
 
 export type CreateMaterialPayload = {
   name: string;
@@ -12,6 +12,8 @@ export type CreateMaterialPayload = {
 export type UpdateMaterialPayload = Partial<CreateMaterialPayload> & {
   payload: any;
 };
+
+export type GetMaterialPaginationParams = PaginationRequestParams<CMSMaterial>;
 
 class CMSMaterialService extends BaseService {
   constructor() {
@@ -35,13 +37,10 @@ class CMSMaterialService extends BaseService {
   async delete(id: string) {
     return this.api.delete(`${this._baseURL}/${id}`);
   }
+
+  async getPagination(params: GetMaterialPaginationParams) {
+    return this._getPagination<CMSMaterial>(params);
+  }
 }
 
-export const cmsMaterialService = new (PaginationMixin<
-  CMSMaterial,
-  typeof CMSMaterialService
->(CMSMaterialService))();
-
-export type GetMaterialPaginationParams = Parameters<
-  typeof cmsMaterialService.getPagination
->[0];
+export const cmsMaterialService = new CMSMaterialService();

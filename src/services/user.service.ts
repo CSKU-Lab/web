@@ -1,7 +1,6 @@
 import { api } from "~/lib/api.client";
 import type { PaginationRequestParams } from "~/types/pagination";
 import type { CreateUser, User, UserRole } from "~/types/user";
-import { PaginationMixin } from "./pagination.mixin";
 import { BaseService } from "./base.service";
 
 export type GetUserPaginationParams = PaginationRequestParams<User>;
@@ -9,6 +8,10 @@ export type GetUserPaginationParams = PaginationRequestParams<User>;
 class UserService extends BaseService {
   constructor() {
     super("/admin/users");
+  }
+
+  async getPagination(params: GetUserPaginationParams) {
+    return this._getPagination<User>(params);
   }
 
   async deleteUser(id: string) {
@@ -98,6 +101,4 @@ class UserService extends BaseService {
   }
 }
 
-export const userService = new (PaginationMixin<User, typeof UserService>(
-  UserService,
-))();
+export const userService = new UserService();

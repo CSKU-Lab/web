@@ -1,8 +1,18 @@
 import { api } from "~/lib/api.client";
 import type { Course, WriteCourse } from "~/types/cms-course";
-import type { VisibilityKey } from "~/types/visibilities";
-import { PaginationMixin } from "./pagination.mixin";
 import { BaseService } from "./base.service";
+import type { PaginationRequestParams } from "~/types/pagination";
+import type { CMSSection } from "~/types/cms-section";
+import type { VisibilityKey } from "~/types/visibilities";
+
+export type GetSectionPaginationParams = PaginationRequestParams<
+  CMSSection,
+  "started_date"
+>;
+
+export type GetCoursePaginationParams = PaginationRequestParams<Course> & {
+  show: VisibilityKey;
+};
 
 class CMSCourseService extends BaseService {
   constructor() {
@@ -39,13 +49,20 @@ class CMSCourseService extends BaseService {
   async deleteByID(courseId: string): Promise<void> {
     return api.delete(`${this._baseURL}/${courseId}`);
   }
+
+  async getPagination(params: GetCoursePaginationParams) {
+    return this._getPagination<Course>(params);
+  }
+
+  async getSectionsByCourseIDPagination(
+    courseID: string,
+    params: GetSectionPaginationParams,
+  ) {
+    return this._getPagination<CMSSection, "started_date">(
+      params,
+      `/${courseID}/sections`,
+    );
+  }
 }
 
-export const cmsCourseService = new (PaginationMixin<
-  Course,
-  typeof CMSCourseService
->(CMSCourseService, { show: "all" }))();
-
-export type GetCoursePaginationParams = Parameters<
-  typeof cmsCourseService.getPagination
->[0] & { show?: VisibilityKey };
+export const cmsCourseService = new CMSCourseService();

@@ -1,6 +1,6 @@
 "use client";
 import { Plus } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "~/components/commons/Button";
 import useResolvePath from "~/hooks/useResolvePath";
@@ -18,7 +18,6 @@ import useSectionsByCourseIdPagination from "./_hooks/useSectionsByCourseIdPagin
 
 function CourseMainPage() {
   const router = useRouter();
-  const { courseID } = useParams();
 
   const generatePath = useResolvePath();
   const handleOnAddSection = () =>
@@ -41,13 +40,11 @@ function CourseMainPage() {
     hasNextPage,
     isFetching,
   } = useSectionsByCourseIdPagination({
-    course_id: courseID!.toString(),
-    args: {
-      page_size: 3,
-      sort_by: "started_date",
-      sort_order: "desc",
-      filters,
-    },
+    page_size: 3,
+    search: "",
+    sort_by: "started_date",
+    sort_order: "desc",
+    filters,
   });
 
   const bottomDivRef = useOnElementAppear({
