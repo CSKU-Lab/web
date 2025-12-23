@@ -12,7 +12,7 @@ function Layout({ children }: ChildrenProps) {
     courseID: string;
     sectionID: string;
   }>();
-  const { data, isFetching } = useGetSection(sectionID);
+  const { data, isFetching } = useGetSection();
   return (
     <>
       <PageTitle>
