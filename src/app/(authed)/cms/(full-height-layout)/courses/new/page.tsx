@@ -22,7 +22,7 @@ function NewCoursePage() {
     defaultValues: {
       name: "",
       creators: [],
-      type: "public",
+      visibility: "public",
     },
   });
 
@@ -94,7 +94,7 @@ function NewCoursePage() {
           </div>
           <Controller
             control={form.control}
-            name="type"
+            name="visibility"
             render={({ field: { value, onChange } }) => (
               <RadioGroup
                 value={value}
