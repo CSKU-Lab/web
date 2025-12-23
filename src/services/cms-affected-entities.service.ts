@@ -1,12 +1,15 @@
-import { api } from "~/lib/api.client";
 import type {
   AffectedEntities,
   AffectedType,
 } from "~/types/cms-affected-entities";
+import { BaseService } from "./base.service";
 
-class AffectedEntitiesService {
+class AffectedEntitiesService extends BaseService {
+  constructor() {
+    super("/cms/affected-entities");
+  }
   async get(type: AffectedType, id: string): Promise<AffectedEntities[]> {
-    const res = await api.post<AffectedEntities[]>(`/cms/affected-entities`, {
+    const res = await this.api.post<AffectedEntities[]>("", {
       type,
       id,
     });
