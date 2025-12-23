@@ -1,4 +1,3 @@
-import { PaginationMixin } from "./pagination.mixin";
 import type { PaginationRequestParams } from "~/types/pagination";
 import type { CMSSemester } from "~/types/cms-semester";
 import { api } from "~/lib/api.client";
@@ -8,9 +7,7 @@ import { BaseService } from "./base.service";
 
 dayjs.extend(utc);
 
-export type GetSemesterPaginationParams = Partial<
-  PaginationRequestParams<CMSSemester>
->;
+export type GetSemesterPaginationParams = PaginationRequestParams<CMSSemester>;
 
 export type WriteSemesterPayload = Omit<CMSSemester, "id" | "started_date"> & {
   started_date: Date;
@@ -28,6 +25,10 @@ class SemesterService extends BaseService {
       started_date: startedDate.toISOString(),
     });
     return res.data;
+  }
+
+  async getPagination(params: GetSemesterPaginationParams) {
+    return this._getPagination<CMSSemester>(params);
   }
 
   async update(id: string, payload: WriteSemesterPayload) {
@@ -55,7 +56,4 @@ class SemesterService extends BaseService {
   }
 }
 
-export const cmsSemesterService = new (PaginationMixin<
-  CMSSemester,
-  typeof SemesterService
->(SemesterService))();
+export const cmsSemesterService = new SemesterService();

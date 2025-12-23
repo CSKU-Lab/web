@@ -1,7 +1,8 @@
 import { api } from "~/lib/api.client";
-import { PaginationMixin } from "./pagination.mixin";
-import type { CMSSection, Section, Student } from "~/types/cms-section";
+import type { Section, Student } from "~/types/cms-section";
 import { BaseService } from "./base.service";
+import type { PaginationRequestParams } from "~/types/pagination";
+import type { CMSSectionLog } from "~/types/cms-section-logs";
 
 export type CreateSectionPayload = {
   name: string;
@@ -18,6 +19,9 @@ export type UpdateSectionPayload = {
   banner?: File | null;
   semester_id?: string;
 };
+
+export type GetSectionLogPaginationParams =
+  PaginationRequestParams<CMSSectionLog>;
 
 class SectionService extends BaseService {
   constructor() {
@@ -60,14 +64,12 @@ class SectionService extends BaseService {
   async deleteByID(id: string) {
     return api.delete(`${this._baseURL}/${id}`);
   }
+  async getLogsPagination(
+    sectionID: string,
+    params: GetSectionLogPaginationParams,
+  ) {
+    return this._getPagination<CMSSectionLog>(params, `/${sectionID}/logs`);
+  }
 }
 
-export const cmsSectionService = new (PaginationMixin<
-  CMSSection,
-  typeof SectionService,
-  "started_date"
->(SectionService))();
-
-export type GetSectionPaginationParams = Parameters<
-  typeof cmsSectionService.getPagination
->[0];
+export const cmsSectionService = new SectionService();

@@ -42,6 +42,8 @@ function SemesterManagementPage() {
     page: pagination.pageIndex + 1,
     page_size: pagination.pageSize,
     search: debouncedSearch,
+    sort_by: "started_date",
+    sort_order: "desc",
     filters,
   });
 

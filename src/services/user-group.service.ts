@@ -1,12 +1,10 @@
 import { api } from "~/lib/api.client";
-import { PaginationMixin } from "./pagination.mixin";
 import type { CMSUserGroup } from "~/types/cms-user-group";
 import type { PaginationRequestParams } from "~/types/pagination";
 import { BaseService } from "./base.service";
 
-export type GetUserGroupPaginationParams = Partial<
-  PaginationRequestParams<CMSUserGroup>
->;
+export type GetUserGroupPaginationParams =
+  PaginationRequestParams<CMSUserGroup>;
 
 class UserGroupService extends BaseService {
   constructor() {
@@ -19,6 +17,10 @@ class UserGroupService extends BaseService {
     });
   }
 
+  async getPagination(params: GetUserGroupPaginationParams) {
+    return this._getPagination<CMSUserGroup>(params);
+  }
+
   async uppdate(id: string, name: string) {
     return api.patch(`${this._baseURL}/${id}`, { name });
   }
@@ -28,7 +30,4 @@ class UserGroupService extends BaseService {
   }
 }
 
-export const userGroupService = new (PaginationMixin<
-  CMSUserGroup,
-  typeof UserGroupService
->(UserGroupService))();
+export const userGroupService = new UserGroupService();
