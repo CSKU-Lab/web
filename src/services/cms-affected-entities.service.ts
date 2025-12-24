@@ -9,7 +9,7 @@ class AffectedEntitiesService extends BaseService {
     super("/cms/affected-entities");
   }
   async get(type: AffectedType, id: string): Promise<AffectedEntities[]> {
-    const res = await this.api.post<AffectedEntities[]>("", {
+    const res = await this.api.post<AffectedEntities[]>(this._baseURL, {
       type,
       id,
     });
