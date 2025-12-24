@@ -27,6 +27,13 @@ export const queryKeys = {
       ...queryKeys.section.getById(sectionId),
       "students",
     ],
+    logs: {
+      allWithParams: (sectionId: string, params?: Record<string, any>) => [
+        ...queryKeys.section.getById(sectionId),
+        "logs",
+        params,
+      ],
+    },
   },
   user_group: {
     all: ["user_groups"],
