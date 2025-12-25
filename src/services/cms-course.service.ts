@@ -4,6 +4,8 @@ import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
 import type { CMSSection } from "~/types/cms-section";
 import type { VisibilityKey } from "~/types/visibilities";
+import { CMSLab } from "~/types/cms-lab";
+import { GetLabPaginationParams } from "./cms-lab.service";
 
 export type GetSectionPaginationParams = PaginationRequestParams<
   CMSSection,
@@ -52,6 +54,13 @@ class CMSCourseService extends BaseService {
 
   async getPagination(params: GetCoursePaginationParams) {
     return this._getPagination<Course>(params);
+  }
+
+  async getLabByCoursePagination(
+    courseID: string,
+    params: GetLabPaginationParams,
+  ) {
+    return this._getPagination<CMSLab>(params, `/${courseID}/labs`);
   }
 
   async getSectionsByCourseIDPagination(
