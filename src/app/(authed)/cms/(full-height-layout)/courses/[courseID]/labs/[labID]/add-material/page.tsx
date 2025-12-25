@@ -77,6 +77,7 @@ export default function NewLabMaterialPage() {
     data: materialPagination.data,
     columns: memoizedColumns,
     totalCount: 0,
+    pageCount: materialPagination.pagination.total_page,
     state: {
       pagination,
       sorting,
@@ -90,7 +91,6 @@ export default function NewLabMaterialPage() {
 
   const { handleSaveLabMaterials } = useSaveLabMaterials({
     labMaterials,
-    table,
     rowSelection,
     labID,
   });
@@ -120,6 +120,10 @@ export default function NewLabMaterialPage() {
         />
       </div>
       <DataTable
+        totalData={
+          materialPagination.pagination.total_page *
+          materialPagination.pagination.total_rows
+        }
         table={table}
         isError={isError || isLabMatError}
         onRetry={refetch}
