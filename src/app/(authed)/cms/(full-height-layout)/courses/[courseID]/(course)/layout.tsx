@@ -21,6 +21,7 @@ function CourseLayout({ children }: ChildrenProps) {
         </Loading>
       </PageTitle>
       <NavigationMenus
+        className="grid-cols-3"
         menus={[
           {
             name: "Sections",

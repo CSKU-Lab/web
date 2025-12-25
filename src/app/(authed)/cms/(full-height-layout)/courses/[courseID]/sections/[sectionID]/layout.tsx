@@ -24,6 +24,7 @@ function Layout({ children }: ChildrenProps) {
         </Loading>
       </PageTitle>
       <NavigationMenus
+        className="grid-cols-5 w-3/5"
         menus={[
           {
             name: "Students",
@@ -35,7 +36,7 @@ function Layout({ children }: ChildrenProps) {
           },
           {
             name: "Gradebook",
-            href: `/cms/courses/${courseID}/sections/${sectionID}/labs`,
+            href: `/cms/courses/${courseID}/sections/${sectionID}/gradebook`,
           },
           {
             name: "Logs",
