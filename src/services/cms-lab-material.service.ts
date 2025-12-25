@@ -1,7 +1,7 @@
-import { PaginationMixin } from "./pagination.mixin";
 import { BaseService } from "./base.service";
 import { type CMSLabMaterial } from "~/types/cms-lab-material";
 import { api } from "~/lib/api.client";
+import { PaginationRequestParams } from "~/types/pagination";
 
 class CMSLabMaterialService extends BaseService {
   constructor() {
@@ -32,16 +32,15 @@ class CMSLabMaterialService extends BaseService {
     );
     return res.data;
   }
+  async getPagination(labID: string, params: GetLabMaterialPaginationParams) {
+    return this._getPagination<CMSLabMaterial>(params, `/${labID}/materials`);
+  }
 }
 
-export const cmsLabMaterialService = new (PaginationMixin<
-  CMSLabMaterial,
-  typeof CMSLabMaterialService
->(CMSLabMaterialService))();
+export const cmsLabMaterialService = new CMSLabMaterialService();
 
-export type GetLabMaterialPaginationParams = Parameters<
-  typeof cmsLabMaterialService.getPagination
->[0];
+export type GetLabMaterialPaginationParams =
+  PaginationRequestParams<CMSLabMaterial> & {};
 
 export type GetLabMaterialPaginationRequest = {
   labID: string;

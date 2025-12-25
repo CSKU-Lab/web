@@ -1,7 +1,7 @@
-import { PaginationMixin } from "./pagination.mixin";
 import { BaseService } from "./base.service";
 import type { CMSDefaultLab } from "~/types/cms-default-lab";
 import { api } from "~/lib/api.client";
+import { PaginationRequestParams } from "~/types/pagination";
 
 class CMSDefaultLabService extends BaseService {
   constructor() {
@@ -31,16 +31,18 @@ class CMSDefaultLabService extends BaseService {
     );
     return res.data;
   }
+  async getPagination(courseID: string, params: GetDefaultLabPaginationParams) {
+    return this._getPagination<CMSDefaultLab>(
+      params,
+      `/${courseID}/default-labs`,
+    );
+  }
 }
 
-export const cmsDefaultLabService = new (PaginationMixin<
-  CMSDefaultLab,
-  typeof CMSDefaultLabService
->(CMSDefaultLabService))();
+export const cmsDefaultLabService = new CMSDefaultLabService();
 
-export type GetDefaultLabPaginationParams = Parameters<
-  typeof cmsDefaultLabService.getPagination
->[0];
+export type GetDefaultLabPaginationParams =
+  PaginationRequestParams<CMSDefaultLab> & {};
 
 export type DefaultLabPayload = {
   lab_id: string;

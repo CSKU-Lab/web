@@ -14,12 +14,7 @@ const useDefaultLabPagination = (params: Params) => {
   const { course_id, args } = params;
   return usePagination({
     queryKey: queryKeys.defaultLab.allWithParams(params),
-    queryFn: ({ pageParam }) =>
-      cmsDefaultLabService.getPagination(
-        { ...args, page: pageParam },
-        "/cms/courses",
-        `/${course_id}/default-labs`,
-      ),
+    queryFn: () => cmsDefaultLabService.getPagination(course_id, args),
   });
 };
 

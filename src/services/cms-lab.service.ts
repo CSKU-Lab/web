@@ -1,7 +1,7 @@
-import { PaginationMixin } from "./pagination.mixin";
 import { BaseService } from "./base.service";
 import type { CMSLab } from "~/types/cms-lab";
 import { api } from "~/lib/api.client";
+import { PaginationRequestParams } from "~/types/pagination";
 
 class CMSLabService extends BaseService {
   constructor() {
@@ -30,15 +30,15 @@ class CMSLabService extends BaseService {
   async deleteById(labID: string) {
     return this.api.delete(`${this._baseURL}/${labID}`);
   }
+
+  async getPagination(params: GetLabPaginationParams) {
+    return this._getPagination<CMSLab>(params);
+  }
 }
 
-export const cmsLabService = new (PaginationMixin<CMSLab, typeof CMSLabService>(
-  CMSLabService,
-))();
+export const cmsLabService = new CMSLabService();
 
-export type GetLabPaginationParams = Parameters<
-  typeof cmsLabService.getPagination
->[0];
+export type GetLabPaginationParams = PaginationRequestParams<CMSLab> & {};
 
 export type CreateLabPayload = {
   courseID: string;
