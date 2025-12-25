@@ -29,6 +29,13 @@ import Loading from "./Loading";
 import Error from "./Error";
 import ErrorFallback from "./Error/ErrorFallback";
 
+import SortableRow from "./SortableRow";
+import { closestCenter, DndContext } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
 interface Props {
   table: ITable<any>;
   isLoading?: boolean;
@@ -38,6 +45,9 @@ interface Props {
   className?: string;
   hidePagination?: boolean;
   onRetry?: () => void;
+
+  rowIds?: string[];
+  onDragEnd?: (event: any) => void;
 }
 
 function DataTable({
@@ -49,6 +59,9 @@ function DataTable({
   className,
   hidePagination,
   onRetry,
+
+  rowIds,
+  onDragEnd,
 }: Props) {
   const visibleColumns = useMemo(
     () =>
@@ -66,145 +79,148 @@ function DataTable({
   return (
     <div
       className={cn(
-        "border border-(--gray-4) overflow-hidden mt-4 h-full flex flex-col relative 2xl:rounded-md border-l-0 2xl:border-l",
+        "border border-(--gray-4) overflow-hidden mt-4 h-full flex flex-col relative 2xl:rounded-md border-l-1 2xl:border-l",
         className,
       )}
     >
-      <Table className="flex-1">
-        <TableHeader className="sticky top-0">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-(--gray-2) h-9">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead
-                    key={header.id}
-                    style={{ width: header.getSize() }}
-                  >
-                    <div
-                      onClick={() => {
-                        if (header.column.getCanSort()) {
-                          header.column.toggleSorting();
-                        }
-                      }}
-                      className={cn(
-                        "flex gap-1.5 text-xs",
-                        header.column.getCanSort() && "cursor-pointer",
-                      )}
+      <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+        <Table className="flex-1">
+          <TableHeader className="sticky top-0">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id} className="bg-(--gray-2) h-9">
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead
+                      key={header.id}
+                      style={{ width: header.getSize() }}
                     >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                      {{
-                        asc: (
-                          <ChevronDown
-                            size="1rem"
-                            className="text-(--gray-11) shrink-0"
-                          />
-                        ),
-                        desc: (
-                          <ChevronUp
-                            size="1rem"
-                            className="text-(--gray-11) shrink-0"
-                          />
-                        ),
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </div>
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody className="flex-1">
-          <Error
-            isError={isError}
-            fallback={
-              <TableRow className="hover:bg-transparent">
-                <TableCell
-                  colSpan={table.getAllColumns().length}
-                  className="h-[calc(100vh-300px)]"
-                >
-                  <ErrorFallback
-                    icon={<ServerCrash size="2rem" />}
-                    title="Something went wrong"
-                    message={
-                      <>
-                        {" "}
-                        There was an error processing your request. <br />{" "}
-                        Please try again later or report issue{" "}
-                        <a href="#" className="text-(--grass-9)">
-                          here
-                        </a>
-                        .
-                      </>
-                    }
-                    onRetry={onRetry}
-                  />
-                </TableCell>
-              </TableRow>
-            }
-          >
-            <Loading
-              fallback={<TableSkeleton columns={visibleColumns} />}
-              isLoading={!!isLoading}
-            >
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    className="border-b last:border-none border-(--gray-4) h-9"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-1.5">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
+                      <div
+                        onClick={() => {
+                          if (header.column.getCanSort()) {
+                            header.column.toggleSorting();
+                          }
+                        }}
+                        className={cn(
+                          "flex gap-1.5 text-xs",
+                          header.column.getCanSort() && "cursor-pointer",
                         )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow className="hover:bg-transparent">
-                  <TableCell
-                    colSpan={table.getAllColumns().length}
-                    className="h-[calc(100vh-300px)]"
-                  >
-                    <div className="h-full w-full flex items-center justify-center">
-                      <div className="flex flex-col items-center justify-center gap-2 text-(--gray-10)">
-                        {search && table.getState().globalFilter !== "" ? (
-                          <>
-                            <SearchX size="2.5rem" />
-                            <p className="text-sm font-medium">
-                              No results found for &ldquo;
-                              {search}&rdquo;
-                            </p>
-                            <p className="text-xs text-(--gray-9)">
-                              Try adjusting your search or filter to find what
-                              you&apos;re looking for.
-                            </p>
-                          </>
-                        ) : (
-                          <>
-                            <Inbox size="2.5rem" />
-                            <p className="text-sm font-medium">
-                              There is no data available
-                            </p>
-                          </>
-                        )}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                        {{
+                          asc: (
+                            <ChevronDown
+                              size="1rem"
+                              className="text-(--gray-11) shrink-0"
+                            />
+                          ),
+                          desc: (
+                            <ChevronUp
+                              size="1rem"
+                              className="text-(--gray-11) shrink-0"
+                            />
+                          ),
+                        }[header.column.getIsSorted() as string] ?? null}
                       </div>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </Loading>
-          </Error>
-        </TableBody>
-      </Table>
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody className="flex-1">
+            <SortableContext
+              items={rowIds ?? []}
+              strategy={verticalListSortingStrategy}
+            >
+              <Error
+                isError={isError}
+                fallback={
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell
+                      colSpan={table.getAllColumns().length}
+                      className="h-[calc(100vh-300px)]"
+                    >
+                      <ErrorFallback
+                        icon={<ServerCrash size="2rem" />}
+                        title="Something went wrong"
+                        message={
+                          <>
+                            {" "}
+                            There was an error processing your request. <br />{" "}
+                            Please try again later or report issue{" "}
+                            <a href="#" className="text-(--grass-9)">
+                              here
+                            </a>
+                            .
+                          </>
+                        }
+                        onRetry={onRetry}
+                      />
+                    </TableCell>
+                  </TableRow>
+                }
+              >
+                <Loading
+                  fallback={<TableSkeleton columns={visibleColumns} />}
+                  isLoading={!!isLoading}
+                >
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <SortableRow key={row.id} row={row}>
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id} className="py-1.5">
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        ))}
+                      </SortableRow>
+                    ))
+                  ) : (
+                    <TableRow className="hover:bg-transparent">
+                      <TableCell
+                        colSpan={table.getAllColumns().length}
+                        className="h-[calc(100vh-300px)]"
+                      >
+                        <div className="h-full w-full flex items-center justify-center">
+                          <div className="flex flex-col items-center justify-center gap-2 text-(--gray-10)">
+                            {search && table.getState().globalFilter !== "" ? (
+                              <>
+                                <SearchX size="2.5rem" />
+                                <p className="text-sm font-medium">
+                                  No results found for &ldquo;
+                                  {search}&rdquo;
+                                </p>
+                                <p className="text-xs text-(--gray-9)">
+                                  Try adjusting your search or filter to find
+                                  what you&apos;re looking for.
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <Inbox size="2.5rem" />
+                                <p className="text-sm font-medium">
+                                  There is no data available
+                                </p>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </Loading>
+              </Error>
+            </SortableContext>
+          </TableBody>
+        </Table>
+      </DndContext>
       <div className="p-2 border-t border-(--gray-4) flex justify-between items-center">
         <p className="text-xs text-(--gray-10) tracking-wide">
           Total{" "}
