@@ -8,12 +8,15 @@ import {
 const useLabMaterialInfPagination = (
   params: GetLabMaterialPaginationRequest,
 ) => {
-  const { labID, ...args } = params;
+  const { labID, payload } = params;
   return useInfinitePagination({
-    queryKey: queryKeys.material.allWithParams(args),
+    queryKey: queryKeys.material.allWithParams(payload),
     queryFn: ({ pageParam }) =>
       cmsLabMaterialService.getPagination(
-        { ...args, page: pageParam },
+        {
+          page: pageParam,
+          ...payload,
+        },
         "/cms/labs",
         `/${labID}/materials`,
       ),

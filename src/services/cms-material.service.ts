@@ -1,6 +1,7 @@
 import type { CMSMaterial } from "~/types/cms-material";
 import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
+import { VisibilityKey } from "~/types/visibilities";
 
 export type CreateMaterialPayload = {
   name: string;

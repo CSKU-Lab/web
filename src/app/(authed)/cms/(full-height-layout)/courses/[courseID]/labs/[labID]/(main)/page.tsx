@@ -2,7 +2,6 @@
 
 import { Plus } from "lucide-react";
 import { Button } from "~/components/commons/Button";
-import Filters from "~/components/commons/Filters";
 import { useParams, useRouter } from "next/navigation";
 import useResolvePath from "~/hooks/useResolvePath";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
@@ -29,7 +28,7 @@ export default function LabDetail() {
   } = useMaterialInfPagination({
     labID: labID!.toString(),
     payload: {
-      page_size: 3,
+      page_size: 5,
       sort_by: "created_at",
       sort_order: "desc",
       filters: [],
