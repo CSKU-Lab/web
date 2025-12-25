@@ -1,14 +1,12 @@
 "use client";
 
-import { Save } from "lucide-react";
+import { Save, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
 import { Button } from "~/components/commons/Button";
-import PageTitle from "~/components/commons/PageTitle";
 import SettingPaper from "~/components/commons/SettingPaper";
-import useGetLab from "../_hooks/useGetLab";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   cmsLabService,
@@ -16,11 +14,14 @@ import {
 } from "~/services/cms-lab.service";
 import { toast } from "sonner";
 import { queryKeys } from "~/queryKeys";
-import DeleteLabDialog from "./_components/DeleteLabDialog";
 import { updateLabSchema } from "./schemas/update-lab.schema";
 import { z } from "zod";
 import Label from "~/components/commons/Label";
 import Input from "~/components/commons/Input";
+import useGetLab from "../../_hooks/useGetLab";
+import DeleteLabDialog, {
+  DeleteLabDialogTrigger,
+} from "./_components/DeleteLabDialog";
 
 export default function SettingPage() {
   const { labID } = useParams<{ labID: string }>();
@@ -49,9 +50,6 @@ export default function SettingPage() {
   });
 
   const isUpdated = form.watch("display_name") === lab?.display_name;
-  const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
-  const handleDeleteLab = () => setConfirmDeleteVisible(true);
-  const onCloseDeleteDialog = () => setConfirmDeleteVisible(false);
 
   if (!lab) return null;
 
@@ -61,15 +59,25 @@ export default function SettingPage() {
     });
   };
 
+  const dangerAction = () => (
+    <DeleteLabDialog>
+      <DeleteLabDialogTrigger asChild>
+        <Button variant="danger" className="h-10">
+          <Trash size="1rem" className="mr-2" />
+          Delete Lab
+        </Button>
+      </DeleteLabDialogTrigger>
+    </DeleteLabDialog>
+  );
+
   return (
     <>
-      {confirmDeleteVisible && (
-        <DeleteLabDialog onClose={onCloseDeleteDialog} />
-      )}
-      <PageTitle>Settings</PageTitle>
       <SettingPaper
-        onDelete={() => handleDeleteLab()}
-        deleteLabel={"Delete Lab"}
+        title="Lab Settings"
+        description="Manage your lab details."
+        dangerTitle="Danger Zone"
+        dangerDescription="Deleting this lab will permanently remove all associated data."
+        dangerAction={dangerAction()}
       >
         <form
           onSubmit={form.handleSubmit(handleUpdateLab)}

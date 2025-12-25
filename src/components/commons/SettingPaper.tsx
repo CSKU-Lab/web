@@ -1,51 +1,67 @@
 import { Trash } from "lucide-react";
 import { Button } from "./Button";
 
+import {
+  SettingCard,
+  SettingDescription,
+  SettingDivider,
+  SettingHeader,
+  SettingLayout,
+  SettingTitle,
+} from "~/components/crafts/Settings";
+import DeleteLabDialog, {
+  DeleteLabDialogTrigger,
+} from "~/app/(authed)/cms/(full-height-layout)/courses/[courseID]/labs/[labID]/(main)/settings/_components/DeleteLabDialog";
+
 interface SettingPaperProps {
+  title: string;
+  description?: string;
   children: React.ReactNode;
-  onDelete: () => void;
-  deleteLabel: string;
+
+  dangerTitle?: string;
+  dangerDescription?: string;
+  dangerAction?: React.ReactNode;
 }
 
 export default function SettingPaper({
+  title,
+  description,
   children,
-  onDelete,
-  deleteLabel,
+  dangerTitle,
+  dangerDescription,
+  dangerAction,
 }: SettingPaperProps) {
   return (
-    <>
-      <div className="flex justify-center py-8">
-        <div className="w-full max-w-4xl space-y-8 2xl:mt-10">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <div className="space-y-1.5 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Course Settings
-              </h2>
-              <p className="text-sm text-gray-600">
-                Manage your course details and visibility.
-              </p>
-              <hr />
-            </div>
-            {children}
-          </div>
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-            <div className="space-y-1.5 mb-6">
-              <h2 className="text-xl font-semibold text-red-900">
-                Danger Zone
-              </h2>
-              <p className="text-sm text-red-700">
-                Deleting this course will permanently remove all associated
-                data. This action cannot be undone.
-              </p>
-              <hr />
-            </div>
-            <Button variant="danger" className="h-10" onClick={onDelete}>
-              <Trash size="1rem" className="mr-2" />
-              {deleteLabel}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </>
+    <SettingLayout>
+      {/* Main settings */}
+      <SettingCard>
+        <SettingHeader>
+          <SettingTitle>{title}</SettingTitle>
+          {description && (
+            <SettingDescription>{description}</SettingDescription>
+          )}
+          <SettingDivider />
+        </SettingHeader>
+
+        {children}
+      </SettingCard>
+
+      {/* Danger zone (optional) */}
+      {dangerAction && (
+        <SettingCard variant="danger">
+          <SettingHeader>
+            <SettingTitle variant="danger">{dangerTitle}</SettingTitle>
+            {dangerDescription && (
+              <SettingDescription variant="danger">
+                {dangerDescription}
+              </SettingDescription>
+            )}
+            <SettingDivider variant="danger" />
+          </SettingHeader>
+
+          {dangerAction}
+        </SettingCard>
+      )}
+    </SettingLayout>
   );
 }
