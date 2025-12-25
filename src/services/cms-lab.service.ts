@@ -30,10 +30,6 @@ class CMSLabService extends BaseService {
   async deleteById(labID: string) {
     return this.api.delete(`${this._baseURL}/${labID}`);
   }
-
-  async getPagination(params: GetLabPaginationParams) {
-    return this._getPagination<CMSLab>(params);
-  }
 }
 
 export const cmsLabService = new CMSLabService();

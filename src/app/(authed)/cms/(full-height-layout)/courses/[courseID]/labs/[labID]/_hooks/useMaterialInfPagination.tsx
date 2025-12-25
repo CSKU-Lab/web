@@ -9,9 +9,14 @@ const useLabMaterialInfPagination = (
   params: GetLabMaterialPaginationRequest,
 ) => {
   const { labID, payload } = params;
+
   return useInfinitePagination({
-    queryKey: queryKeys.material.allWithParams(payload),
-    queryFn: () => cmsLabMaterialService.getPagination(labID, payload),
+    queryKey: queryKeys.material.allWithParams(params),
+    queryFn: ({ pageParam }) =>
+      cmsLabMaterialService.getPagination(labID, {
+        ...payload,
+        page: pageParam,
+      }),
   });
 };
 
