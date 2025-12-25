@@ -46,9 +46,8 @@ export default function LabTable() {
   const table = useTable({
     data: labPagination.data,
     columns: memoizedColumns,
-    totalCount:
-      labPagination?.pagination.total_page *
-        labPagination.pagination.total_rows ?? 0,
+    totalCount: 0,
+    pageCount: labPagination.pagination.total_page,
     state: {
       pagination,
       sorting,

@@ -20,6 +20,16 @@ class CMSLabService extends BaseService {
     const res = await api.get<CMSLab>(`${this._baseURL}/${labID}`);
     return res.data;
   }
+
+  async updateById(labID: string, payload: UpdateLabPayload) {
+    return this.api.patch(`${this._baseURL}/${labID}`, {
+      display_name: payload.displayName,
+    });
+  }
+
+  async deleteById(labID: string) {
+    return this.api.delete(`${this._baseURL}/${labID}`);
+  }
 }
 
 export const cmsLabService = new (PaginationMixin<CMSLab, typeof CMSLabService>(
@@ -32,5 +42,9 @@ export type GetLabPaginationParams = Parameters<
 
 export type CreateLabPayload = {
   courseID: string;
+  displayName: string;
+};
+
+export type UpdateLabPayload = {
   displayName: string;
 };

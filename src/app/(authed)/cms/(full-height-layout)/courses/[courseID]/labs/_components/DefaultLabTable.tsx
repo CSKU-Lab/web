@@ -55,7 +55,7 @@ export default function DefaultLabTable() {
     data: rows,
     columns: memoizedColumns,
     getRowId: (row) => row.lab_id,
-    totalCount: labPagination.pagination.total_rows ?? 0,
+    totalCount: 0,
     state: {
       pagination,
       sorting,

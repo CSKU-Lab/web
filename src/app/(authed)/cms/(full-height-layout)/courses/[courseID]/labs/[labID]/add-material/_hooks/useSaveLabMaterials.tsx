@@ -1,22 +1,18 @@
-import { type Table } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import useResolvePath from "~/hooks/useResolvePath";
 import { cmsLabMaterialService } from "~/services/cms-lab-material.service";
 import { type CMSLabMaterial } from "~/types/cms-lab-material";
-import { type CMSMaterial } from "~/types/cms-material";
 
 interface SaveMaterialsProps {
   labMaterials: CMSLabMaterial[] | undefined;
-  table: Table<CMSMaterial>;
   rowSelection: Record<string, boolean>;
   labID: string;
 }
 
 export const useSaveLabMaterials = ({
   labMaterials,
-  table,
   rowSelection,
   labID,
 }: SaveMaterialsProps) => {
@@ -28,24 +24,18 @@ export const useSaveLabMaterials = ({
     return new Set(labMaterials.map((m) => String(m.material_id)));
   }, [labMaterials]);
 
-  const currentSelectedIdSet = useMemo(() => {
-    return new Set(
-      table.getSelectedRowModel().rows.map((row) => String(row.original.id)),
-    );
-  }, [table, rowSelection]);
-
   const handleSaveLabMaterials = async () => {
     const toCreate: string[] = [];
     const toDelete: string[] = [];
 
-    currentSelectedIdSet.forEach((id) => {
-      if (!initialMaterialIdSet.has(id)) {
+    Object.entries(rowSelection).forEach(([id, selected]) => {
+      if (selected && !initialMaterialIdSet.has(id)) {
         toCreate.push(id);
       }
     });
 
     initialMaterialIdSet.forEach((id) => {
-      if (!currentSelectedIdSet.has(id)) {
+      if (!rowSelection[id]) {
         toDelete.push(id);
       }
     });

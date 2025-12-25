@@ -12,12 +12,12 @@ import { useParams, useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  type CreateLabSchema,
-  createLabSchema,
-} from "./_schemas/create-section.schema";
 import Label from "~/components/commons/Label";
 import Input from "~/components/commons/Input";
+import {
+  CreateLabSchema,
+  createLabSchema,
+} from "./_schemas/create-section.schema";
 
 export default function NewLabPage() {
   const form = useForm({
@@ -35,7 +35,7 @@ export default function NewLabPage() {
 
     onSuccess: (labID) => {
       toast.success("Lab created successfully");
-      router.push(`/cms/courses/${courseID}/labs/${labID}`);
+      router.push(`/cms/courses/${courseID}/labs/`);
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

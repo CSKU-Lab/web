@@ -53,6 +53,7 @@ function MaterialPage() {
     data: materialPagination.data,
     columns: memoizedColumns,
     totalCount: 0,
+    pageCount: materialPagination.pagination.total_page,
     state: {
       pagination,
       sorting,

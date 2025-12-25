@@ -1,3 +1,7 @@
+export interface WriteLab {
+  display_name: string;
+}
+
 export interface CMSLab {
   id: string;
   display_name: string;

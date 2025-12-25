@@ -1,6 +1,5 @@
 import { PaginationMixin } from "./pagination.mixin";
 import { BaseService } from "./base.service";
-import { type GetMaterialPaginationParams } from "./cms-material.service";
 import { type CMSLabMaterial } from "~/types/cms-lab-material";
 import { api } from "~/lib/api.client";
 
@@ -46,7 +45,7 @@ export type GetLabMaterialPaginationParams = Parameters<
 
 export type GetLabMaterialPaginationRequest = {
   labID: string;
-  payload: GetMaterialPaginationParams;
+  payload: GetLabMaterialPaginationParams;
 };
 
 export type CreateLabMaterialPayload = {
