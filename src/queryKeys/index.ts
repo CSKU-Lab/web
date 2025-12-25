@@ -8,6 +8,10 @@ export const queryKeys = {
       params,
     ],
   },
+  labMaterial: {
+    all: ["labMaterials"],
+    getByLabId: (labId: string) => [...queryKeys.labMaterial.all, labId],
+  },
   course: {
     all: ["courses"],
     allWithParams: (params: Record<string, any>) => [
@@ -56,6 +60,21 @@ export const queryKeys = {
       params,
     ],
     getById: (materialId: string) => [...queryKeys.material.all, materialId],
+  },
+  lab: {
+    all: ["labs"],
+    allWithParams: (params: Record<string, any>) => [
+      ...queryKeys.lab.all,
+      params,
+    ],
+    getById: (labID: string) => [...queryKeys.course.all, labID],
+  },
+  defaultLab: {
+    all: ["default_labs"],
+    allWithParams: (params: Record<string, any>) => [
+      ...queryKeys.defaultLab.all,
+      params,
+    ],
   },
   config: {
     runners: {
