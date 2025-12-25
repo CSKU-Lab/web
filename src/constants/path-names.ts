@@ -16,6 +16,16 @@ export const pathNames = {
             "/logs": "Logs",
           },
         },
+        "/labs": {
+          "/": "Labs",
+          "/new": "New Lab",
+          "/[labID]": {
+            "/": "Details",
+            "/add-material": {
+              "/": "New Lab Material",
+            },
+          },
+        },
       },
     },
     "/materials": {
