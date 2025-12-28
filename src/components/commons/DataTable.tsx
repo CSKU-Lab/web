@@ -113,7 +113,7 @@ function DataTable({
                           }
                         }}
                         className={cn(
-                          "flex gap-1.5",
+                          "flex gap-1.5 text-xs",
                           textAlign === "center" && "justify-center",
                           textAlign === "right" && "justify-end",
                           header.column.getCanSort() && "cursor-pointer",
@@ -185,7 +185,7 @@ function DataTable({
                 >
                   {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
-                      <SortableRow key={row.id} row={row}>
+                      <SortableRow key={row.id} row={row} columnBordered>
                         {row.getVisibleCells().map((cell) => (
                           <TableCell
                             key={cell.id}

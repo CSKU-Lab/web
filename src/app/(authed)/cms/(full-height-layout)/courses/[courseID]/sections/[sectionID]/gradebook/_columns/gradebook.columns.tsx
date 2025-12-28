@@ -54,17 +54,6 @@ export const columns: ColumnDef<CMSGradebook, any>[] = [
             cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
           },
         ),
-        columnHelper.accessor(
-          (row) => {
-            const lab = row.labs.find((lab) => lab.name === labName);
-            return lab ? lab.total_score : 0;
-          },
-          {
-            id: `${labName}-total-score`,
-            header: () => <h6>Total (12)</h6>,
-            cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
-          },
-        ),
       ],
     }),
   ),
