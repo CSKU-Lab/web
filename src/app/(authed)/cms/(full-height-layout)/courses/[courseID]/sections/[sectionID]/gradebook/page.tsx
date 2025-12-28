@@ -10,7 +10,7 @@ function GradebookPage() {
     data: [
       {
         username: "6510405814",
-        display_name: "Sornchai Somsakul",
+        display_name: "ณัฐวุฒิ แสงสว่าง",
         labs: [
           {
             id: "lab-01",
@@ -37,7 +37,7 @@ function GradebookPage() {
       },
       {
         username: "6510405825",
-        display_name: "Pattara Poomjai",
+        display_name: "สุภาพร ใจดี",
         labs: [
           {
             id: "lab-01",
@@ -64,7 +64,7 @@ function GradebookPage() {
       },
       {
         username: "6510405836",
-        display_name: "Chalida Chaiyaporn",
+        display_name: "พัชรพล พลายแก้ว",
         labs: [
           {
             id: "lab-01",
@@ -91,7 +91,7 @@ function GradebookPage() {
       },
       {
         username: "6510405847",
-        display_name: "Thitipong Thongchai",
+        display_name: "วรางคณา วีระกุล",
         labs: [
           {
             id: "lab-01",
@@ -118,7 +118,7 @@ function GradebookPage() {
       },
       {
         username: "6510405858",
-        display_name: "Nattaporn Narak",
+        display_name: "ธนากรณ์ ทองสุข",
         labs: [
           {
             id: "lab-01",
@@ -145,7 +145,7 @@ function GradebookPage() {
       },
       {
         username: "6510405859",
-        display_name: "Kanchana Kittisak",
+        display_name: "นวลพรรณ นิลกาญจน์",
         labs: [
           {
             id: "lab-01",
@@ -172,7 +172,7 @@ function GradebookPage() {
       },
       {
         username: "6510405860",
-        display_name: "Anupong Anuman",
+        display_name: "ศุภชัย ชัยชนะ",
         labs: [
           {
             id: "lab-01",
@@ -199,7 +199,7 @@ function GradebookPage() {
       },
       {
         username: "6510405861",
-        display_name: "Siriporn Sirichai",
+        display_name: "อรพรรณ อรุณสวัสดิ์",
         labs: [
           {
             id: "lab-01",
@@ -226,7 +226,7 @@ function GradebookPage() {
       },
       {
         username: "6510405862",
-        display_name: "Prasert Praphan",
+        display_name: "กิตติพงษ์ กาญจนรัตน์",
         labs: [
           {
             id: "lab-01",
@@ -253,7 +253,7 @@ function GradebookPage() {
       },
       {
         username: "6510405863",
-        display_name: "Wanida Wongdee",
+        display_name: "สมชาย สมบัติ",
         labs: [
           {
             id: "lab-01",
@@ -280,7 +280,7 @@ function GradebookPage() {
       },
       {
         username: "6510405864",
-        display_name: "Suthep Sukhothai",
+        display_name: "จิราพร จิตรกร",
         labs: [
           {
             id: "lab-01",
@@ -307,7 +307,7 @@ function GradebookPage() {
       },
       {
         username: "6510405865",
-        display_name: "Nanthawan Nakhon",
+        display_name: "วัชรพล วัฒนศักดิ์",
         labs: [
           {
             id: "lab-01",
@@ -334,7 +334,7 @@ function GradebookPage() {
       },
       {
         username: "6510405866",
-        display_name: "Chaiyut Chaiprakarn",
+        display_name: "รุ่งนภา รุ่งเรือง",
         labs: [
           {
             id: "lab-01",
@@ -361,7 +361,7 @@ function GradebookPage() {
       },
       {
         username: "6510405867",
-        display_name: "Rattana Rattanakosin",
+        display_name: "ธีรพงษ์ ธีระวัฒน์",
         labs: [
           {
             id: "lab-01",
@@ -388,7 +388,7 @@ function GradebookPage() {
       },
       {
         username: "6510405868",
-        display_name: "Komsan Kongkaew",
+        display_name: "นันทนา นันทาพร",
         labs: [
           {
             id: "lab-01",
@@ -415,7 +415,7 @@ function GradebookPage() {
       },
       {
         username: "6510405869",
-        display_name: "Supaporn Suphan",
+        display_name: "พีรพล พีรพงษ์",
         labs: [
           {
             id: "lab-01",
@@ -442,7 +442,7 @@ function GradebookPage() {
       },
       {
         username: "6510405870",
-        display_name: "Thawatchai Thanakorn",
+        display_name: "สาวิตรี สายใจ",
         labs: [
           {
             id: "lab-01",
@@ -469,7 +469,7 @@ function GradebookPage() {
       },
       {
         username: "6510405871",
-        display_name: "Patcharaporn Pattana",
+        display_name: "วิชัย วิชาชัย",
         labs: [
           {
             id: "lab-01",
@@ -496,7 +496,7 @@ function GradebookPage() {
       },
       {
         username: "6510405872",
-        display_name: "Vichai Vongvanich",
+        display_name: "ลัดดา ลัดดาวัลย์",
         labs: [
           {
             id: "lab-01",
@@ -523,7 +523,7 @@ function GradebookPage() {
       },
       {
         username: "6510405873",
-        display_name: "Nalinee Narong",
+        display_name: "ชัยวัฒน์ ชัยนาท",
         labs: [
           {
             id: "lab-01",
@@ -550,7 +550,7 @@ function GradebookPage() {
       },
       {
         username: "6510405874",
-        display_name: "Sombat Somchai",
+        display_name: "มนต์นภา มนต์นวล",
         labs: [
           {
             id: "lab-01",
@@ -577,7 +577,7 @@ function GradebookPage() {
       },
       {
         username: "6510405875",
-        display_name: "Piyanut Piyaporn",
+        display_name: "รัฐพงษ์ รัฐวิไล",
         labs: [
           {
             id: "lab-01",
@@ -604,7 +604,7 @@ function GradebookPage() {
       },
       {
         username: "6510405876",
-        display_name: "Kittipong Kittisak",
+        display_name: "สุนิสา สุนันท์",
         labs: [
           {
             id: "lab-01",
@@ -631,7 +631,7 @@ function GradebookPage() {
       },
       {
         username: "6510405877",
-        display_name: "Yuthana Yoddee",
+        display_name: "เอกพล เอกวัฒน์",
         labs: [
           {
             id: "lab-01",
@@ -658,7 +658,7 @@ function GradebookPage() {
       },
       {
         username: "6510405878",
-        display_name: "Apinya Apirak",
+        display_name: "วรุณ วรุณ",
         labs: [
           {
             id: "lab-01",
@@ -686,7 +686,7 @@ function GradebookPage() {
     ],
   });
   return (
-    <DataTable table={table} textAlign="center" columnBordered hidePagination totalData={20} />
+    <DataTable table={table} columnBordered hidePagination textAlign="center" totalData={20} className="font-[Boon]" />
   );
 }
 

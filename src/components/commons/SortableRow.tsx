@@ -1,13 +1,16 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { TableRow } from "./Table";
+import { cn } from "~/lib/tiptap-utils";
 
 export default function SortableRow({
   row,
   children,
+  columnBordered = false,
 }: {
   row: any;
   children: React.ReactNode;
+  columnBordered?: boolean;
 }) {
   const { setNodeRef, transform, transition } = useSortable({
     id: row.id,
@@ -22,7 +25,11 @@ export default function SortableRow({
     <TableRow
       ref={setNodeRef}
       style={style}
-      className="border-b last:border-none border-(--gray-4) h-9"
+      className={cn(
+        "border-(--gray-4) h-9",
+        columnBordered &&
+          "[&>td]:border-r last:[&>td]:border-b-0 [&>td]:border-b",
+      )}
     >
       {children}
     </TableRow>
