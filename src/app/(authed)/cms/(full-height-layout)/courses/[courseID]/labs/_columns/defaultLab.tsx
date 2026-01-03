@@ -32,36 +32,12 @@ export const columns = [
     size: 40,
     cell: ({ row }) => <DragHandleCell rowId={row.original.lab_id} />,
   },
-  columnHelper.accessor("lab_id", {
-    id: "lab_id",
-    enableSorting: true,
-    header: () => (
-      <>
-        <Hash size="1rem" /> Lab ID
-      </>
-    ),
-    cell: (cell) => {
-      return <>{cell.getValue()}</>;
-    },
-  }),
   columnHelper.accessor("lab_name", {
     id: "lab_name",
     enableSorting: false,
     header: () => (
       <>
         <Hash size="1rem" /> Name
-      </>
-    ),
-    cell: (cell) => {
-      return <>{cell.getValue()}</>;
-    },
-  }),
-  columnHelper.accessor("position", {
-    id: "position",
-    enableSorting: false,
-    header: () => (
-      <>
-        <ListOrdered size="1rem" /> Position
       </>
     ),
     cell: (cell) => {
