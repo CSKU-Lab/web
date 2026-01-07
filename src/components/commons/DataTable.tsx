@@ -88,7 +88,10 @@ function DataTable({
       )}
     >
       <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-        <Table className="flex-1 border-separate border-spacing-0">
+        <Table
+          containerClassName="flex-1"
+          className="border-separate border-spacing-0"
+        >
           <TableHeader className="sticky top-0">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
@@ -185,7 +188,11 @@ function DataTable({
                 >
                   {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
-                      <SortableRow key={row.id} row={row} columnBordered>
+                      <SortableRow
+                        key={row.id}
+                        row={row}
+                        columnBordered={columnBordered}
+                      >
                         {row.getVisibleCells().map((cell) => (
                           <TableCell
                             key={cell.id}
