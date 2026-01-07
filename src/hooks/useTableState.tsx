@@ -7,12 +7,7 @@ function useTableState() {
     email: false,
     username: false,
   });
-  const [sorting, setSorting] = useState<SortingState>([
-    {
-      id: "created_at",
-      desc: true,
-    },
-  ]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,

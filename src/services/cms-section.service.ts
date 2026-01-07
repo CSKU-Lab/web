@@ -3,6 +3,7 @@ import type { Section, Student } from "~/types/cms-section";
 import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
 import type { CMSSectionLog } from "~/types/cms-section-logs";
+import type { CMSSectionLab } from "~/types/cms-section-lab";
 
 export type CreateSectionPayload = {
   name: string;
@@ -22,6 +23,9 @@ export type UpdateSectionPayload = {
 
 export type GetSectionLogPaginationParams =
   PaginationRequestParams<CMSSectionLog>;
+
+export type GetSectionLabPaginationParams =
+  PaginationRequestParams<CMSSectionLab>;
 
 class SectionService extends BaseService {
   constructor() {
@@ -64,11 +68,25 @@ class SectionService extends BaseService {
   async deleteByID(id: string) {
     return api.delete(`${this._baseURL}/${id}`);
   }
+
   async getLogsPagination(
     sectionID: string,
     params: GetSectionLogPaginationParams,
   ) {
     return this._getPagination<CMSSectionLog>(params, `/${sectionID}/logs`);
+  }
+
+  async getLabsPagination(
+    sectionID: string,
+    params: GetSectionLabPaginationParams,
+  ) {
+    return this._getPagination<CMSSectionLab>(params, `/${sectionID}/labs`);
+  }
+
+  async addLabs(sectionID: string, labIDs: string[]) {
+    return api.post(`${this._baseURL}/${sectionID}/labs`, {
+      lab_ids: labIDs,
+    });
   }
 }
 
