@@ -1,10 +1,9 @@
 import * as React from "react";
 import {
-  type Content,
+  type JSONContent,
   EditorContent,
   EditorContext,
   useEditor,
-  JSONContent,
 } from "@tiptap/react";
 
 // --- Tiptap Core Extensions ---
@@ -17,6 +16,7 @@ import { Highlight } from "@tiptap/extension-highlight";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Selection } from "@tiptap/extensions";
+import { TableKit } from "@tiptap/extension-table";
 
 // --- UI Primitives ---
 import { Button } from "~/components/tiptap-ui-primitive/button";
@@ -57,6 +57,8 @@ import {
 import { MarkButton } from "~/components/tiptap-ui/mark-button";
 import { TextAlignButton } from "~/components/tiptap-ui/text-align-button";
 import { UndoRedoButton } from "~/components/tiptap-ui/undo-redo-button";
+import { TablePopover } from "~/components/tiptap-ui/table-button";
+import { TableContextMenu } from "~/components/tiptap-ui/table-context-menu";
 
 // --- Icons ---
 import { ArrowLeftIcon } from "~/components/tiptap-icons/arrow-left-icon";
@@ -141,9 +143,10 @@ const MainToolbarContent = ({
 
       <ToolbarSeparator />
 
-      <ToolbarGroup>
-        <ImageUploadButton text="Add" />
-      </ToolbarGroup>
+<ToolbarGroup>
+          <ImageUploadButton text="Add" />
+          <TablePopover />
+        </ToolbarGroup>
 
       <Spacer />
 
@@ -235,6 +238,7 @@ export function SimpleEditor({
         upload: handleImageUpload,
         onError: (error) => console.error("Upload failed:", error),
       }),
+      TableKit,
     ],
     content: initialValue,
     onUpdate: ({ editor }) => {
@@ -293,6 +297,7 @@ export function SimpleEditor({
         role="presentation"
         className={cn("simple-editor-content", className)}
       />
+      <TableContextMenu editor={editor} />
     </EditorContext.Provider>
   );
 }

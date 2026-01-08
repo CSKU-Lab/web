@@ -1,0 +1,17 @@
+.table-context-menu {
+  min-width: 160px;
+
+  .menu-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+  }
+
+  [data-variant="destructive"] {
+    color: var(--destructive, #dc2626);
+
+    .menu-icon {
+      color: var(--destructive, #dc2626);
+    }
+  }
+}
