@@ -28,7 +28,10 @@ import {
 } from "~/components/tiptap-ui-primitive/toolbar";
 
 // --- Tiptap Node ---
-import { ImageUploadNode } from "~/components/tiptap-node/image-upload-node/image-upload-node-extension";
+import {
+  ImageUploadNode,
+  type UploadFunction,
+} from "~/components/tiptap-node/image-upload-node/image-upload-node-extension";
 import { HorizontalRule } from "~/components/tiptap-node/horizontal-rule-node/horizontal-rule-node-extension";
 import "~/components/tiptap-node/blockquote-node/blockquote-node.scss";
 import "~/components/tiptap-node/code-block-node/code-block-node.scss";
@@ -69,9 +72,6 @@ import { LinkIcon } from "~/components/tiptap-icons/link-icon";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { useWindowSize } from "~/hooks/use-window-size";
 import { useCursorVisibility } from "~/hooks/use-cursor-visibility";
-
-// --- Lib ---
-import { handleImageUpload, MAX_FILE_SIZE } from "~/lib/tiptap-utils";
 
 // --- Styles ---
 import "~/components/tiptap-templates/simple/simple-editor.scss";
@@ -187,12 +187,16 @@ const MobileToolbarContent = ({
 interface Props extends ClassNameProps {
   initialValue?: JSONContent | null;
   onChange?: (content: JSONContent) => void;
+  onUploadImage?: UploadFunction;
+  maxFileUploadSize?: number;
 }
 
 export function SimpleEditor({
   className,
   initialValue = null,
   onChange = () => {},
+  onUploadImage,
+  maxFileUploadSize = -1,
 }: Props) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
@@ -233,9 +237,8 @@ export function SimpleEditor({
       Selection,
       ImageUploadNode.configure({
         accept: "image/*",
-        maxSize: MAX_FILE_SIZE,
-        limit: 3,
-        upload: handleImageUpload,
+        maxSize: maxFileUploadSize,
+        upload: onUploadImage,
         onError: (error) => console.error("Upload failed:", error),
       }),
       TableKit,
