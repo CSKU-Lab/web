@@ -112,6 +112,7 @@ const MainToolbarContent = ({
       <ToolbarSeparator />
 
       <ToolbarGroup>
+        <TablePopover />
         <MarkButton type="bold" />
         <MarkButton type="italic" />
         <MarkButton type="strike" />
@@ -143,10 +144,9 @@ const MainToolbarContent = ({
 
       <ToolbarSeparator />
 
-<ToolbarGroup>
-          <ImageUploadButton text="Add" />
-          <TablePopover />
-        </ToolbarGroup>
+      <ToolbarGroup>
+        <ImageUploadButton text="Add" />
+      </ToolbarGroup>
 
       <Spacer />
 
