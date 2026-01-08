@@ -1,5 +1,5 @@
 "use client";
-import { Globe, Lock, Save } from "lucide-react";
+import { Globe, Lock } from "lucide-react";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
@@ -25,8 +25,6 @@ function DetailSection({
 }: DetailSectionProps) {
   const { data: detail, isFetching } = useGetMaterial();
   const saveStatus = useAtomValue(saveStatusAtom);
-
-  const handleSave = () => {};
 
   const renderStatus = () => {
     switch (saveStatus) {

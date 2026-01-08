@@ -8,12 +8,14 @@ import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { allowedRunnersAtom, compareScriptAtom } from "../_stores/config.store";
 import { queryKeys } from "~/queryKeys";
+import { descriptionAtom } from "../_stores/description.store";
 
 function SaveButton() {
   const code = useAtomValue(codeAtom);
   const testcases = useAtomValue(testCasesAtom);
   const allowedRunners = useAtomValue(allowedRunnersAtom);
   const compareScript = useAtomValue(compareScriptAtom);
+  const description = useAtomValue(descriptionAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
 
   const { materialID } = useParams<{ materialID: string }>();
@@ -23,6 +25,7 @@ function SaveButton() {
       setSaveStatus("Saving");
       return cmsMaterialService.update(materialID, {
         payload: {
+          description: JSON.stringify(description),
           solution: code,
           test_cases: testcases,
           allowed_runner_ids: allowedRunners.map((runner) => runner.id) ?? [],
