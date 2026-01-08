@@ -88,6 +88,18 @@ class SectionService extends BaseService {
       lab_ids: labIDs,
     });
   }
+  async removeLabs(sectionID: string, labIDs: string[]) {
+    return api.post(`${this._baseURL}/${sectionID}/labs/delete`, {
+      lab_ids: labIDs,
+    });
+  }
+
+  async updateSectionLabPosition(sectionID: string, labID: string, position: number) {
+    return api.patch(`${this._baseURL}/${sectionID}/labs`, {
+      lab_id: labID,
+      position,
+    });
+  }
 }
 
 export const cmsSectionService = new SectionService();
