@@ -38,6 +38,17 @@ export const queryKeys = {
         params,
       ],
     },
+    labs: {
+      all: (sectionId: string) => [
+        ...queryKeys.section.getById(sectionId),
+        "labs",
+      ],
+      allWithParams: (sectionId: string, params: Record<string, any>) => [
+        ...queryKeys.section.getById(sectionId),
+        "labs",
+        params,
+      ],
+    },
   },
   user_group: {
     all: ["user_groups"],
