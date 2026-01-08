@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 const useLabPagination = (params: GetSectionLabPaginationParams) => {
   const { sectionID } = useParams<{ sectionID: string }>();
   return usePagination({
-    queryKey: queryKeys.lab.allWithParams(params),
+    queryKey: queryKeys.section.labs.allWithParams(sectionID, params),
     queryFn: ({ pageParam }) =>
       cmsSectionService.getLabsPagination(sectionID, {
         ...params,
