@@ -1,7 +1,7 @@
 import type { CMSMaterial } from "~/types/cms-material";
 import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
-import { VisibilityKey } from "~/types/visibilities";
+import { AxiosProgressEvent } from "axios";
 
 export type CreateMaterialPayload = {
   name: string;
@@ -41,6 +41,24 @@ class CMSMaterialService extends BaseService {
 
   async getPagination(params: GetMaterialPaginationParams) {
     return this._getPagination<CMSMaterial>(params);
+  }
+
+  async uploadAsset(
+    id: string,
+    file: File,
+    onUploadProgress: (progressEvent: AxiosProgressEvent) => void,
+    signal?: AbortSignal,
+  ) {
+    return this.api.postForm<{ url: string }>(
+      `${this._baseURL}/${id}/assets`,
+      {
+        file,
+      },
+      {
+        signal,
+        onUploadProgress,
+      },
+    );
   }
 }
 

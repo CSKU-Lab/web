@@ -4,6 +4,10 @@ import useDrag from "~/hooks/useDrag";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 import { useAtom } from "jotai";
 import { descriptionAtom } from "../_stores/description.store";
+import { cmsMaterialService } from "~/services/cms-material.service";
+import { useParams } from "next/navigation";
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 function DescriptionSection() {
   const { buttonRef, containerRef, size, events } = useDrag({
@@ -12,6 +16,45 @@ function DescriptionSection() {
   });
 
   const [description, setDescription] = useAtom(descriptionAtom);
+  const { materialID } = useParams<{ materialID: string }>();
+
+  const handleImageUpload = async (
+    file: File,
+    onProgress?: (event: { progress: number }) => void,
+    abortSignal?: AbortSignal,
+  ): Promise<string> => {
+    // Validate file
+    if (!file) {
+      throw new Error("No file provided");
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error(
+        `File size exceeds maximum allowed (${MAX_FILE_SIZE / (1024 * 1024)}MB)`,
+      );
+    }
+
+    // For demo/testing: Simulate upload progress. In production, replace the following code
+    // with your own upload implementation.
+    try {
+      const res = await cmsMaterialService.uploadAsset(
+        materialID,
+        file,
+        (progressEvent) => {
+          if (abortSignal?.aborted) {
+            throw new Error("Upload cancelled");
+          }
+
+          onProgress?.({ progress: progressEvent.progress ?? 0 });
+        },
+        abortSignal,
+      );
+
+      return res.data.url;
+    } catch {
+      throw new Error("Something went wrong during upload");
+    }
+  };
   return (
     <div
       className="flex flex-col min-h-0 border border-t-0 border-l-0 2xl:border-l relative min-w-[300px]"
@@ -29,7 +72,12 @@ function DescriptionSection() {
         <h4 className="text-xs text-(--gray-11)">Description</h4>
       </div>
       <div className="flex-1 max-h-full overflow-auto">
-        <SimpleEditor initialValue={description} onChange={setDescription} />
+        <SimpleEditor
+          initialValue={description}
+          onChange={setDescription}
+          onUploadImage={handleImageUpload}
+          maxFileUploadSize={MAX_FILE_SIZE}
+        />
       </div>
     </div>
   );
