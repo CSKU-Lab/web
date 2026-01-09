@@ -11,7 +11,7 @@ function Layout({ children }: ChildrenProps) {
       <CoreLayoutSidebar>
         <Sidebar />
       </CoreLayoutSidebar>
-      <CoreLayoutContent>{children}</CoreLayoutContent>
+      <CoreLayoutContent className="h-full">{children}</CoreLayoutContent>
     </CoreLayout>
   );
 }

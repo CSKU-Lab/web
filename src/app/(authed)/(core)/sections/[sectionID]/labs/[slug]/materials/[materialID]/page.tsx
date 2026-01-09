@@ -6,8 +6,7 @@ import LottieComp from "~/components/commons/Lottie";
 import floating from "~/assets/lotties/foating.json";
 import DescriptionTab from "../_components/DescriptionTab";
 import { type Metadata } from "next";
-import { languages } from "../__mocks__/languages";
-import { initialsCodes } from "../__mocks__/initialCodes";
+import DetailSection from "~/app/(authed)/cms/(full-height-layout)/materials/[materialID]/_materialTypes/CodeMaterial/_components/DetailSection";
 
 export const generateMetadata = async ({
   params,
@@ -27,7 +26,7 @@ export const generateMetadata = async ({
   };
 };
 
-async function LabPage(props: { params: Promise<{ problemId: string }> }) {
+async function MaterialPage(props: { params: Promise<{ problemId: string }> }) {
   const params = await props.params;
   const userAgent = (await headers()).get("User-Agent");
 
@@ -42,18 +41,24 @@ async function LabPage(props: { params: Promise<{ problemId: string }> }) {
     );
   }
 
+  const headerDisplay = {
+    name: true,
+    type: false,
+    submissions: false,
+    createdBy: false,
+    visibility: false,
+    status: true,
+  };
+
   return (
-    <div className="h-full flex flex-col bg-(--gray-2) gap-2">
-      <div className="flex-1 flex min-h-0">
+    <>
+      <DetailSection headerDisplay={headerDisplay} />
+      <div className="flex flex-1 min-h-0">
         <LeftSection descriptionTab={<DescriptionTab />} />
-        <RightSection
-          problemId={params.problemId}
-          initialCodes={initialsCodes}
-          allowLanguages={languages}
-        />
+        <RightSection />
       </div>
-    </div>
+    </>
   );
 }
 
-export default LabPage;
+export default MaterialPage;

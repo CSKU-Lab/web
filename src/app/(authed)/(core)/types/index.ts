@@ -2,6 +2,7 @@ export type LearnStatus = "PASSED" | "FAILED" | "IN_PROGRESS" | "NONE";
 
 export interface ICourseItem {
   name: string;
+  labID: string;
   status: LearnStatus;
   subItems: SubCourseItem[];
 }
@@ -12,9 +13,8 @@ export interface SubCourseItem {
 }
 
 export interface SidebarCourse {
-  courseId: string;
+  sectionID: string;
   name: string;
   icon: string;
-  lessons: ICourseItem[];
   labs: ICourseItem[];
 }

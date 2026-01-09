@@ -20,7 +20,7 @@ async function Layout({ children }: ChildrenProps) {
         <SidebarMenus config={sidebarMenus} />
       </CoreLayoutSidebar>
       <CoreLayoutContent className="h-full">
-        <BreadcrumbClient className="pl-4 mt-4" />
+        <BreadcrumbClient className="pl-4 mt-4 mb-4" />
         {children}
       </CoreLayoutContent>
     </CoreLayout>
