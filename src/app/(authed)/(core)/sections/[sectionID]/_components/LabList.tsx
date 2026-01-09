@@ -1,6 +1,10 @@
 import { CourseItem } from "./CourseItem";
 
 export default function LabList() {
+  // const bottomDivRef = useOnElementAppear({
+  //   onAppear: () => fetchNextPage(),
+  //   enabled: hasNextPage,
+  // });
   return (
     <div className="flex flex-col mt-6 gap-4">
       {new Array(10).fill(0).map((_, i) => (
