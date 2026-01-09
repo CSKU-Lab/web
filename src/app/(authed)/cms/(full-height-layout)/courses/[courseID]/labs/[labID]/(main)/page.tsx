@@ -35,8 +35,8 @@ export default function LabDetail() {
     },
   });
 
-  const handleMaterialNavigate = () => {
-    router.push(generatePath(`/cms/materials/:materialID`));
+  const handleMaterialNavigate = (id: string) => {
+    router.push(generatePath(`/cms/materials/${id}`));
   };
 
   const bottomDivRef = useOnElementAppear({
@@ -72,7 +72,7 @@ export default function LabDetail() {
                       tags={material_data.tags}
                       type={material_data.type}
                       visibility={material_data.visibility}
-                      onClick={handleMaterialNavigate}
+                      onClick={() => handleMaterialNavigate(material_data.id)}
                     />
                   ))}
                 </Fragment>
