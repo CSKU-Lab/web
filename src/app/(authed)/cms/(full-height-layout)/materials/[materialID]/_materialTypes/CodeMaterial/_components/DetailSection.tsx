@@ -7,8 +7,22 @@ import useGetMaterial from "../../../_hooks/useGetMaterial";
 import { useAtomValue } from "jotai";
 import { saveStatusAtom } from "../_stores/save-status.store";
 import SaveButton from "./SaveButton";
+import { JSX } from "react";
 
-function DetailSection() {
+interface DetailSectionProps {
+  headerDisplay?: Record<string, boolean>;
+}
+
+function DetailSection({
+  headerDisplay = {
+    name: true,
+    type: true,
+    submissions: true,
+    createdBy: true,
+    visibility: true,
+    status: true,
+  },
+}: DetailSectionProps) {
   const { data: detail, isFetching } = useGetMaterial();
   const saveStatus = useAtomValue(saveStatusAtom);
 
@@ -53,65 +67,88 @@ function DetailSection() {
         );
     }
   };
+
+  const detailItems = [
+    {
+      idx: "name",
+      label: "Name",
+      value: detail?.name,
+    },
+    {
+      idx: "type",
+      label: "Type",
+      value: titleFormatter(detail?.type ?? ""),
+    },
+    {
+      idx: "submissions",
+      label: "Submissions",
+      value: "126",
+    },
+    {
+      idx: "createdBy",
+      label: "Created By",
+      value: detail?.created_by,
+    },
+    {
+      idx: "visibility",
+      label: "Visibility",
+      value: titleFormatter(detail?.visibility ?? ""),
+      body: () => (
+        <>
+          {detail?.visibility === "public" && <Globe size="0.9rem" />}
+          {detail?.visibility === "private" && <Lock size="0.9rem" />}
+        </>
+      ),
+    },
+    {
+      idx: "status",
+      label: "Status",
+      value: renderStatus(),
+    },
+  ];
+
   return (
-    <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 mt-4 flex justify-between items-center">
+    <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 flex justify-between items-center">
       <div className="flex gap-4">
-        <div>
-          <h6 className="text-xs text-(--gray-11)">Name</h6>
-          <Loading
-            isLoading={isFetching}
-            fallback={<Skeleton className="w-32 h-6" />}
-          >
-            <h4 className="font-medium">{detail?.name}</h4>
-          </Loading>
-        </div>
-        <div>
-          <h6 className="text-xs text-(--gray-11)">Type</h6>
-          <Loading
-            isLoading={isFetching}
-            fallback={<Skeleton className="w-32 h-6" />}
-          >
-            <h4 className="font-medium">
-              {titleFormatter(detail?.type ?? "")}
-            </h4>
-          </Loading>
-        </div>
-        <div>
-          <h6 className="text-xs text-(--gray-11)">Submissions</h6>
-          <h4 className="font-medium">126</h4>
-        </div>
-        <div>
-          <h6 className="text-xs text-(--gray-11)">Created By</h6>
-          <Loading
-            isLoading={isFetching}
-            fallback={<Skeleton className="w-32 h-6" />}
-          >
-            <h4 className="font-medium">{detail?.created_by}</h4>
-          </Loading>
-        </div>
-        <div>
-          <h6 className="text-xs text-(--gray-11)">Visibility</h6>
-          <div className="flex gap-1.5 items-center">
-            <Loading
-              isLoading={isFetching}
-              fallback={<Skeleton className="w-32 h-6" />}
-            >
-              {detail?.visibility === "public" && <Globe size="0.9rem" />}
-              {detail?.visibility === "private" && <Lock size="0.9rem" />}
-              <h4 className="font-medium">
-                {titleFormatter(detail?.visibility ?? "")}
-              </h4>
-            </Loading>
-          </div>
-        </div>
-        <div>
-          <h6 className="text-xs text-(--gray-11)">Status</h6>
-          {renderStatus()}
-        </div>
+        {detailItems.map(
+          (item, i) =>
+            headerDisplay[item.idx] && (
+              <HeaderItem
+                key={item.idx}
+                label={item.label}
+                value={item.value}
+                body={item.body}
+                isFetching={isFetching}
+              />
+            ),
+        )}
       </div>
       <SaveButton />
     </div>
   );
 }
+
+interface HeaderItemProps {
+  label: string;
+  value: string | undefined | JSX.Element;
+  isFetching: boolean;
+  body?: () => React.ReactNode;
+}
+const HeaderItem = ({ label, value, isFetching, body }: HeaderItemProps) => {
+  return (
+    <div>
+      <h6 className="text-xs text-(--gray-11)">{label}</h6>
+      <Loading
+        isLoading={isFetching}
+        fallback={<Skeleton className="w-32 h-6" />}
+      >
+        <div className="flex items-center gap-2">
+          {body && body()}
+          <h4 className="font-medium">{value}</h4>
+        </div>
+      </Loading>
+    </div>
+  );
+};
 
 export default DetailSection;

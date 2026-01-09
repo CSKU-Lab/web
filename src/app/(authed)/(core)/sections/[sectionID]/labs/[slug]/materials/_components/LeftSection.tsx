@@ -1,27 +1,35 @@
 "use client";
 
-import { NotebookText, History } from "lucide-react";
+import { NotebookText, History, GripVertical } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import useDrag from "../../../../../../../hooks/useDrag";
-import { cn } from "~/lib/utils";
-
 import SubmissionsTab from "./SubmissionsTab";
 import { type ReactNode, type RefObject } from "react";
+import useDrag from "~/hooks/useDrag";
 
 interface Props {
   descriptionTab: ReactNode;
 }
 
 function LeftSection({ descriptionTab }: Props) {
-  const { isDrag, size, containerRef, buttonRef, events } = useDrag({});
+  const { buttonRef, containerRef, size, events } = useDrag({
+    initialSize: 500,
+    direction: "horizontal",
+  });
 
   return (
     <>
       <div
-        className="border border-(--gray-6) rounded-lg h-full bg-white"
-        style={{ width: size, minWidth: 300 }}
+        className="flex flex-col min-h-0 border border-t-0 border-l-0 2xl:border-l relative min-w-[300px]"
+        style={{ width: size }}
         ref={containerRef}
       >
+        <button
+          {...events}
+          ref={buttonRef}
+          className="w-4 h-8 bg-white border rounded absolute -right-2 z-10 top-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center"
+        >
+          <GripVertical size="0.9rem" />
+        </button>
         <Tabs
           defaultValue="description"
           className="h-full flex flex-col justify-start items-start"
@@ -55,37 +63,8 @@ function LeftSection({ descriptionTab }: Props) {
           </TabsContent>
         </Tabs>
       </div>
-      <HorizontalSectionControl {...{ buttonRef, events, isDrag }} />
     </>
   );
 }
 
 export default LeftSection;
-
-const HorizontalSectionControl = ({
-  buttonRef,
-  events,
-  isDrag,
-}: {
-  buttonRef: RefObject<HTMLButtonElement | null>;
-  events: {
-    onMouseDown: () => void;
-    onDoubleClick: () => void;
-  };
-  isDrag: boolean;
-}) => {
-  return (
-    <button
-      className="flex items-center h-full mx-1 cursor-ew-resize"
-      ref={buttonRef}
-      {...events}
-    >
-      <div
-        className={cn(
-          "w-1 h-12 bg-(--gray-6) rounded-full hover:h-14 transition-all",
-          isDrag && "h-16",
-        )}
-      ></div>
-    </button>
-  );
-};
