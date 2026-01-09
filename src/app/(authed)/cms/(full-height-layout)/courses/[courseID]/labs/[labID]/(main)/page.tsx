@@ -5,11 +5,11 @@ import { Button } from "~/components/commons/Button";
 import { useParams, useRouter } from "next/navigation";
 import useResolvePath from "~/hooks/useResolvePath";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
-import MaterialCard, {
-  FallbackMaterialCard,
-} from "~/components/commons/MaterialCard";
 import useMaterialInfPagination from "../_hooks/useMaterialInfPagination";
 import { Fragment } from "react";
+import MaterialCard, {
+  FallbackMaterialCard,
+} from "../_components/MaterialCard";
 
 export default function LabDetail() {
   const router = useRouter();
