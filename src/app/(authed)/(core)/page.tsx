@@ -6,6 +6,10 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  // const bottomDivRef = useOnElementAppear({
+  //   onAppear: () => fetchNextPage(),
+  //   enabled: hasNextPage,
+  // });
   return (
     <div className="bg-white h-full p-4 gap-10 flex flex-col">
       <h4 className="text-3xl font-semibold">My Courses</h4>
