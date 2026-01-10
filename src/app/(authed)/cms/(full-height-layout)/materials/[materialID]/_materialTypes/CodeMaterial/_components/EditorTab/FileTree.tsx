@@ -6,6 +6,7 @@ import {
   File as FileIcon,
   Trash2,
   MoreHorizontal,
+  GripVertical,
 } from "lucide-react";
 import {
   Dialog,
@@ -30,6 +31,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import useDrag from "~/hooks/useDrag";
 
 export interface CodeMaterialSolutionFile {
   name: string;
@@ -55,6 +57,11 @@ function FileTree({
   const [newFileName, setNewFileName] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [fileToDelete, setFileToDelete] = useState<string | null>(null);
+
+  const { buttonRef, containerRef, size, events } = useDrag({
+    initialSize: 240,
+    direction: "horizontal",
+  });
 
   const isDuplicateName = files.some(
     (f) => f.name.toLowerCase() === newFileName.toLowerCase(),
@@ -95,7 +102,11 @@ function FileTree({
     files[0].content === "";
 
   return (
-    <div className="min-w-[240px] border-r">
+    <div
+      ref={containerRef}
+      style={{ width: size }}
+      className="relative border-r h-full"
+    >
       <div className="flex justify-between items-center mb-3 border-b p-2">
         <h6 className="text-xs">Files</h6>
         {isLoading ? (
@@ -180,7 +191,7 @@ function FileTree({
                 onClick={() => onSelectFile(file.name)}
               >
                 <FileIcon className="w-4 h-4" />
-                {file.name}
+                <span className="truncate">{file.name}</span>
               </button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -205,6 +216,13 @@ function FileTree({
           ))
         )}
       </div>
+      <button
+        {...events}
+        ref={buttonRef}
+        className="w-4 h-8 bg-white border rounded absolute -right-2 z-10 top-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center"
+      >
+        <GripVertical size="0.9rem" />
+      </button>
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader className="p-4">
