@@ -1,13 +1,8 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useState } from "react";
 import { FileCode, Settings } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
-import {
-  codeAtom,
-  filesAtom,
-  runnerAtom,
-  selectedFileAtom,
-} from "../../_stores/editor.store";
+import { filesAtom, selectedFileAtom } from "../../_stores/editor.store";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import FileTree from "./FileTree";
 import RunnerSelect from "./RunnerSelect";
@@ -15,7 +10,6 @@ import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -33,11 +27,9 @@ import { Switch } from "~/components/ui/switch";
 const fontSizes = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
 
 function Code() {
-  const [code, setCode] = useAtom(codeAtom);
   const [files, setFiles] = useAtom(filesAtom);
   const [selectedFile, setSelectedFile] = useAtom(selectedFileAtom);
-  const [runner] = useAtom(runnerAtom);
-  const [, setSaveStatus] = useAtom(saveStatusAtom);
+  const setSaveStatus = useSetAtom(saveStatusAtom);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [vimMode, setVimMode] = useState(true);
   const [fontSize, setFontSize] = useState(14);
@@ -69,9 +61,9 @@ function Code() {
   };
 
   const currentFile = files.find((f) => f.name === selectedFile);
-  const fileExtension = currentFile?.name.split(".").pop() || runner || "go";
+  const fileExtension = currentFile?.name.split(".").pop();
 
-  const codeMirrorValue = currentFile?.content ?? code ?? "";
+  const codeMirrorValue = currentFile?.content ?? "";
 
   return (
     <div className="flex-1 min-h-0 flex flex-col relative">
@@ -110,8 +102,6 @@ function Code() {
                   if (currentFile.content !== value) {
                     setSaveStatus("UnSaved");
                   }
-                } else {
-                  setCode(value);
                 }
               }}
             />

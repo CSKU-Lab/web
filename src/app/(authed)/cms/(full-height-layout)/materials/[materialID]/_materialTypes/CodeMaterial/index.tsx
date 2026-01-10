@@ -6,9 +6,15 @@ import DescriptionSection from "./_components/DescriptionSection";
 import DetailSection from "./_components/DetailSection";
 import MultipleTabsSection from "./_components/MultipleTabsSection";
 import { useSetAtom } from "jotai";
-import { initialCodeAtom, filesAtom, selectedFileAtom } from "./_stores/editor.store";
+import {
+  initialCodeAtom,
+  filesAtom,
+  selectedFileAtom,
+  solutionRunnerIDAtom,
+} from "./_stores/editor.store";
 import { initialTestCasesAtom } from "./_stores/testcases.store";
 import { initialDescriptionAtom } from "./_stores/description.store";
+import type { CodeMaterialResponse } from "./_types/code-material-response";
 
 function CodeMaterial() {
   const { data, isFetching } = useGetMaterial();
@@ -17,17 +23,19 @@ function CodeMaterial() {
   const setTestCases = useSetAtom(initialTestCasesAtom);
   const setFiles = useSetAtom(filesAtom);
   const setSelectedFile = useSetAtom(selectedFileAtom);
+  const setSolutionRunnerID = useSetAtom(solutionRunnerIDAtom);
 
   useEffect(() => {
     if (isFetching) return;
-    if (data?.payload) {
-      setDescription(JSON.parse(data.payload.description));
-      setCode(data.payload.solution || "");
-      setTestCases(data.payload.test_cases);
+    const payload = data?.payload as CodeMaterialResponse | undefined;
+    if (payload !== undefined) {
+      setDescription(JSON.parse(payload.description));
+      setTestCases(payload.test_cases);
+      setSolutionRunnerID(payload.solution_runner_id || "");
 
-      if (data.payload.solution_files?.length) {
-        setFiles(data.payload.solution_files);
-        setSelectedFile(data.payload.solution_files[0].name);
+      if (payload.solution_files?.length) {
+        setFiles(payload.solution_files);
+        setSelectedFile(payload.solution_files[0].name);
       }
 
       // setConfig({
@@ -35,7 +43,16 @@ function CodeMaterial() {
       //   compareScript: data.payload.compare_script || null,
       // });
     }
-  }, [data, isFetching, setCode, setTestCases, setDescription, setFiles, setSelectedFile]);
+  }, [
+    data,
+    isFetching,
+    setCode,
+    setTestCases,
+    setDescription,
+    setFiles,
+    setSelectedFile,
+    setSolutionRunnerID,
+  ]);
 
   return (
     <>
