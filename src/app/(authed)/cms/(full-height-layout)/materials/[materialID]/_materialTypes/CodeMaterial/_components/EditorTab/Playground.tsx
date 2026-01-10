@@ -11,8 +11,8 @@ import useDrag from "~/hooks/useDrag";
 import { useState } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
-  codeAtom,
   errorAtom,
+  filesAtom,
   playgroundAtom,
   runnerAtom,
 } from "../../_stores/editor.store";
@@ -41,8 +41,8 @@ function Playground() {
   };
 
   const runnerID = useAtomValue(runnerAtom);
-  const code = useAtomValue(codeAtom);
   const setError = useSetAtom(errorAtom);
+  const files = useAtomValue(filesAtom);
   const [result, setResult] = useState<CodeExecutionResult | null>(null);
   const isRunning =
     result?.status === "STATUS_RUNNING" || result?.status === "STATUS_QUEUED";
@@ -57,7 +57,7 @@ function Playground() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        code,
+        files,
         input,
         runner_id: runnerID,
       }),

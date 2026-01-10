@@ -6,7 +6,7 @@ import {
 import { basicSetup } from "codemirror";
 import { EditorState, type Extension } from "@codemirror/state";
 import { useMemo } from "react";
-import { getLang } from "./utils/getLang";
+import { getLangFromExtension } from "./utils/getLang";
 import { vim } from "@replit/codemirror-vim";
 import readOnlyRangeExtension from "codemirror-readonly-ranges";
 import { getReadOnlyRanges } from "./utils/getReadOnlyRanges";
@@ -18,7 +18,7 @@ import { indentWithTab } from "./extensions/indentWithTab";
 interface CodeMirrorProps {
   value?: string;
   onChange?: (value: string) => void;
-  lang?: string;
+  extension?: string;
   vimMode?: boolean;
   initialCode?: string;
   extensions?: Extension[];
@@ -38,7 +38,7 @@ const theme = EditorView.theme({
 function CodeMirror(props: CodeMirrorProps) {
   const {
     onChange,
-    lang,
+    extension,
     vimMode,
     editable = true,
     readOnly = false,
@@ -47,10 +47,12 @@ function CodeMirror(props: CodeMirrorProps) {
     ...others
   } = props;
 
+  const langExtension = extension ? getLangFromExtension(extension) : null;
+
   const mergedExtensions = useMemo(
     () =>
       Object.values({
-        lang: lang ? getLang(lang) : null,
+        lang: langExtension,
         vimMode: vimMode ? vim() : null,
         readOnlyRange: readOnlyRangeExtension((state) =>
           getReadOnlyRanges(state, initialCode),
@@ -60,7 +62,7 @@ function CodeMirror(props: CodeMirrorProps) {
         ),
         placeholder: placeHolderExtension(placeholder || "Start typing..."),
       }).filter((ext) => ext !== null),
-    [lang, vimMode, initialCode, placeholder],
+    [langExtension, vimMode, initialCode, placeholder],
   );
 
   return (
