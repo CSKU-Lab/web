@@ -25,6 +25,7 @@ interface CodeMirrorProps {
   editable?: boolean;
   readOnly?: boolean;
   placeholder?: string;
+  fontSize?: number;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -44,10 +45,22 @@ function CodeMirror(props: CodeMirrorProps) {
     readOnly = false,
     initialCode = "",
     placeholder,
+    fontSize = 14,
     ...others
   } = props;
 
   const langExtension = extension ? getLangFromExtension(extension) : null;
+
+  const theme = useMemo(
+    () =>
+      EditorView.theme({
+        "&": {
+          height: "100%",
+          fontSize: `${fontSize}px`,
+        },
+      }),
+    [fontSize],
+  );
 
   const mergedExtensions = useMemo(
     () =>
