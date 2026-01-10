@@ -24,12 +24,25 @@ function Code() {
   };
 
   const handleCreateFile = (name: string) => {
-    setFiles([...files, { name, content: "" }]);
+    const newFiles = [...files, { name, content: "" }];
+    setFiles(newFiles);
+    setSelectedFile(name);
+    setSaveStatus("UnSaved");
+  };
+
+  const handleDeleteFile = (name: string) => {
+    const newFiles = files.filter((f) => f.name !== name);
+    setFiles(newFiles);
+    if (selectedFile === name) {
+      setSelectedFile(newFiles[0]?.name || null);
+    }
     setSaveStatus("UnSaved");
   };
 
   const currentFile = files.find((f) => f.name === selectedFile);
   const fileExtension = currentFile?.name.split(".").pop() || runner || "go";
+
+  const codeMirrorValue = currentFile?.content ?? code ?? "";
 
   return (
     <div className="flex-1 min-h-0 flex relative">
@@ -38,6 +51,7 @@ function Code() {
         selectedFile={selectedFile}
         onSelectFile={handleSelectFile}
         onCreateFile={handleCreateFile}
+        onDeleteFile={handleDeleteFile}
       />
       <RunnerSelect />
       <div className="flex-1 min-h-0 overflow-auto">
@@ -45,7 +59,7 @@ function Code() {
           className="h-full"
           extension={fileExtension}
           vimMode
-          value={currentFile?.content || code}
+          value={codeMirrorValue}
           onChange={(value) => {
             if (isInitialLoad) {
               setIsInitialLoad(false);

@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { FilePlus, File as FileIcon } from "lucide-react";
+import {
+  FilePlus,
+  File as FileIcon,
+  Trash2,
+  MoreHorizontal,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +15,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/commons/Dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import Input from "~/components/commons/Input";
 import Label from "~/components/commons/Label";
 import { Button } from "~/components/commons/Button";
@@ -29,6 +40,7 @@ interface FileTreeProps {
   selectedFile: string | null;
   onSelectFile: (name: string) => void;
   onCreateFile: (name: string) => void;
+  onDeleteFile: (name: string) => void;
 }
 
 function FileTree({
@@ -36,15 +48,43 @@ function FileTree({
   selectedFile,
   onSelectFile,
   onCreateFile,
+  onDeleteFile,
 }: FileTreeProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [fileToDelete, setFileToDelete] = useState<string | null>(null);
+
+  const isDuplicateName = files.some(
+    (f) => f.name.toLowerCase() === newFileName.toLowerCase(),
+  );
+  const isInvalid = !newFileName.trim() || isDuplicateName;
 
   const handleCreateFile = () => {
-    if (newFileName.trim()) {
+    if (!isInvalid) {
       onCreateFile(newFileName.trim());
       setNewFileName("");
       setIsDialogOpen(false);
+    }
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setNewFileName("");
+    }
+    setIsDialogOpen(open);
+  };
+
+  const handleDeleteClick = (fileName: string) => {
+    setFileToDelete(fileName);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (fileToDelete) {
+      onDeleteFile(fileToDelete);
+      setFileToDelete(null);
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -52,7 +92,7 @@ function FileTree({
     <div className="min-w-[240px] border-r">
       <div className="flex justify-between items-center mb-3 border-b p-2">
         <h6 className="text-xs">Files</h6>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
           <Tooltip>
             <TooltipTrigger asChild>
               <DialogTrigger asChild>
@@ -76,11 +116,16 @@ function FileTree({
                   value={newFileName}
                   onChange={(e) => setNewFileName(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === "Enter" && !isInvalid) {
                       handleCreateFile();
                     }
                   }}
                 />
+                {isDuplicateName && (
+                  <p className="text-(--red-9) text-sm">
+                    File name already exists
+                  </p>
+                )}
               </div>
             </div>
             <DialogFooter className="p-4">
@@ -94,6 +139,7 @@ function FileTree({
               <Button
                 className="px-6"
                 variant="action"
+                disabled={isInvalid}
                 onClick={handleCreateFile}
               >
                 Create
@@ -104,20 +150,72 @@ function FileTree({
       </div>
       <div className="space-y-1.5 px-1">
         {files.map((file) => (
-          <button
+          <div
             key={file.name}
-            className={`pl-2 pr-4 py-1 flex items-center gap-2 rounded text-sm w-full transition-colors ${
+            className={`group relative flex items-center gap-2 rounded text-sm transition-colors ${
               selectedFile === file.name
                 ? "bg-(--gray-4) text-(--gray-12) font-medium"
                 : "hover:bg-(--gray-4) text-(--gray-11)"
             }`}
-            onClick={() => onSelectFile(file.name)}
           >
-            <FileIcon className="w-4 h-4" />
-            {file.name}
-          </button>
+            <button
+              className="flex-1 pl-2 pr-1 py-1 text-left flex items-center gap-2"
+              onClick={() => onSelectFile(file.name)}
+            >
+              <FileIcon className="w-4 h-4" />
+              {file.name}
+            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="absolute right-1 p-1 opacity-0 group-hover:opacity-100 hover:bg-(--gray-6) rounded transition-opacity">
+                  <MoreHorizontal size="1rem" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  className="text-(--red-11) focus:text-(--red-11)"
+                  onSelect={(e) => {
+                    e.preventDefault();
+                    handleDeleteClick(file.name);
+                  }}
+                >
+                  <Trash2 size="1rem" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         ))}
       </div>
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader className="p-4">
+            <DialogTitle>Delete File</DialogTitle>
+          </DialogHeader>
+          <div className="p-4">
+            <p className="text-(--gray-12)">
+              Are you sure you want to delete{" "}
+              <span className="font-medium">{fileToDelete}</span>?
+            </p>
+          </div>
+          <DialogFooter className="p-4">
+            <Button
+              className="px-6"
+              variant="primary"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="px-6"
+              variant="action"
+              onClick={handleConfirmDelete}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

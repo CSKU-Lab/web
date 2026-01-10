@@ -68,7 +68,7 @@ const selectedFileAtomConfig = atom<string | null>("main.go");
 
 export const selectedFileAtom = atom(
   (get) => get(selectedFileAtomConfig),
-  (get, set, fileName: string) => {
+  (get, set, fileName: string | null) => {
     set(selectedFileAtomConfig, fileName);
   },
 );
