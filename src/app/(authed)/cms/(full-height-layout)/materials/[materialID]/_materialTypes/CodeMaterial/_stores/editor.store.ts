@@ -1,5 +1,4 @@
 import { atom } from "jotai";
-import { saveStatusAtom } from "./save-status.store";
 
 interface CodeMaterialSolutionFile {
   name: string;
@@ -37,20 +36,7 @@ export const initialCodeAtom = atom(null, (_get, set, code: string) => {
   set(internalCodeAtom, code);
 });
 
-export const codeAtom = atom(
-  (get) => get(internalCodeAtom),
-  (get, set, newCode: string) => {
-    const currentCode = get(internalCodeAtom);
-    if (currentCode === newCode) {
-      return;
-    }
-
-    set(internalCodeAtom, newCode);
-    set(saveStatusAtom, "UnSaved");
-  },
-);
-
-export const runnerAtom = atom("");
+export const solutionRunnerIDAtom = atom("");
 export const errorAtom = atom<"NO_RUNNER" | null>(null);
 
 const filesAtomConfig = atom<CodeMaterialSolutionFile[]>([
@@ -59,7 +45,7 @@ const filesAtomConfig = atom<CodeMaterialSolutionFile[]>([
 
 export const filesAtom = atom(
   (get) => get(filesAtomConfig),
-  (get, set, files: CodeMaterialSolutionFile[]) => {
+  (_, set, files: CodeMaterialSolutionFile[]) => {
     set(filesAtomConfig, files);
   },
 );
@@ -68,7 +54,7 @@ const selectedFileAtomConfig = atom<string | null>("main.go");
 
 export const selectedFileAtom = atom(
   (get) => get(selectedFileAtomConfig),
-  (get, set, fileName: string | null) => {
+  (_, set, fileName: string | null) => {
     set(selectedFileAtomConfig, fileName);
   },
 );

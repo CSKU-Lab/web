@@ -14,7 +14,7 @@ import {
   errorAtom,
   filesAtom,
   playgroundAtom,
-  runnerAtom,
+  solutionRunnerIDAtom,
 } from "../../_stores/editor.store";
 import type { CodeExecutionResult } from "~/types/code-execution-result";
 import { env } from "~/lib/env";
@@ -40,7 +40,7 @@ function Playground() {
     }
   };
 
-  const runnerID = useAtomValue(runnerAtom);
+  const solutionRunnerID = useAtomValue(solutionRunnerIDAtom);
   const setError = useSetAtom(errorAtom);
   const files = useAtomValue(filesAtom);
   const [result, setResult] = useState<CodeExecutionResult | null>(null);
@@ -48,7 +48,7 @@ function Playground() {
     result?.status === "STATUS_RUNNING" || result?.status === "STATUS_QUEUED";
 
   const handleRunCode = async () => {
-    if (runnerID === "") {
+    if (solutionRunnerID === "") {
       setError("NO_RUNNER");
       return;
     }
@@ -59,7 +59,7 @@ function Playground() {
       body: JSON.stringify({
         files,
         input,
-        runner_id: runnerID,
+        runner_id: solutionRunnerID,
       }),
     });
 
