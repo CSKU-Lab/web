@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
 import { useState } from "react";
+import { FileCode } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import {
   codeAtom,
@@ -18,6 +19,11 @@ function Code() {
   const [runner] = useAtom(runnerAtom);
   const [, setSaveStatus] = useAtom(saveStatusAtom);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  const isLoading =
+    files.length === 1 &&
+    files[0].name === "main.go" &&
+    files[0].content === "";
 
   const handleSelectFile = (name: string) => {
     setSelectedFile(name);
@@ -55,29 +61,36 @@ function Code() {
       />
       <RunnerSelect />
       <div className="flex-1 min-h-0 overflow-auto">
-        <CodeMirror
-          className="h-full"
-          extension={fileExtension}
-          vimMode
-          value={codeMirrorValue}
-          onChange={(value) => {
-            if (isInitialLoad) {
-              setIsInitialLoad(false);
-              return;
-            }
-            if (currentFile) {
-              const newFiles = files.map((f) =>
-                f.name === currentFile.name ? { ...f, content: value } : f,
-              );
-              setFiles(newFiles);
-              if (currentFile.content !== value) {
-                setSaveStatus("UnSaved");
+        {isLoading ? (
+          <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
+            <FileCode size="3rem" className="mb-3 opacity-50" />
+            <p className="text-sm">Click a file to start editing</p>
+          </div>
+        ) : (
+          <CodeMirror
+            className="h-full"
+            extension={fileExtension}
+            vimMode
+            value={codeMirrorValue}
+            onChange={(value) => {
+              if (isInitialLoad) {
+                setIsInitialLoad(false);
+                return;
               }
-            } else {
-              setCode(value);
-            }
-          }}
-        />
+              if (currentFile) {
+                const newFiles = files.map((f) =>
+                  f.name === currentFile.name ? { ...f, content: value } : f,
+                );
+                setFiles(newFiles);
+                if (currentFile.content !== value) {
+                  setSaveStatus("UnSaved");
+                }
+              } else {
+                setCode(value);
+              }
+            }}
+          />
+        )}
       </div>
     </div>
   );

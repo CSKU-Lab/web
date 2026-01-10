@@ -24,6 +24,7 @@ import {
 import Input from "~/components/commons/Input";
 import Label from "~/components/commons/Label";
 import { Button } from "~/components/commons/Button";
+import { Skeleton } from "~/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -88,104 +89,121 @@ function FileTree({
     }
   };
 
+  const isLoading =
+    files.length === 1 &&
+    files[0].name === "main.go" &&
+    files[0].content === "";
+
   return (
     <div className="min-w-[240px] border-r">
       <div className="flex justify-between items-center mb-3 border-b p-2">
         <h6 className="text-xs">Files</h6>
-        <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <DialogTrigger asChild>
-                <button className="text-(--gray-11)">
-                  <FilePlus size="1rem" />
-                </button>
-              </DialogTrigger>
-            </TooltipTrigger>
-            <TooltipContent>Add a file</TooltipContent>
-          </Tooltip>
-          <DialogContent>
-            <DialogHeader className="p-4">
-              <DialogTitle>Create New File</DialogTitle>
-            </DialogHeader>
-            <div className="p-4 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="fileName">File Name</Label>
-                <Input
-                  id="fileName"
-                  placeholder="e.g., main.go"
-                  value={newFileName}
-                  onChange={(e) => setNewFileName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !isInvalid) {
-                      handleCreateFile();
-                    }
-                  }}
-                />
-                {isDuplicateName && (
-                  <p className="text-(--red-9) text-sm">
-                    File name already exists
-                  </p>
-                )}
+        {isLoading ? (
+          <Skeleton className="h-5 w-16" />
+        ) : (
+          <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild>
+                  <button className="text-(--gray-11)">
+                    <FilePlus size="1rem" />
+                  </button>
+                </DialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Add a file</TooltipContent>
+            </Tooltip>
+            <DialogContent>
+              <DialogHeader className="p-4">
+                <DialogTitle>Create New File</DialogTitle>
+              </DialogHeader>
+              <div className="p-4 space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fileName">File Name</Label>
+                  <Input
+                    id="fileName"
+                    placeholder="e.g., main.go"
+                    value={newFileName}
+                    onChange={(e) => setNewFileName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !isInvalid) {
+                        handleCreateFile();
+                      }
+                    }}
+                  />
+                  {isDuplicateName && (
+                    <p className="text-(--red-9) text-sm">
+                      File name already exists
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-            <DialogFooter className="p-4">
-              <Button
-                className="px-6"
-                variant="primary"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="px-6"
-                variant="action"
-                disabled={isInvalid}
-                onClick={handleCreateFile}
-              >
-                Create
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter className="p-4">
+                <Button
+                  className="px-6"
+                  variant="primary"
+                  onClick={() => setIsDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="px-6"
+                  variant="action"
+                  disabled={isInvalid}
+                  onClick={handleCreateFile}
+                >
+                  Create
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
       <div className="space-y-1.5 px-1">
-        {files.map((file) => (
-          <div
-            key={file.name}
-            className={`group relative flex items-center gap-2 rounded text-sm transition-colors ${
-              selectedFile === file.name
-                ? "bg-(--gray-4) text-(--gray-12) font-medium"
-                : "hover:bg-(--gray-4) text-(--gray-11)"
-            }`}
-          >
-            <button
-              className="flex-1 pl-2 pr-1 py-1 text-left flex items-center gap-2"
-              onClick={() => onSelectFile(file.name)}
+        {isLoading ? (
+          <>
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-6 w-full" />
+          </>
+        ) : (
+          files.map((file) => (
+            <div
+              key={file.name}
+              className={`group relative flex items-center gap-2 rounded text-sm transition-colors ${
+                selectedFile === file.name
+                  ? "bg-(--gray-4) text-(--gray-12) font-medium"
+                  : "hover:bg-(--gray-4) text-(--gray-11)"
+              }`}
             >
-              <FileIcon className="w-4 h-4" />
-              {file.name}
-            </button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="absolute right-1 p-1 opacity-0 group-hover:opacity-100 hover:bg-(--gray-6) rounded transition-opacity">
-                  <MoreHorizontal size="1rem" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  className="text-(--red-11) focus:text-(--red-11)"
-                  onSelect={(e) => {
-                    e.preventDefault();
-                    handleDeleteClick(file.name);
-                  }}
-                >
-                  <Trash2 size="1rem" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        ))}
+              <button
+                className="flex-1 pl-2 pr-1 py-1 text-left flex items-center gap-2"
+                onClick={() => onSelectFile(file.name)}
+              >
+                <FileIcon className="w-4 h-4" />
+                {file.name}
+              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="absolute right-1 p-1 opacity-0 group-hover:opacity-100 hover:bg-(--gray-6) rounded transition-opacity">
+                    <MoreHorizontal size="1rem" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    className="text-(--red-11) focus:text-(--red-11)"
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      handleDeleteClick(file.name);
+                    }}
+                  >
+                    <Trash2 size="1rem" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ))
+        )}
       </div>
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
