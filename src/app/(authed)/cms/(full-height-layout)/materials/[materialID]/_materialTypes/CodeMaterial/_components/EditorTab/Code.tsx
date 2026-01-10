@@ -84,7 +84,7 @@ function Code() {
           onDeleteFile={handleDeleteFile}
         />
         <RunnerSelect />
-        <div className="flex-1 min-h-0 overflow-auto flex flex-col">
+        <div className="flex-1 min-h-0 overflow-auto flex flex-col min-w-40">
           {isLoading ? (
             <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
               <FileCode size="3rem" className="mb-3 opacity-50" />
