@@ -105,11 +105,11 @@ function Playground() {
       <button
         {...events}
         ref={buttonRef}
-        className="w-8 h-4 bg-white border rounded absolute -top-2 z-10 left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center"
+        className="w-8 h-4 bg-white border rounded absolute -top-2 z-20 left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center"
       >
         <GripHorizontal size="0.9rem" />
       </button>
-      <div className="border-b p-4 flex justify-between items-center">
+      <div className="bg-white border-b p-4 flex justify-between items-center z-10">
         <h4 className="text-xs text-(--gray-11)">Playground</h4>
         {result !== null && !isRunning && (
           <div className="flex gap-2">
