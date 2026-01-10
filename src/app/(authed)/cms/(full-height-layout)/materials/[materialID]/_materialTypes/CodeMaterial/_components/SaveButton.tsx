@@ -1,6 +1,6 @@
 import { useAtom, useAtomValue } from "jotai";
 import { Save } from "lucide-react";
-import { codeAtom } from "../_stores/editor.store";
+import { codeAtom, runnerAtom } from "../_stores/editor.store";
 import { testCasesAtom } from "../_stores/testcases.store";
 import { saveStatusAtom } from "../_stores/save-status.store";
 import { cmsMaterialService } from "~/services/cms-material.service";
@@ -10,12 +10,44 @@ import { allowedRunnersAtom, compareScriptAtom } from "../_stores/config.store";
 import { queryKeys } from "~/queryKeys";
 import { descriptionAtom } from "../_stores/description.store";
 
+interface CodeMaterialLimit {
+  cpu_time: number;
+  cpu_extra_time: number;
+  wall_time: number;
+  mempry: number;
+  stack: number;
+  max_open_files: number;
+  max_file_size: number;
+  network_allow: boolean;
+}
+
+interface CodeMaterialSolutionFile {
+  name: string;
+  content: string;
+}
+
+interface CodeMaterialTestCase {
+  order: number;
+  input: string;
+}
+
+interface CodeMaterialPayload {
+  description: string;
+  test_cases: CodeMaterialTestCase[];
+  allowed_runner_ids: string[];
+  compare_script_id: string | null;
+  solution_runner_id: string | null;
+  solution_files: CodeMaterialSolutionFile[];
+  limit: CodeMaterialLimit | null;
+}
+
 function SaveButton() {
   const code = useAtomValue(codeAtom);
   const testcases = useAtomValue(testCasesAtom);
   const allowedRunners = useAtomValue(allowedRunnersAtom);
   const compareScript = useAtomValue(compareScriptAtom);
   const description = useAtomValue(descriptionAtom);
+  const solutionRunnerID = useAtomValue(runnerAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
 
   const { materialID } = useParams<{ materialID: string }>();
@@ -26,11 +58,21 @@ function SaveButton() {
       return cmsMaterialService.update(materialID, {
         payload: {
           description: JSON.stringify(description),
-          solution: code,
-          test_cases: testcases,
+          test_cases: testcases.map((tc) => ({
+            order: tc.order,
+            input: tc.input,
+          })),
           allowed_runner_ids: allowedRunners.map((runner) => runner.id) ?? [],
           compare_script_id: compareScript?.id ?? null,
-        },
+          solution_runner_id: solutionRunnerID,
+          solution_files: [
+            {
+              name: "main.py",
+              content: code,
+            },
+          ],
+          limit: null,
+        } satisfies CodeMaterialPayload,
       });
     },
     onSuccess: async () => {
