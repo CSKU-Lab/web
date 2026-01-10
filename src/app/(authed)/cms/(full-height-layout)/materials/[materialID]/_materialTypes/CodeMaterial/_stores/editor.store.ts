@@ -1,6 +1,11 @@
 import { atom } from "jotai";
 import { saveStatusAtom } from "./save-status.store";
 
+interface CodeMaterialSolutionFile {
+  name: string;
+  content: string;
+}
+
 interface EditorStore {
   input: string;
   output: string;
@@ -47,3 +52,23 @@ export const codeAtom = atom(
 
 export const runnerAtom = atom("");
 export const errorAtom = atom<"NO_RUNNER" | null>(null);
+
+const filesAtomConfig = atom<CodeMaterialSolutionFile[]>([
+  { name: "main.go", content: "" },
+]);
+
+export const filesAtom = atom(
+  (get) => get(filesAtomConfig),
+  (get, set, files: CodeMaterialSolutionFile[]) => {
+    set(filesAtomConfig, files);
+  },
+);
+
+const selectedFileAtomConfig = atom<string | null>("main.go");
+
+export const selectedFileAtom = atom(
+  (get) => get(selectedFileAtomConfig),
+  (get, set, fileName: string) => {
+    set(selectedFileAtomConfig, fileName);
+  },
+);

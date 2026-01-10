@@ -1,6 +1,6 @@
 import { useAtom, useAtomValue } from "jotai";
 import { Save } from "lucide-react";
-import { codeAtom, runnerAtom } from "../_stores/editor.store";
+import { codeAtom, filesAtom, runnerAtom } from "../_stores/editor.store";
 import { testCasesAtom } from "../_stores/testcases.store";
 import { saveStatusAtom } from "../_stores/save-status.store";
 import { cmsMaterialService } from "~/services/cms-material.service";
@@ -43,6 +43,7 @@ interface CodeMaterialPayload {
 
 function SaveButton() {
   const code = useAtomValue(codeAtom);
+  const files = useAtomValue(filesAtom);
   const testcases = useAtomValue(testCasesAtom);
   const allowedRunners = useAtomValue(allowedRunnersAtom);
   const compareScript = useAtomValue(compareScriptAtom);
@@ -65,12 +66,7 @@ function SaveButton() {
           allowed_runner_ids: allowedRunners.map((runner) => runner.id) ?? [],
           compare_script_id: compareScript?.id ?? null,
           solution_runner_id: solutionRunnerID,
-          solution_files: [
-            {
-              name: "main.py",
-              content: code,
-            },
-          ],
+          solution_files: files,
           limit: null,
         } satisfies CodeMaterialPayload,
       });
