@@ -187,10 +187,10 @@ function FileTree({
               }`}
             >
               <button
-                className="flex-1 pl-2 pr-1 py-1 text-left flex items-center gap-2"
+                className="flex-1 pl-2 pr-1 py-1 text-left flex items-center gap-2 w-full"
                 onClick={() => onSelectFile(file.name)}
               >
-                <FileIcon className="w-4 h-4" />
+                <FileIcon className="w-4 h-4 shrink-0" />
                 <span className="truncate">{file.name}</span>
               </button>
               <DropdownMenu>
