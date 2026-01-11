@@ -6,10 +6,14 @@ import { saveStatusAtom } from "../_stores/save-status.store";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { allowedRunnersAtom, compareScriptAtom } from "../_stores/config.store";
+import {
+  allowedRunnersAtom,
+  compareScriptAtom,
+  limitAtom,
+} from "../_stores/config.store";
 import { queryKeys } from "~/queryKeys";
 import { descriptionAtom } from "../_stores/description.store";
-
+import type { CodeMaterialPayload } from "../_types/code-material-payload";
 
 function SaveButton() {
   const files = useAtomValue(filesAtom);
@@ -18,6 +22,7 @@ function SaveButton() {
   const compareScript = useAtomValue(compareScriptAtom);
   const description = useAtomValue(descriptionAtom);
   const solutionRunnerID = useAtomValue(solutionRunnerIDAtom);
+  const limit = useAtomValue(limitAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
 
   const { materialID } = useParams<{ materialID: string }>();
@@ -36,7 +41,7 @@ function SaveButton() {
           compare_script_id: compareScript?.id ?? null,
           solution_runner_id: solutionRunnerID,
           solution_files: files,
-          limit: null,
+          limit,
         } satisfies CodeMaterialPayload,
       });
     },

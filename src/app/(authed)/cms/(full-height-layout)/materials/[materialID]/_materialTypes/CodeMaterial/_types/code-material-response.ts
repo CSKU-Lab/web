@@ -7,12 +7,24 @@ interface CodeMaterialTestCaseResponse {
   output: string;
 }
 
+interface CodeMaterialAllowedRunner {
+  id: string;
+  name: string;
+  run_script: string;
+  build_script: string;
+}
+
+interface CodeMaterialCompareScript {
+  id: string;
+  name: string;
+}
+
 export interface CodeMaterialResponse {
-  description: string;
+  description: string | null;
   test_cases: CodeMaterialTestCaseResponse[];
-  allowed_runner_ids: string[];
-  compare_script_id: string | null;
+  allowed_runners: CodeMaterialAllowedRunner[];
+  compare_script: CodeMaterialCompareScript | null;
   solution_runner_id: string | null;
   solution_files: CodeMaterialSolutionFile[];
-  limit: CodeMaterialLimit | null;
+  limit: CodeMaterialLimit;
 }
