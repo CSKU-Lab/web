@@ -23,7 +23,7 @@ import {
 import { isLoadingAtom } from "./_stores/loading.store";
 
 function CodeMaterial() {
-  const { data, isFetching } = useGetMaterial();
+  const { data, isLoading } = useGetMaterial();
   const setCode = useSetAtom(initialCodeAtom);
   const setDescription = useSetAtom(initialDescriptionAtom);
   const setTestCases = useSetAtom(initialTestCasesAtom);
@@ -36,8 +36,8 @@ function CodeMaterial() {
   const setIsLoading = useSetAtom(isLoadingAtom);
 
   useEffect(() => {
-    setIsLoading(isFetching);
-    if (isFetching) return;
+    setIsLoading(isLoading);
+    if (isLoading) return;
     const payload = data?.payload as CodeMaterialResponse | undefined;
     if (payload !== undefined) {
       if (payload?.description !== null) {
@@ -57,7 +57,7 @@ function CodeMaterial() {
     }
   }, [
     data,
-    isFetching,
+    isLoading,
     setCode,
     setTestCases,
     setDescription,
