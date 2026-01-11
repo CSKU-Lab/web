@@ -1,4 +1,4 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 import { FileCode, Settings } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
+import { isLoadingAtom } from "../../_stores/loading.store";
 
 const fontSizes = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
 
@@ -30,15 +31,11 @@ function Code() {
   const [files, setFiles] = useAtom(filesAtom);
   const [selectedFile, setSelectedFile] = useAtom(selectedFileAtom);
   const setSaveStatus = useSetAtom(saveStatusAtom);
+  const isLoading = useAtomValue(isLoadingAtom);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [vimMode, setVimMode] = useState(true);
   const [fontSize, setFontSize] = useState(14);
   const [settingsOpen, setSettingsOpen] = useState(false);
-
-  const isLoading =
-    files.length === 1 &&
-    files[0].name === "main.go" &&
-    files[0].content === "";
 
   const handleSelectFile = (name: string) => {
     setSelectedFile(name);

@@ -33,6 +33,8 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import useDrag from "~/hooks/useDrag";
+import { useAtomValue } from "jotai";
+import { isLoadingAtom } from "../../_stores/loading.store";
 
 export interface CodeMaterialSolutionFile {
   name: string;
@@ -56,6 +58,7 @@ function FileTree({
   onDeleteFile,
   onRenameFile,
 }: FileTreeProps) {
+  const isLoading = useAtomValue(isLoadingAtom);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -116,11 +119,6 @@ function FileTree({
       setRenameDialogOpen(false);
     }
   };
-
-  const isLoading =
-    files.length === 1 &&
-    files[0].name === "main.go" &&
-    files[0].content === "";
 
   return (
     <div

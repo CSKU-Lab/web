@@ -2,10 +2,11 @@
 import { GripVertical } from "lucide-react";
 import useDrag from "~/hooks/useDrag";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { descriptionAtom } from "../_stores/description.store";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { useParams } from "next/navigation";
+import { isLoadingAtom } from "../_stores/loading.store";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -15,6 +16,7 @@ function DescriptionSection() {
     direction: "horizontal",
   });
 
+  const isLoading = useAtomValue(isLoadingAtom);
   const [description, setDescription] = useAtom(descriptionAtom);
   const { materialID } = useParams<{ materialID: string }>();
 
@@ -73,6 +75,7 @@ function DescriptionSection() {
       </div>
       <div className="flex-1 max-h-full overflow-auto">
         <SimpleEditor
+          isLoading={isLoading}
           initialValue={description}
           onChange={setDescription}
           onUploadImage={handleImageUpload}
