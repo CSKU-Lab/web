@@ -10,11 +10,16 @@ import {
   initialCodeAtom,
   filesAtom,
   selectedFileAtom,
-  solutionRunnerIDAtom,
+  initialSolutionRunnerIDAtom,
 } from "./_stores/editor.store";
 import { initialTestCasesAtom } from "./_stores/testcases.store";
 import { initialDescriptionAtom } from "./_stores/description.store";
 import type { CodeMaterialResponse } from "./_types/code-material-response";
+import {
+  initialAllowedRunnersAtom,
+  initialCompareScriptAtom,
+  initialLimitAtom,
+} from "./_stores/config.store";
 
 function CodeMaterial() {
   const { data, isFetching } = useGetMaterial();
@@ -23,25 +28,29 @@ function CodeMaterial() {
   const setTestCases = useSetAtom(initialTestCasesAtom);
   const setFiles = useSetAtom(filesAtom);
   const setSelectedFile = useSetAtom(selectedFileAtom);
-  const setSolutionRunnerID = useSetAtom(solutionRunnerIDAtom);
+  const setSolutionRunnerID = useSetAtom(initialSolutionRunnerIDAtom);
+  const setAllowedRunners = useSetAtom(initialAllowedRunnersAtom);
+  const setCompareScript = useSetAtom(initialCompareScriptAtom);
+  const setLimit = useSetAtom(initialLimitAtom);
 
   useEffect(() => {
     if (isFetching) return;
     const payload = data?.payload as CodeMaterialResponse | undefined;
     if (payload !== undefined) {
-      setDescription(JSON.parse(payload.description));
+      if (payload?.description !== null) {
+        setDescription(JSON.parse(payload.description));
+      }
       setTestCases(payload.test_cases);
-      setSolutionRunnerID(payload.solution_runner_id || "");
+      setSolutionRunnerID(payload.solution_runner_id ?? "");
 
       if (payload.solution_files?.length) {
         setFiles(payload.solution_files);
         setSelectedFile(payload.solution_files[0].name);
       }
 
-      // setConfig({
-      //   allowedRunners: data.payload.allowed_runners || [],
-      //   compareScript: data.payload.compare_script || null,
-      // });
+      setAllowedRunners(payload.allowed_runners);
+      setCompareScript(payload.compare_script);
+      setLimit(payload.limit);
     }
   }, [
     data,
@@ -52,6 +61,9 @@ function CodeMaterial() {
     setFiles,
     setSelectedFile,
     setSolutionRunnerID,
+    setAllowedRunners,
+    setCompareScript,
+    setLimit,
   ]);
 
   return (

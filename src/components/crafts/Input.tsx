@@ -7,6 +7,8 @@ interface Props {
   placeholder?: string;
   isError?: boolean;
   errorMessage?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function Input({
@@ -19,7 +21,11 @@ function Input({
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
-      <SharedInput className="bg-white" placeholder={placeholder} {...formProps} />
+      <SharedInput
+        className="bg-white"
+        placeholder={placeholder}
+        {...formProps}
+      />
       <InlineError isError={isError}>{errorMessage}</InlineError>
     </div>
   );

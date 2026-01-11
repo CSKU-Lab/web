@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { saveStatusAtom } from "./save-status.store";
+import type { CodeMaterialLimit } from "../_types/limit";
 
 interface AllowedRunner {
   id: string;
@@ -13,35 +14,13 @@ interface CompareScript {
   name: string;
 }
 
-interface ConfigAtom {
-  allowedRunners: AllowedRunner[];
-  compareScript: CompareScript;
-  cpuTime: number;
-  cpuExtraTime: number;
-  wallTime: number;
-  memory: number;
-  stack: number;
-  maxOpenFiles: number;
-  maxFileSizes: number;
-  allowNetwork: boolean;
-}
-
-const internalConfigAtom = atom<ConfigAtom | null>(null);
-
-export const configAtom = atom(
-  (get) => get(internalConfigAtom),
-  (get, set, newConfig: ConfigAtom) => {
-    const currentConfig = get(internalConfigAtom);
-    if (JSON.stringify(currentConfig) === JSON.stringify(newConfig)) {
-      return;
-    }
-
-    set(internalConfigAtom, newConfig);
-    set(saveStatusAtom, "UnSaved");
+const internalAllowedRunnersAtom = atom<AllowedRunner[]>([]);
+export const initialAllowedRunnersAtom = atom(
+  null,
+  (_get, set, allowedRunners: AllowedRunner[]) => {
+    set(internalAllowedRunnersAtom, allowedRunners);
   },
 );
-
-const internalAllowedRunnersAtom = atom<AllowedRunner[]>([]);
 export const allowedRunnersAtom = atom(
   (get) => get(internalAllowedRunnersAtom),
   (get, set, newAllowedRunners: AllowedRunner[]) => {
@@ -59,6 +38,12 @@ export const allowedRunnersAtom = atom(
 );
 
 const internalCompareScriptAtom = atom<CompareScript | null>(null);
+export const initialCompareScriptAtom = atom(
+  null,
+  (_get, set, compareScript: CompareScript | null) => {
+    set(internalCompareScriptAtom, compareScript);
+  },
+);
 export const compareScriptAtom = atom(
   (get) => get(internalCompareScriptAtom),
   (get, set, newCompareScript: CompareScript | null) => {
@@ -70,6 +55,35 @@ export const compareScriptAtom = atom(
     }
 
     set(internalCompareScriptAtom, newCompareScript);
+    set(saveStatusAtom, "UnSaved");
+  },
+);
+
+const internalLimitAtom = atom<CodeMaterialLimit>({
+  cpu_time: 0,
+  cpu_extra_time: 0,
+  wall_time: 0,
+  memory: 0,
+  stack: 0,
+  max_open_files: 0,
+  max_file_size: 0,
+  network_allow: false,
+});
+export const initialLimitAtom = atom(
+  null,
+  (_get, set, limit: CodeMaterialLimit) => {
+    set(internalLimitAtom, limit);
+  },
+);
+export const limitAtom = atom(
+  (get) => get(internalLimitAtom),
+  (get, set, newLimit: CodeMaterialLimit) => {
+    const currentLimit = get(internalLimitAtom);
+    if (JSON.stringify(currentLimit) === JSON.stringify(newLimit)) {
+      return;
+    }
+
+    set(internalLimitAtom, newLimit);
     set(saveStatusAtom, "UnSaved");
   },
 );
