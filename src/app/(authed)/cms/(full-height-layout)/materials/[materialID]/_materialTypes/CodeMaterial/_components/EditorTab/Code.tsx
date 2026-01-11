@@ -60,6 +60,17 @@ function Code() {
     setSaveStatus("UnSaved");
   };
 
+  const handleRenameFile = (oldName: string, newName: string) => {
+    const newFiles = files.map((f) =>
+      f.name === oldName ? { ...f, name: newName } : f,
+    );
+    setFiles(newFiles);
+    if (selectedFile === oldName) {
+      setSelectedFile(newName);
+    }
+    setSaveStatus("UnSaved");
+  };
+
   const currentFile = files.find((f) => f.name === selectedFile);
   const fileExtension = currentFile?.name.split(".").pop();
 
@@ -74,6 +85,7 @@ function Code() {
           onSelectFile={handleSelectFile}
           onCreateFile={handleCreateFile}
           onDeleteFile={handleDeleteFile}
+          onRenameFile={handleRenameFile}
         />
         <RunnerSelect />
         <div className="flex-1 min-h-0 overflow-auto flex flex-col min-w-40">
