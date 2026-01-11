@@ -7,6 +7,7 @@ import {
   Trash2,
   MoreHorizontal,
   GripVertical,
+  Pencil,
 } from "lucide-react";
 import {
   Dialog,
@@ -44,6 +45,7 @@ interface FileTreeProps {
   onSelectFile: (name: string) => void;
   onCreateFile: (name: string) => void;
   onDeleteFile: (name: string) => void;
+  onRenameFile: (oldName: string, newName: string) => void;
 }
 
 function FileTree({
@@ -52,11 +54,15 @@ function FileTree({
   onSelectFile,
   onCreateFile,
   onDeleteFile,
+  onRenameFile,
 }: FileTreeProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [fileToDelete, setFileToDelete] = useState<string | null>(null);
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [fileToRename, setFileToRename] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
 
   const { buttonRef, containerRef, size, events } = useDrag({
     initialSize: 240,
@@ -93,6 +99,21 @@ function FileTree({
       onDeleteFile(fileToDelete);
       setFileToDelete(null);
       setDeleteDialogOpen(false);
+    }
+  };
+
+  const handleRenameClick = (fileName: string) => {
+    setFileToRename(fileName);
+    setRenameValue(fileName);
+    setRenameDialogOpen(true);
+  };
+
+  const handleConfirmRename = () => {
+    if (fileToRename && renameValue.trim() && renameValue !== fileToRename) {
+      onRenameFile(fileToRename, renameValue.trim());
+      setFileToRename(null);
+      setRenameValue("");
+      setRenameDialogOpen(false);
     }
   };
 
@@ -201,6 +222,15 @@ function FileTree({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      handleRenameClick(file.name);
+                    }}
+                  >
+                    <Pencil size="1rem" />
+                    Rename
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
                     variant="destructive"
                     className="text-(--red-11) focus:text-(--red-11)"
                     onSelect={(e) => {
@@ -249,6 +279,45 @@ function FileTree({
               onClick={handleConfirmDelete}
             >
               Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
+        <DialogContent>
+          <DialogHeader className="p-4">
+            <DialogTitle>Rename File</DialogTitle>
+          </DialogHeader>
+          <div className="p-4 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="renameFile">New Name</Label>
+              <Input
+                id="renameFile"
+                placeholder="e.g., main.go"
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleConfirmRename();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter className="p-4">
+            <Button
+              className="px-6"
+              variant="primary"
+              onClick={() => setRenameDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="px-6"
+              variant="action"
+              onClick={handleConfirmRename}
+            >
+              Rename
             </Button>
           </DialogFooter>
         </DialogContent>
