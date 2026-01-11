@@ -58,9 +58,7 @@ export const solutionRunnerIDAtom = atom(
 );
 export const errorAtom = atom<"NO_RUNNER" | null>(null);
 
-const filesAtomConfig = atom<CodeMaterialSolutionFile[]>([
-  { name: "main.go", content: "" },
-]);
+const filesAtomConfig = atom<CodeMaterialSolutionFile[]>([]);
 
 export const filesAtom = atom(
   (get) => get(filesAtomConfig),
@@ -69,7 +67,7 @@ export const filesAtom = atom(
   },
 );
 
-const selectedFileAtomConfig = atom<string | null>("main.go");
+const selectedFileAtomConfig = atom<string | null>(null);
 
 export const selectedFileAtom = atom(
   (get) => get(selectedFileAtomConfig),

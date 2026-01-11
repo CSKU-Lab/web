@@ -20,6 +20,7 @@ import {
   initialCompareScriptAtom,
   initialLimitAtom,
 } from "./_stores/config.store";
+import { isLoadingAtom } from "./_stores/loading.store";
 
 function CodeMaterial() {
   const { data, isFetching } = useGetMaterial();
@@ -32,8 +33,10 @@ function CodeMaterial() {
   const setAllowedRunners = useSetAtom(initialAllowedRunnersAtom);
   const setCompareScript = useSetAtom(initialCompareScriptAtom);
   const setLimit = useSetAtom(initialLimitAtom);
+  const setIsLoading = useSetAtom(isLoadingAtom);
 
   useEffect(() => {
+    setIsLoading(isFetching);
     if (isFetching) return;
     const payload = data?.payload as CodeMaterialResponse | undefined;
     if (payload !== undefined) {
@@ -64,6 +67,7 @@ function CodeMaterial() {
     setAllowedRunners,
     setCompareScript,
     setLimit,
+    setIsLoading,
   ]);
 
   return (

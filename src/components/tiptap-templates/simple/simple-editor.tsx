@@ -22,7 +22,6 @@ import { TableKit } from "@tiptap/extension-table";
 import { Button } from "~/components/tiptap-ui-primitive/button";
 import { Spacer } from "~/components/tiptap-ui-primitive/spacer";
 import {
-  Toolbar,
   ToolbarGroup,
   ToolbarSeparator,
 } from "~/components/tiptap-ui-primitive/toolbar";
@@ -78,6 +77,7 @@ import "~/components/tiptap-templates/simple/simple-editor.scss";
 
 import type { ClassNameProps } from "~/types/classname-props";
 import { cn } from "~/lib/utils";
+import { Skeleton } from "~/components/ui/skeleton";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -189,6 +189,7 @@ interface Props extends ClassNameProps {
   onChange?: (content: JSONContent) => void;
   onUploadImage?: UploadFunction;
   maxFileUploadSize?: number;
+  isLoading?: boolean;
 }
 
 export function SimpleEditor({
@@ -197,6 +198,7 @@ export function SimpleEditor({
   onChange = () => {},
   onUploadImage,
   maxFileUploadSize = -1,
+  isLoading = false,
 }: Props) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
@@ -270,8 +272,8 @@ export function SimpleEditor({
   }, [isMobile, mobileView]);
 
   return (
-    <EditorContext.Provider value={{ editor }}>
-      <Toolbar
+    <>
+      <div
         ref={toolbarRef}
         style={{
           ...(isMobile
@@ -280,6 +282,10 @@ export function SimpleEditor({
               }
             : {}),
         }}
+        className={cn(
+          "tiptap-toolbar",
+          isLoading && "opacity-50 pointer-events-none"
+        )}
       >
         {mobileView === "main" ? (
           <MainToolbarContent
@@ -293,14 +299,26 @@ export function SimpleEditor({
             onBack={() => setMobileView("main")}
           />
         )}
-      </Toolbar>
+      </div>
 
-      <EditorContent
-        editor={editor}
-        role="presentation"
-        className={cn("simple-editor-content", className)}
-      />
-      <TableContextMenu editor={editor} />
-    </EditorContext.Provider>
+      {isLoading ? (
+        <div className={cn("simple-editor-content p-4 space-y-3", className)}>
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-4 w-5/6" />
+          <Skeleton className="h-4 w-2/3" />
+          <Skeleton className="h-4 w-full" />
+        </div>
+      ) : (
+        <EditorContext.Provider value={{ editor }}>
+          <EditorContent
+            editor={editor}
+            role="presentation"
+            className={cn("simple-editor-content", className)}
+          />
+          <TableContextMenu editor={editor} />
+        </EditorContext.Provider>
+      )}
+    </>
   );
 }
