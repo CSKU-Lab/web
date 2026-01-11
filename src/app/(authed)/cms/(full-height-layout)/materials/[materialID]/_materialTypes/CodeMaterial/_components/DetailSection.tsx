@@ -7,10 +7,26 @@ import useGetMaterial from "../../../_hooks/useGetMaterial";
 import { useAtomValue } from "jotai";
 import { saveStatusAtom } from "../_stores/save-status.store";
 import SaveButton from "./SaveButton";
-import { JSX } from "react";
+import type { JSX } from "react";
+
+interface HeaderDisplayOptions {
+  name: boolean;
+  type: boolean;
+  submissions: boolean;
+  createdBy: boolean;
+  visibility: boolean;
+  status: boolean;
+}
+
+interface DetailOptions {
+  idx: keyof HeaderDisplayOptions;
+  label: string;
+  value: string | undefined | JSX.Element;
+  body?: () => React.ReactNode;
+}
 
 interface DetailSectionProps {
-  headerDisplay?: Record<string, boolean>;
+  headerDisplay?: HeaderDisplayOptions;
 }
 
 function DetailSection({
@@ -23,7 +39,7 @@ function DetailSection({
     status: true,
   },
 }: DetailSectionProps) {
-  const { data: detail, isFetching } = useGetMaterial();
+  const { data: detail, isLoading } = useGetMaterial();
   const saveStatus = useAtomValue(saveStatusAtom);
 
   const renderStatus = () => {
@@ -66,7 +82,7 @@ function DetailSection({
     }
   };
 
-  const detailItems = [
+  const detailItems: DetailOptions[] = [
     {
       idx: "name",
       label: "Name",
@@ -109,14 +125,14 @@ function DetailSection({
     <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 flex justify-between items-center">
       <div className="flex gap-4">
         {detailItems.map(
-          (item, i) =>
+          (item) =>
             headerDisplay[item.idx] && (
               <HeaderItem
                 key={item.idx}
                 label={item.label}
                 value={item.value}
                 body={item.body}
-                isFetching={isFetching}
+                isLoading={isLoading}
               />
             ),
         )}
@@ -129,15 +145,15 @@ function DetailSection({
 interface HeaderItemProps {
   label: string;
   value: string | undefined | JSX.Element;
-  isFetching: boolean;
+  isLoading: boolean;
   body?: () => React.ReactNode;
 }
-const HeaderItem = ({ label, value, isFetching, body }: HeaderItemProps) => {
+const HeaderItem = ({ label, value, isLoading, body }: HeaderItemProps) => {
   return (
     <div>
       <h6 className="text-xs text-(--gray-11)">{label}</h6>
       <Loading
-        isLoading={isFetching}
+        isLoading={isLoading}
         fallback={<Skeleton className="w-32 h-6" />}
       >
         <div className="flex items-center gap-2">
