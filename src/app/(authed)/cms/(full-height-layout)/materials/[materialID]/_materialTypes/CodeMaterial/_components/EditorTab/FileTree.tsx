@@ -201,6 +201,7 @@ function FileTree({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
+                    variant="destructive"
                     className="text-(--red-11) focus:text-(--red-11)"
                     onSelect={(e) => {
                       e.preventDefault();
