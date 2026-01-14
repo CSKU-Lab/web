@@ -22,6 +22,7 @@ import { TableKit } from "@tiptap/extension-table";
 import { Button } from "~/components/tiptap-ui-primitive/button";
 import { Spacer } from "~/components/tiptap-ui-primitive/spacer";
 import {
+  Toolbar,
   ToolbarGroup,
   ToolbarSeparator,
 } from "~/components/tiptap-ui-primitive/toolbar";
@@ -272,20 +273,10 @@ export function SimpleEditor({
   }, [isMobile, mobileView]);
 
   return (
-    <>
-      <div
+    <EditorContext.Provider value={{ editor }}>
+      <Toolbar
         ref={toolbarRef}
-        style={{
-          ...(isMobile
-            ? {
-                bottom: `calc(100% - ${height - rect.y}px)`,
-              }
-            : {}),
-        }}
-        className={cn(
-          "tiptap-toolbar",
-          isLoading && "opacity-50 pointer-events-none"
-        )}
+        className={cn(isLoading && "opacity-50 pointer-events-none")}
       >
         {mobileView === "main" ? (
           <MainToolbarContent
@@ -299,7 +290,7 @@ export function SimpleEditor({
             onBack={() => setMobileView("main")}
           />
         )}
-      </div>
+      </Toolbar>
 
       {isLoading ? (
         <div className={cn("simple-editor-content p-4 space-y-3", className)}>
@@ -310,15 +301,15 @@ export function SimpleEditor({
           <Skeleton className="h-4 w-full" />
         </div>
       ) : (
-        <EditorContext.Provider value={{ editor }}>
+        <>
           <EditorContent
             editor={editor}
             role="presentation"
-            className={cn("simple-editor-content", className)}
+            className={cn("simple-editor-content ", className)}
           />
           <TableContextMenu editor={editor} />
-        </EditorContext.Provider>
+        </>
       )}
-    </>
+    </EditorContext.Provider>
   );
 }
