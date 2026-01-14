@@ -5,6 +5,8 @@
 @import "@radix-ui/colors/lime";
 @import "@radix-ui/colors/amber";
 @import "@radix-ui/colors/blue";
+@import '../styles/_variables.scss';
+@import '../styles/_keyframe-animations.scss';
 
 @import "tw-animate-css";
 
@@ -15,8 +17,8 @@
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
+	--radius-xl: calc(var(--radius) + 4px);
+	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-card: var(--card);
 	--color-card-foreground: var(--card-foreground);
@@ -130,4 +132,29 @@
 	button {
 		@apply cursor-pointer border-(--gray-6);
 	}
+}
+
+
+/* width */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: var(--gray-2);
+	border: 1px solid var(--gray-4);
+	border-radius: 100px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: var(--gray-6);
+	border-radius: 100px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: var(--gray-7);
 }
