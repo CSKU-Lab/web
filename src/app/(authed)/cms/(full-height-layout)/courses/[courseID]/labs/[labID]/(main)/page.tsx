@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { Button } from "~/components/commons/Button";
 import { useParams, useRouter } from "next/navigation";
 import useResolvePath from "~/hooks/useResolvePath";
@@ -49,7 +49,7 @@ export default function LabDetail() {
       <div className="@container px-4">
         <div className="flex justify-end items-center gap-2">
           <Button onClick={handleOnAddMaterial}>
-            <Plus size="1rem" /> Add Material
+            <Pencil size="1rem" /> Edit Lab Material
           </Button>
         </div>
 
