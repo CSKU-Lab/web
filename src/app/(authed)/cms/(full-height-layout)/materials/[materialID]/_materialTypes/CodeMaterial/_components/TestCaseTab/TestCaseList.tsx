@@ -119,7 +119,7 @@ function TestCaseList({ groupId, test_cases }: TestCaseListProps) {
       </SortableContext>
       {test_cases.length === 0 && (
         <div className="text-center py-6 text-gray-10 text-sm">
-          No test cases in this group. Click "Add Test Case" to create one.
+          No test cases in this group. Click &ldquo;Add Test Case&rdquo; to create one.
         </div>
       )}
     </div>
