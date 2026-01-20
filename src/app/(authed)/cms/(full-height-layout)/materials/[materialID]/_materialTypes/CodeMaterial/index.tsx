@@ -12,7 +12,7 @@ import {
   selectedFileAtom,
   initialSolutionRunnerIDAtom,
 } from "./_stores/editor.store";
-import { initialTestCasesAtom } from "./_stores/testcases.store";
+import { initialTestCaseGroupsAtom } from "./_stores/testcase-groups.store";
 import { initialDescriptionAtom } from "./_stores/description.store";
 import type { CodeMaterialResponse } from "./_types/code-material-response";
 import {
@@ -26,7 +26,7 @@ function CodeMaterial() {
   const { data, isLoading } = useGetMaterial();
   const setCode = useSetAtom(initialCodeAtom);
   const setDescription = useSetAtom(initialDescriptionAtom);
-  const setTestCases = useSetAtom(initialTestCasesAtom);
+  const setTestCaseGroups = useSetAtom(initialTestCaseGroupsAtom);
   const setFiles = useSetAtom(filesAtom);
   const setSelectedFile = useSetAtom(selectedFileAtom);
   const setSolutionRunnerID = useSetAtom(initialSolutionRunnerIDAtom);
@@ -43,7 +43,7 @@ function CodeMaterial() {
       if (payload?.description !== null) {
         setDescription(JSON.parse(payload.description));
       }
-      setTestCases(payload.test_cases);
+      setTestCaseGroups(payload.test_case_groups);
       setSolutionRunnerID(payload.solution_runner_id ?? "");
 
       if (payload.solution_files?.length) {
@@ -59,7 +59,7 @@ function CodeMaterial() {
     data,
     isLoading,
     setCode,
-    setTestCases,
+    setTestCaseGroups,
     setDescription,
     setFiles,
     setSelectedFile,

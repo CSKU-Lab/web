@@ -1,11 +1,6 @@
 import type { CodeMaterialSolutionFile } from "./file";
 import type { CodeMaterialLimit } from "./limit";
-
-interface CodeMaterialTestCaseResponse {
-  order: number;
-  input: string;
-  output: string;
-}
+import type { TestCaseGroup } from "./testcase-group";
 
 interface CodeMaterialAllowedRunner {
   id: string;
@@ -21,7 +16,7 @@ interface CodeMaterialCompareScript {
 
 export interface CodeMaterialResponse {
   description: string | null;
-  test_cases: CodeMaterialTestCaseResponse[];
+  test_case_groups: TestCaseGroup[];
   allowed_runners: CodeMaterialAllowedRunner[];
   compare_script: CodeMaterialCompareScript | null;
   solution_runner_id: string | null;
