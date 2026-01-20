@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue } from "jotai";
 import { Save } from "lucide-react";
 import { filesAtom, solutionRunnerIDAtom } from "../_stores/editor.store";
-import { testCasesAtom } from "../_stores/testcases.store";
+import { testCaseGroupsAtom } from "../_stores/testcase-groups.store";
 import { saveStatusAtom } from "../_stores/save-status.store";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { useParams } from "next/navigation";
@@ -17,7 +17,7 @@ import type { CodeMaterialPayload } from "../_types/code-material-payload";
 
 function SaveButton() {
   const files = useAtomValue(filesAtom);
-  const testcases = useAtomValue(testCasesAtom);
+  const testCaseGroups = useAtomValue(testCaseGroupsAtom);
   const allowedRunners = useAtomValue(allowedRunnersAtom);
   const compareScript = useAtomValue(compareScriptAtom);
   const description = useAtomValue(descriptionAtom);
@@ -33,10 +33,7 @@ function SaveButton() {
       return cmsMaterialService.update(materialID, {
         payload: {
           description: JSON.stringify(description),
-          test_cases: testcases.map((tc) => ({
-            order: tc.order,
-            input: tc.input,
-          })),
+          test_case_groups: testCaseGroups,
           allowed_runner_ids: allowedRunners.map((runner) => runner.id) ?? [],
           compare_script_id: compareScript?.id ?? null,
           solution_runner_id: solutionRunnerID,

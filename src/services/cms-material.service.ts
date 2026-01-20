@@ -1,7 +1,7 @@
 import type { CMSMaterial } from "~/types/cms-material";
 import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
-import { AxiosProgressEvent } from "axios";
+import type { AxiosProgressEvent } from "axios";
 
 export type CreateMaterialPayload = {
   name: string;
