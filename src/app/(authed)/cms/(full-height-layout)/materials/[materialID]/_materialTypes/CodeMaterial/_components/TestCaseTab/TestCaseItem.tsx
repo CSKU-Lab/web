@@ -1,4 +1,4 @@
-import CodeMirror from "~/components/Editor/CodeMirror";
+import { memo, useState, useEffect } from "react";
 import { Trash2, Copy } from "lucide-react";
 import { useSetAtom } from "jotai";
 import {
@@ -6,7 +6,6 @@ import {
   duplicateTestCaseAtom,
   updateTestCaseAtom,
   toggleTestCaseSelectionAtom,
-  selectedTestCaseIdsAtom,
 } from "../../_stores/testcase-groups.store";
 import type { TestCase } from "../../_types/testcase-group";
 import { Button } from "~/components/commons/Button";
@@ -18,13 +17,19 @@ interface TestCaseItemProps {
 }
 
 function TestCaseItem({ testCase, groupId, isSelected }: TestCaseItemProps) {
+  const [inputValue, setInputValue] = useState(testCase.input);
+
   const onRemove = useSetAtom(removeTestCaseAtom);
   const onDuplicate = useSetAtom(duplicateTestCaseAtom);
   const onUpdateInput = useSetAtom(updateTestCaseAtom);
   const onToggleSelect = useSetAtom(toggleTestCaseSelectionAtom);
-  const selectedTestCaseIds = useSetAtom(selectedTestCaseIdsAtom);
+
+  useEffect(() => {
+    setInputValue(testCase.input);
+  }, [testCase.input]);
 
   const handleInputChange = (newInput: string) => {
+    setInputValue(newInput);
     onUpdateInput({
       groupId,
       testCaseId: testCase.id,
@@ -97,18 +102,20 @@ function TestCaseItem({ testCase, groupId, isSelected }: TestCaseItemProps) {
       <div className="flex gap-2 min-h-[150px]">
         <div className="flex-1 flex flex-col">
           <p className="text-xs text-gray-10 mb-1">Input</p>
-          <CodeMirror
-            value={testCase.input}
-            onChange={handleInputChange}
-            className="border border-gray-4 rounded-md overflow-hidden flex-1"
+          <textarea
+            value={inputValue}
+            onChange={(e) => handleInputChange(e.target.value)}
+            className="w-full h-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5"
+            placeholder="Enter input..."
           />
         </div>
         <div className="flex-1 flex flex-col">
           <p className="text-xs text-gray-10 mb-1">Output</p>
-          <CodeMirror
+          <textarea
             value={testCase.output}
-            className="border border-gray-4 rounded-md overflow-hidden flex-1"
             readOnly
+            className="w-full h-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md bg-gray-1 focus:outline-none"
+            placeholder="Expected output..."
           />
         </div>
       </div>
@@ -116,4 +123,4 @@ function TestCaseItem({ testCase, groupId, isSelected }: TestCaseItemProps) {
   );
 }
 
-export default TestCaseItem;
+export default memo(TestCaseItem);

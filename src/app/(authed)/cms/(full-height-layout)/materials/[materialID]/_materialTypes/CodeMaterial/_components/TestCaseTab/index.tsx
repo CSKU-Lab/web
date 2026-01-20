@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
   DndContext,
@@ -8,8 +8,8 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragStartEvent,
-  DragEndEvent,
+  type DragStartEvent,
+  type DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -34,8 +34,6 @@ import {
   moveTestCaseToGroupAtom,
   selectAllGroupsAtom,
   deselectAllGroupsAtom,
-  selectAllTestCasesAtom,
-  deselectAllTestCasesAtom,
 } from "../../_stores/testcase-groups.store";
 import { Button } from "~/components/commons/Button";
 import type { TestCaseGroup } from "../../_types/testcase-group";
@@ -53,14 +51,9 @@ function SortableGroupCard({
   onToggleExpand,
   isSelected,
 }: SortableGroupCardProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: group.id });
+  const { setNodeRef, transform, transition, isDragging } = useSortable({
+    id: group.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -93,21 +86,29 @@ function TestCaseTab() {
   const selectedGroupIds = useAtomValue(selectedGroupIdsAtom);
   const selectedTestCaseIds = useAtomValue(selectedTestCaseIdsAtom);
 
+  const [isMounted, setIsMounted] = useState(false);
+  const [expandedGroupIds, setExpandedGroupIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const onRemoveSelectedGroups = useSetAtom(removeSelectedGroupsAtom);
   const onRemoveSelectedTestCases = useSetAtom(removeSelectedTestCasesAtom);
-  const onDuplicateSelectedTestCases = useSetAtom(duplicateSelectedTestCasesAtom);
+  const onDuplicateSelectedTestCases = useSetAtom(
+    duplicateSelectedTestCasesAtom,
+  );
   const onMoveGroup = useSetAtom(moveGroupAtom);
   const onMoveTestCase = useSetAtom(moveTestCaseAtom);
   const onMoveTestCaseToGroup = useSetAtom(moveTestCaseToGroupAtom);
   const onSelectAllGroups = useSetAtom(selectAllGroupsAtom);
   const onDeselectAllGroups = useSetAtom(deselectAllGroupsAtom);
-  const onSelectAllTestCases = useSetAtom(selectAllTestCasesAtom);
-  const onDeselectAllTestCases = useSetAtom(deselectAllTestCasesAtom);
-
-  const [expandedGroupIds, setExpandedGroupIds] = useState<Set<string>>(
-    new Set(testCaseGroups.map((g) => g.id)),
-  );
-  const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -205,118 +206,138 @@ function TestCaseTab() {
 
   return (
     <div className="p-2">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="flex justify-between items-center gap-2 flex-wrap mb-4">
-          <div className="flex items-center gap-2">
-            {testCaseGroups.length > 0 && (
-              <button
-                onClick={
-                  isAllGroupsSelected ? onDeselectAllGroups : onSelectAllGroups
-                }
-                className="flex items-center gap-1.5 text-sm text-gray-11 hover:text-gray-12 transition-colors"
-              >
-                {isAllGroupsSelected ? (
-                  <>
-                    <CheckSquare size="1rem" />
-                    Deselect all
-                  </>
-                ) : (
-                  <>
-                    <Square size="1rem" />
-                    Select all
-                  </>
-                )}
-              </button>
-            )}
-            {totalSelectedCount > 0 && (
-              <span className="text-sm text-gray-10">
-                {totalSelectedCount} selected
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            {totalSelectedCount > 0 && (
-              <>
-                <Button
-                  variant="ghost"
-                  onClick={onRemoveSelectedTestCases}
-                  disabled={Object.keys(selectedTestCaseIds).length === 0}
-                >
-                  <Trash2 size="1rem" />
-                  Delete Test Cases
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={onDuplicateSelectedTestCases}
-                  disabled={Object.keys(selectedTestCaseIds).length === 0}
-                >
-                  <Copy size="1rem" />
-                  Duplicate Test Cases
-                </Button>
-                {selectedGroupIds.length > 0 && (
-                  <>
-                    <div className="w-px h-6 bg-gray-4 mx-1" />
-                    <Button
-                      variant="danger"
-                      onClick={onRemoveSelectedGroups}
-                    >
-                      <Trash2 size="1rem" />
-                      Delete Groups
-                    </Button>
-                  </>
-                )}
-                <div className="w-px h-6 bg-gray-4 mx-1" />
-              </>
-            )}
-            <AddGroupButton />
-          </div>
+      {!isMounted ? (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="border border-gray-4 rounded-md bg-white p-3 animate-pulse"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-5 h-5 bg-gray-2 rounded" />
+                <div className="w-32 h-4 bg-gray-2 rounded" />
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1 h-32 bg-gray-2 rounded" />
+                <div className="flex-1 h-32 bg-gray-2 rounded" />
+              </div>
+            </div>
+          ))}
         </div>
-
-        <SortableContext
-          items={testCaseGroups.map((g) => g.id)}
-          strategy={verticalListSortingStrategy}
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
         >
-          <div className="space-y-4">
-            {testCaseGroups.map((group) => (
-              <SortableGroupCard
-                key={group.id}
-                group={group}
-                isExpanded={expandedGroupIds.has(group.id)}
-                onToggleExpand={() => toggleExpand(group.id)}
-                isSelected={selectedGroupIds.includes(group.id)}
-              />
-            ))}
-          </div>
-        </SortableContext>
-
-        {testCaseGroups.length === 0 && (
-          <div className="text-center py-12 text-gray-10">
-            <p>No test case groups yet</p>
-            <p className="text-sm mt-1">
-              Click "Add Group" to create your first test case group
-            </p>
-          </div>
-        )}
-
-        <DragOverlay>
-          {activeId ? (
-            <div className="bg-white border border-gray-4 rounded-md shadow-lg p-3 opacity-80">
-              {testCaseGroups.some((g) => g.id === activeId) ? (
-                <p className="text-sm font-medium">
-                  {testCaseGroups.find((g) => g.id === activeId)?.name}
-                </p>
-              ) : (
-                <p className="text-sm text-gray-10">Moving test case...</p>
+          <div className="flex justify-between items-center gap-2 flex-wrap mb-4">
+            <div className="flex items-center gap-2">
+              {testCaseGroups.length > 0 && (
+                <button
+                  onClick={
+                    isAllGroupsSelected
+                      ? onDeselectAllGroups
+                      : onSelectAllGroups
+                  }
+                  className="flex items-center gap-1.5 text-sm text-gray-11 hover:text-gray-12 transition-colors"
+                >
+                  {isAllGroupsSelected ? (
+                    <>
+                      <CheckSquare size="1rem" />
+                      Deselect all
+                    </>
+                  ) : (
+                    <>
+                      <Square size="1rem" />
+                      Select all
+                    </>
+                  )}
+                </button>
+              )}
+              {totalSelectedCount > 0 && (
+                <span className="text-sm text-gray-10">
+                  {totalSelectedCount} selected
+                </span>
               )}
             </div>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
+            <div className="flex items-center gap-2">
+              {totalSelectedCount > 0 && (
+                <>
+                  <Button
+                    variant="ghost"
+                    onClick={onRemoveSelectedTestCases}
+                    disabled={Object.keys(selectedTestCaseIds).length === 0}
+                  >
+                    <Trash2 size="1rem" />
+                    Delete Test Cases
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={onDuplicateSelectedTestCases}
+                    disabled={Object.keys(selectedTestCaseIds).length === 0}
+                  >
+                    <Copy size="1rem" />
+                    Duplicate Test Cases
+                  </Button>
+                  {selectedGroupIds.length > 0 && (
+                    <>
+                      <div className="w-px h-6 bg-gray-4 mx-1" />
+                      <Button variant="danger" onClick={onRemoveSelectedGroups}>
+                        <Trash2 size="1rem" />
+                        Delete Groups
+                      </Button>
+                    </>
+                  )}
+                  <div className="w-px h-6 bg-gray-4 mx-1" />
+                </>
+              )}
+              <AddGroupButton />
+            </div>
+          </div>
+
+          <SortableContext
+            items={testCaseGroups.map((g) => g.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="space-y-4">
+              {testCaseGroups.map((group) => (
+                <SortableGroupCard
+                  key={group.id}
+                  group={group}
+                  isExpanded={expandedGroupIds.has(group.id)}
+                  onToggleExpand={() => toggleExpand(group.id)}
+                  isSelected={selectedGroupIds.includes(group.id)}
+                />
+              ))}
+            </div>
+          </SortableContext>
+
+          {testCaseGroups.length === 0 && (
+            <div className="text-center py-12 text-gray-10">
+              <p>No test case groups yet</p>
+              <p className="text-sm mt-1">
+                Click &ldquo;Add Group&rdquo; to create your first test case
+                group
+              </p>
+            </div>
+          )}
+
+          <DragOverlay>
+            {activeId ? (
+              <div className="bg-white border border-gray-4 rounded-md shadow-lg p-3 opacity-80">
+                {testCaseGroups.some((g) => g.id === activeId) ? (
+                  <p className="text-sm font-medium">
+                    {testCaseGroups.find((g) => g.id === activeId)?.name}
+                  </p>
+                ) : (
+                  <p className="text-sm text-gray-10">Moving test case...</p>
+                )}
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+      )}
     </div>
   );
 }
