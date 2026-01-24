@@ -1,42 +1,47 @@
 "use client";
 
-import * as React from "react";
 import { Pie, Label, PieChart } from "recharts";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "~/components/ui/chart";
 
-export const description = "A donut chart with text";
-
-const chartData = [
-  { progress: "Todo", materials: 3, fill: "var(--color-todo)" },
-  { progress: "Done", materials: 10, fill: "var(--color-done)" },
-];
-
 const chartConfig = {
-  materials: {
-    label: "Materials",
+  completed: {
+    label: "Completed",
+    color: "var(--color-done)",
   },
-  todo: {
-    label: "Todo",
-    color: "var(--chart-1)",
-  },
-  done: {
-    label: "Done",
-    color: "var(--chart-2)",
+  remaining: {
+    label: "Remaining",
+    color: "var(--color-muted)",
   },
 } satisfies ChartConfig;
 
-export function MaterialPieChart() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.materials, 0);
-  }, []);
+interface MaterialPieChartProps {
+  totalMaterials: number;
+  completedMaterials: number;
+}
 
+export function MaterialPieChart({
+  totalMaterials,
+  completedMaterials,
+}: MaterialPieChartProps) {
+  const percentize = (number: number) => {
+    return Number((number * (100 / totalMaterials)).toFixed(2));
+  };
+
+  const chartData = [
+    { name: "Completed", value: completedMaterials, fill: "var(--color-done)" },
+    {
+      name: "Remaining",
+      value: totalMaterials - completedMaterials,
+      fill: "var(--color-muted)",
+    },
+  ];
   return (
-    <ChartContainer config={chartConfig} className="mx-auto flex w-fit h-full ">
+    <ChartContainer config={chartConfig} className="mx-auto w-full h-full">
       <PieChart>
         <ChartTooltip
           cursor={false}
@@ -44,38 +49,53 @@ export function MaterialPieChart() {
         />
         <Pie
           data={chartData}
-          dataKey="materials"
-          nameKey="progress"
-          innerRadius={60}
-          strokeWidth={5}
+          dataKey="value"
+          innerRadius={90}
+          outerRadius={100}
+          startAngle={220}
+          endAngle={-40}
+          strokeWidth={0}
         >
           <Label
             content={({ viewBox }) => {
-              if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                return (
-                  <text
-                    x={viewBox.cx}
-                    y={viewBox.cy}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
+              if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox))
+                return null;
+
+              const { cx, cy } = viewBox;
+
+              return (
+                <text
+                  x={cx}
+                  y={cy}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                >
+                  <tspan
+                    x={cx}
+                    y={cy}
+                    className="fill-foreground text-3xl font-bold"
                   >
-                    <tspan
-                      x={viewBox.cx}
-                      y={viewBox.cy}
-                      className="fill-foreground text-3xl font-bold"
-                    >
-                      {totalVisitors.toLocaleString()}
-                    </tspan>
-                    <tspan
-                      x={viewBox.cx}
-                      y={(viewBox.cy || 0) + 24}
-                      className="fill-muted-foreground"
-                    >
-                      Materials
-                    </tspan>
-                  </text>
-                );
-              }
+                    {percentize(completedMaterials)}%
+                  </tspan>
+
+                  <tspan
+                    x={cx}
+                    y={cy! + 40}
+                    dy="1.6em"
+                    className="fill-muted-foreground text-xs"
+                  >
+                    {completedMaterials} / {totalMaterials}
+                  </tspan>
+
+                  <tspan
+                    x={cx}
+                    dy="1.4em"
+                    className="fill-muted-foreground text-sm"
+                  >
+                    Completed
+                  </tspan>
+                </text>
+              );
             }}
           />
         </Pie>

@@ -79,6 +79,14 @@ export const queryKeys = {
       params,
     ],
     getById: (labID: string) => [...queryKeys.course.all, labID],
+    materials: {
+      all: (labId: string) => [...queryKeys.lab.getById(labId), "materials"],
+      allWithParams: (labId: string, params: Record<string, any>) => [
+        ...queryKeys.lab.getById(labId),
+        "materials",
+        params,
+      ],
+    },
   },
   defaultLab: {
     all: ["default_labs"],
@@ -99,5 +107,8 @@ export const queryKeys = {
   },
   affectedEntities: {
     get: (type: AffectedType, id: string) => ["affectedEntities", type, id],
+  },
+  sidebar: {
+    get: () => ["sidebar"],
   },
 } as const;
