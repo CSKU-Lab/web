@@ -1,14 +1,36 @@
 "use client";
+import { useRouter } from "next/navigation";
 import Course from "./Course";
-import { myCourses } from "~/__mocks__/myCourses";
+import { useSidebar } from "~/hooks/useSidebar";
 
 function Sidebar() {
+  const router = useRouter();
+  const { data: sidebarData, isLoading, isError } = useSidebar();
+
+  const handleHomeClick = () => {
+    router.push(`/`);
+  };
+
+  if (isLoading) {
+    return <div>Loading sidebar...</div>;
+  }
+  if (isError || !sidebarData) {
+    return <div>Error loading sidebar.</div>;
+  }
   return (
     <>
-      <h6 className="text-(--gray-11) text-sm font-light py-2">My Courses</h6>
+      <button onClick={handleHomeClick}>
+        <h6 className="text-(--gray-11) text-sm font-light py-2">My Courses</h6>
+      </button>
       <div className="flex flex-col gap-4 mt-2">
-        {myCourses.map((course) => (
-          <Course key={course.name} {...course} />
+        {sidebarData.map((data) => (
+          <Course
+            key={data.id}
+            name={data.name}
+            id={data.id}
+            status={data.status}
+            sub_items={data.sub_items}
+          />
         ))}
       </div>
     </>

@@ -7,8 +7,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import useCoreSection from "../_hooks/useCoreSectionUnenroll";
 
-export default function CardOptions() {
+interface CardOptionsProps {
+  sectionID: string;
+}
+
+export default function CardOptions({ sectionID }: CardOptionsProps) {
+  const { unenroll } = useCoreSection(sectionID);
+  const handleUnenrollClick = async () => {
+    unenroll.mutate();
+  };
   return (
     <>
       <DropdownMenu>
@@ -24,7 +33,13 @@ export default function CardOptions() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-52">
           <DropdownMenuGroup>
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUnenrollClick();
+              }}
+            >
               <LogOutIcon />
               Unenroll
             </DropdownMenuItem>

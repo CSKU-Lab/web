@@ -56,4 +56,58 @@ export class BaseService {
 
     return res.data;
   }
+
+  protected async _getPaginationWithBody<
+    Item extends Record<string, any>,
+    CustomSortByKeys = never,
+  >(
+    paramsRequest: Partial<PaginationRequestParams<Item, CustomSortByKeys>>,
+    query = "",
+    requestBody: Record<string, any>,
+  ): Promise<PaginationResponse<Item>> {
+    const searchParams = new URLSearchParams();
+
+    const { filters, page, page_size, search, ...other } = paramsRequest;
+
+    const params = {
+      page: page ?? 1,
+      page_size: page_size ?? 10,
+      search: search ?? "",
+      ...other,
+    };
+
+    if (filters?.length) {
+      filters.forEach((filter) => {
+        const field = `${filter.field.value}__${filter.operator}`;
+        searchParams.append(field, String(filter.value));
+      });
+    }
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        searchParams.append(key, String(value));
+      }
+    });
+
+    const res = await this.api.post<PaginationResponse<Item>>(
+      `${this._baseURL}${query}?${searchParams.toString()}`,
+      requestBody,
+    );
+
+    const data = res.data;
+
+    if (
+      !data ||
+      !data.pagination ||
+      typeof data.pagination.page !== "number" ||
+      typeof data.pagination.total_page !== "number"
+    ) {
+      throw new Error("Invalid pagination response from API");
+    }
+
+    return {
+      ...data,
+      data: data.data ?? [],
+    };
+  }
 }
