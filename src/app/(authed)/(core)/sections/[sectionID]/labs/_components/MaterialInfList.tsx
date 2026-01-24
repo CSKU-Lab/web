@@ -1,17 +1,20 @@
 "use client";
+
 import { Fragment, useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import type { IFilter } from "~/types/filter";
 import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
 import Filters from "~/components/commons/Filters";
 import SearchInput from "~/components/commons/SearchInput";
-import useLabMaterialInfPagination from "../_hooks/useLabMaterialInfPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
-import { Badge } from "~/components/ui/badge";
-import { MaterialType } from "~/types/cms-material";
 import { useMaterialDisplay } from "~/hooks/useMaterialDisplay";
 import useResolvePath from "~/hooks/useResolvePath";
+import { CircleCheck, CirclePlay, CircleX } from "lucide-react";
+import useCoreLab from "../_hooks/useCoreLab";
+import { LabMaterial } from "~/types/core-lab-material";
+import { Material } from "~/types/core-material";
+import MaterialListItemSkeleton from "./MaterialListItemSkeleton";
 
 function MaterialInfList() {
   const [search, setSearch] = useState("");
@@ -28,22 +31,18 @@ function MaterialInfList() {
     searchParamsToFilter(searchParams, filterFields),
   );
 
-  const { slug } = useParams();
-
+  const { useGetInfMaterial } = useCoreLab();
   const {
     data: materialPagination,
     fetchNextPage,
     hasNextPage,
     isFetching,
-  } = useLabMaterialInfPagination({
-    labID: "019b56b9-19d5-73b5-a9f1-96f36c59957f",
-    payload: {
-      page_size: 5,
-      sort_by: "created_at",
-      sort_order: "desc",
-      filters: [],
-      search: debouncedSearch,
-    },
+  } = useGetInfMaterial({
+    page_size: 5,
+    sort_by: "created_at",
+    sort_order: "desc",
+    filters: [],
+    search: debouncedSearch,
   });
 
   const bottomDivRef = useOnElementAppear({
@@ -69,31 +68,34 @@ function MaterialInfList() {
           fields={filterFields}
         />
       </div>
-      <div className="grid grid-cols-4 gap-4 w-full text-sm py-3 px-4 font-bold mt-6 border-b mb-3">
-        <p>Name</p>
-        <p>Tag</p>
-        <p>Type</p>
-        <p>Visibility</p>
+      <div className="grid grid-cols-10 gap-4 w-full text-sm py-3 px-4 font-bold mt-6 border-b mb-3">
+        <span></span>
+        <p className="col-span-9">Name</p>
       </div>
       <div className="flex flex-col divide-y divide-(--gray-3)">
-        {materialPagination.pages.map((page, pageIndex) => (
-          <Fragment key={pageIndex}>
-            {page.data.map(({ material_data }) => {
-              const { id, name, tags, type, visibility } = material_data;
+        {isFetching && materialPagination.pages.length === 0 ? (
+          <div className="flex flex-col divide-y divide-(--gray-3)">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <MaterialListItemSkeleton key={index} />
+            ))}
+          </div>
+        ) : (
+          materialPagination.pages.map((page, pageIndex) => (
+            <Fragment key={pageIndex}>
+              {page.data.map((material) => {
+                const { id, material_id, material_data } = material;
 
-              return (
-                <MaterialListItem
-                  key={id}
-                  id={id}
-                  name={name}
-                  tags={tags}
-                  type={type as MaterialType}
-                  visibility={visibility}
-                />
-              );
-            })}
-          </Fragment>
-        ))}
+                return (
+                  <MaterialListItem
+                    key={id}
+                    id={material_id}
+                    data={material_data}
+                  />
+                );
+              })}
+            </Fragment>
+          ))
+        )}
       </div>
       <div ref={bottomDivRef} className="h-20"></div>
     </div>
@@ -102,20 +104,10 @@ function MaterialInfList() {
 
 interface MaterialListItemProps {
   id: string;
-  name: string;
-  tags: string[];
-  type: MaterialType;
-  visibility: "public" | "private";
+  data: Material;
 }
 
-const MaterialListItem = ({
-  id,
-  name,
-  tags,
-  type,
-  visibility,
-}: MaterialListItemProps) => {
-  const { logoMap, visibilityStyleMap } = useMaterialDisplay();
+const MaterialListItem = ({ id, data }: MaterialListItemProps) => {
   const router = useRouter();
   const generatePath = useResolvePath();
   const handleMaterialRoute = (id: string) => {
@@ -123,42 +115,38 @@ const MaterialListItem = ({
       generatePath(`/sections/:sectionID/labs/:slug/materials/${id}`),
     );
   };
+  const statusColorMap = {
+    passed: (
+      <div className="text-green-500 flex items-center gap-2">
+        <CircleCheck />
+      </div>
+    ),
+    not_passed: (
+      <div className="text-red-500 flex items-center gap-2">
+        <CircleX />
+      </div>
+    ),
+    in_progress: (
+      <div className="text-yellow-500 flex items-center gap-2">
+        <CirclePlay />
+      </div>
+    ),
+  };
 
   return (
     <button
       onClick={() => handleMaterialRoute(id)}
       key={id}
       className="
-        grid grid-cols-4 gap-4
+        grid grid-cols-10 gap-4
         w-full px-4 py-3 text-sm items-center
         hover:underline transition-colors
         cursor-pointer
         odd:bg-(--gray-2)
       "
     >
-      <p className="font-medium truncate w-fit">{name}</p>
-
-      <div className="flex gap-1 items-center overflow-hidden">
-        {tags.slice(0, 1).map((tag) => (
-          <Badge key={tag} variant="default">
-            {tag}
-          </Badge>
-        ))}
-
-        {tags.length > 1 && <Badge variant="outline">+{tags.length - 1}</Badge>}
-      </div>
-
-      <div className="flex items-center gap-2">
-        {logoMap[type as MaterialType]}
-        <p className="text-(--gray-11) capitalize">{type}</p>
-      </div>
-
-      <Badge
-        variant="outline"
-        className={visibilityStyleMap[visibility].className}
-      >
-        {visibility}
-      </Badge>
+      {statusColorMap["not_passed"]}
+      <p className="font-medium truncate w-fit col-span-9">{data.name}</p>
     </button>
   );
 };

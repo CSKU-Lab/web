@@ -1,28 +1,29 @@
+import { GetSidebarResponse } from "~/services/core-sidebar.service";
 import type { SidebarCourse } from "../../../types";
 import CourseItem from "./CourseItem";
 import NavChevron from "./NavChevron";
 
-const Course = ({ name, icon, labs, sectionID }: SidebarCourse) => {
-  const _icon = icon ?? name[0];
+const Course = ({ name, id, status, sub_items }: GetSidebarResponse) => {
+  const _icon = "📚";
 
   return (
-    <NavChevron href={`/sections/${sectionID}`} _icon={_icon} name={name}>
+    <NavChevron href={`/sections/${id}`} _icon={_icon} name={name}>
       <div className="space-y-3">
         <p className="text-xs text-(--gray-10)">Labs</p>
 
         <div className="space-y-4">
-          {labs.map(({ name, subItems, status, labID }) => (
+          {sub_items.map(({ name, sub_items, status, id: labID }) => (
             <NavChevron
-              key={labID}
-              href={`/sections/${sectionID}/labs/${labID}`}
+              key={id + labID}
+              href={`/sections/${id}/labs/${labID}`}
               name={name}
             >
               <CourseItem
                 name={name}
-                subItems={subItems}
+                sub_items={sub_items}
                 status={status}
-                labID={labID}
-                sectionID={sectionID}
+                id={labID}
+                sectionID={id}
                 type="materials"
               />
             </NavChevron>

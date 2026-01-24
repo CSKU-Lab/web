@@ -1,6 +1,5 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
 import Link from "~/components/commons/Link";
 
 interface NavChevronProps {
