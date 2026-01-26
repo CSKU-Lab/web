@@ -42,7 +42,7 @@ export default function SectionHeader() {
           </h6>
         </div>
       </div>
-      <SectionBanner />
+      <SectionBanner banner={section.banner} />
       <div className="absolute inset-0 bg-black/60" />
     </div>
   );

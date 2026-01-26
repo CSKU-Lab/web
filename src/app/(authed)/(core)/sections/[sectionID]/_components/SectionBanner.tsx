@@ -6,9 +6,10 @@ interface SectionBannerProps {
 
 export default function SectionBanner({ banner }: SectionBannerProps) {
   return (
-    <div className="w-full h-[20rem] overflow-hidden">
+    <div className="w-full h-[20rem] relative overflow-hidden">
       {banner ? (
         <Image
+          fill
           src={banner}
           alt="Banner"
           className="aspect-video w-full object-cover scale-105"
