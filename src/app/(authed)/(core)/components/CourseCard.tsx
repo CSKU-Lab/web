@@ -61,9 +61,10 @@ const CourseList = () => {
                 className="pt-0 w-full flex flex-col hover:cursor-pointer hover:shadow-lg transition-shadow duration-200 ease-in-out"
                 onClick={() => handleCardClick(id)}
               >
-                <CardContent className="px-0 relative overflow-hidden rounded-t-xl">
+                <CardContent className="px-0 h-40 relative overflow-hidden rounded-t-xl">
                   {banner ? (
                     <Image
+                      fill
                       src={banner}
                       alt="Banner"
                       className="aspect-video w-full object-cover scale-105"
