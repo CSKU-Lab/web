@@ -1,6 +1,19 @@
+import { useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
+  DndContext,
+  DragOverlay,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragStartEvent,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
   SortableContext,
+  sortableKeyboardCoordinates,
   verticalListSortingStrategy,
   useSortable,
 } from "@dnd-kit/sortable";
@@ -9,6 +22,7 @@ import TestCaseItem from "./TestCaseItem";
 import {
   selectedTestCaseIdsAtom,
   addTestCaseToGroupAtom,
+  moveTestCaseAtom,
 } from "../../_stores/testcase-groups.store";
 import { Button } from "~/components/commons/Button";
 import { Plus } from "lucide-react";
@@ -56,14 +70,24 @@ function SortableTestCaseItem({
   };
 
   return (
-    <div ref={setNodeRef} style={style} className={isDragging ? "opacity-50" : ""}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={isDragging ? "opacity-50" : ""}
+    >
       <div className="flex items-start gap-1">
         <button
           {...attributes}
           {...listeners}
           className="cursor-grab active:cursor-grabbing text-gray-11 hover:text-gray-12 mt-2"
         >
-          <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="12"
+            height="20"
+            viewBox="0 0 12 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <circle cx="3" cy="4" r="1.5" fill="currentColor" />
             <circle cx="9" cy="4" r="1.5" fill="currentColor" />
             <circle cx="3" cy="10" r="1.5" fill="currentColor" />
@@ -87,8 +111,47 @@ function SortableTestCaseItem({
 function TestCaseList({ groupId, test_cases }: TestCaseListProps) {
   const selectedTestCaseIds = useAtomValue(selectedTestCaseIdsAtom);
   const onAddTestCase = useSetAtom(addTestCaseToGroupAtom);
+  const onMoveTestCase = useSetAtom(moveTestCaseAtom);
+
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const selectedIds = selectedTestCaseIds[groupId] || [];
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveId(null);
+
+    if (!over) return;
+
+    const activeId = active.id as string;
+    const overId = over.id as string;
+
+    const fromIndex = test_cases.findIndex((tc) => tc.id === activeId);
+    const toIndex = test_cases.findIndex((tc) => tc.id === overId);
+
+    if (
+      fromIndex !== -1 &&
+      toIndex !== -1 &&
+      fromIndex !== toIndex
+    ) {
+      onMoveTestCase({
+        groupId,
+        fromIndex,
+        toIndex,
+      });
+    }
+  };
 
   const handleAddTestCase = () => {
     onAddTestCase(groupId);
@@ -102,24 +165,38 @@ function TestCaseList({ groupId, test_cases }: TestCaseListProps) {
           Add Test Case
         </Button>
       </div>
-      <SortableContext
-        items={test_cases.map((tc) => tc.id)}
-        strategy={verticalListSortingStrategy}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
       >
-        <div className="space-y-3">
-          {test_cases.map((testCase) => (
-            <SortableTestCaseItem
-              key={testCase.id}
-              testCase={testCase}
-              groupId={groupId}
-              isSelected={selectedIds.includes(testCase.id)}
-            />
-          ))}
-        </div>
-      </SortableContext>
+        <SortableContext
+          items={test_cases.map((tc) => tc.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="space-y-3">
+            {test_cases.map((testCase) => (
+              <SortableTestCaseItem
+                key={testCase.id}
+                testCase={testCase}
+                groupId={groupId}
+                isSelected={selectedIds.includes(testCase.id)}
+              />
+            ))}
+          </div>
+        </SortableContext>
+        <DragOverlay>
+          {activeId ? (
+            <div className="bg-white border border-gray-4 rounded-md shadow-lg p-3 opacity-80">
+              <p className="text-sm text-gray-10">Moving test case...</p>
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
       {test_cases.length === 0 && (
         <div className="text-center py-6 text-gray-10 text-sm">
-          No test cases in this group. Click &ldquo;Add Test Case&rdquo; to create one.
+          No test cases in this group. Click "Add Test Case" to create one.
         </div>
       )}
     </div>
