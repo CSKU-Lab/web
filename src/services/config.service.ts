@@ -8,7 +8,7 @@ import { BaseService } from "./base.service";
 
 export class ConfigService extends BaseService {
   constructor() {
-    super("/cms/config");
+    super("/cms/configs");
   }
 
   async getRunners<T extends boolean>(opts?: {
