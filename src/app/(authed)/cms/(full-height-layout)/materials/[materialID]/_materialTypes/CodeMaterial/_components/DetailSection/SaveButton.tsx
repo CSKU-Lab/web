@@ -1,19 +1,20 @@
 import { useAtom, useAtomValue } from "jotai";
 import { Save } from "lucide-react";
-import { filesAtom, solutionRunnerIDAtom } from "../_stores/editor.store";
-import { testCaseGroupsAtom } from "../_stores/testcase-groups.store";
-import { saveStatusAtom } from "../_stores/save-status.store";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "~/queryKeys";
+import { filesAtom, solutionRunnerIDAtom } from "../../_stores/editor.store";
+import { testCaseGroupsAtom } from "../../_stores/testcase-groups.store";
 import {
   allowedRunnersAtom,
   compareScriptAtom,
   limitAtom,
-} from "../_stores/config.store";
-import { queryKeys } from "~/queryKeys";
-import { descriptionAtom } from "../_stores/description.store";
-import type { CodeMaterialPayload } from "../_types/code-material-payload";
+} from "../../_stores/config.store";
+import { descriptionAtom } from "../../_stores/description.store";
+import { saveStatusAtom } from "../../_stores/save-status.store";
+import type { CodeMaterialPayload } from "../../_types/code-material-payload";
+import { Button } from "~/components/commons/Button";
 
 function SaveButton() {
   const files = useAtomValue(filesAtom);
@@ -55,13 +56,10 @@ function SaveButton() {
 
   if (saveStatus === "UnSaved") {
     return (
-      <button
-        onClick={() => save.mutate()}
-        className="flex items-center gap-2 px-4 h-fit py-1 text-sm hover:bg-(--gray-3) rounded-md transition-colors"
-      >
+      <Button variant="action" onClick={() => save.mutate()}>
         <Save size="1rem" />
-        Save
-      </button>
+        Save Changes
+      </Button>
     );
   }
 

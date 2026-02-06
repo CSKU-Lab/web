@@ -6,7 +6,7 @@ import LottieComp from "~/components/commons/Lottie";
 import floating from "~/assets/lotties/foating.json";
 import DescriptionTab from "../_components/DescriptionTab";
 import { type Metadata } from "next";
-import DetailSection from "~/app/(authed)/cms/(full-height-layout)/materials/[materialID]/_materialTypes/CodeMaterial/_components/DetailSection";
+import DetailSection from "~/app/(authed)/cms/(full-height-layout)/materials/[materialID]/_materialTypes/CodeMaterial/_components/DetailSection/DetailSection";
 
 export const generateMetadata = async ({
   params,
