@@ -8,6 +8,7 @@ import { useAtomValue } from "jotai";
 import { saveStatusAtom } from "../_stores/save-status.store";
 import SaveButton from "./SaveButton";
 import type { JSX } from "react";
+import SettingButton from "./SettingsButton";
 
 interface HeaderDisplayOptions {
   name: boolean;
@@ -138,6 +139,7 @@ function DetailSection({
         )}
       </div>
       <SaveButton />
+      <SettingButton />
     </div>
   );
 }
