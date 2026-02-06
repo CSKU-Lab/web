@@ -66,7 +66,7 @@ function SettingsButton() {
     }) =>
       cmsMaterialService.update(materialID, {
         ...payload,
-        payload: {},
+        payload: null,
       }),
     onSuccess: () => {
       toast.success("Material updated successfully");
