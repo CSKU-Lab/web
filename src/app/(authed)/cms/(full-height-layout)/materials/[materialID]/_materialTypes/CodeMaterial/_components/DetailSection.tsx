@@ -3,12 +3,17 @@ import { Globe, Lock } from "lucide-react";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
-import useGetMaterial from "../../../_hooks/useGetMaterial";
+import useGetMaterial from "../../../../_hooks/useGetMaterial";
 import { useAtomValue } from "jotai";
-import { saveStatusAtom } from "../_stores/save-status.store";
-import SaveButton from "./SaveButton";
+import { saveStatusAtom } from "../../_stores/save-status.store";
+import SaveButton from "../SaveButton";
 import type { JSX } from "react";
-import SettingButton from "./SettingsButton";
+import SettingButton from "../SettingsButton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 interface HeaderDisplayOptions {
   name: boolean;
@@ -115,16 +120,16 @@ function DetailSection({
         </>
       ),
     },
-    {
-      idx: "status",
-      label: "Status",
-      value: renderStatus(),
-    },
+    // {
+    //   idx: "status",
+    //   label: "Status",
+    //   value: renderStatus(),
+    // },
   ];
 
   return (
-    <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 flex justify-between items-center">
-      <div className="flex gap-4">
+    <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 w-full flex items-center jubstify-between gap-4">
+      <div className="flex-1 flex gap-4 overflow-x-auto">
         {detailItems.map(
           (item) =>
             headerDisplay[item.idx] && (
@@ -138,8 +143,10 @@ function DetailSection({
             ),
         )}
       </div>
-      <SaveButton />
-      <SettingButton />
+      <div>
+        <SaveButton />
+        <SettingButton />
+      </div>
     </div>
   );
 }
@@ -151,6 +158,16 @@ interface HeaderItemProps {
   body?: () => React.ReactNode;
 }
 const HeaderItem = ({ label, value, isLoading, body }: HeaderItemProps) => {
+  const render = () => {
+		if(value.length > 20){
+		}
+    return (
+      <div className="flex items-center gap-2 max-w-64 w-fit">
+        {body && body()}
+        <h4 className="font-medium truncate">{value}</h4>
+      </div>
+    );
+  };
   return (
     <div>
       <h6 className="text-xs text-(--gray-11)">{label}</h6>
@@ -158,10 +175,15 @@ const HeaderItem = ({ label, value, isLoading, body }: HeaderItemProps) => {
         isLoading={isLoading}
         fallback={<Skeleton className="w-32 h-6" />}
       >
-        <div className="flex items-center gap-2">
-          {body && body()}
-          <h4 className="font-medium">{value}</h4>
-        </div>
+        <Tooltip>
+          <TooltipTrigger>
+            <div className="flex items-center gap-2 max-w-64 w-fit">
+              {body && body()}
+              <h4 className="font-medium truncate">{value}</h4>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>{value}</TooltipContent>
+        </Tooltip>
       </Loading>
     </div>
   );

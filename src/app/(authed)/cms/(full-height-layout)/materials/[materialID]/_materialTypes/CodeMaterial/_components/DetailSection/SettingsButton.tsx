@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { useParams } from "next/navigation";
 import { queryKeys } from "~/queryKeys";
-import useGetMaterial from "../../../_hooks/useGetMaterial";
+import useGetMaterial from "../../../../_hooks/useGetMaterial";
 
 const settingsSchema = z.object({
   name: z.string().min(1, "Material name is required"),

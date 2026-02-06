@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import useGetMaterial from "../../_hooks/useGetMaterial";
 import DescriptionSection from "./_components/DescriptionSection";
-import DetailSection from "./_components/DetailSection";
+import DetailSection from "./_components/DetailSection/index";
 import MultipleTabsSection from "./_components/MultipleTabsSection";
 import { useSetAtom } from "jotai";
 import {
