@@ -1,12 +1,13 @@
 import Input from "~/components/crafts/Input";
 import AllowedRunners from "./AllowedRunners";
 import CompareScript from "./CompareScript";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import {
   allowedRunnersAtom,
   compareScriptAtom,
   limitAtom,
 } from "../../_stores/config.store";
+import { isOwnerAtom } from "../../_stores/owner.store";
 import Label from "~/components/commons/Label";
 import { Switch } from "~/components/ui/switch";
 import type { CodeMaterialLimit } from "../../_types/limit";
@@ -15,6 +16,7 @@ function ConfigTab() {
   const [allowedRunners, setAllowedRunner] = useAtom(allowedRunnersAtom);
   const [compareScript, setCompareScript] = useAtom(compareScriptAtom);
   const [limit, setLimit] = useAtom(limitAtom);
+  const isOwner = useAtomValue(isOwnerAtom);
 
   const handleOnLimitChange = (
     field: keyof CodeMaterialLimit,
@@ -33,9 +35,9 @@ function ConfigTab() {
     <div className="p-4">
       <h5 className="my-2 font-medium">General</h5>
       <h6 className="my-2 text-sm">Allowed Runner</h6>
-      <AllowedRunners value={allowedRunners} onChange={setAllowedRunner} />
+      <AllowedRunners value={allowedRunners} onChange={setAllowedRunner} isOwner={isOwner} />
       <h6 className="my-2 text-sm">Compare Script</h6>
-      <CompareScript value={compareScript} onChange={setCompareScript} />
+      <CompareScript value={compareScript} onChange={setCompareScript} isOwner={isOwner} />
       <div className="h-1 border-b my-4"></div>
       <h5 className="my-2 font-medium">Limits</h5>
       <div className="space-y-2">
@@ -45,6 +47,7 @@ function ConfigTab() {
           isError={limit.cpu_time < 0}
           value={limit?.cpu_time.toString()}
           onChange={(e) => handleOnLimitChange("cpu_time", e.target.value)}
+          disabled={!isOwner}
         />
         <Input
           label="CPU Extra Time"
@@ -54,6 +57,7 @@ function ConfigTab() {
           onChange={(e) =>
             handleOnLimitChange("cpu_extra_time", e.target.value)
           }
+          disabled={!isOwner}
         />
         <Input
           label="Wall Time"
@@ -61,6 +65,7 @@ function ConfigTab() {
           isError={limit.wall_time < 0}
           value={limit?.wall_time.toString()}
           onChange={(e) => handleOnLimitChange("wall_time", e.target.value)}
+          disabled={!isOwner}
         />
         <Input
           label="Memory"
@@ -68,6 +73,7 @@ function ConfigTab() {
           isError={limit.memory < 0}
           value={limit?.memory.toString()}
           onChange={(e) => handleOnLimitChange("memory", e.target.value)}
+          disabled={!isOwner}
         />
         <Input
           label="Stack"
@@ -75,6 +81,7 @@ function ConfigTab() {
           isError={limit.stack < 0}
           value={limit?.stack.toString()}
           onChange={(e) => handleOnLimitChange("stack", e.target.value)}
+          disabled={!isOwner}
         />
         <Input
           label="Max Open Files"
@@ -84,6 +91,7 @@ function ConfigTab() {
           onChange={(e) =>
             handleOnLimitChange("max_open_files", e.target.value)
           }
+          disabled={!isOwner}
         />
         <Input
           label="Max File Sizes"
@@ -91,6 +99,7 @@ function ConfigTab() {
           isError={limit.max_file_size < 0}
           value={limit?.max_file_size.toString()}
           onChange={(e) => handleOnLimitChange("max_file_size", e.target.value)}
+          disabled={!isOwner}
         />
         <div className="space-y-2">
           <Label>Allow Network</Label>
@@ -99,6 +108,7 @@ function ConfigTab() {
             onCheckedChange={() =>
               setLimit({ ...limit, network_allow: !limit.network_allow })
             }
+            disabled={!isOwner}
           />
         </div>
       </div>

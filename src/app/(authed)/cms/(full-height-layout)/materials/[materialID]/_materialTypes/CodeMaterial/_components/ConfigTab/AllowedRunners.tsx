@@ -12,8 +12,9 @@ import type { RunnerConfigDetail } from "~/types/config";
 interface Props {
   value: RunnerConfigDetail[];
   onChange: (value: RunnerConfigDetail[]) => void;
+  isOwner: boolean;
 }
-function AllowedRunners({ value, onChange }: Props) {
+function AllowedRunners({ value, onChange, isOwner }: Props) {
   return (
     <AutoComplete
       value={value}
@@ -21,6 +22,7 @@ function AllowedRunners({ value, onChange }: Props) {
       queryFn={(query) =>
         configService.getRunners({ search: query, includeScript: true })
       }
+      disabled={!isOwner}
       renderSelected={({ option, handleOnRemove }) => (
         <HoverCard key={option.id}>
           <HoverCardTrigger asChild>
@@ -30,9 +32,11 @@ function AllowedRunners({ value, onChange }: Props) {
             >
               <div className="w-2 h-2 rounded-full bg-(--accent-color)"></div>
               <p className="text-sm">{option.name}</p>
-              <button onClick={() => handleOnRemove(option)}>
-                <X size="0.965rem" />
-              </button>
+              {isOwner && (
+                <button onClick={() => handleOnRemove(option)}>
+                  <X size="0.965rem" />
+                </button>
+              )}
             </div>
           </HoverCardTrigger>
           <HoverCardContent className="p-0 w-80">

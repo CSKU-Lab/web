@@ -9,6 +9,7 @@ interface Props {
   errorMessage?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 function Input({
@@ -16,6 +17,7 @@ function Input({
   placeholder,
   isError,
   errorMessage,
+  disabled,
   ...formProps
 }: Props) {
   return (
@@ -24,6 +26,7 @@ function Input({
       <SharedInput
         className="bg-white"
         placeholder={placeholder}
+        disabled={disabled}
         {...formProps}
       />
       <InlineError isError={isError}>{errorMessage}</InlineError>

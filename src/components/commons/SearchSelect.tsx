@@ -19,6 +19,7 @@ interface Props<T> extends ClassNameProps {
   queryFn?: (query: string) => Promise<T[]>;
   isError?: boolean;
   customValueRender?: (value: T) => string;
+  disabled?: boolean;
 }
 
 function SearchSelect<T extends { id: string; name: string }>({
@@ -30,6 +31,7 @@ function SearchSelect<T extends { id: string; name: string }>({
   queryFn,
   isError,
   customValueRender,
+  disabled = false,
 }: Props<T>) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -82,15 +84,17 @@ function SearchSelect<T extends { id: string; name: string }>({
   const isEmpty = !isLoading && filteredOptions.length === 0;
 
   return (
-    <Popover open={isOpen}>
+    <Popover open={isOpen && !disabled}>
       <PopoverTrigger
         ref={triggerRef}
+        disabled={disabled}
         className={cn(
           "relative w-40 border bg-white rounded-md text-left px-2 h-9",
           isError && "border-(--red-9)",
+          disabled && "opacity-50 cursor-not-allowed bg-gray-100",
           className,
         )}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
       >
         {value !== null && value !== undefined && (
           <h5 className="text-sm w-10/12 truncate">

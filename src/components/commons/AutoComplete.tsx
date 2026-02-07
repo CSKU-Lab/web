@@ -25,6 +25,7 @@ type ControlledOrUncontrolledProps<T> =
 
 type Props<T extends { id: string | number }> = {
   isError?: boolean;
+  disabled?: boolean;
   queryFn: (query: string) => Promise<T[]>;
   renderSelected?: ({
     option,
@@ -54,6 +55,7 @@ type Props<T extends { id: string | number }> = {
 
 function AutoComplete<T extends { id: string | number; display?: string }>({
   isError,
+  disabled = false,
   value: initialValue,
   onChange,
   queryFn,
@@ -158,6 +160,7 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
   }, [memoizedOptions]);
 
   const handleDivClick = () => {
+    if (disabled) return;
     setIsOpen(true);
     if (inputRef.current) {
       inputRef.current.focus();
@@ -224,6 +227,7 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
           className={cn(
             "flex flex-wrap items-center border border-(--gray-6) rounded-md px-3 py-1 min-h-9 gap-2 bg-white",
             isError && "border-(--red-9)",
+            disabled && "opacity-50 cursor-not-allowed bg-gray-100",
             className,
           )}
         >
@@ -242,7 +246,8 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
             value={inputValue}
             autoComplete="off"
             placeholder={placeHolder}
-            className="border-none flex-1 p-0 h-auto outline-none text-xs"
+            disabled={disabled}
+            className="border-none flex-1 p-0 h-auto outline-none text-xs disabled:cursor-not-allowed"
             onKeyDown={handleOnKeyDown}
             onChange={handleOnChange}
           />

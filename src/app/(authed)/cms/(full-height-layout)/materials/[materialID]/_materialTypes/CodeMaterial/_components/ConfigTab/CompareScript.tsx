@@ -4,8 +4,9 @@ import { configService } from "~/services/config.service";
 interface Props {
   value: { id: string; name: string } | null;
   onChange: (value: { id: string; name: string }) => void;
+  isOwner: boolean;
 }
-function CompareScript({ value, onChange }: Props) {
+function CompareScript({ value, onChange, isOwner }: Props) {
   const queryCompareScripts = async (query: string) => {
     const compares = await configService.getCompareScripts({ search: query });
     return compares;
@@ -15,6 +16,7 @@ function CompareScript({ value, onChange }: Props) {
       value={value}
       className="w-full"
       queryFn={queryCompareScripts}
+      disabled={!isOwner}
     >
       {(options) =>
         options.map((option) => (
