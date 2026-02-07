@@ -8,7 +8,7 @@ import { useAtomValue } from "jotai";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import SaveButton from "../SaveButton";
 import type { JSX } from "react";
-import SettingButton from "../SettingsButton";
+import SettingButton from "./DetailSection/SettingsButton";
 import {
   Tooltip,
   TooltipContent,

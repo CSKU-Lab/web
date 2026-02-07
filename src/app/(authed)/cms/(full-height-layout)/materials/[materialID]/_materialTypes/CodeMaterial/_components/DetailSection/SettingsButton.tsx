@@ -22,6 +22,8 @@ import { AxiosError } from "axios";
 import { useParams } from "next/navigation";
 import { queryKeys } from "~/queryKeys";
 import useGetMaterial from "../../../../_hooks/useGetMaterial";
+import { useAtomValue } from "jotai";
+import { isOwnerAtom } from "../../_stores/owner.store";
 
 const settingsSchema = z.object({
   name: z.string().min(1, "Material name is required"),
@@ -35,6 +37,11 @@ function SettingsButton() {
   const { materialID } = useParams<{ materialID: string }>();
   const queryClient = useQueryClient();
   const { data: material } = useGetMaterial();
+  const isOwner = useAtomValue(isOwnerAtom);
+
+  if (!isOwner) {
+    return null;
+  }
 
   const form = useForm<SettingsSchema>({
     resolver: zodResolver(settingsSchema),
