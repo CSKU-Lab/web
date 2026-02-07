@@ -6,12 +6,7 @@ import DescriptionSection from "./_components/DescriptionSection";
 import DetailSection from "./_components/DetailSection/index";
 import MultipleTabsSection from "./_components/MultipleTabsSection";
 import { useSetAtom } from "jotai";
-import {
-  initialCodeAtom,
-  filesAtom,
-  selectedFileAtom,
-  initialSolutionRunnerIDAtom,
-} from "./_stores/editor.store";
+import { filesAtom, initialSolutionRunnerIDAtom } from "./_stores/editor.store";
 import { initialTestCaseGroupsAtom } from "./_stores/testcase-groups.store";
 import { initialDescriptionAtom } from "./_stores/description.store";
 import type { CodeMaterialResponse } from "./_types/code-material-response";
@@ -21,19 +16,27 @@ import {
   initialLimitAtom,
 } from "./_stores/config.store";
 import { isLoadingAtom } from "./_stores/loading.store";
+import { isOwnerAtom } from "./_stores/owner.store";
 
-function CodeMaterial() {
+interface Props {
+  isOwner: boolean;
+}
+
+function CodeMaterial({ isOwner }: Props) {
   const { data, isLoading } = useGetMaterial();
-  const setCode = useSetAtom(initialCodeAtom);
   const setDescription = useSetAtom(initialDescriptionAtom);
   const setTestCaseGroups = useSetAtom(initialTestCaseGroupsAtom);
   const setFiles = useSetAtom(filesAtom);
-  const setSelectedFile = useSetAtom(selectedFileAtom);
   const setSolutionRunnerID = useSetAtom(initialSolutionRunnerIDAtom);
   const setAllowedRunners = useSetAtom(initialAllowedRunnersAtom);
   const setCompareScript = useSetAtom(initialCompareScriptAtom);
   const setLimit = useSetAtom(initialLimitAtom);
   const setIsLoading = useSetAtom(isLoadingAtom);
+  const setIsOwner = useSetAtom(isOwnerAtom);
+
+  useEffect(() => {
+    setIsOwner(isOwner);
+  }, [isOwner, setIsOwner]);
 
   useEffect(() => {
     setIsLoading(isLoading);
@@ -48,7 +51,6 @@ function CodeMaterial() {
 
       if (payload.solution_files?.length) {
         setFiles(payload.solution_files);
-        setSelectedFile(payload.solution_files[0].name);
       }
 
       setAllowedRunners(payload.allowed_runners);
@@ -58,11 +60,9 @@ function CodeMaterial() {
   }, [
     data,
     isLoading,
-    setCode,
     setTestCaseGroups,
     setDescription,
     setFiles,
-    setSelectedFile,
     setSolutionRunnerID,
     setAllowedRunners,
     setCompareScript,

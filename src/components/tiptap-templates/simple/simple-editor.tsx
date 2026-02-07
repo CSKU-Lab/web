@@ -70,8 +70,6 @@ import { LinkIcon } from "~/components/tiptap-icons/link-icon";
 
 // --- Hooks ---
 import { useIsMobile } from "~/hooks/use-mobile";
-import { useWindowSize } from "~/hooks/use-window-size";
-import { useCursorVisibility } from "~/hooks/use-cursor-visibility";
 
 // --- Styles ---
 import "~/components/tiptap-templates/simple/simple-editor.scss";
@@ -191,18 +189,19 @@ interface Props extends ClassNameProps {
   onUploadImage?: UploadFunction;
   maxFileUploadSize?: number;
   isLoading?: boolean;
+  readOnly?: boolean;
 }
 
 export function SimpleEditor({
   className,
   initialValue = null,
-  onChange = () => {},
+  onChange,
   onUploadImage,
   maxFileUploadSize = -1,
   isLoading = false,
+  readOnly = false,
 }: Props) {
   const isMobile = useIsMobile();
-  const { height } = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
     "main" | "highlighter" | "link"
   >("main");
@@ -247,10 +246,16 @@ export function SimpleEditor({
       TableKit,
     ],
     content: initialValue,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getJSON());
+    onUpdate: ({ editor, transaction }) => {
+      if (!transaction.docChanged) return;
+      onChange?.(editor.getJSON());
     },
   });
+
+  React.useEffect(() => {
+    if (!editor) return;
+    editor.setEditable(!readOnly);
+  }, [readOnly, editor]);
 
   const isSetInitialValue = React.useRef(false);
   React.useEffect(() => {
@@ -261,11 +266,6 @@ export function SimpleEditor({
     }
   }, [initialValue, editor]);
 
-  const rect = useCursorVisibility({
-    editor,
-    overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
-  });
-
   React.useEffect(() => {
     if (!isMobile && mobileView !== "main") {
       setMobileView("main");
@@ -274,23 +274,25 @@ export function SimpleEditor({
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <Toolbar
-        ref={toolbarRef}
-        className={cn(isLoading && "opacity-50 pointer-events-none")}
-      >
-        {mobileView === "main" ? (
-          <MainToolbarContent
-            onHighlighterClick={() => setMobileView("highlighter")}
-            onLinkClick={() => setMobileView("link")}
-            isMobile={isMobile}
-          />
-        ) : (
-          <MobileToolbarContent
-            type={mobileView === "highlighter" ? "highlighter" : "link"}
-            onBack={() => setMobileView("main")}
-          />
-        )}
-      </Toolbar>
+      {!readOnly && (
+        <Toolbar
+          ref={toolbarRef}
+          className={cn(isLoading && "opacity-50 pointer-events-none")}
+        >
+          {mobileView === "main" ? (
+            <MainToolbarContent
+              onHighlighterClick={() => setMobileView("highlighter")}
+              onLinkClick={() => setMobileView("link")}
+              isMobile={isMobile}
+            />
+          ) : (
+            <MobileToolbarContent
+              type={mobileView === "highlighter" ? "highlighter" : "link"}
+              onBack={() => setMobileView("main")}
+            />
+          )}
+        </Toolbar>
+      )}
 
       {isLoading ? (
         <div className={cn("simple-editor-content p-4 space-y-3", className)}>

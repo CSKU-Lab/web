@@ -5,6 +5,7 @@ import SaveButton from "./SaveButton";
 import SaveStatus from "./SaveStatus";
 import SettingsButton from "./SettingsButton";
 import { Globe, Lock } from "lucide-react";
+import UserProfileImage from "~/components/Menus/UserProfileImage";
 
 function DetailSection() {
   const { data: detail, isLoading } = useGetMaterial();
@@ -19,7 +20,16 @@ function DetailSection() {
         />
         <HeaderItem
           label="Created By"
-          value={detail?.created_by}
+          value={
+            <div className="flex items-center gap-1.5">
+              <UserProfileImage
+                src={detail?.created_by?.profile_image}
+                username={detail?.created_by?.username ?? ""}
+                size="1.25rem"
+              />
+              <h4 className="font-medium">{detail?.created_by.display_name}</h4>
+            </div>
+          }
           isLoading={isLoading}
         />
 
