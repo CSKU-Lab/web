@@ -23,6 +23,8 @@ function RightSection() {
           permissions={{
             writeFiles: true,
             modifyFiles: false,
+            codeExecution: true,
+            selectRunner: true,
           }}
           queryRunnerFn={queryRunners}
         />

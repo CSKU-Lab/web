@@ -8,7 +8,6 @@ function SubmissionList() {
 
   return (
     <div className="space-y-4">
-      <h4 className="text-(--gray-12) font-medium text-sm">Your Submissions</h4>
       <PassedCard
         onClick={() =>
           setSubmissionAtom({ selectedSubmissionId: "third-time" })

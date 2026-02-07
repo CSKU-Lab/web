@@ -45,7 +45,7 @@ async function MaterialPage(props: { params: Promise<{ problemId: string }> }) {
     <>
       <DetailSection />
       <div className="flex flex-1 min-h-0">
-        <LeftSection descriptionTab={<DescriptionTab />} />
+        <LeftSection />
         <RightSection />
       </div>
     </>

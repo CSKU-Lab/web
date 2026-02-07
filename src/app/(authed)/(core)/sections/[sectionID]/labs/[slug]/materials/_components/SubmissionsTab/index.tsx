@@ -5,11 +5,16 @@ import SubmissionDetail from "./SubmissionDetail";
 
 function SumissionsTab() {
   const [{ selectedSubmissionId }] = useAtom(submissionAtom);
-  if (selectedSubmissionId === null) {
-    return <SubmissionList />;
-  }
 
-  return <SubmissionDetail />;
+  return (
+    <div className="p-4">
+      {selectedSubmissionId !== null ? (
+        <SubmissionDetail />
+      ) : (
+        <SubmissionList />
+      )}
+    </div>
+  );
 }
 
 export default SumissionsTab;
