@@ -35,7 +35,7 @@ class SubmissionService extends BaseService {
 
   async listenByID(submissionID: string): Promise<EventSource> {
     const eventSource = new EventSource(
-      this._baseURL + `/submissions/${submissionID}`,
+      this._baseURL + `/api/v1/submissions/${submissionID}/listen`,
       {
         withCredentials: true,
       },
