@@ -5,42 +5,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/commons/Select";
-import { useGetRunners } from "../../../../_hooks/useGetRunners";
-import { useAtom } from "jotai";
-import { errorAtom, solutionRunnerIDAtom } from "../../_stores/editor.store";
 import { cn } from "~/lib/tiptap-utils";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import type { Runner } from "./types/runner";
 
-function RunnerSelect() {
-  const { data: runners, isFetching } = useGetRunners();
-  const [solutionRunnerID, setSolutionRunnerID] = useAtom(solutionRunnerIDAtom);
-  const [error, setError] = useAtom(errorAtom);
-  const isError = error === "NO_RUNNER";
-
-  const handleOnValueChange = (value: string) => {
-    setError(null);
-    setSolutionRunnerID(value);
-  };
-
+interface Props {
+  runners: Runner[];
+  selectedRunnerID: string;
+  onSelect: (runnerID: string) => void;
+  isLoading?: boolean;
+  isError?: boolean;
+}
+function RunnerSelect({
+  runners,
+  selectedRunnerID,
+  onSelect,
+  isLoading,
+  isError,
+}: Props) {
   return (
     <Tooltip open={isError}>
-      <Select value={solutionRunnerID} onValueChange={handleOnValueChange}>
+      <Select value={selectedRunnerID} onValueChange={onSelect}>
         <TooltipTrigger asChild>
           <SelectTrigger
-            className={cn(
-              "absolute h-6 right-2 top-2 z-20 text-xs",
-              isError && "border-red-500",
-            )}
+            className={cn("h-6 z-20 text-xs", isError && "border-red-500")}
           >
+            <span className="mr-1">Runner:</span>
             <SelectValue placeholder="Select a runner" />
           </SelectTrigger>
         </TooltipTrigger>
         <SelectContent>
-          {isFetching && (
+          {isLoading && (
             <div className="p-2 text-center text-xs text-(--gray-11)">
               Loading...
             </div>

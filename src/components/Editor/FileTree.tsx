@@ -33,32 +33,25 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import useDrag from "~/hooks/useDrag";
-import { useAtomValue } from "jotai";
-import { isLoadingAtom } from "../../_stores/loading.store";
-
-export interface CodeMaterialSolutionFile {
-  name: string;
-  content: string;
-}
+import type { CodeFile } from "./types/editor";
 
 interface FileTreeProps {
-  files: CodeMaterialSolutionFile[];
+  files: CodeFile[];
   selectedFile: string | null;
   onSelectFile: (name: string) => void;
-  onCreateFile: (name: string) => void;
-  onDeleteFile: (name: string) => void;
-  onRenameFile: (oldName: string, newName: string) => void;
+  onChange: (newFiles: CodeFile[]) => void;
+  isLoading?: boolean;
+  allowModify?: boolean;
 }
 
 function FileTree({
   files,
   selectedFile,
+  onChange,
   onSelectFile,
-  onCreateFile,
-  onDeleteFile,
-  onRenameFile,
+  isLoading,
+  allowModify,
 }: FileTreeProps) {
-  const isLoading = useAtomValue(isLoadingAtom);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -79,7 +72,8 @@ function FileTree({
 
   const handleCreateFile = () => {
     if (!isInvalid) {
-      onCreateFile(newFileName.trim());
+      const newFiles = [...files, { name: newFileName.trim(), content: "" }];
+      onChange(newFiles);
       setNewFileName("");
       setIsDialogOpen(false);
     }
@@ -99,7 +93,8 @@ function FileTree({
 
   const handleConfirmDelete = () => {
     if (fileToDelete) {
-      onDeleteFile(fileToDelete);
+      const newFiles = files.filter((f) => f.name !== fileToDelete);
+      onChange(newFiles);
       setFileToDelete(null);
       setDeleteDialogOpen(false);
     }
@@ -113,7 +108,10 @@ function FileTree({
 
   const handleConfirmRename = () => {
     if (fileToRename && renameValue.trim() && renameValue !== fileToRename) {
-      onRenameFile(fileToRename, renameValue.trim());
+      const newFiles = files.map((f) =>
+        f.name === fileToRename ? { ...f, name: renameValue.trim() } : f,
+      );
+      onChange(newFiles);
       setFileToRename(null);
       setRenameValue("");
       setRenameDialogOpen(false);
@@ -130,7 +128,7 @@ function FileTree({
         <h6 className="text-xs">Files</h6>
         {isLoading ? (
           <Skeleton className="h-5 w-16" />
-        ) : (
+        ) : allowModify ? (
           <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -186,7 +184,7 @@ function FileTree({
               </DialogFooter>
             </DialogContent>
           </Dialog>
-        )}
+        ) : null}
       </div>
       <div className="space-y-1.5 px-1">
         {isLoading ? (
@@ -212,35 +210,37 @@ function FileTree({
                 <FileIcon className="w-4 h-4 shrink-0" />
                 <span className="truncate">{file.name}</span>
               </button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="absolute right-1 p-1 opacity-0 group-hover:opacity-100 hover:bg-(--gray-6) rounded transition-opacity">
-                    <MoreHorizontal size="1rem" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onSelect={(e) => {
-                      e.preventDefault();
-                      handleRenameClick(file.name);
-                    }}
-                  >
-                    <Pencil size="1rem" />
-                    Rename
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    variant="destructive"
-                    className="text-(--red-11) focus:text-(--red-11)"
-                    onSelect={(e) => {
-                      e.preventDefault();
-                      handleDeleteClick(file.name);
-                    }}
-                  >
-                    <Trash2 size="1rem" />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {allowModify && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="absolute right-1 p-1 opacity-0 group-hover:opacity-100 hover:bg-(--gray-6) rounded transition-opacity">
+                      <MoreHorizontal size="1rem" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onSelect={(e) => {
+                        e.preventDefault();
+                        handleRenameClick(file.name);
+                      }}
+                    >
+                      <Pencil size="1rem" />
+                      Rename
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      variant="destructive"
+                      className="text-(--red-11) focus:text-(--red-11)"
+                      onSelect={(e) => {
+                        e.preventDefault();
+                        handleDeleteClick(file.name);
+                      }}
+                    >
+                      <Trash2 size="1rem" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
           ))
         )}

@@ -2,11 +2,13 @@
 import { GripVertical } from "lucide-react";
 import useDrag from "~/hooks/useDrag";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
-import { useAtom, useAtomValue } from "jotai";
-import { descriptionAtom } from "../_stores/description.store";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { descriptionAtom, editorAtom } from "../_stores/description.store";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { useParams } from "next/navigation";
 import { isLoadingAtom } from "../_stores/loading.store";
+import { isOwnerAtom } from "../_stores/owner.store";
+import { useEffect } from "react";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -19,13 +21,13 @@ function DescriptionSection() {
   const isLoading = useAtomValue(isLoadingAtom);
   const [description, setDescription] = useAtom(descriptionAtom);
   const { materialID } = useParams<{ materialID: string }>();
+  const isOwner = useAtomValue(isOwnerAtom);
 
   const handleImageUpload = async (
     file: File,
     onProgress?: (event: { progress: number }) => void,
     abortSignal?: AbortSignal,
   ): Promise<string> => {
-    // Validate file
     if (!file) {
       throw new Error("No file provided");
     }
@@ -36,8 +38,6 @@ function DescriptionSection() {
       );
     }
 
-    // For demo/testing: Simulate upload progress. In production, replace the following code
-    // with your own upload implementation.
     try {
       const res = await cmsMaterialService.uploadAsset(
         materialID,
@@ -75,9 +75,10 @@ function DescriptionSection() {
       </div>
       <div className="flex-1 max-h-full overflow-auto">
         <SimpleEditor
+          onChange={setDescription}
+          readOnly={!isOwner}
           isLoading={isLoading}
           initialValue={description}
-          onChange={setDescription}
           onUploadImage={handleImageUpload}
           maxFileUploadSize={MAX_FILE_SIZE}
         />

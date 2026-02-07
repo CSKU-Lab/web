@@ -1,15 +1,18 @@
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import CodeMaterial from "./_materialTypes/CodeMaterial";
+import { getUser } from "~/lib/get-user";
 
 async function MaterialPage(props: {
   params: Promise<{ materialID: string }>;
 }) {
   const params = await props.params;
   const material = await cmsMaterialService.getById(params.materialID);
+  const user = await getUser();
+  const isOwner = material.created_by.id === user.sub;
 
   if (material.type === "code") {
-    return <CodeMaterial />;
+    return <CodeMaterial isOwner={isOwner} />;
   }
 
   return (

@@ -1,8 +1,10 @@
 import { atom } from "jotai";
 import { saveStatusAtom } from "./save-status.store";
-import type { JSONContent } from "@tiptap/react";
+import type { Editor, JSONContent } from "@tiptap/react";
 
 const internalDescriptionAtom = atom<JSONContent | null>(null);
+
+export const editorAtom = atom<Editor | null>(null);
 
 export const initialDescriptionAtom = atom(
   null,

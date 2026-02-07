@@ -9,25 +9,21 @@ import IOButton from "./IOButton";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import useDrag from "~/hooks/useDrag";
 import { useState } from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import {
-  errorAtom,
-  filesAtom,
-  playgroundAtom,
-  solutionRunnerIDAtom,
-} from "../../_stores/editor.store";
 import type { CodeExecutionResult } from "~/types/code-execution-result";
 import { env } from "~/lib/env";
+import type { CodeFile } from "~/types/code-material";
+import { kiloToMegaBytes } from "./utils/kilo-to-megabytes";
 
-const kiloToMegaBytes = (kilobyte: number): number => {
-  const mb = kilobyte / 1024;
-  const fixedMb = parseFloat(mb.toFixed(2));
-  return fixedMb;
-};
+interface Props {
+  runnerID: string;
+  files: CodeFile[];
+  onError(error: "NO_RUNNER" | null): void;
+}
 
-function Playground() {
+function Playground({ runnerID, files, onError }: Props) {
   const [selectedTab, setSelectedTab] = useState<"input" | "output">("input");
-  const [{ input, output }, update] = useAtom(playgroundAtom);
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
 
   const { buttonRef, containerRef, size, events } = useDrag({
     initialSize: 200,
@@ -35,21 +31,17 @@ function Playground() {
   });
 
   const handleOnChange = (value: string) => {
-    if (selectedTab === "input") {
-      update({ type: "input", value });
-    }
+    if (selectedTab === "output") return;
+    setInput(value);
   };
 
-  const solutionRunnerID = useAtomValue(solutionRunnerIDAtom);
-  const setError = useSetAtom(errorAtom);
-  const files = useAtomValue(filesAtom);
   const [result, setResult] = useState<CodeExecutionResult | null>(null);
   const isRunning =
     result?.status === "STATUS_RUNNING" || result?.status === "STATUS_QUEUED";
 
   const handleRunCode = async () => {
-    if (solutionRunnerID === "") {
-      setError("NO_RUNNER");
+    if (runnerID === "") {
+      onError("NO_RUNNER");
       return;
     }
     setResult(null);
@@ -59,7 +51,7 @@ function Playground() {
       body: JSON.stringify({
         files,
         input,
-        runner_id: solutionRunnerID,
+        runner_id: runnerID,
       }),
     });
 
@@ -82,12 +74,13 @@ function Playground() {
           if (event === "done") break;
 
           const data = JSON.parse(dataLine.slice(5)) as CodeExecutionResult;
+          console.log(data);
 
           if (
             data.status !== "STATUS_QUEUED" &&
             data.status !== "STATUS_RUNNING"
           ) {
-            update({ type: "output", value: data.output });
+            setOutput(data.output);
             setSelectedTab("output");
           }
           setResult(data);

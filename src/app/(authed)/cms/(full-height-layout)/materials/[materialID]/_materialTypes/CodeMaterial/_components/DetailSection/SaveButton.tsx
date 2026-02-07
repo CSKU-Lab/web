@@ -17,11 +17,11 @@ import type { CodeMaterialPayload } from "../../_types/code-material-payload";
 import { Button } from "~/components/commons/Button";
 
 function SaveButton() {
-  const files = useAtomValue(filesAtom);
   const testCaseGroups = useAtomValue(testCaseGroupsAtom);
   const allowedRunners = useAtomValue(allowedRunnersAtom);
   const compareScript = useAtomValue(compareScriptAtom);
   const description = useAtomValue(descriptionAtom);
+  const files = useAtomValue(filesAtom);
   const solutionRunnerID = useAtomValue(solutionRunnerIDAtom);
   const limit = useAtomValue(limitAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
