@@ -1,17 +1,17 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
+import { useAtom } from "jotai";
 import CodeEditor from "~/components/Editor/CodeEditor";
 import { configService } from "~/services/config.service";
-import type { CodeFile } from "~/types/code-material";
+import {
+  submissionFilesAtom,
+  selectedRunnerIDAtom,
+} from "../[materialID]/_stores/submission.store";
 
 function RightSection() {
-  const [files, setFiles] = useState<CodeFile[]>([
-    {
-      name: "main.py",
-      content: "# Write your code here\nprint('Hello, World!')\n",
-    },
-  ]);
+  const [files, setFiles] = useAtom(submissionFilesAtom);
+  const [selectedRunnerID, setSelectedRunnerID] = useAtom(selectedRunnerIDAtom);
   const queryRunners = useCallback(() => configService.getRunners(), []);
 
   return (
@@ -27,6 +27,8 @@ function RightSection() {
             selectRunner: true,
           }}
           queryRunnerFn={queryRunners}
+          initialSelectedRunnerID={selectedRunnerID}
+          onChangeSelectedRunnerID={setSelectedRunnerID}
         />
       </div>
     </div>

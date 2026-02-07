@@ -26,8 +26,11 @@ export const generateMetadata = async ({
   };
 };
 
-async function MaterialPage(props: { params: Promise<{ problemId: string }> }) {
+async function MaterialPage(props: {
+  params: Promise<{ sectionID: string; slug: string; materialID: string }>;
+}) {
   const params = await props.params;
+  const { sectionID, slug: labID, materialID } = params;
   const userAgent = (await headers()).get("User-Agent");
 
   if (isFromMobile(userAgent)) {
@@ -43,7 +46,11 @@ async function MaterialPage(props: { params: Promise<{ problemId: string }> }) {
 
   return (
     <>
-      <DetailSection />
+      <DetailSection
+        sectionID={sectionID}
+        labID={labID}
+        materialID={materialID}
+      />
       <div className="flex flex-1 min-h-0">
         <LeftSection />
         <RightSection />

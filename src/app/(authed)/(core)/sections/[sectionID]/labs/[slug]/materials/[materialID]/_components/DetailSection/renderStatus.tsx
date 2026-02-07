@@ -1,6 +1,6 @@
 import { cn } from "~/lib/utils";
 
-type StatusType = "NO_SUBMISSION" | "PASSED" | "FAILED";
+export type StatusType = "NO_SUBMISSION" | "PASSED" | "FAILED" | "GRADING";
 
 export const renderStatus = (status: StatusType) => {
   let text = "";
@@ -18,6 +18,10 @@ export const renderStatus = (status: StatusType) => {
     case "FAILED":
       text = "Failed";
       colorClass = "bg-(--red-9)";
+      break;
+    case "GRADING":
+      text = "Grading";
+      colorClass = "bg-(--amber-9)";
       break;
   }
 
