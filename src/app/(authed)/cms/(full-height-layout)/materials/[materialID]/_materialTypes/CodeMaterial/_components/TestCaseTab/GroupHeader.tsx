@@ -17,6 +17,7 @@ interface GroupHeaderProps {
   isSelected: boolean;
   isExpanded: boolean;
   onToggleExpand: () => void;
+  isOwner: boolean;
 }
 
 function GroupHeader({
@@ -24,6 +25,7 @@ function GroupHeader({
   isSelected,
   isExpanded,
   onToggleExpand,
+  isOwner,
 }: GroupHeaderProps) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameValue, setNameValue] = useState(group.name);
@@ -64,39 +66,43 @@ function GroupHeader({
 
   return (
     <div className="flex items-center gap-2 p-3 bg-gray-2 border-b rounded-t-md">
-      <button className="cursor-grab active:cursor-grabbing text-gray-11 hover:text-gray-12">
-        <GripVertical size="1.25rem" />
-      </button>
+      {isOwner && (
+        <button className="cursor-grab active:cursor-grabbing text-gray-11 hover:text-gray-12">
+          <GripVertical size="1.25rem" />
+        </button>
+      )}
 
-      <label
-        className={`flex items-center justify-center w-5 h-5 rounded border cursor-pointer transition-colors ${
-          isSelected
-            ? "bg-blue-5 border-blue-5 text-white"
-            : "border-gray-4 hover:border-gray-6"
-        }`}
-      >
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={() => onToggleSelect(group.id)}
-          className="sr-only"
-        />
-        {isSelected && (
-          <svg
-            className="w-3 h-3"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={3}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-        )}
-      </label>
+      {isOwner && (
+        <label
+          className={`flex items-center justify-center w-5 h-5 rounded border cursor-pointer transition-colors ${
+            isSelected
+              ? "bg-blue-5 border-blue-5 text-white"
+              : "border-gray-4 hover:border-gray-6"
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => onToggleSelect(group.id)}
+            className="sr-only"
+          />
+          {isSelected && (
+            <svg
+              className="w-3 h-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          )}
+        </label>
+      )}
 
       <button
         onClick={onToggleExpand}
@@ -105,7 +111,7 @@ function GroupHeader({
         {isExpanded ? <ChevronUp size="1.25rem" /> : <ChevronDown size="1.25rem" />}
       </button>
 
-      {isEditingName ? (
+      {isOwner && isEditingName ? (
         <input
           type="text"
           value={nameValue}
@@ -117,8 +123,8 @@ function GroupHeader({
         />
       ) : (
         <button
-          onClick={() => setIsEditingName(true)}
-          className="flex-1 text-left px-2 py-1 text-sm font-medium hover:bg-gray-3 rounded transition-colors"
+          onClick={() => isOwner && setIsEditingName(true)}
+          className={`flex-1 text-left px-2 py-1 text-sm font-medium rounded transition-colors ${isOwner ? "hover:bg-gray-3" : "cursor-default"}`}
         >
           {group.name}
         </button>
@@ -132,21 +138,24 @@ function GroupHeader({
           value={group.score}
           onChange={handleScoreChange}
           className="w-20 h-8 text-sm"
+          disabled={!isOwner}
         />
       </div>
 
-      <div className="flex items-center gap-1">
-        <Button variant="ghost" onClick={() => onDuplicate(group.id)}>
-          <Copy size="1rem" />
-        </Button>
-        <Button
-          variant="ghost"
-          onClick={() => onRemove(group.id)}
-          className="text-(--red-11) hover:text-(--red-12) hover:bg-(--red-3)"
-        >
-          <Trash2 size="1rem" />
-        </Button>
-      </div>
+      {isOwner && (
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" onClick={() => onDuplicate(group.id)}>
+            <Copy size="1rem" />
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => onRemove(group.id)}
+            className="text-(--red-11) hover:text-(--red-12) hover:bg-(--red-3)"
+          >
+            <Trash2 size="1rem" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

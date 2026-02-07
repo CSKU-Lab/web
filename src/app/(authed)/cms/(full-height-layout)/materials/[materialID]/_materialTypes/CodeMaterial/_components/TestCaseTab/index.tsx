@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
+import { isOwnerAtom } from "../../_stores/owner.store";
 import {
   DndContext,
   DragOverlay,
@@ -43,6 +44,7 @@ interface SortableGroupCardProps {
   isExpanded: boolean;
   onToggleExpand: () => void;
   isSelected: boolean;
+  isOwner: boolean;
 }
 
 function SortableGroupCard({
@@ -50,6 +52,7 @@ function SortableGroupCard({
   isExpanded,
   onToggleExpand,
   isSelected,
+  isOwner,
 }: SortableGroupCardProps) {
   const { setNodeRef, transform, transition, isDragging } = useSortable({
     id: group.id,
@@ -73,9 +76,10 @@ function SortableGroupCard({
         isSelected={isSelected}
         isExpanded={isExpanded}
         onToggleExpand={onToggleExpand}
+        isOwner={isOwner}
       />
       {isExpanded && (
-        <TestCaseList groupId={group.id} test_cases={group.test_cases} />
+        <TestCaseList groupId={group.id} test_cases={group.test_cases} isOwner={isOwner} />
       )}
     </div>
   );
@@ -85,6 +89,7 @@ function TestCaseTab() {
   const testCaseGroups = useAtomValue(testCaseGroupsAtom);
   const selectedGroupIds = useAtomValue(selectedGroupIdsAtom);
   const selectedTestCaseIds = useAtomValue(selectedTestCaseIdsAtom);
+  const isOwner = useAtomValue(isOwnerAtom);
 
   const [isMounted, setIsMounted] = useState(false);
   const [expandedGroupIds, setExpandedGroupIds] = useState<Set<string>>(
@@ -233,7 +238,7 @@ function TestCaseTab() {
         >
           <div className="flex justify-between items-center gap-2 flex-wrap mb-4">
             <div className="flex items-center gap-2">
-              {testCaseGroups.length > 0 && (
+              {isOwner && testCaseGroups.length > 0 && (
                 <button
                   onClick={
                     isAllGroupsSelected
@@ -255,14 +260,14 @@ function TestCaseTab() {
                   )}
                 </button>
               )}
-              {totalSelectedCount > 0 && (
+              {isOwner && totalSelectedCount > 0 && (
                 <span className="text-sm text-gray-10">
                   {totalSelectedCount} selected
                 </span>
               )}
             </div>
             <div className="flex items-center gap-2">
-              {totalSelectedCount > 0 && (
+              {isOwner && totalSelectedCount > 0 && (
                 <>
                   <Button
                     variant="ghost"
@@ -292,7 +297,7 @@ function TestCaseTab() {
                   <div className="w-px h-6 bg-gray-4 mx-1" />
                 </>
               )}
-              <AddGroupButton />
+              {isOwner && <AddGroupButton />}
             </div>
           </div>
 
@@ -308,6 +313,7 @@ function TestCaseTab() {
                   isExpanded={expandedGroupIds.has(group.id)}
                   onToggleExpand={() => toggleExpand(group.id)}
                   isSelected={selectedGroupIds.includes(group.id)}
+                  isOwner={isOwner}
                 />
               ))}
             </div>

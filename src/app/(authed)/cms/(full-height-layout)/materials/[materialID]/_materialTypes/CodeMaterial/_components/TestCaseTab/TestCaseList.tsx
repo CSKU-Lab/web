@@ -36,6 +36,7 @@ interface TestCaseListProps {
     output: string;
     isHidden?: boolean;
   }>;
+  isOwner: boolean;
 }
 
 interface SortableTestCaseItemProps {
@@ -48,12 +49,14 @@ interface SortableTestCaseItemProps {
   };
   groupId: string;
   isSelected: boolean;
+  isOwner: boolean;
 }
 
 function SortableTestCaseItem({
   testCase,
   groupId,
   isSelected,
+  isOwner,
 }: SortableTestCaseItemProps) {
   const {
     attributes,
@@ -76,11 +79,12 @@ function SortableTestCaseItem({
       className={isDragging ? "opacity-50" : ""}
     >
       <div className="flex items-start gap-1">
-        <button
-          {...attributes}
-          {...listeners}
-          className="cursor-grab active:cursor-grabbing text-gray-11 hover:text-gray-12 mt-2"
-        >
+        {isOwner && (
+          <button
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing text-gray-11 hover:text-gray-12 mt-2"
+          >
           <svg
             width="12"
             height="20"
@@ -96,11 +100,13 @@ function SortableTestCaseItem({
             <circle cx="9" cy="16" r="1.5" fill="currentColor" />
           </svg>
         </button>
+        )}
         <div className="flex-1">
           <TestCaseItem
             testCase={testCase}
             groupId={groupId}
             isSelected={isSelected}
+            isOwner={isOwner}
           />
         </div>
       </div>
@@ -108,7 +114,7 @@ function SortableTestCaseItem({
   );
 }
 
-function TestCaseList({ groupId, test_cases }: TestCaseListProps) {
+function TestCaseList({ groupId, test_cases, isOwner }: TestCaseListProps) {
   const selectedTestCaseIds = useAtomValue(selectedTestCaseIdsAtom);
   const onAddTestCase = useSetAtom(addTestCaseToGroupAtom);
   const onMoveTestCase = useSetAtom(moveTestCaseAtom);
@@ -159,12 +165,14 @@ function TestCaseList({ groupId, test_cases }: TestCaseListProps) {
 
   return (
     <div className="p-3 bg-gray-1 border-b rounded-b-md">
-      <div className="mb-3">
-        <Button variant="ghost" onClick={handleAddTestCase}>
-          <Plus size="1rem" />
-          Add Test Case
-        </Button>
-      </div>
+      {isOwner && (
+        <div className="mb-3">
+          <Button variant="ghost" onClick={handleAddTestCase}>
+            <Plus size="1rem" />
+            Add Test Case
+          </Button>
+        </div>
+      )}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -182,6 +190,7 @@ function TestCaseList({ groupId, test_cases }: TestCaseListProps) {
                 testCase={testCase}
                 groupId={groupId}
                 isSelected={selectedIds.includes(testCase.id)}
+                isOwner={isOwner}
               />
             ))}
           </div>
