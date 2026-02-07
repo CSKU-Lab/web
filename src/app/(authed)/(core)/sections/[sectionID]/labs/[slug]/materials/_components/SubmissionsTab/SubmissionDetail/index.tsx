@@ -7,24 +7,24 @@ import CodeBlock from "./CodeBlock";
 
 function Submission() {
   const [isFetching, setIsFetching] = useState(false);
-  useEffect(() => {
-    const controller = new AbortController();
-    const getData = async () => {
-      setIsFetching(true);
-      await fetch(`${process.env.PUBLIC_URL}/api/timeout-request`, {
-        method: "POST",
-        body: JSON.stringify({
-          timeout: 4000,
-        }),
-        signal: controller.signal,
-      });
-      setIsFetching(false);
-    };
+  // useEffect(() => {
+  //   const controller = new AbortController();
+  //   const getData = async () => {
+  //     setIsFetching(true);
+  //     await fetch(`${process.env.PUBLIC_URL}/api/timeout-request`, {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         timeout: 4000,
+  //       }),
+  //       signal: controller.signal,
+  //     });
+  //     setIsFetching(false);
+  //   };
 
-    getData();
+  //   getData();
 
-    return () => controller.abort("Changed Submission");
-  }, []);
+  //   return () => controller.abort("Changed Submission");
+  // }, []);
 
   if (isFetching) return <Loading />;
 

@@ -1,0 +1,306 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        {
+          "type": "text",
+          "text": "เกมแบล็กแจ็ค (blackjack) หรือเกม 21 แต้ม เป็นเกมไพ่ที่มีการเล่นเกมแบบง่าย ๆ คือ เริ่มจากการจั่วไพ่ 2 ใบจากสำรับ ไพ่ A มีคะแนน 1 หรือ 11 คะแนน, ไพ่ 2-10 มีคะแนนตามเลขบนไพ่ และไพ่ J Q K มีคะแนน 10 คะแนน ผู้เล่นต้องการให้คะแนนรวมของไพ่บนมือมีมากที่สุด แต่ไม่เกิน 21 คะแนน เมื่อจั่วไพ่ 2 ใบแรกแล้ว ผู้เล่นสามารถเลือกที่จะหยุดหรือจั่วไพ่เพิ่มได้อีกไม่เกิน 3 ไพ่ (รวมมีไพ่บนมือไม่เกิน 5 ใบ) เพื่อให้คะแนนรวมของไพ่บนมือสูงขึ้น แต่ในขณะเดียวกันก็มีโอกาสทำให้คะแนนรวมเกิน 21 คะแนน หากคะแนนรวมของไพ่บนมือเกิน 21 คะแนน จะถือว่าผู้เล่นคนนั้นแพ้ (busted)"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        {
+          "type": "text",
+          "text": "เนื่องจากเกมนี้เป็นเกมที่ต้องเล่นหลายคน (multiplayer game) คุณจึงต้องการบอทที่ช่วยการฝึกซ้อม วิธีการเล่นของบอทที่ต้องการคือ บอทจะจั่วไพ่จากกองจนกว่า คะแนนรวมจะมีค่ามากกว่า 16 หรือมีไพ่บนมือครบ 5 ใบ หลังจากนั้น บอทจะแสดงคะแนนรวมที่ได้ ในกรณีที่บอทมีคะแนนรวมมากกว่า 21 คะแนน จะแสดงคำว่า “busted”"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        {
+          "type": "text",
+          "text": "เพื่อความง่าย จะกำหนดให้ A มีคะแนน 1 คะแนนเท่านั้น เนื่องจากคุณเป็นโปรแกรมเมอร์ คุณจึงจะเขียนบอทสำหรับฝึกซ้อมด้วยตัวเอง"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        {
+          "type": "text",
+          "marks": [{ "type": "bold" }, { "type": "underline" }],
+          "text": "ข้อมูลเข้า"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        {
+          "type": "text",
+          "text": "บรรทัดแรก เป็นจำนวนกรณีทดสอบ N ชุด (1 <= N <= 100)"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        {
+          "type": "text",
+          "text": "ถัดมา N บรรทัด แต่ละบรรทัดจะระบุไพ่ 5 ใบที่อยู่ถัดไปในกองสำรับ ไพ่แต่ละใบสามารถเป็น A, 2, 3, …, 10, J, Q หรือ K คั่นด้วยเว้นวรรค"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        {
+          "type": "text",
+          "marks": [{ "type": "bold" }, { "type": "underline" }],
+          "text": "ข้อมูลออก"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        {
+          "type": "text",
+          "text": "สำหรับแต่ละกรณีทดสอบ ให้แสดงคำตอบ 1 บรรทัด ในกรณีที่คะแนนรวมของบอทไม่เกิน 21 คะแนน ให้แสดงคะแนนรวมนั้น และในกรณีที่คะแนนรวมเกิน 21 คะแนน ให้แสดงว่า “busted” โดยไม่มีเครื่องหมายคำพูด"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "attrs": { "colspan": 1, "rowspan": 1, "colwidth": null },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": { "textAlign": "center" },
+                  "content": [{ "type": "text", "text": "ข้อมูลเข้า" }]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "attrs": { "colspan": 1, "rowspan": 1, "colwidth": null },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": { "textAlign": "center" },
+                  "content": [{ "type": "text", "text": "ข้อมูลออก" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "attrs": { "colspan": 1, "rowspan": 1, "colwidth": null },
+              "content": [
+                {
+                  "type": "codeBlock",
+                  "attrs": { "language": null },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "3\nA 10 8 2 7\n4 5 3 J Q\n6 2 A 3 4"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": { "colspan": 1, "rowspan": 1, "colwidth": null },
+              "content": [
+                {
+                  "type": "codeBlock",
+                  "attrs": { "language": null },
+                  "content": [{ "type": "text", "text": "19\nbusted\n16" }]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "สำหรับข้อมูลเข้า " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "A 10 8 2 7" },
+        { "type": "text", "text": " หมายความว่าไพ่ 5 ใบบนสุดของสำรับ คือ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "A 10 8 2 7" },
+        { "type": "text", "text": " ตามลำดับ" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "บอทต้องหยิบไพ่มาก่อน 2 ใบ จะได้ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "A" },
+        { "type": "text", "text": " และ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "10" },
+        { "type": "text", "text": " ซึ่งมีคะแนนรวมคือ 11 ซึ่งยังไม่มากกว่า 16" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "จึงหยิบไพ่เพิ่มอีก 1 ใบ ได้ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "8" },
+        {
+          "type": "text",
+          "text": " ทำให้ได้คะแนนรวมเป็น 19 ซึ่งมากกว่า 16 แล้ว บอทจึงไม่สนใจจะหยิบไพ่อีก"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "สำหรับข้อมูลเข้า " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "4 5 3 J Q" },
+        { "type": "text", "text": " หมายความว่าไพ่ 5 ใบบนสุดของสำรับ คือ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "4 5 3 J Q" },
+        { "type": "text", "text": " ตามลำดับ" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "บอทต้องหยิบไพ่มาก่อน 2 ใบ จะได้ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "4" },
+        { "type": "text", "text": " และ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "5" },
+        { "type": "text", "text": " ซึ่งมีคะแนนรวมคือ 9 ซึ่งยังไม่มากกว่า 16" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "จึงหยิบไพ่เพิ่มอีก 1 ใบ ได้ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "3" },
+        {
+          "type": "text",
+          "text": " ทำให้ได้คะแนนรวมเป็น 12 ซึ่งยังไม่มากกว่า 16"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "จึงหยิบไพ่เพิ่มอีก 1 ใบ ได้ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "J" },
+        {
+          "type": "text",
+          "text": " ทำให้ได้คะแนนรวมเป็น 22 ซึ่งมากกว่า 16 แล้ว บอทจึงไม่สนใจจะหยิบไพ่อีก"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "แต่ 22 มากกว่า 21 จึงเป็น busted" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "สำหรับข้อมูลเข้า " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "6 2 A 3 4" },
+        { "type": "text", "text": " หมายความว่าไพ่ 5 ใบบนสุดของสำรับ คือ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "6 2 A 3 4" },
+        { "type": "text", "text": " ตามลำดับ" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "บอทต้องหยิบไพ่มาก่อน 2 ใบ จะได้ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "6" },
+        { "type": "text", "text": " และ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "2" },
+        { "type": "text", "text": " ซึ่งมีคะแนนรวมคือ 8 ซึ่งยังไม่มากกว่า 16" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "จึงหยิบไพ่เพิ่มอีก 1 ใบ ได้ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "A" },
+        {
+          "type": "text",
+          "text": " ทำให้ได้คะแนนรวมเป็น 9 ซึ่งยังไม่มากกว่า 16"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "จึงหยิบไพ่เพิ่มอีก 1 ใบ ได้ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "3" },
+        {
+          "type": "text",
+          "text": " ทำให้ได้คะแนนรวมเป็น 12 ซึ่งยังไม่มากกว่า 16"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        { "type": "text", "text": "จึงหยิบไพ่เพิ่มอีก 1 ใบ ได้ " },
+        { "type": "text", "marks": [{ "type": "code" }], "text": "4" },
+        {
+          "type": "text",
+          "text": " ทำให้ได้คะแนนรวมเป็น 16 ซึ่งยังไม่มากกว่า 16"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "textAlign": null },
+      "content": [
+        {
+          "type": "text",
+          "text": "แต่ไม่สามารถหยิบไพ่เพิ่มได้อีก เพราะไพ่บนมือมี 5 ใบแล้ว"
+        }
+      ]
+    }
+  ]
+}
