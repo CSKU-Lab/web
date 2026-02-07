@@ -39,10 +39,6 @@ function SettingsButton() {
   const { data: material } = useGetMaterial();
   const isOwner = useAtomValue(isOwnerAtom);
 
-  if (!isOwner) {
-    return null;
-  }
-
   const form = useForm<SettingsSchema>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
@@ -98,6 +94,10 @@ function SettingsButton() {
       visibility: data.visibility,
     });
   };
+
+  if (!isOwner) {
+    return null;
+  }
 
   return (
     <Dialog>
