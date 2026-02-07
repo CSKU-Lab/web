@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X, Server } from "lucide-react";
 import AutoComplete from "~/components/commons/AutoComplete";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import {
@@ -8,6 +8,7 @@ import {
 } from "~/components/ui/hover-card";
 import { configService } from "~/services/config.service";
 import type { RunnerConfigDetail } from "~/types/config";
+import { cn } from "~/lib/utils";
 
 interface Props {
   value: RunnerConfigDetail[];
@@ -23,59 +24,91 @@ function AllowedRunners({ value, onChange, isOwner }: Props) {
         configService.getRunners({ search: query, includeScript: true })
       }
       disabled={!isOwner}
+      placeHolder="Search runners..."
       renderSelected={({ option, handleOnRemove }) => (
         <HoverCard key={option.id}>
           <HoverCardTrigger asChild>
             <div
               key={option.id}
-              className="px-2 rounded-full bg-(--gray-3) flex items-center gap-2 border"
+              className="group/runner px-2.5 py-1 rounded-full bg-gradient-to-r from-(--accent-color)/10 to-(--accent-color)/5 border border-(--accent-color)/20 flex items-center gap-1.5 shadow-sm hover:shadow-md hover:border-(--accent-color)/30 transition-all duration-200 cursor-pointer"
             >
-              <div className="w-2 h-2 rounded-full bg-(--accent-color)"></div>
-              <p className="text-sm">{option.name}</p>
+              <div className="w-1.5 h-1.5 rounded-full bg-(--accent-color) ring-2 ring-(--accent-color)/20"></div>
+              <span className="text-xs font-medium text-(--gray-12)">
+                {option.name}
+              </span>
               {isOwner && (
-                <button onClick={() => handleOnRemove(option)}>
-                  <X size="0.965rem" />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOnRemove(option);
+                  }}
+                  className="p-0.5 rounded-full hover:bg-(--gray-3) hover:text-(--red-9) text-(--gray-10) transition-all duration-150 opacity-80 group-hover/runner:opacity-100"
+                  aria-label={`Remove ${option.name}`}
+                >
+                  <X size="12" strokeWidth={2.5} />
                 </button>
               )}
             </div>
           </HoverCardTrigger>
-          <HoverCardContent className="p-0 w-80">
-            <div className="p-2 rounded-md">
-              <h5 className="text-sm font-medium">{option.name}</h5>
-              <h6 className="text-xs mt-1.5">Build Script</h6>
+          <HoverCardContent className="p-0 w-80 border border-(--gray-5) shadow-xl shadow-black/5 rounded-lg">
+            <div className="p-3 rounded-md">
+              <h5 className="text-sm font-medium text-(--gray-12)">{option.name}</h5>
+              <h6 className="text-xs mt-2 text-(--gray-10)">Build Script</h6>
               <CodeMirror
                 value={option.build_script}
-                className="h-30 rounded-md border overflow-hidden mt-2"
+                className="h-30 rounded-md border border-(--gray-4) overflow-hidden mt-1.5"
               />
-              <h6 className="text-xs mt-1.5">Run Script</h6>
+              <h6 className="text-xs mt-2 text-(--gray-10)">Run Script</h6>
               <CodeMirror
                 value={option.run_script}
-                className="h-30 rounded-md border overflow-hidden mt-2"
+                className="h-30 rounded-md border border-(--gray-4) overflow-hidden mt-1.5"
               />
             </div>
           </HoverCardContent>
         </HoverCard>
       )}
-      popoverContentClasses="max-h-60"
+      popoverContentClasses="max-h-60 bg-white border border-(--gray-5) shadow-xl shadow-black/5 rounded-lg p-2"
     >
-      {({ options, handleOnAdd }) => (
-        <div className="flex flex-col gap-2">
-          {options.map((option) => (
+      {({ options, handleOnAdd, highlightedIndex, getItemId }) => (
+        <div className="flex flex-col gap-1">
+          {options.map((option, index) => (
             <div
-              key={option.id}
-              className="hover:bg-(--gray-2) p-2 rounded-md cursor-pointer"
+              key={getItemId(index)}
+              id={getItemId(index)}
+              className={cn(
+                "w-full text-left p-2 rounded-md cursor-pointer transition-all duration-150",
+                index === highlightedIndex
+                  ? "bg-(--accent-color)/10"
+                  : "hover:bg-(--gray-2)"
+              )}
               onClick={() => handleOnAdd(option)}
             >
-              <h5 className="text-sm font-medium">{option.name}</h5>
-              <h6 className="text-xs mt-1.5">Build Script</h6>
+              <div className="flex items-center gap-2">
+                <Server
+                  size="14"
+                  className={cn(
+                    "transition-colors duration-150",
+                    index === highlightedIndex
+                      ? "text-(--accent-color)"
+                      : "text-(--gray-8)"
+                  )}
+                />
+                <h5 className={cn(
+                  "text-sm font-medium",
+                  index === highlightedIndex
+                    ? "text-(--accent-color)"
+                    : "text-(--gray-11)"
+                )}>{option.name}</h5>
+              </div>
+              <h6 className="text-xs mt-1.5 text-(--gray-10)">Build Script</h6>
               <CodeMirror
                 value={option.build_script}
-                className="h-30 rounded-md border overflow-hidden mt-2"
+                className="h-30 rounded-md border border-(--gray-4) overflow-hidden mt-1"
               />
-              <h6 className="text-xs mt-1.5">Run Script</h6>
+              <h6 className="text-xs mt-1.5 text-(--gray-10)">Run Script</h6>
               <CodeMirror
                 value={option.run_script}
-                className="h-30 rounded-md border overflow-hidden mt-2"
+                className="h-30 rounded-md border border-(--gray-4) overflow-hidden mt-1"
               />
             </div>
           ))}
