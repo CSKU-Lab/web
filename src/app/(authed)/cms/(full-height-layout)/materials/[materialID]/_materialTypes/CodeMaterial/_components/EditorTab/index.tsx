@@ -15,7 +15,9 @@ function EditorSection() {
 
   const handleFilesChange = (newFiles: CodeFile[]) => {
     setFiles(newFiles);
-    setSaveStatus("UnSaved");
+    if (isOwner) {
+      setSaveStatus("UnSaved");
+    }
   };
 
   const queryRunners = useCallback(() => configService.getRunners(), []);
@@ -28,6 +30,7 @@ function EditorSection() {
         writeFiles: isOwner,
         modifyFiles: isOwner,
         codeExecution: isOwner,
+        selectRunner: isOwner,
       }}
       queryRunnerFn={queryRunners}
       initialSelectedRunnerID={selectedRunnerID}

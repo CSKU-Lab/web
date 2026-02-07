@@ -13,6 +13,7 @@ interface Permission {
   modifyFiles?: boolean;
   writeFiles?: boolean;
   codeExecution?: boolean;
+  selectRunner?: boolean;
 }
 
 interface Props {
@@ -108,6 +109,7 @@ function CodeEditor({
               onSelect={handleSelectRunner}
               isError={runnerSelectError}
               isLoading={isLoading}
+              disabled={!permissions?.selectRunner}
             />
             <EditorSettings
               settings={settings}

@@ -19,6 +19,7 @@ interface Props {
   onSelect: (runnerID: string) => void;
   isLoading?: boolean;
   isError?: boolean;
+  disabled?: boolean;
 }
 function RunnerSelect({
   runners,
@@ -26,13 +27,14 @@ function RunnerSelect({
   onSelect,
   isLoading,
   isError,
+  disabled,
 }: Props) {
   return (
     <Tooltip open={isError}>
-      <Select value={selectedRunnerID} onValueChange={onSelect}>
+      <Select value={selectedRunnerID} onValueChange={onSelect} disabled={disabled}>
         <TooltipTrigger asChild>
           <SelectTrigger
-            className={cn("h-6 z-20 text-xs", isError && "border-red-500")}
+            className={cn("h-6 z-20 text-xs", isError && "border-red-500", disabled && "opacity-50 cursor-not-allowed")}
           >
             <span className="mr-1">Runner:</span>
             <SelectValue placeholder="Select a runner" />

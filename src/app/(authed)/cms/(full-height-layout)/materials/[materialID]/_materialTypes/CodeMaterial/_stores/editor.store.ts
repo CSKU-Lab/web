@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { saveStatusAtom } from "./save-status.store";
+import { isOwnerAtom } from "./owner.store";
 import type { CodeFile } from "~/types/code-material";
 
 const internalSolutionRunnerIDAtom = atom("");
@@ -18,7 +19,10 @@ export const solutionRunnerIDAtom = atom(
     }
 
     set(internalSolutionRunnerIDAtom, newID);
-    set(saveStatusAtom, "UnSaved");
+    const isOwner = get(isOwnerAtom);
+    if (isOwner) {
+      set(saveStatusAtom, "UnSaved");
+    }
   },
 );
 

@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import type { TestCase, TestCaseGroup } from "../_types/testcase-group";
 import { saveStatusAtom } from "./save-status.store";
+import { isOwnerAtom } from "./owner.store";
 
 export const testCaseGroupsAtom = atom<TestCaseGroup[]>([]);
 
@@ -22,8 +23,11 @@ export const initialTestCaseGroupsAtom = atom(
   },
 );
 
-const triggerUnSaved = (set: any) => {
-  set(saveStatusAtom, "UnSaved");
+const triggerUnSaved = (get: any, set: any) => {
+  const isOwner = get(isOwnerAtom);
+  if (isOwner) {
+    set(saveStatusAtom, "UnSaved");
+  }
 };
 
 export const addGroupAtom = atom(null, (get, set) => {
@@ -36,7 +40,7 @@ export const addGroupAtom = atom(null, (get, set) => {
     test_cases: [],
   };
   set(testCaseGroupsAtom, [...groups, newGroup]);
-  triggerUnSaved(set);
+  triggerUnSaved(get, set);
 });
 
 export const removeGroupAtom = atom(null, (get, set, groupId: string) => {
@@ -54,7 +58,7 @@ export const removeGroupAtom = atom(null, (get, set, groupId: string) => {
     const { [groupId]: _, ...rest } = prev;
     return rest;
   });
-  triggerUnSaved(set);
+  triggerUnSaved(get, set);
 });
 
 export const removeSelectedGroupsAtom = atom(null, (get, set) => {
@@ -78,7 +82,7 @@ export const removeSelectedGroupsAtom = atom(null, (get, set) => {
     });
     return newPrev;
   });
-  triggerUnSaved(set);
+  triggerUnSaved(get, set);
 });
 
 export const duplicateGroupAtom = atom(null, (get, set, groupId: string) => {
@@ -105,7 +109,7 @@ export const duplicateGroupAtom = atom(null, (get, set, groupId: string) => {
     order: index,
   }));
   set(testCaseGroupsAtom, reorderedGroups);
-  triggerUnSaved(set);
+  triggerUnSaved(get, set);
 });
 
 export const updateGroupAtom = atom(
@@ -122,7 +126,7 @@ export const updateGroupAtom = atom(
         : g,
     );
     set(testCaseGroupsAtom, updatedGroups);
-    triggerUnSaved(set);
+    triggerUnSaved(get, set);
   },
 );
 
@@ -137,7 +141,7 @@ export const moveGroupAtom = atom(null, (get, set, payload: { fromIndex: number;
     order: index,
   }));
   set(testCaseGroupsAtom, reorderedGroups);
-  triggerUnSaved(set);
+  triggerUnSaved(get, set);
 });
 
 export const addTestCaseToGroupAtom = atom(
@@ -161,7 +165,7 @@ export const addTestCaseToGroupAtom = atom(
       test_cases: [...group.test_cases, newTestCase],
     };
     set(testCaseGroupsAtom, updatedGroups);
-    triggerUnSaved(set);
+    triggerUnSaved(get, set);
   },
 );
 
@@ -193,7 +197,7 @@ export const removeTestCaseAtom = atom(
         (id) => id !== payload.testCaseId,
       ),
     }));
-    triggerUnSaved(set);
+    triggerUnSaved(get, set);
   },
 );
 
@@ -217,7 +221,7 @@ export const removeSelectedTestCasesAtom = atom(null, (get, set) => {
 
   set(testCaseGroupsAtom, updatedGroups);
   set(selectedTestCaseIdsAtom, {});
-  triggerUnSaved(set);
+  triggerUnSaved(get, set);
 });
 
 export const duplicateTestCaseAtom = atom(
@@ -246,7 +250,7 @@ export const duplicateTestCaseAtom = atom(
       test_cases: [...group.test_cases, duplicatedTestCase],
     };
     set(testCaseGroupsAtom, updatedGroups);
-    triggerUnSaved(set);
+    triggerUnSaved(get, set);
   },
 );
 
@@ -275,7 +279,7 @@ export const duplicateSelectedTestCasesAtom = atom(null, (get, set) => {
 
   set(testCaseGroupsAtom, updatedGroups);
   set(selectedTestCaseIdsAtom, {});
-  triggerUnSaved(set);
+  triggerUnSaved(get, set);
 });
 
 export const moveTestCaseAtom = atom(
@@ -301,7 +305,7 @@ export const moveTestCaseAtom = atom(
       test_cases: reorderedTestCases,
     };
     set(testCaseGroupsAtom, updatedGroups);
-    triggerUnSaved(set);
+    triggerUnSaved(get, set);
   },
 );
 
@@ -343,7 +347,7 @@ export const moveTestCaseToGroupAtom = atom(
         (id) => id !== payload.testCaseId,
       ),
     }));
-    triggerUnSaved(set);
+    triggerUnSaved(get, set);
   },
 );
 
@@ -373,7 +377,7 @@ export const updateTestCaseAtom = atom(
       test_cases: updatedTestCases,
     };
     set(testCaseGroupsAtom, updatedGroups);
-    triggerUnSaved(set);
+    triggerUnSaved(get, set);
   },
 );
 
