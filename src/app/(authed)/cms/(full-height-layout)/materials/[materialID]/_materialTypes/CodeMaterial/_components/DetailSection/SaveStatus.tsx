@@ -1,6 +1,6 @@
 import { useAtomValue } from "jotai";
 import { saveStatusAtom } from "../../_stores/save-status.store";
-import HeaderItem from "./HeaderItem";
+import HeaderItem from "~/components/crafts/DetailSection/HeaderItem";
 
 function SaveStatus() {
   const saveStatus = useAtomValue(saveStatusAtom);
