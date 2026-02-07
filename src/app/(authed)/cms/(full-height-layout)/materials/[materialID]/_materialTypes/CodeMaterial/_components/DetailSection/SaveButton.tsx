@@ -13,6 +13,7 @@ import {
 } from "../../_stores/config.store";
 import { descriptionAtom } from "../../_stores/description.store";
 import { saveStatusAtom } from "../../_stores/save-status.store";
+import { isOwnerAtom } from "../../_stores/owner.store";
 import type { CodeMaterialPayload } from "../../_types/code-material-payload";
 import { Button } from "~/components/commons/Button";
 
@@ -25,6 +26,11 @@ function SaveButton() {
   const solutionRunnerID = useAtomValue(solutionRunnerIDAtom);
   const limit = useAtomValue(limitAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
+  const isOwner = useAtomValue(isOwnerAtom);
+
+  if (!isOwner) {
+    return null;
+  }
 
   const { materialID } = useParams<{ materialID: string }>();
   const queryCleint = useQueryClient();

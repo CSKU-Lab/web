@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { saveStatusAtom } from "./save-status.store";
+import { isOwnerAtom } from "./owner.store";
 import type { Editor, JSONContent } from "@tiptap/react";
 
 const internalDescriptionAtom = atom<JSONContent | null>(null);
@@ -21,6 +22,9 @@ export const descriptionAtom = atom(
       return;
     }
     set(internalDescriptionAtom, newDescription);
-    set(saveStatusAtom, "UnSaved");
+    const isOwner = get(isOwnerAtom);
+    if (isOwner) {
+      set(saveStatusAtom, "UnSaved");
+    }
   },
 );

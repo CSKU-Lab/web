@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { saveStatusAtom } from "./save-status.store";
+import { isOwnerAtom } from "./owner.store";
 import type { CodeMaterialLimit } from "../_types/limit";
 
 interface AllowedRunner {
@@ -33,7 +34,10 @@ export const allowedRunnersAtom = atom(
     }
 
     set(internalAllowedRunnersAtom, newAllowedRunners);
-    set(saveStatusAtom, "UnSaved");
+    const isOwner = get(isOwnerAtom);
+    if (isOwner) {
+      set(saveStatusAtom, "UnSaved");
+    }
   },
 );
 
@@ -55,7 +59,10 @@ export const compareScriptAtom = atom(
     }
 
     set(internalCompareScriptAtom, newCompareScript);
-    set(saveStatusAtom, "UnSaved");
+    const isOwner = get(isOwnerAtom);
+    if (isOwner) {
+      set(saveStatusAtom, "UnSaved");
+    }
   },
 );
 
@@ -84,6 +91,9 @@ export const limitAtom = atom(
     }
 
     set(internalLimitAtom, newLimit);
-    set(saveStatusAtom, "UnSaved");
+    const isOwner = get(isOwnerAtom);
+    if (isOwner) {
+      set(saveStatusAtom, "UnSaved");
+    }
   },
 );

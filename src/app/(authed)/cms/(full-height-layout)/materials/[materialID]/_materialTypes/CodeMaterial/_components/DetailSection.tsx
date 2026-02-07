@@ -6,7 +6,7 @@ import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import useGetMaterial from "../../../../_hooks/useGetMaterial";
 import { useAtomValue } from "jotai";
 import { saveStatusAtom } from "../../_stores/save-status.store";
-import SaveButton from "../SaveButton";
+import SaveButton from "./DetailSection/SaveButton";
 import type { JSX } from "react";
 import SettingButton from "./DetailSection/SettingsButton";
 import {
