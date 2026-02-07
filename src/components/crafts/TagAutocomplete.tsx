@@ -1,15 +1,21 @@
-import { X } from "lucide-react";
+import { X, Tag } from "lucide-react";
 import AutoComplete from "../commons/AutoComplete";
 import { cn } from "~/lib/tiptap-utils";
 
-type Tag = { id: string; display: string };
+type TagType = { id: string; display: string };
 interface Props {
-  value: Tag[];
-  onChange: (value: Tag[]) => void;
+  value: TagType[];
+  onChange: (value: TagType[]) => void;
   isError?: boolean;
+  placeholder?: string;
 }
 
-function TagAutocomplete({ value, onChange, isError }: Props) {
+function TagAutocomplete({
+  value,
+  onChange,
+  isError,
+  placeholder = "Search or create tags...",
+}: Props) {
   const queryTags = async (query: string) => {
     // Dummy implementation for tag fetching
     const allTags = [
@@ -26,20 +32,31 @@ function TagAutocomplete({ value, onChange, isError }: Props) {
   return (
     <AutoComplete
       {...{ value, onChange, isError }}
+      placeHolder={placeholder}
       renderSelected={({ option, handleOnRemove }) => (
         <div
           key={option.id}
-          className="px-2 rounded-full bg-(--gray-3) flex items-center gap-2 border"
+          className="group/tag px-2.5 py-1 rounded-full bg-gradient-to-r from-(--accent-color)/10 to-(--accent-color)/5 border border-(--accent-color)/20 flex items-center gap-1.5 shadow-sm hover:border-(--accent-color)/30 transition-all duration-200"
         >
-          <div className="w-2 h-2 rounded-full bg-(--accent-color)"></div>
-          <p className="text-sm">{option.display}</p>
-          <button onClick={() => handleOnRemove(option)}>
-            <X size="0.965rem" />
+          <div className="w-1.5 h-1.5 rounded-full bg-(--accent-color) ring-2 ring-(--accent-color)/20"></div>
+          <span className="text-xs font-medium text-(--gray-12)">
+            {option.display}
+          </span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOnRemove(option);
+            }}
+            className="p-0.5 rounded-full hover:bg-(--gray-3) hover:text-(--red-9) text-(--gray-10) transition-all duration-150 opacity-80 group-hover/tag:opacity-100"
+            aria-label={`Remove ${option.display}`}
+          >
+            <X size="12" strokeWidth={2.5} />
           </button>
         </div>
       )}
       queryFn={queryTags}
       allowAdditionalOptions
+      popoverContentClasses="bg-white border border-(--gray-5) shadow-xl shadow-black/5 rounded-lg"
     >
       {({ options, handleOnAdd, highlightedIndex, getItemId }) =>
         options.map((tag, index) => (
@@ -47,9 +64,23 @@ function TagAutocomplete({ value, onChange, isError }: Props) {
             key={getItemId(index)}
             id={getItemId(index)}
             onClick={() => handleOnAdd(tag)}
-            className={cn(index === highlightedIndex ? "bg-(--gray-3)" : null)}
+            className={cn(
+              "w-full text-left px-3 py-2 text-sm rounded-md flex items-center gap-3 transition-all duration-150",
+              index === highlightedIndex
+                ? "bg-(--accent-color)/10 text-(--accent-color)"
+                : "text-(--gray-11) hover:bg-(--gray-2) hover:text-(--gray-12)",
+            )}
           >
-            {tag.display}
+            <Tag
+              size="14"
+              className={cn(
+                "transition-colors duration-150",
+                index === highlightedIndex
+                  ? "text-(--accent-color)"
+                  : "text-(--gray-8)",
+              )}
+            />
+            <span className="font-medium">{tag.display}</span>
           </button>
         ))
       }
