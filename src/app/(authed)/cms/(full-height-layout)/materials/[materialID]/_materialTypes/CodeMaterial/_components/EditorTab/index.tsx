@@ -27,6 +27,7 @@ function EditorSection() {
       permissions={{
         writeFiles: isOwner,
         modifyFiles: isOwner,
+        codeExecution: isOwner,
       }}
       queryRunnerFn={queryRunners}
       initialSelectedRunnerID={selectedRunnerID}

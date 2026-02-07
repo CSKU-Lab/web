@@ -18,9 +18,10 @@ interface Props {
   runnerID: string;
   files: CodeFile[];
   onError(error: "NO_RUNNER" | null): void;
+  disabled?: boolean;
 }
 
-function Playground({ runnerID, files, onError }: Props) {
+function Playground({ runnerID, files, onError, disabled }: Props) {
   const [selectedTab, setSelectedTab] = useState<"input" | "output">("input");
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -47,7 +48,10 @@ function Playground({ runnerID, files, onError }: Props) {
     setResult(null);
     const res = await fetch(env("API_URL") + "/playground/execute", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "text/event-stream",
+      },
       body: JSON.stringify({
         files,
         input,
@@ -74,7 +78,6 @@ function Playground({ runnerID, files, onError }: Props) {
           if (event === "done") break;
 
           const data = JSON.parse(dataLine.slice(5)) as CodeExecutionResult;
-          console.log(data);
 
           if (
             data.status !== "STATUS_QUEUED" &&
@@ -136,8 +139,8 @@ function Playground({ runnerID, files, onError }: Props) {
       <div className="flex-1 min-h-10 relative">
         <button
           onClick={handleRunCode}
-          disabled={isRunning}
-          className="absolute bottom-2 right-2 z-10 bg-(--gray-12) hover:bg-(--gray-12)/80 text-(--gray-1) p-2 text-xs backdrop-blur-sm transition-colors"
+          disabled={isRunning || disabled}
+          className="absolute bottom-2 right-2 z-10 bg-(--gray-12) hover:bg-(--gray-12)/80 text-(--gray-1) p-2 text-xs backdrop-blur-sm transition-colors  disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {isRunning ? (
             <LoaderCircle size="1rem" className="animate-spin" />
@@ -147,7 +150,7 @@ function Playground({ runnerID, files, onError }: Props) {
         </button>
         <CodeMirror
           onChange={handleOnChange}
-          readOnly={selectedTab === "output"}
+          readOnly={selectedTab === "output" || disabled}
           value={selectedTab === "input" ? input : output}
           className="h-full"
         />

@@ -146,6 +146,7 @@ function CodeEditor({
         files={files}
         runnerID={selectedRunnerID}
         onError={() => setRunnerSelectError(true)}
+        disabled={!permissions?.codeExecution}
       />
     </div>
   );
