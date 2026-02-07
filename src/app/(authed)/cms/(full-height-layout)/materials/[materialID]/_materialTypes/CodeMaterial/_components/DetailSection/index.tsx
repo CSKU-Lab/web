@@ -1,6 +1,6 @@
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import useGetMaterial from "../../../../_hooks/useGetMaterial";
-import HeaderItem from "./HeaderItem";
+import HeaderItem from "~/components/crafts/DetailSection/HeaderItem";
 import SaveButton from "./SaveButton";
 import SaveStatus from "./SaveStatus";
 import SettingsButton from "./SettingsButton";

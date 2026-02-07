@@ -6,6 +6,7 @@ import LottieComp from "~/components/commons/Lottie";
 import floating from "~/assets/lotties/foating.json";
 import DescriptionTab from "../_components/DescriptionTab";
 import { type Metadata } from "next";
+import DetailSection from "./_components/DetailSection";
 
 export const generateMetadata = async ({
   params,
@@ -40,17 +41,9 @@ async function MaterialPage(props: { params: Promise<{ problemId: string }> }) {
     );
   }
 
-  const headerDisplay = {
-    name: true,
-    type: false,
-    submissions: false,
-    createdBy: false,
-    visibility: false,
-    status: true,
-  };
-
   return (
     <>
+      <DetailSection />
       <div className="flex flex-1 min-h-0">
         <LeftSection descriptionTab={<DescriptionTab />} />
         <RightSection />
