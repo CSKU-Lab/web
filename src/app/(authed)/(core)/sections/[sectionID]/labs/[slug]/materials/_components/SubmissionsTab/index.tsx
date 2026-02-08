@@ -3,15 +3,14 @@ import SubmissionList from "./SubmissionList";
 import { submissionAtom } from "~/globalStore/submissions";
 import SubmissionDetail from "./SubmissionDetail";
 import useMaterialSubmissionPagination from "../../[materialID]/_hooks/useMaterialSubmisionPagination";
-import type { CodeSubmissionResult } from "~/types/core-submission";
+import type { CodeSubmissionOverview } from "~/types/core-submission";
 
 function SumissionsTab() {
   const [{ selectedSubmissionId }] = useAtom(submissionAtom);
-  const { data } = useMaterialSubmissionPagination<CodeSubmissionResult>({});
-  console.log(data);
+  useMaterialSubmissionPagination<CodeSubmissionOverview>({});
 
   return (
-    <div className="p-4">
+    <div className="p-4 h-full">
       {selectedSubmissionId !== null ? (
         <SubmissionDetail />
       ) : (

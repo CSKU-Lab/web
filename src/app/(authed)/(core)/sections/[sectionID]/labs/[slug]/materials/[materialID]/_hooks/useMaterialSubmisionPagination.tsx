@@ -5,6 +5,7 @@ import {
   coreMaterialService,
   type GetSubmissionPaginationParams,
 } from "~/services/core-material.service";
+import { SUBMISSION_PAGE_SIZE } from "../../_constants/submissions";
 
 function useMaterialSubmissionPagination<T>(
   params: GetSubmissionPaginationParams<T>,
@@ -15,6 +16,7 @@ function useMaterialSubmissionPagination<T>(
     queryKey: queryKeys.material.core.getById(materialID),
     queryFn: ({ pageParam }) =>
       coreMaterialService.getPagination(materialID, {
+        page_size: SUBMISSION_PAGE_SIZE,
         ...params,
         page: pageParam,
       }),
