@@ -1,3 +1,5 @@
+import type { SubmissionStatus } from "./core-submission";
+
 export interface Material {
   id: string;
   name: string;
@@ -13,4 +15,9 @@ export enum MaterialType {
   DOCUMENT = "document",
   CODE = "code",
   TYPE = "type",
+}
+
+export interface MaterialDetail {
+  name: string;
+  status: SubmissionStatus;
 }

@@ -1,4 +1,5 @@
 import { BaseService } from "./base.service";
+import type { MaterialDetail } from "~/types/core-material";
 import type { SubmissionOverviewResult } from "~/types/core-submission";
 import type { PaginationRequestParams } from "~/types/pagination";
 
@@ -19,6 +20,11 @@ class CoreMaterialService extends BaseService {
       params,
       `/${materialID}/submissions`,
     );
+  }
+
+  async getById(materialID: string): Promise<MaterialDetail> {
+    const res = await this.api.get<MaterialDetail>(`/materials/${materialID}`);
+    return res.data;
   }
 }
 

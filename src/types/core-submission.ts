@@ -1,5 +1,7 @@
 import type { CodeFile } from "./code-material";
 
+export type SubmissionStatus = "queued" | "running" | "passed" | "failed";
+
 export interface CodeSubmissionPayload {
   files: CodeFile[];
   runner_id: string;
@@ -15,7 +17,7 @@ export interface CodeSubmissionResult {
 
 export interface SubmissionOverviewResult<T> {
   id: string;
-  status: "queued" | "running" | "passed" | "failed";
+  status: SubmissionStatus;
   created_at: string;
   payload: T;
 }
