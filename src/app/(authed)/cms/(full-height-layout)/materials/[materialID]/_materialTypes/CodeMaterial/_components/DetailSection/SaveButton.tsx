@@ -28,10 +28,6 @@ function SaveButton() {
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
   const isOwner = useAtomValue(isOwnerAtom);
 
-  if (!isOwner) {
-    return null;
-  }
-
   const { materialID } = useParams<{ materialID: string }>();
   const queryCleint = useQueryClient();
   const save = useMutation({
@@ -59,6 +55,10 @@ function SaveButton() {
       setSaveStatus("SaveFailed");
     },
   });
+
+  if (!isOwner) {
+    return null;
+  }
 
   if (saveStatus === "UnSaved") {
     return (
