@@ -16,5 +16,6 @@ export interface CodeSubmissionResult {
 export interface SubmissionResult<T> {
   id: string;
   status: "queued" | "running" | "passed" | "failed";
+  created_at: string;
   payload: T;
 }
