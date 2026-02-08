@@ -71,6 +71,11 @@ export const queryKeys = {
         ...queryKeys.material.core.all,
         materialID,
       ],
+      getSubmissionByID: (materialID: string) => [
+        ...queryKeys.material.core.all,
+        materialID,
+        "submissions",
+      ],
     },
     all: ["materials"],
     allWithParams: (params: Record<string, any>) => [
