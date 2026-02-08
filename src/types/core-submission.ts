@@ -13,9 +13,14 @@ export interface CodeSubmissionResult {
   test_case_groups: null;
 }
 
-export interface SubmissionResult<T> {
+export interface SubmissionOverviewResult<T> {
   id: string;
   status: "queued" | "running" | "passed" | "failed";
   created_at: string;
   payload: T;
+}
+
+export interface CodeSubmissionOverview {
+  passed_test_cases: number;
+  total_test_cases: number;
 }

@@ -1,5 +1,5 @@
 import TestcaseTable from "./TestcaseTable";
-import { PassedCard } from "../SubmissionList/SubmissionCard";
+import { SubmissionCard } from "../SubmissionList/SubmissionCard/SubmissionCard";
 import BackButton from "./BackButton";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
@@ -7,31 +7,20 @@ import CodeBlock from "./CodeBlock";
 
 function Submission() {
   const [isFetching, setIsFetching] = useState(false);
-  // useEffect(() => {
-  //   const controller = new AbortController();
-  //   const getData = async () => {
-  //     setIsFetching(true);
-  //     await fetch(`${process.env.PUBLIC_URL}/api/timeout-request`, {
-  //       method: "POST",
-  //       body: JSON.stringify({
-  //         timeout: 4000,
-  //       }),
-  //       signal: controller.signal,
-  //     });
-  //     setIsFetching(false);
-  //   };
-
-  //   getData();
-
-  //   return () => controller.abort("Changed Submission");
-  // }, []);
 
   if (isFetching) return <Loading />;
 
   return (
     <>
       <BackButton />
-      <PassedCard order={1} totalCase={20} />
+      <SubmissionCard
+        id="example"
+        order={1}
+        status="passed"
+        createdAt={new Date().toISOString()}
+        totalCase={20}
+        onClick={() => {}}
+      />
       <CodeBlock />
       <TestcaseTable isLoading={false} />
     </>

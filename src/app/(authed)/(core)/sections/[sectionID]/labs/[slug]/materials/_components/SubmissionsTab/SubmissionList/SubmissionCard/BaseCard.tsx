@@ -1,6 +1,9 @@
 import React, { type Children, type ReactNode } from "react";
 import { cn } from "~/lib/utils";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 interface Children {
   children?: ReactNode;
@@ -47,9 +50,16 @@ export const Status = ({ children, className }: Children) => (
   <h6 className={cn("text-(--gray-11) font-semibold", className)}>{children}</h6>
 );
 
-export const SubmissionDate = ({ date }: { date: Date }) => {
-  const formattedDate = dayjs(date).format("DD MMMM YYYY HH:mm:ss");
-  return <h6 className="mt-1 text-xs text-(--gray-11)">{formattedDate}</h6>;
+export const SubmissionDate = ({ date }: { date: Date | string }) => {
+  const dateObj = dayjs(date);
+  const diffDays = dateObj.diff(dayjs(), "day");
+  const isWithinTwoDays = Math.abs(diffDays) <= 2;
+
+  const displayDate = isWithinTwoDays
+    ? dateObj.fromNow()
+    : dateObj.format("DD MMMM YYYY HH:mm:ss");
+
+  return <h6 className="mt-1 text-xs text-(--gray-11)">{displayDate}</h6>;
 };
 
 export const Testcase = ({
