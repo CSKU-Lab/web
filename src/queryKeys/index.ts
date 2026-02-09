@@ -65,23 +65,6 @@ export const queryKeys = {
     ],
   },
   material: {
-    core: {
-      all: "core-materials",
-      getById: (materialID: string) => [
-        ...queryKeys.material.core.all,
-        materialID,
-      ],
-      getSubmissionByID: (materialID: string) => [
-        ...queryKeys.material.core.all,
-        materialID,
-        "submission",
-      ],
-      getPagination: (materialID: string) => [
-        ...queryKeys.material.core.all,
-        materialID,
-        "submissions-pagination",
-      ],
-    },
     all: ["materials"],
     allWithParams: (params: Record<string, any>) => [
       ...queryKeys.material.all,
@@ -127,5 +110,22 @@ export const queryKeys = {
   },
   sidebar: {
     get: () => ["sidebar"],
+  },
+  core: {
+    all: "core",
+    material: {
+      all: "materials",
+      getById: (materialID: string) => [...queryKeys.core.all, materialID],
+      getSubmissionById: (materialID: string) => [
+        ...queryKeys.core.material.all,
+        materialID,
+        "submission",
+      ],
+      getPagination: (materialID: string) => [
+        ...queryKeys.core.material.all,
+        materialID,
+        "submissions-pagination",
+      ],
+    },
   },
 } as const;

@@ -7,7 +7,7 @@ function useGetCoreMaterial<T>() {
   const { materialID } = useParams<{ materialID: string }>();
 
   return useQuery({
-    queryKey: queryKeys.material.core.getById(materialID),
+    queryKey: queryKeys.core.material.getById(materialID),
     queryFn: async () => coreMaterialService.getById<T>(materialID),
     placeholderData: keepPreviousData,
   });
