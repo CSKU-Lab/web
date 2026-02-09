@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import { useAtom } from "jotai";
+import { useParams } from "next/navigation";
 import { Inbox } from "lucide-react";
 import { SubmissionCard } from "./SubmissionCard/SubmissionCard";
 import { SubmissionCardSkeletonList } from "./SubmissionCard/SubmissionCardSkeleton";
@@ -10,6 +11,7 @@ import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { SUBMISSION_PAGE_SIZE } from "../../../_constants/submissions";
 
 function SubmissionList() {
+  const { materialID } = useParams<{ materialID: string }>();
   const [_, setSubmissionAtom] = useAtom(submissionAtom);
 
   const { data, fetchNextPage, hasNextPage, isFetching } =
@@ -63,6 +65,7 @@ function SubmissionList() {
                   (submission.payload as CodeSubmissionOverview | undefined)
                     ?.total_test_cases
                 }
+                materialID={materialID}
                 onClick={() =>
                   setSubmissionAtom({ selectedSubmissionId: submission.id })
                 }
