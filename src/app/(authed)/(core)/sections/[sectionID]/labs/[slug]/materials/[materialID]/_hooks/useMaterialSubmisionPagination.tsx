@@ -13,7 +13,7 @@ function useMaterialSubmissionPagination<T>(
   const { materialID } = useParams<{ materialID: string }>();
 
   return useInfinitePagination({
-    queryKey: queryKeys.material.core.getSubmissionByID(materialID),
+    queryKey: queryKeys.material.core.getPagination(materialID),
     queryFn: ({ pageParam }) =>
       coreMaterialService.getPagination(materialID, {
         page_size: SUBMISSION_PAGE_SIZE,

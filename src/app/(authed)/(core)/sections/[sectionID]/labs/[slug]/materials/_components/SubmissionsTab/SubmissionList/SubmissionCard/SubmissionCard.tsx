@@ -81,9 +81,29 @@ export function SubmissionCard({
           try {
             const data = JSON.parse(event.data);
             if (data.status === "passed" || data.status === "failed") {
-              queryClient.invalidateQueries({
-                queryKey: queryKeys.material.core.getSubmissionByID(materialID),
-              });
+              // Optimistic update - update cache directly without refetch
+              queryClient.setQueryData(
+                queryKeys.material.core.getPagination(materialID),
+                (oldData: any) => {
+                  if (!oldData?.pages) return oldData;
+
+                  return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => ({
+                      ...page,
+                      data: page.data.map((submission: any) =>
+                        submission.id === data.id
+                          ? {
+                              ...submission,
+                              status: data.status,
+                              payload: data.payload,
+                            }
+                          : submission,
+                      ),
+                    })),
+                  };
+                },
+              );
               eventSource.close();
             }
           } catch (error) {
@@ -109,7 +129,9 @@ export function SubmissionCard({
       <CardContent>
         <Order>{order}</Order>
         <CardStatusLine>
-          <Status className={config.statusClassName}>{config.statusText}</Status>
+          <Status className={config.statusClassName}>
+            {config.statusText}
+          </Status>
           {showTestcase && totalCase !== undefined && (
             <Testcase
               correctCase={status === "passed" ? totalCase : (correctCase ?? 0)}
