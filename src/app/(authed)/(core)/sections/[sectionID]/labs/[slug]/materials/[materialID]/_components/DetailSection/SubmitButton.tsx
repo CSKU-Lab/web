@@ -2,16 +2,17 @@
 
 import { useAtomValue, useSetAtom } from "jotai";
 import { Loader2, Upload } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { coreSubmissionService } from "~/services/core-submission.service";
-import type { CodeSubmissionPayload } from "~/types/core-submission";
+import { queryKeys } from "~/queryKeys";
 import {
   submissionFilesAtom,
   selectedRunnerIDAtom,
   submissionStatusAtom,
 } from "../../_stores/submission.store";
+import type { CodeSubmissionPayload } from "~/types/core-code-submission";
 
 interface SubmitButtonProps {
   sectionID: string;
@@ -23,6 +24,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   const files = useAtomValue(submissionFilesAtom);
   const selectedRunnerID = useAtomValue(selectedRunnerIDAtom);
   const setSubmissionStatus = useSetAtom(submissionStatusAtom);
+  const queryClient = useQueryClient();
 
   const submitMutation = useMutation({
     mutationFn: () => {
@@ -39,6 +41,10 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
     onSuccess: () => {
       toast.success("Submission created successfully");
       setSubmissionStatus("GRADING");
+      // Refetch submissions to show the new submission
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.material.core.getPagination(materialID),
+      });
     },
     onError: () => {
       toast.error("Failed to create submission");

@@ -66,7 +66,7 @@ export const queryKeys = {
   },
   material: {
     core: {
-      all: "materials",
+      all: "core-materials",
       getById: (materialID: string) => [
         ...queryKeys.material.core.all,
         materialID,
@@ -74,7 +74,12 @@ export const queryKeys = {
       getSubmissionByID: (materialID: string) => [
         ...queryKeys.material.core.all,
         materialID,
-        "submissions",
+        "submission",
+      ],
+      getPagination: (materialID: string) => [
+        ...queryKeys.material.core.all,
+        materialID,
+        "submissions-pagination",
       ],
     },
     all: ["materials"],
