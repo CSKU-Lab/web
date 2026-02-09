@@ -83,7 +83,7 @@ export function SubmissionCard({
             if (data.status === "passed" || data.status === "failed") {
               // Optimistic update - update cache directly without refetch
               queryClient.setQueryData(
-                queryKeys.material.core.getPagination(materialID),
+                queryKeys.core.material.getPagination(materialID),
                 (oldData: any) => {
                   if (!oldData?.pages) return oldData;
 

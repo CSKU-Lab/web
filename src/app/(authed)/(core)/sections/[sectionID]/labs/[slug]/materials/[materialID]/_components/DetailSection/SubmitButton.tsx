@@ -43,7 +43,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
       setSubmissionStatus("GRADING");
       // Refetch submissions to show the new submission
       queryClient.invalidateQueries({
-        queryKey: queryKeys.material.core.getPagination(materialID),
+        queryKey: queryKeys.core.material.getPagination(materialID),
       });
     },
     onError: () => {
