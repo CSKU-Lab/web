@@ -17,7 +17,8 @@ export enum MaterialType {
   TYPE = "type",
 }
 
-export interface MaterialDetail {
+export interface MaterialDetail<T> {
   name: string;
   status: SubmissionStatus;
+  payload: T;
 }

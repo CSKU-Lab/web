@@ -4,7 +4,7 @@ import { Inbox } from "lucide-react";
 import { SubmissionCard } from "./SubmissionCard/SubmissionCard";
 import { SubmissionCardSkeletonList } from "./SubmissionCard/SubmissionCardSkeleton";
 import useMaterialSubmissionPagination from "../../../[materialID]/_hooks/useMaterialSubmisionPagination";
-import type { CodeSubmissionOverview } from "~/types/core-submission";
+import type { CodeSubmissionOverview } from "~/types/core-code-submission";
 import { submissionAtom } from "~/globalStore/submissions";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { SUBMISSION_PAGE_SIZE } from "../../../_constants/submissions";

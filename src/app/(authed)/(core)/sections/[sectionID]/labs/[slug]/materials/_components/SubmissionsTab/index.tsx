@@ -3,7 +3,7 @@ import SubmissionList from "./SubmissionList";
 import { submissionAtom } from "~/globalStore/submissions";
 import SubmissionDetail from "./SubmissionDetail";
 import useMaterialSubmissionPagination from "../../[materialID]/_hooks/useMaterialSubmisionPagination";
-import type { CodeSubmissionOverview } from "~/types/core-submission";
+import type { CodeSubmissionOverview } from "~/types/core-code-submission";
 
 function SumissionsTab() {
   const [{ selectedSubmissionId }] = useAtom(submissionAtom);

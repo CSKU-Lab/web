@@ -1,18 +1,18 @@
 "use client";
 
-import { useCallback } from "react";
 import { useAtom } from "jotai";
 import CodeEditor from "~/components/Editor/CodeEditor";
-import { configService } from "~/services/config.service";
 import {
   submissionFilesAtom,
   selectedRunnerIDAtom,
 } from "../[materialID]/_stores/submission.store";
+import useGetCoreMaterial from "../[materialID]/_hooks/useGetCoreMaterial";
+import type { CoreCodeMaterial } from "~/types/core-code-material";
 
 function RightSection() {
   const [files, setFiles] = useAtom(submissionFilesAtom);
   const [selectedRunnerID, setSelectedRunnerID] = useAtom(selectedRunnerIDAtom);
-  const queryRunners = useCallback(() => configService.getRunners(), []);
+  const { data: material, isLoading } = useGetCoreMaterial<CoreCodeMaterial>();
 
   return (
     <div className="flex-1 border-t-0 border-l-0 border flex flex-col min-h-0 min-w-[300px] overflow-hidden">
@@ -26,9 +26,10 @@ function RightSection() {
             codeExecution: true,
             selectRunner: true,
           }}
-          queryRunnerFn={queryRunners}
+          allowedRunners={material?.payload.allowed_runners ?? []}
           initialSelectedRunnerID={selectedRunnerID}
           onChangeSelectedRunnerID={setSelectedRunnerID}
+          isLoading={isLoading}
         />
       </div>
     </div>
