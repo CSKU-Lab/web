@@ -1,5 +1,6 @@
 import { RefreshCcw, CircleCheck, CircleX } from "lucide-react";
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -9,6 +10,8 @@ import {
   SubmissionDate,
   Testcase,
 } from "./BaseCard";
+import { coreSubmissionService } from "~/services/core-submission.service";
+import { queryKeys } from "~/queryKeys";
 
 interface SubmissionCardProps {
   id: string;
@@ -18,6 +21,7 @@ interface SubmissionCardProps {
   correctCase?: number;
   totalCase?: number;
   onClick: () => void;
+  materialID: string;
 }
 
 const statusConfig = {
@@ -52,17 +56,53 @@ const statusConfig = {
 };
 
 export function SubmissionCard({
+  id,
   order,
   status,
   createdAt,
   correctCase,
   totalCase,
   onClick,
+  materialID,
 }: SubmissionCardProps) {
   const config = statusConfig[status];
   const Icon = config.icon;
+  const queryClient = useQueryClient();
+  const eventSourceRef = useRef<EventSource | null>(null);
 
   const showTestcase = status === "passed" || status === "failed";
+
+  useEffect(() => {
+    if (status === "queued" || status === "running") {
+      coreSubmissionService.listenByID(id).then((eventSource) => {
+        eventSourceRef.current = eventSource;
+
+        eventSource.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.status === "passed" || data.status === "failed") {
+              queryClient.invalidateQueries({
+                queryKey: queryKeys.material.core.getSubmissionByID(materialID),
+              });
+              eventSource.close();
+            }
+          } catch (error) {
+            console.error("Error parsing SSE message:", error);
+          }
+        };
+
+        eventSource.onerror = () => {
+          eventSource.close();
+        };
+      });
+    }
+
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+    };
+  }, [id, materialID, queryClient, status]);
 
   return (
     <Card onClick={onClick} className={config.borderColor}>
