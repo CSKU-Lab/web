@@ -20,18 +20,20 @@ interface Props {
   files: CodeFile[];
   onFilesChange: (files: CodeFile[]) => void;
   permissions?: Permission;
-  queryRunnerFn: () => Promise<Runner[]>;
+  allowedRunners: Runner[];
   initialSelectedRunnerID?: string;
   onChangeSelectedRunnerID?: (runnerID: string) => void;
+  isLoading?: boolean;
 }
 
 function CodeEditor({
   files,
   onFilesChange,
   permissions,
-  queryRunnerFn,
+  allowedRunners,
   initialSelectedRunnerID,
   onChangeSelectedRunnerID,
+  isLoading,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -58,24 +60,6 @@ function CodeEditor({
     setSettings(newSettings);
     localStorage.setItem("editor-settings", JSON.stringify(newSettings));
   };
-
-  const [allowedRunners, setAllowedRunners] = useState<Runner[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchRunners = async () => {
-      setIsLoading(true);
-      try {
-        const runners = await queryRunnerFn();
-        setAllowedRunners(runners);
-      } catch (error) {
-        setAllowedRunners([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchRunners();
-  }, [queryRunnerFn]);
 
   const [runnerSelectError, setRunnerSelectError] = useState(false);
   const [selectedRunnerID, setSelectedRunnerID] = useState<string>("");

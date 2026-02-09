@@ -22,8 +22,10 @@ class CoreMaterialService extends BaseService {
     );
   }
 
-  async getById(materialID: string): Promise<MaterialDetail> {
-    const res = await this.api.get<MaterialDetail>(`/materials/${materialID}`);
+  async getById<T>(materialID: string): Promise<MaterialDetail<T>> {
+    const res = await this.api.get<MaterialDetail<T>>(
+      `/materials/${materialID}`,
+    );
     return res.data;
   }
 }
