@@ -1,10 +1,10 @@
 import { BaseService } from "./base.service";
 import type { MaterialDetail } from "~/types/core-material";
-import type { SubmissionOverviewResult } from "~/types/core-submission";
+import type { SubmissionResult } from "~/types/core-submission";
 import type { PaginationRequestParams } from "~/types/pagination";
 
 export type GetSubmissionPaginationParams<T> = PaginationRequestParams<
-  SubmissionOverviewResult<T>
+  SubmissionResult<T>
 >;
 
 class CoreMaterialService extends BaseService {
@@ -16,7 +16,7 @@ class CoreMaterialService extends BaseService {
     materialID: string,
     params: GetSubmissionPaginationParams<T>,
   ) {
-    return this._getPagination<SubmissionOverviewResult<T>>(
+    return this._getPagination<SubmissionResult<T>>(
       params,
       `/${materialID}/submissions`,
     );
