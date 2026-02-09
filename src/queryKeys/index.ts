@@ -116,10 +116,10 @@ export const queryKeys = {
     material: {
       all: "materials",
       getById: (materialID: string) => [...queryKeys.core.all, materialID],
-      getSubmissionById: (materialID: string) => [
-        ...queryKeys.core.material.all,
-        materialID,
+      getSubmissionDetail: (submissionID: string) => [
+        ...queryKeys.core.all,
         "submission",
+        submissionID,
       ],
       getPagination: (materialID: string) => [
         ...queryKeys.core.material.all,
