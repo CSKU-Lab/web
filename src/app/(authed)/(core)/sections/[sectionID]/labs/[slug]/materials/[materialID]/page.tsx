@@ -7,6 +7,7 @@ import floating from "~/assets/lotties/foating.json";
 import DescriptionTab from "../_components/DescriptionTab";
 import { type Metadata } from "next";
 import DetailSection from "./_components/DetailSection";
+import MaterialPageClient from "./_components/MaterialPageClient";
 
 export const generateMetadata = async ({
   params,
@@ -45,7 +46,7 @@ async function MaterialPage(props: {
   }
 
   return (
-    <>
+    <MaterialPageClient materialID={materialID}>
       <DetailSection
         sectionID={sectionID}
         labID={labID}
@@ -55,7 +56,7 @@ async function MaterialPage(props: {
         <LeftSection />
         <RightSection />
       </div>
-    </>
+    </MaterialPageClient>
   );
 }
 

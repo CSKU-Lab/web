@@ -1,6 +1,5 @@
 import { RefreshCcw, CircleCheck, CircleX } from "lucide-react";
-import React, { useEffect, useRef } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import React from "react";
 import {
   Card,
   CardContent,
@@ -10,8 +9,6 @@ import {
   SubmissionDate,
   Testcase,
 } from "./BaseCard";
-import { coreSubmissionService } from "~/services/core-submission.service";
-import { queryKeys } from "~/queryKeys";
 
 interface SubmissionCardProps {
   id: string;
@@ -67,62 +64,8 @@ export function SubmissionCard({
 }: SubmissionCardProps) {
   const config = statusConfig[status];
   const Icon = config.icon;
-  const queryClient = useQueryClient();
-  const eventSourceRef = useRef<EventSource | null>(null);
 
   const showTestcase = status === "passed" || status === "failed";
-
-  useEffect(() => {
-    if (status === "queued" || status === "running") {
-      coreSubmissionService.listenByID(id).then((eventSource) => {
-        eventSourceRef.current = eventSource;
-
-        eventSource.onmessage = (event) => {
-          try {
-            const data = JSON.parse(event.data);
-            if (data.status === "passed" || data.status === "failed") {
-              // Optimistic update - update cache directly without refetch
-              queryClient.setQueryData(
-                queryKeys.core.material.getPagination(materialID),
-                (oldData: any) => {
-                  if (!oldData?.pages) return oldData;
-
-                  return {
-                    ...oldData,
-                    pages: oldData.pages.map((page: any) => ({
-                      ...page,
-                      data: page.data.map((submission: any) =>
-                        submission.id === data.id
-                          ? {
-                              ...submission,
-                              status: data.status,
-                              payload: data.payload,
-                            }
-                          : submission,
-                      ),
-                    })),
-                  };
-                },
-              );
-              eventSource.close();
-            }
-          } catch (error) {
-            console.error("Error parsing SSE message:", error);
-          }
-        };
-
-        eventSource.onerror = () => {
-          eventSource.close();
-        };
-      });
-    }
-
-    return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
-    };
-  }, [id, materialID, queryClient, status]);
 
   return (
     <Card onClick={onClick} className={config.borderColor}>

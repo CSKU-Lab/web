@@ -11,6 +11,7 @@ import {
   submissionFilesAtom,
   selectedRunnerIDAtom,
   submissionStatusAtom,
+  activeSubmissionsAtom,
 } from "../../_stores/submission.store";
 import type { CodeSubmissionPayload } from "~/types/core-code-submission";
 
@@ -24,6 +25,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   const files = useAtomValue(submissionFilesAtom);
   const selectedRunnerID = useAtomValue(selectedRunnerIDAtom);
   const setSubmissionStatus = useSetAtom(submissionStatusAtom);
+  const setActiveSubmissions = useSetAtom(activeSubmissionsAtom);
   const queryClient = useQueryClient();
 
   const submitMutation = useMutation({
@@ -38,10 +40,22 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
         },
       });
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const newSubmissionId = response.data.id;
+
       toast.success("Submission created successfully");
+
+      // 1. Set status to GRADING immediately
       setSubmissionStatus("GRADING");
-      // Refetch submissions to show the new submission
+
+      // 2. Add to activeSubmissionsAtom so hook creates EventSource
+      setActiveSubmissions((prev) => {
+        const next = new Set(prev);
+        next.add(newSubmissionId);
+        return next;
+      });
+
+      // 3. Refetch submissions to show the new submission
       queryClient.invalidateQueries({
         queryKey: queryKeys.core.material.getPagination(materialID),
       });
