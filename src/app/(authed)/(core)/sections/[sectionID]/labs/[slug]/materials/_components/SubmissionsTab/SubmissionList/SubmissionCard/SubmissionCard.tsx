@@ -11,14 +11,12 @@ import {
 } from "./BaseCard";
 
 interface SubmissionCardProps {
-  id: string;
   order: number;
   status: "queued" | "running" | "passed" | "failed";
   createdAt: string;
   correctCase?: number;
   totalCase?: number;
   onClick: () => void;
-  materialID: string;
 }
 
 const statusConfig = {
@@ -53,14 +51,12 @@ const statusConfig = {
 };
 
 export function SubmissionCard({
-  id,
   order,
   status,
   createdAt,
   correctCase,
   totalCase,
   onClick,
-  materialID,
 }: SubmissionCardProps) {
   const config = statusConfig[status];
   const Icon = config.icon;
