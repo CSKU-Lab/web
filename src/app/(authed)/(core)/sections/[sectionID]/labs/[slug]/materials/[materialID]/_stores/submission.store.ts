@@ -13,3 +13,6 @@ export const submissionFilesAtom = atom<CodeFile[]>([
 
 export const selectedRunnerIDAtom = atom<string>("");
 export const submissionStatusAtom = atom<StatusType>("NO_SUBMISSION");
+
+// Track submission IDs that should have active EventSource connections
+export const activeSubmissionsAtom = atom<Set<string>>(new Set<string>());

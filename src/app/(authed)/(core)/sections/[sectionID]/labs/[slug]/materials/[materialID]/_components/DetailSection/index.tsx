@@ -5,6 +5,8 @@ import { renderStatus, type StatusType } from "./renderStatus";
 import SubmitButton from "./SubmitButton";
 import useGetCoreMaterial from "../../_hooks/useGetCoreMaterial";
 import type { SubmissionStatus } from "~/types/core-submission";
+import { useAtom } from "jotai";
+import { submissionStatusAtom } from "../../_stores/submission.store";
 
 interface DetailSectionProps {
   sectionID: string;
@@ -30,6 +32,13 @@ function mapSubmissionStatus(status: SubmissionStatus | undefined): StatusType {
 
 function DetailSection({ sectionID, labID, materialID }: DetailSectionProps) {
   const { data: material, isLoading } = useGetCoreMaterial();
+  const [submissionStatus] = useAtom(submissionStatusAtom);
+
+  // Use atom status if set (real-time), otherwise fallback to material API
+  const displayStatus =
+    submissionStatus !== "NO_SUBMISSION"
+      ? submissionStatus
+      : mapSubmissionStatus(material?.status);
 
   return (
     <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 w-full flex items-center justify-between gap-4">
@@ -37,7 +46,7 @@ function DetailSection({ sectionID, labID, materialID }: DetailSectionProps) {
         <HeaderItem label="Name" value={material?.name} isLoading={isLoading} />
         <HeaderItem
           label="Status"
-          value={renderStatus(mapSubmissionStatus(material?.status))}
+          value={renderStatus(displayStatus)}
           isLoading={isLoading}
         />
       </div>
