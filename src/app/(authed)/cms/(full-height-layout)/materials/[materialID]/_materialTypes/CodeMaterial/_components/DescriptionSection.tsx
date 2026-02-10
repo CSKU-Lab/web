@@ -81,6 +81,7 @@ function DescriptionSection() {
           initialValue={description}
           onUploadImage={handleImageUpload}
           maxFileUploadSize={MAX_FILE_SIZE}
+          className="p-4"
         />
       </div>
     </div>
