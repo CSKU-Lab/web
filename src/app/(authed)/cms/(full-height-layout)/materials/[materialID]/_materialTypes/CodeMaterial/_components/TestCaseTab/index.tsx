@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { isOwnerAtom } from "../../_stores/owner.store";
 import {
@@ -57,7 +57,7 @@ function SortableGroupCard({
   isSelected,
   isOwner,
 }: SortableGroupCardProps) {
-  const { setNodeRef, transform, transition, isDragging, isOver } = useSortable({
+  const { setNodeRef, transform, transition, isDragging, isOver, attributes, listeners } = useSortable({
     id: `group-${group.id}`,
     transition: {
       duration: 300,
@@ -69,6 +69,8 @@ function SortableGroupCard({
     transform: CSS.Transform.toString(transform),
     transition: transition || 'transform 300ms cubic-bezier(0.25, 0.1, 0.25, 1)',
   };
+
+  const dragHandleProps = { ...attributes, ...listeners };
 
   return (
     <div
@@ -88,6 +90,7 @@ function SortableGroupCard({
         isExpanded={isExpanded}
         onToggleExpand={onToggleExpand}
         isOwner={isOwner}
+        dragHandleProps={dragHandleProps}
       />
       {isExpanded && (
         <TestCaseList groupId={group.id} test_cases={group.test_cases} isOwner={isOwner} />
@@ -101,6 +104,11 @@ function TestCaseTab() {
   const selectedGroupIds = useAtomValue(selectedGroupIdsAtom);
   const selectedTestCaseIds = useAtomValue(selectedTestCaseIdsAtom);
   const isOwner = useAtomValue(isOwnerAtom);
+
+  // Sort groups by order field
+  const sortedTestCaseGroups = useMemo(() => {
+    return [...testCaseGroups].sort((a, b) => a.order - b.order);
+  }, [testCaseGroups]);
 
   const [isMounted, setIsMounted] = useState(false);
   const [expandedGroupIds, setExpandedGroupIds] = useState<Set<string>>(
@@ -146,7 +154,7 @@ function TestCaseTab() {
   // Build the list of all sortable items (groups and test cases)
   // Always include all items to prevent SortableContext from re-calculating
   // when groups expand/collapse, which can interfere with scroll behavior
-  const allSortableItems = testCaseGroups.flatMap((group) => {
+  const allSortableItems = sortedTestCaseGroups.flatMap((group) => {
     const items = [`group-${group.id}`];
     items.push(...group.test_cases.map((tc) => `testcase-${tc.id}`));
     return items;
@@ -188,8 +196,8 @@ function TestCaseTab() {
       // Dragging a group onto another group - reorder groups
       const activeGroupId = activeId.replace("group-", "");
       const overGroupId = overId.replace("group-", "");
-      const fromIndex = testCaseGroups.findIndex((g) => g.id === activeGroupId);
-      const toIndex = testCaseGroups.findIndex((g) => g.id === overGroupId);
+      const fromIndex = sortedTestCaseGroups.findIndex((g) => g.id === activeGroupId);
+      const toIndex = sortedTestCaseGroups.findIndex((g) => g.id === overGroupId);
       if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
         onMoveGroup({ fromIndex, toIndex });
       }
@@ -198,7 +206,7 @@ function TestCaseTab() {
       const activeTestCaseId = activeId.replace("testcase-", "");
       
       // Find the source group
-      const fromGroup = testCaseGroups.find((g) =>
+      const fromGroup = sortedTestCaseGroups.find((g) =>
         g.test_cases.some((tc) => tc.id === activeTestCaseId),
       );
       
@@ -207,7 +215,7 @@ function TestCaseTab() {
       if (isOverTestCase) {
         // Dragging test case onto another test case
         const overTestCaseId = overId.replace("testcase-", "");
-        const toGroup = testCaseGroups.find((g) =>
+        const toGroup = sortedTestCaseGroups.find((g) =>
           g.test_cases.some((tc) => tc.id === overTestCaseId),
         );
 
@@ -244,7 +252,7 @@ function TestCaseTab() {
       } else if (isOverGroup) {
         // Dragging test case onto a group
         const overGroupId = overId.replace("group-", "");
-        const toGroup = testCaseGroups.find((g) => g.id === overGroupId);
+        const toGroup = sortedTestCaseGroups.find((g) => g.id === overGroupId);
         
         if (fromGroup && toGroup && fromGroup.id !== toGroup.id) {
           const fromTestCase = fromGroup.test_cases.find(
@@ -270,8 +278,8 @@ function TestCaseTab() {
     );
 
   const isAllGroupsSelected =
-    testCaseGroups.length > 0 &&
-    selectedGroupIds.length === testCaseGroups.length;
+    sortedTestCaseGroups.length > 0 &&
+    selectedGroupIds.length === sortedTestCaseGroups.length;
 
   // Helper to get drag overlay content
   const getDragOverlayContent = () => {
@@ -279,7 +287,7 @@ function TestCaseTab() {
     
     if (activeId.startsWith("group-")) {
       const groupId = activeId.replace("group-", "");
-      const group = testCaseGroups.find((g) => g.id === groupId);
+      const group = sortedTestCaseGroups.find((g) => g.id === groupId);
       return (
         <div className="bg-white border-2 border-blue-400 rounded-lg shadow-2xl p-4 rotate-2">
           <p className="text-sm font-semibold text-gray-900">{group?.name ?? "Group"}</p>
@@ -321,7 +329,7 @@ function TestCaseTab() {
         <>
           <div className="flex justify-between items-center gap-2 flex-wrap mb-4">
             <div className="flex items-center gap-2">
-              {isOwner && testCaseGroups.length > 0 && (
+              {isOwner && sortedTestCaseGroups.length > 0 && (
                 <button
                   onClick={
                     isAllGroupsSelected
@@ -398,7 +406,7 @@ function TestCaseTab() {
                 strategy={verticalListSortingStrategy}
               >
                 <div className="space-y-4">
-                {testCaseGroups.map((group) => (
+                {sortedTestCaseGroups.map((group) => (
                   <SortableGroupCard
                     key={group.id}
                     group={group}
@@ -411,7 +419,7 @@ function TestCaseTab() {
               </div>
             </SortableContext>
 
-            {testCaseGroups.length === 0 && (
+            {sortedTestCaseGroups.length === 0 && (
               <div className="text-center py-12 text-gray-10">
                 <p>No test case groups yet</p>
                 <p className="text-sm mt-1">

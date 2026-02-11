@@ -18,6 +18,7 @@ interface GroupHeaderProps {
   isExpanded: boolean;
   onToggleExpand: () => void;
   isOwner: boolean;
+  dragHandleProps?: Record<string, unknown>;
 }
 
 function GroupHeader({
@@ -26,6 +27,7 @@ function GroupHeader({
   isExpanded,
   onToggleExpand,
   isOwner,
+  dragHandleProps,
 }: GroupHeaderProps) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameValue, setNameValue] = useState(group.name);
@@ -67,7 +69,10 @@ function GroupHeader({
   return (
     <div className="flex items-center gap-2 p-3 bg-gray-2 border-b rounded-t-md">
       {isOwner && (
-        <button className="cursor-grab active:cursor-grabbing text-gray-11 hover:text-gray-12">
+        <button
+          {...dragHandleProps}
+          className="cursor-grab active:cursor-grabbing text-gray-11 hover:text-gray-12"
+        >
           <GripVertical size="1.25rem" />
         </button>
       )}
