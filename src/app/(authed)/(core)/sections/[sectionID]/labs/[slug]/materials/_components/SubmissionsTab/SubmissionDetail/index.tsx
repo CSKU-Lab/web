@@ -43,11 +43,9 @@ function SubmissionDetail() {
     <>
       <BackButton />
       <SubmissionCard
-        id={data.id}
         order={data.order}
         status={data.status}
         createdAt={data.created_at}
-        materialID={materialID}
         onClick={() => {}}
       />
       <div className="mt-4">
