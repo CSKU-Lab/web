@@ -11,6 +11,9 @@ import {
   useSensors,
   type DragStartEvent,
   type DragEndEvent,
+  defaultDropAnimationSideEffects,
+  DragOverlayProps,
+  MeasuringStrategy,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -54,21 +57,29 @@ function SortableGroupCard({
   isSelected,
   isOwner,
 }: SortableGroupCardProps) {
-  const { setNodeRef, transform, transition, isDragging } = useSortable({
-    id: group.id,
+  const { setNodeRef, transform, transition, isDragging, isOver } = useSortable({
+    id: `group-${group.id}`,
+    transition: {
+      duration: 300,
+      easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+    },
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: transition || 'transform 300ms cubic-bezier(0.25, 0.1, 0.25, 1)',
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`border border-gray-4 rounded-md bg-white mb-4 transition-shadow ${
-        isDragging ? "shadow-lg opacity-50" : ""
+      className={`border-2 rounded-md bg-white mb-4 transition-all duration-300 ${
+        isDragging 
+          ? "shadow-xl opacity-60 border-blue-400 scale-[1.01]" 
+          : isOver
+            ? "border-blue-400 shadow-lg bg-blue-50/30"
+            : "border-gray-4"
       }`}
     >
       <GroupHeader
@@ -122,6 +133,25 @@ function TestCaseTab() {
     }),
   );
 
+  const dropAnimation: DragOverlayProps["dropAnimation"] = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: "0.5",
+        },
+      },
+    }),
+  };
+
+  // Build the list of all sortable items (groups and test cases)
+  // Always include all items to prevent SortableContext from re-calculating
+  // when groups expand/collapse, which can interfere with scroll behavior
+  const allSortableItems = testCaseGroups.flatMap((group) => {
+    const items = [`group-${group.id}`];
+    items.push(...group.test_cases.map((tc) => `testcase-${tc.id}`));
+    return items;
+  });
+
   const toggleExpand = (groupId: string) => {
     setExpandedGroupIds((prev) => {
       const newSet = new Set(prev);
@@ -147,44 +177,78 @@ function TestCaseTab() {
     const activeId = active.id as string;
     const overId = over.id as string;
 
-    const isGroup = testCaseGroups.some((g) => g.id === activeId);
-    const isTestCase = testCaseGroups.some((g) =>
-      g.test_cases.some((tc) => tc.id === activeId),
-    );
+    if (activeId === overId) return;
 
-    if (isGroup) {
-      const fromIndex = testCaseGroups.findIndex((g) => g.id === activeId);
-      const toIndex = testCaseGroups.findIndex((g) => g.id === overId);
+    const isActiveGroup = activeId.startsWith("group-");
+    const isActiveTestCase = activeId.startsWith("testcase-");
+    const isOverGroup = overId.startsWith("group-");
+    const isOverTestCase = overId.startsWith("testcase-");
+
+    if (isActiveGroup && isOverGroup) {
+      // Dragging a group onto another group - reorder groups
+      const activeGroupId = activeId.replace("group-", "");
+      const overGroupId = overId.replace("group-", "");
+      const fromIndex = testCaseGroups.findIndex((g) => g.id === activeGroupId);
+      const toIndex = testCaseGroups.findIndex((g) => g.id === overGroupId);
       if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
         onMoveGroup({ fromIndex, toIndex });
       }
-    } else if (isTestCase) {
+    } else if (isActiveTestCase) {
+      // Dragging a test case
+      const activeTestCaseId = activeId.replace("testcase-", "");
+      
+      // Find the source group
       const fromGroup = testCaseGroups.find((g) =>
-        g.test_cases.some((tc) => tc.id === activeId),
+        g.test_cases.some((tc) => tc.id === activeTestCaseId),
       );
-      const toGroup = testCaseGroups.find((g) => g.id === overId);
-      const overTestCase = testCaseGroups
-        .flatMap((g) => g.test_cases)
-        .find((tc) => tc.id === overId);
+      
+      if (!fromGroup) return;
 
-      if (fromGroup && toGroup) {
-        if (fromGroup.id === toGroup.id && overTestCase) {
-          const fromIndex = fromGroup.test_cases.findIndex(
-            (tc) => tc.id === activeId,
-          );
-          const toIndex = fromGroup.test_cases.findIndex(
-            (tc) => tc.id === overId,
-          );
-          if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
-            onMoveTestCase({
-              groupId: fromGroup.id,
-              fromIndex,
-              toIndex,
-            });
+      if (isOverTestCase) {
+        // Dragging test case onto another test case
+        const overTestCaseId = overId.replace("testcase-", "");
+        const toGroup = testCaseGroups.find((g) =>
+          g.test_cases.some((tc) => tc.id === overTestCaseId),
+        );
+
+        if (fromGroup && toGroup) {
+          if (fromGroup.id === toGroup.id) {
+            // Reorder within the same group
+            const fromIndex = fromGroup.test_cases.findIndex(
+              (tc) => tc.id === activeTestCaseId,
+            );
+            const toIndex = toGroup.test_cases.findIndex(
+              (tc) => tc.id === overTestCaseId,
+            );
+            if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
+              onMoveTestCase({
+                groupId: fromGroup.id,
+                fromIndex,
+                toIndex,
+              });
+            }
+          } else {
+            // Move test case to a different group
+            const fromTestCase = fromGroup.test_cases.find(
+              (tc) => tc.id === activeTestCaseId,
+            );
+            if (fromTestCase) {
+              onMoveTestCaseToGroup({
+                fromGroupId: fromGroup.id,
+                toGroupId: toGroup.id,
+                testCaseId: fromTestCase.id,
+              });
+            }
           }
-        } else if (fromGroup.id !== toGroup.id) {
+        }
+      } else if (isOverGroup) {
+        // Dragging test case onto a group
+        const overGroupId = overId.replace("group-", "");
+        const toGroup = testCaseGroups.find((g) => g.id === overGroupId);
+        
+        if (fromGroup && toGroup && fromGroup.id !== toGroup.id) {
           const fromTestCase = fromGroup.test_cases.find(
-            (tc) => tc.id === activeId,
+            (tc) => tc.id === activeTestCaseId,
           );
           if (fromTestCase) {
             onMoveTestCaseToGroup({
@@ -209,6 +273,30 @@ function TestCaseTab() {
     testCaseGroups.length > 0 &&
     selectedGroupIds.length === testCaseGroups.length;
 
+  // Helper to get drag overlay content
+  const getDragOverlayContent = () => {
+    if (!activeId) return null;
+    
+    if (activeId.startsWith("group-")) {
+      const groupId = activeId.replace("group-", "");
+      const group = testCaseGroups.find((g) => g.id === groupId);
+      return (
+        <div className="bg-white border-2 border-blue-400 rounded-lg shadow-2xl p-4 rotate-2">
+          <p className="text-sm font-semibold text-gray-900">{group?.name ?? "Group"}</p>
+          <p className="text-xs text-gray-500 mt-1">{group?.test_cases?.length ?? 0} test cases</p>
+        </div>
+      );
+    } else if (activeId.startsWith("testcase-")) {
+      return (
+        <div className="bg-white border-2 border-blue-400 rounded-lg shadow-2xl p-4 rotate-1 scale-105">
+          <p className="text-sm font-medium text-gray-900">Test Case</p>
+          <p className="text-xs text-blue-500 mt-1">Drop to move</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="p-2">
       {!isMounted ? (
@@ -230,12 +318,7 @@ function TestCaseTab() {
           ))}
         </div>
       ) : (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
+        <>
           <div className="flex justify-between items-center gap-2 flex-wrap mb-4">
             <div className="flex items-center gap-2">
               {isOwner && testCaseGroups.length > 0 && (
@@ -301,48 +384,49 @@ function TestCaseTab() {
             </div>
           </div>
 
-          <SortableContext
-            items={testCaseGroups.map((g) => g.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="space-y-4">
-              {testCaseGroups.map((group) => (
-                <SortableGroupCard
-                  key={group.id}
-                  group={group}
-                  isExpanded={expandedGroupIds.has(group.id)}
-                  onToggleExpand={() => toggleExpand(group.id)}
-                  isSelected={selectedGroupIds.includes(group.id)}
-                  isOwner={isOwner}
-                />
-              ))}
-            </div>
-          </SortableContext>
-
-          {testCaseGroups.length === 0 && (
-            <div className="text-center py-12 text-gray-10">
-              <p>No test case groups yet</p>
-              <p className="text-sm mt-1">
-                Click &ldquo;Add Group&rdquo; to create your first test case
-                group
-              </p>
-            </div>
-          )}
-
-          <DragOverlay>
-            {activeId ? (
-              <div className="bg-white border border-gray-4 rounded-md shadow-lg p-3 opacity-80">
-                {testCaseGroups.some((g) => g.id === activeId) ? (
-                  <p className="text-sm font-medium">
-                    {testCaseGroups.find((g) => g.id === activeId)?.name}
-                  </p>
-                ) : (
-                  <p className="text-sm text-gray-10">Moving test case...</p>
-                )}
+          <div className="relative">
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              autoScroll={{ threshold: { x: 0.2, y: 0.2 }, canScroll: () => true }}
+              measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+            >
+              <SortableContext
+                items={allSortableItems}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="space-y-4">
+                {testCaseGroups.map((group) => (
+                  <SortableGroupCard
+                    key={group.id}
+                    group={group}
+                    isExpanded={expandedGroupIds.has(group.id)}
+                    onToggleExpand={() => toggleExpand(group.id)}
+                    isSelected={selectedGroupIds.includes(group.id)}
+                    isOwner={isOwner}
+                  />
+                ))}
               </div>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
+            </SortableContext>
+
+            {testCaseGroups.length === 0 && (
+              <div className="text-center py-12 text-gray-10">
+                <p>No test case groups yet</p>
+                <p className="text-sm mt-1">
+                  Click &ldquo;Add Group&rdquo; to create your first test case
+                  group
+                </p>
+              </div>
+            )}
+
+              <DragOverlay dropAnimation={dropAnimation}>
+                {getDragOverlayContent()}
+              </DragOverlay>
+            </DndContext>
+          </div>
+        </>
       )}
     </div>
   );
