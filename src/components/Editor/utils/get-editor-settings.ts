@@ -1,4 +1,4 @@
-import type { IEditorSettings } from "~/types/editor";
+import { IEditorSettings } from "../types/editor";
 
 export const getEditorSettings = () => {
   if (typeof window !== "undefined") {

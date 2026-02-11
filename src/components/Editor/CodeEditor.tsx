@@ -107,7 +107,7 @@ function CodeEditor({
             </div>
           ) : (
             <CodeMirror
-              readOnly={!permissions?.writeFiles ?? true}
+              readOnly={permissions ? permissions.writeFiles : true}
               className="flex-1 min-h-0"
               extension={fileExtension}
               fontSize={settings.fontSize}

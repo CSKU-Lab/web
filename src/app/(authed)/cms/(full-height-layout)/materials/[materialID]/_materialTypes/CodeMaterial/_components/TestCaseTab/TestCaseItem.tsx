@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState } from "react";
 import { Trash2, Copy } from "lucide-react";
 import { useSetAtom } from "jotai";
 import {
@@ -17,17 +17,18 @@ interface TestCaseItemProps {
   isOwner: boolean;
 }
 
-function TestCaseItem({ testCase, groupId, isSelected, isOwner }: TestCaseItemProps) {
+function TestCaseItem({
+  testCase,
+  groupId,
+  isSelected,
+  isOwner,
+}: TestCaseItemProps) {
   const [inputValue, setInputValue] = useState(testCase.input);
 
   const onRemove = useSetAtom(removeTestCaseAtom);
   const onDuplicate = useSetAtom(duplicateTestCaseAtom);
   const onUpdateInput = useSetAtom(updateTestCaseAtom);
   const onToggleSelect = useSetAtom(toggleTestCaseSelectionAtom);
-
-  useEffect(() => {
-    setInputValue(testCase.input);
-  }, [testCase.input]);
 
   const handleInputChange = (newInput: string) => {
     setInputValue(newInput);
