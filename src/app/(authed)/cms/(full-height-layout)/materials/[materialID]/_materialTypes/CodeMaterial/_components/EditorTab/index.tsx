@@ -6,6 +6,7 @@ import type { CodeFile } from "~/types/code-material";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import { configService } from "~/services/config.service";
 import { useCallback } from "react";
+import { useGetRunners } from "../../../../_hooks/useGetRunners";
 
 function EditorSection() {
   const [files, setFiles] = useAtom(filesAtom);
@@ -20,7 +21,7 @@ function EditorSection() {
     }
   };
 
-  const queryRunners = useCallback(() => configService.getRunners(), []);
+  const allowedRunners = useGetRunners();
 
   return (
     <CodeEditor
@@ -32,7 +33,7 @@ function EditorSection() {
         codeExecution: isOwner,
         selectRunner: isOwner,
       }}
-      queryRunnerFn={queryRunners}
+      allowedRunners={allowedRunners.data ?? []}
       initialSelectedRunnerID={selectedRunnerID}
       onChangeSelectedRunnerID={setSelectedRunnerID}
     />
