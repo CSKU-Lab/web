@@ -1,9 +1,9 @@
 "use client";
 
-import PageTitle from "~/components/commons/PageTitle";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import LabTable from "./_components/LabTable";
 import DefaultLabTable from "./_components/DefaultLabTable";
+import RouteNavigation from "../_components/RouteNavigation";
 
 const tabMap = {
   lab: {
@@ -18,8 +18,8 @@ const tabMap = {
 
 export default function LabPage() {
   return (
-    <div className="flex flex-col h-[100vh] w-full overflow-y-auto space-y-4">
-      <PageTitle>Labs</PageTitle>
+    <div className="flex flex-col h-[100vh] w-full overflow-y-auto">
+      <RouteNavigation title="Labs" />
       <div className="flex flex-col h-full">
         <Tabs
           defaultValue={tabMap["lab"].value}

@@ -32,6 +32,7 @@ import {
   SettingTitle,
 } from "~/components/crafts/Settings";
 import { createCourseSchame } from "../../../_schemas/course.create";
+import RouteNavigation from "../_components/RouteNavigation";
 
 function SettingPage() {
   const { courseID } = useParams<{ courseID: string }>();
@@ -68,141 +69,146 @@ function SettingPage() {
   if (!course) return null;
 
   return (
-    <SettingLayout>
-      <SettingCard>
-        <SettingHeader>
-          <SettingTitle>Course Settings</SettingTitle>
-          <SettingDescription>
-            Manage your course details and visibility.
-          </SettingDescription>
-          <SettingDivider />
-        </SettingHeader>
-        <form
-          onSubmit={form.handleSubmit((course) => updateCourse.mutate(course))}
-          className="space-y-6"
-        >
-          <SettingSection>
-            <SettingSectionHeader>
-              <SettingSectionTitle>General</SettingSectionTitle>
-              <SettingSectionDescription>
-                Fill in the details of your course.
-              </SettingSectionDescription>
-            </SettingSectionHeader>
-            <div className="space-y-2">
-              <Label isError={!!form.formState.errors.name} htmlFor="name">
-                Course Name
-              </Label>
-              <Input
-                isError={!!form.formState.errors.name}
-                id="name"
-                className="text-sm"
-                {...form.register("name")}
-              />
-              <InlineError isError={!!form.formState.errors.name}>
-                Course name is required
-              </InlineError>
-            </div>
-            <div className="space-y-2">
-              <Label
-                isError={!!form.formState.errors.creators}
-                htmlFor="creators"
-              >
-                Creators
-              </Label>
+    <>
+      <RouteNavigation title="Settings" />
+      <SettingLayout>
+        <SettingCard>
+          <SettingHeader>
+            <SettingTitle>Course Settings</SettingTitle>
+            <SettingDescription>
+              Manage your course details and visibility.
+            </SettingDescription>
+            <SettingDivider />
+          </SettingHeader>
+          <form
+            onSubmit={form.handleSubmit((course) =>
+              updateCourse.mutate(course),
+            )}
+            className="space-y-6"
+          >
+            <SettingSection>
+              <SettingSectionHeader>
+                <SettingSectionTitle>General</SettingSectionTitle>
+                <SettingSectionDescription>
+                  Fill in the details of your course.
+                </SettingSectionDescription>
+              </SettingSectionHeader>
+              <div className="space-y-2">
+                <Label isError={!!form.formState.errors.name} htmlFor="name">
+                  Course Name
+                </Label>
+                <Input
+                  isError={!!form.formState.errors.name}
+                  id="name"
+                  className="text-sm"
+                  {...form.register("name")}
+                />
+                <InlineError isError={!!form.formState.errors.name}>
+                  Course name is required
+                </InlineError>
+              </div>
+              <div className="space-y-2">
+                <Label
+                  isError={!!form.formState.errors.creators}
+                  htmlFor="creators"
+                >
+                  Creators
+                </Label>
+                <Controller
+                  name="creators"
+                  control={form.control}
+                  render={({ field: { onChange, value } }) => (
+                    <UserAutoComplete value={value} onChange={onChange} />
+                  )}
+                />
+                <InlineError isError={!!form.formState.errors.creators}>
+                  Course creators are required
+                </InlineError>
+              </div>
+            </SettingSection>
+
+            <SettingSection>
+              <SettingSectionHeader>
+                <SettingSectionTitle>Visibility</SettingSectionTitle>
+                <SettingSectionDescription>
+                  Choose who can see this course.
+                </SettingSectionDescription>
+              </SettingSectionHeader>
               <Controller
-                name="creators"
                 control={form.control}
-                render={({ field: { onChange, value } }) => (
-                  <UserAutoComplete value={value} onChange={onChange} />
+                name="visibility"
+                render={({ field: { value, onChange } }) => (
+                  <RadioGroup
+                    value={value}
+                    onValueChange={onChange}
+                    defaultValue="public"
+                    className="space-y-2"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="public" id="public" />
+                      <div className="flex flex-col">
+                        <Label
+                          htmlFor="public"
+                          className="font-medium text-gray-900"
+                        >
+                          Public
+                        </Label>
+                        <p className="text-xs text-gray-500">
+                          Everyone can see this course
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value="private"
+                        id="private"
+                        className="font-medium"
+                      />
+                      <div className="flex flex-col">
+                        <Label htmlFor="private" className="font-medium">
+                          Private
+                        </Label>
+                        <p className="text-xs text-gray-500">
+                          Only invited users would see this course
+                        </p>
+                      </div>
+                    </div>
+                  </RadioGroup>
                 )}
               />
-              <InlineError isError={!!form.formState.errors.creators}>
-                Course creators are required
-              </InlineError>
-            </div>
-          </SettingSection>
+            </SettingSection>
 
-          <SettingSection>
-            <SettingSectionHeader>
-              <SettingSectionTitle>Visibility</SettingSectionTitle>
-              <SettingSectionDescription>
-                Choose who can see this course.
-              </SettingSectionDescription>
-            </SettingSectionHeader>
-            <Controller
-              control={form.control}
-              name="visibility"
-              render={({ field: { value, onChange } }) => (
-                <RadioGroup
-                  value={value}
-                  onValueChange={onChange}
-                  defaultValue="public"
-                  className="space-y-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="public" id="public" />
-                    <div className="flex flex-col">
-                      <Label
-                        htmlFor="public"
-                        className="font-medium text-gray-900"
-                      >
-                        Public
-                      </Label>
-                      <p className="text-xs text-gray-500">
-                        Everyone can see this course
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value="private"
-                      id="private"
-                      className="font-medium"
-                    />
-                    <div className="flex flex-col">
-                      <Label htmlFor="private" className="font-medium">
-                        Private
-                      </Label>
-                      <p className="text-xs text-gray-500">
-                        Only invited users would see this course
-                      </p>
-                    </div>
-                  </div>
-                </RadioGroup>
-              )}
-            />
-          </SettingSection>
-
-          <Button
-            type="submit"
-            variant="action"
-            className="w-full h-10"
-            disabled={isUpdated}
-          >
-            <Save size="1rem" className="mr-2" />
-            Save Changes
-          </Button>
-        </form>
-      </SettingCard>
-      <SettingCard variant="danger">
-        <SettingHeader>
-          <SettingTitle variant="danger">Danger Zone</SettingTitle>
-          <SettingDescription variant="danger">
-            Deleting this course will permanently remove all associated data.
-            This action cannot be undone.
-          </SettingDescription>
-          <SettingDivider variant="danger" />
-        </SettingHeader>
-        <DeleteCourseDialog>
-          <DeleteCourseDialogTrigger asChild>
-            <Button variant="danger" className="h-10">
-              <Trash size="1rem" className="mr-2" />
-              Delete Course
+            <Button
+              type="submit"
+              variant="action"
+              className="w-full h-10"
+              disabled={isUpdated}
+            >
+              <Save size="1rem" className="mr-2" />
+              Save Changes
             </Button>
-          </DeleteCourseDialogTrigger>
-        </DeleteCourseDialog>
-      </SettingCard>
-    </SettingLayout>
+          </form>
+        </SettingCard>
+        <SettingCard variant="danger">
+          <SettingHeader>
+            <SettingTitle variant="danger">Danger Zone</SettingTitle>
+            <SettingDescription variant="danger">
+              Deleting this course will permanently remove all associated data.
+              This action cannot be undone.
+            </SettingDescription>
+            <SettingDivider variant="danger" />
+          </SettingHeader>
+          <DeleteCourseDialog>
+            <DeleteCourseDialogTrigger asChild>
+              <Button variant="danger" className="h-10">
+                <Trash size="1rem" className="mr-2" />
+                Delete Course
+              </Button>
+            </DeleteCourseDialogTrigger>
+          </DeleteCourseDialog>
+        </SettingCard>
+      </SettingLayout>
+    </>
   );
 }
 

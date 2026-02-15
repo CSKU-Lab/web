@@ -2,19 +2,19 @@
 import type { ChildrenProps } from "~/types/children-props";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
-import { useParams } from "next/navigation";
 import PageTitle from "~/components/commons/PageTitle";
-import useGetLab from "../_hooks/useGetLab";
 import NavigationMenus from "~/app/(authed)/cms/_components/NavigationMenus";
+import { useBreadcrumbEntity } from "~/app/(authed)/cms/_components/BreadcrumbProvider";
+import type { CMSLab } from "~/types/cms-lab";
 
 export default function LabLayout({ children }: ChildrenProps) {
-  const { labID } = useParams<{ labID: string }>();
-  const { data: lab, isFetching } = useGetLab({ labID });
+  const { data: lab, isLoading } = useBreadcrumbEntity<CMSLab>("lab");
+
   return (
     <div>
       <PageTitle>
         <Loading
-          isLoading={isFetching}
+          isLoading={isLoading}
           fallback={<Skeleton className="w-64 h-8" />}
         >
           {lab?.display_name}
