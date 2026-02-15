@@ -7,6 +7,7 @@ import useGetStudents from "./_hooks/useGetStudents";
 import { useParams } from "next/navigation";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
+import RouteNavigation from "./_components/RouteNavigation";
 
 function SectionStudentPage() {
   const { sectionID } = useParams<{ sectionID: string }>();
@@ -14,6 +15,7 @@ function SectionStudentPage() {
 
   return (
     <>
+      <RouteNavigation title="Students" />
       <div className="p-4">
         <Loading
           isLoading={isFetching}

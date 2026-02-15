@@ -2,6 +2,7 @@
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import DataTable from "~/components/commons/DataTable";
 import { columns } from "./_columns/gradebook.columns";
+import RouteNavigation from "../_components/RouteNavigation";
 
 function GradebookPage() {
   const table = useReactTable({
@@ -686,7 +687,17 @@ function GradebookPage() {
     ],
   });
   return (
-    <DataTable table={table} columnBordered hidePagination textAlign="center" totalData={20} className="font-[Boon]" />
+    <>
+      <RouteNavigation title="Gradebook" />
+      <DataTable
+        table={table}
+        columnBordered
+        hidePagination
+        textAlign="center"
+        totalData={20}
+        className="font-[Boon]"
+      />
+    </>
   );
 }
 

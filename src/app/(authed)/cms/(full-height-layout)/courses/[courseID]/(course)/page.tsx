@@ -15,6 +15,7 @@ import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
 import Filters from "~/components/commons/Filters";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import useSectionsByCourseIdPagination from "./_hooks/useSectionsByCourseIdPagination";
+import RouteNavigation from "./_components/RouteNavigation";
 
 function CourseMainPage() {
   const router = useRouter();
@@ -53,58 +54,61 @@ function CourseMainPage() {
   });
 
   return (
-    <div className="@container px-4">
-      <div className="flex justify-end items-center gap-2">
-        <Button onClick={handleOnAddSection}>
-          <Plus size="1rem" /> Add Section
-        </Button>
-      </div>
+    <>
+      <RouteNavigation title="Sections" />
+      <div className="@container px-4">
+        <div className="flex justify-end items-center gap-2">
+          <Button onClick={handleOnAddSection}>
+            <Plus size="1rem" /> Add Section
+          </Button>
+        </div>
 
-      <Filters fields={filterFields} value={filters} onChange={setFilters} />
+        <Filters fields={filterFields} value={filters} onChange={setFilters} />
 
-      <div className="mt-10 space-y-8">
-        {sectionPagination.pages.map((page) =>
-          page.data.map((data) => (
-            <div key={data.semester.name + data.semester.type}>
-              <h6 className="text-xs text-(--gray-10)">Semester</h6>
-              <h4 className="text-xl font-semibold text-(--gray-12)">
-                {data.semester.name} ({titleFormatter(data.semester.type)})
-              </h4>
-              <hr className="my-2" />
-              <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max mt-4">
-                {data.sections.map((section) => (
-                  <CMSSectionCard
-                    key={section.id}
-                    id={section.id}
-                    name={section.name}
-                    instructors={section.instructors.map(
-                      (instructor) => instructor.display_name,
-                    )}
-                    bannerImage={section.banner}
-                    semester={data.semester.name}
-                  />
-                ))}
+        <div className="mt-10 space-y-8">
+          {sectionPagination.pages.map((page) =>
+            page.data.map((data) => (
+              <div key={data.semester.name + data.semester.type}>
+                <h6 className="text-xs text-(--gray-10)">Semester</h6>
+                <h4 className="text-xl font-semibold text-(--gray-12)">
+                  {data.semester.name} ({titleFormatter(data.semester.type)})
+                </h4>
+                <hr className="my-2" />
+                <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max mt-4">
+                  {data.sections.map((section) => (
+                    <CMSSectionCard
+                      key={section.id}
+                      id={section.id}
+                      name={section.name}
+                      instructors={section.instructors.map(
+                        (instructor) => instructor.display_name,
+                      )}
+                      bannerImage={section.banner}
+                      semester={data.semester.name}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          )),
-        )}
+            )),
+          )}
 
-        {isFetching &&
-          Array.from({ length: 3 }).map((_, index) => (
-            <div key={index}>
-              <h6 className="text-xs text-(--gray-10)">Semester</h6>
-              <Skeleton className="w-20 h-6 mt-2" />
-              <hr className="my-2" />
-              <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max mt-4">
-                {Array.from({ length: 7 }).map((_, index) => (
-                  <FallbackSectionCard key={index} />
-                ))}
+          {isFetching &&
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index}>
+                <h6 className="text-xs text-(--gray-10)">Semester</h6>
+                <Skeleton className="w-20 h-6 mt-2" />
+                <hr className="my-2" />
+                <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max mt-4">
+                  {Array.from({ length: 7 }).map((_, index) => (
+                    <FallbackSectionCard key={index} />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        <div ref={bottomDivRef} className="h-20"></div>
+            ))}
+          <div ref={bottomDivRef} className="h-20"></div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

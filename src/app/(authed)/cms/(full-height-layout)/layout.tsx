@@ -5,6 +5,7 @@ import CoreLayout, {
 } from "~/layouts/CoreLayout";
 import type { ChildrenProps } from "~/types/children-props";
 import BreadcrumbClient from "../_components/BreadcrumbClient";
+import { BreadcrumbProvider } from "../_components/BreadcrumbProvider";
 import SidebarMenus from "../_components/SidebarMenus";
 import { getUser } from "~/lib/get-user";
 import { getSidebarMenus } from "../_configs/sidebar-menus";
@@ -20,8 +21,10 @@ async function Layout({ children }: ChildrenProps) {
         <SidebarMenus config={sidebarMenus} />
       </CoreLayoutSidebar>
       <CoreLayoutContent className="h-full">
-        <BreadcrumbClient className="pl-4 mt-4 mb-4" />
-        {children}
+        <BreadcrumbProvider>
+          <BreadcrumbClient className="pl-4 mt-4" />
+          {children}
+        </BreadcrumbProvider>
       </CoreLayoutContent>
     </CoreLayout>
   );

@@ -1,28 +1,21 @@
 "use client";
-import Loading from "~/components/commons/Loading";
-import PageTitle from "~/components/commons/PageTitle";
-import { Skeleton } from "~/components/ui/skeleton";
-import type { ChildrenProps } from "~/types/children-props";
-import useGetSection from "./_hooks/useGetSection";
 import { useParams } from "next/navigation";
 import NavigationMenus from "~/app/(authed)/cms/_components/NavigationMenus";
+import PageTitle from "~/components/commons/PageTitle";
 
-function Layout({ children }: ChildrenProps) {
+interface Props {
+  title: string;
+}
+
+function RouteNavigation({ title }: Props) {
   const { courseID, sectionID } = useParams<{
     courseID: string;
     sectionID: string;
   }>();
-  const { data, isFetching } = useGetSection();
+
   return (
     <>
-      <PageTitle>
-        <Loading
-          isLoading={isFetching}
-          fallback={<Skeleton className="w-48 h-8" />}
-        >
-          {data?.name}
-        </Loading>
-      </PageTitle>
+      <PageTitle>{title}</PageTitle>
       <NavigationMenus
         className="grid-cols-5 w-3/5"
         menus={[
@@ -48,9 +41,8 @@ function Layout({ children }: ChildrenProps) {
           },
         ]}
       />
-      {children}
     </>
   );
 }
 
-export default Layout;
+export default RouteNavigation;
