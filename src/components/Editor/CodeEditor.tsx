@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { FileCode } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
@@ -8,6 +8,25 @@ import { getEditorSettings } from "./utils/get-editor-settings";
 import type { Runner } from "./types/runner";
 import Playground from "./Playground";
 import type { CodeFile, IEditorSettings } from "./types/editor";
+
+function useDebouncedCallback<TArgs extends unknown[]>(
+  callback: (...args: TArgs) => void,
+  delay: number
+) {
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  return useCallback(
+    (...args: TArgs) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    },
+    [callback, delay]
+  );
+}
 
 interface Permission {
   modifyFiles?: boolean;
@@ -36,13 +55,20 @@ function CodeEditor({
   isLoading,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [settings, setSettings] =
+    useState<IEditorSettings>(getEditorSettings());
+  const [runnerSelectError, setRunnerSelectError] = useState(false);
+  const [selectedRunnerID, setSelectedRunnerID] = useState<string>("");
 
-  useEffect(() => {
-    if (files.length === 0 || !isInitialLoad) return;
+  const [previousFiles, setPreviousFiles] = useState<CodeFile[]>([]);
+  if (previousFiles.length === 0 && files.length > 0) {
     setSelectedFile(files[0].name);
-    setIsInitialLoad(false);
-  }, [files, isInitialLoad]);
+    setPreviousFiles(files);
+  }
+
+  if (initialSelectedRunnerID && selectedRunnerID === "") {
+    setSelectedRunnerID(initialSelectedRunnerID);
+  }
 
   const handleSelectFile = (name: string) => {
     setSelectedFile(name);
@@ -51,29 +77,37 @@ function CodeEditor({
   const currentFile = files.find((f) => f.name === selectedFile);
   const fileExtension = currentFile?.name.split(".").pop();
 
-  const codeMirrorValue = currentFile?.content ?? "";
-
-  const [settings, setSettings] =
-    useState<IEditorSettings>(getEditorSettings());
-
   const handleSettingsChange = (newSettings: IEditorSettings) => {
     setSettings(newSettings);
     localStorage.setItem("editor-settings", JSON.stringify(newSettings));
   };
-
-  const [runnerSelectError, setRunnerSelectError] = useState(false);
-  const [selectedRunnerID, setSelectedRunnerID] = useState<string>("");
-
-  useEffect(() => {
-    if (!initialSelectedRunnerID) return;
-    setSelectedRunnerID(initialSelectedRunnerID);
-  }, [initialSelectedRunnerID]);
 
   const handleSelectRunner = (runnerID: string) => {
     setSelectedRunnerID(runnerID);
     onChangeSelectedRunnerID?.(runnerID);
     setRunnerSelectError(false);
   };
+
+  // Debounced callback to notify parent of changes
+  const debouncedOnFilesChange = useDebouncedCallback(
+    (newFiles: CodeFile[]) => {
+      onFilesChange(newFiles);
+    },
+    300
+  );
+
+  const handleCodeChange = useCallback(
+    (value: string) => {
+      if (!currentFile) return;
+
+      // Debounce the parent update - typing stays responsive
+      const newFiles = files.map((f) =>
+        f.name === currentFile.name ? { ...f, content: value } : f
+      );
+      debouncedOnFilesChange(newFiles);
+    },
+    [currentFile, files, debouncedOnFilesChange]
+  );
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
@@ -107,22 +141,14 @@ function CodeEditor({
             </div>
           ) : (
             <CodeMirror
+              key={currentFile.name}
               readOnly={permissions ? !permissions.writeFiles : true}
               className="flex-1 min-h-0"
               extension={fileExtension}
               fontSize={settings.fontSize}
               vimMode={settings.vimMode}
-              value={codeMirrorValue}
-              onChange={(value) => {
-                if (currentFile) {
-                  const newFiles = files.map((f) =>
-                    f.name === currentFile.name ? { ...f, content: value } : f,
-                  );
-                  if (currentFile.content !== value) {
-                    onFilesChange(newFiles);
-                  }
-                }
-              }}
+              value={currentFile.content}
+              onChange={handleCodeChange}
             />
           )}
         </div>
