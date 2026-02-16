@@ -1,11 +1,11 @@
 import {
   Clock,
   GripHorizontal,
+  GripVertical,
   LoaderCircle,
   MemoryStick,
   Play,
 } from "lucide-react";
-import IOButton from "./IOButton";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import useDrag from "~/hooks/useDrag";
 import { useState } from "react";
@@ -22,7 +22,6 @@ interface Props {
 }
 
 function Playground({ runnerID, files, onError, disabled }: Props) {
-  const [selectedTab, setSelectedTab] = useState<"input" | "output">("input");
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
 
@@ -31,10 +30,18 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
     direction: "vertical",
   });
 
-  const handleOnChange = (value: string) => {
-    if (selectedTab === "output") return;
-    setInput(value);
-  };
+
+
+  const {
+    buttonRef: splitButtonRef,
+    containerRef: splitContainerRef,
+    size: splitPercent,
+    events: splitEvents,
+  } = useDrag({
+    initialSize: 50,
+    direction: "horizontal",
+    mode: "percent",
+  });
 
   const [result, setResult] = useState<CodeExecutionResult | null>(null);
   const isRunning =
@@ -84,7 +91,6 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
             data.status !== "STATUS_RUNNING"
           ) {
             setOutput(data.output);
-            setSelectedTab("output");
           }
           setResult(data);
         }
@@ -122,38 +128,55 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
           </div>
         )}
       </div>
-      <div className="flex">
-        <IOButton
-          isActive={selectedTab === "input"}
-          onClick={() => setSelectedTab("input")}
-        >
-          Input
-        </IOButton>
-        <IOButton
-          isActive={selectedTab === "output"}
-          onClick={() => setSelectedTab("output")}
-        >
-          Output
-        </IOButton>
-      </div>
-      <div className="flex-1 min-h-10 relative">
+      <div className="flex flex-1 min-h-0 overflow-hidden" ref={splitContainerRef}>
+        {/* Input panel */}
+        <div className="flex flex-col overflow-hidden" style={{ width: `${splitPercent}%` }}>
+          <div className="bg-(--gray-3) border-b px-3 py-2 shrink-0">
+            <span className="text-xs font-medium text-(--gray-11)">Input</span>
+          </div>
+          <div className="flex-1 min-h-0 relative overflow-hidden">
+            <button
+              onClick={handleRunCode}
+              disabled={isRunning || disabled}
+              className="absolute bottom-2 right-2 z-10 bg-(--gray-12) hover:bg-(--gray-12)/80 text-(--gray-1) p-2 text-xs backdrop-blur-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {isRunning ? (
+                <LoaderCircle size="1rem" className="animate-spin" />
+              ) : (
+                <Play size="1rem" />
+              )}
+            </button>
+            <CodeMirror
+              onChange={(value: string) => setInput(value)}
+              readOnly={disabled}
+              value={input}
+              className="h-full overflow-auto"
+            />
+          </div>
+        </div>
+
+        {/* Horizontal drag handle */}
         <button
-          onClick={handleRunCode}
-          disabled={isRunning || disabled}
-          className="absolute bottom-2 right-2 z-10 bg-(--gray-12) hover:bg-(--gray-12)/80 text-(--gray-1) p-2 text-xs backdrop-blur-sm transition-colors  disabled:opacity-60 disabled:cursor-not-allowed"
+          {...splitEvents}
+          ref={splitButtonRef}
+          className="w-4 h-full bg-white border-l border-r cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center shrink-0"
         >
-          {isRunning ? (
-            <LoaderCircle size="1rem" className="animate-spin" />
-          ) : (
-            <Play size="1rem" />
-          )}
+          <GripVertical size="0.9rem" />
         </button>
-        <CodeMirror
-          onChange={handleOnChange}
-          readOnly={selectedTab === "output" || disabled}
-          value={selectedTab === "input" ? input : output}
-          className="h-full"
-        />
+
+        {/* Output panel */}
+        <div className="flex flex-col flex-1 overflow-hidden">
+          <div className="bg-(--gray-3) border-b px-3 py-2 shrink-0">
+            <span className="text-xs font-medium text-(--gray-11)">Output</span>
+          </div>
+          <div className="flex-1 min-h-0 relative overflow-hidden">
+            <CodeMirror
+              readOnly
+              value={output}
+              className="h-full overflow-auto"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
