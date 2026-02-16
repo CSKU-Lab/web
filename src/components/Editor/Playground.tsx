@@ -128,13 +128,13 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
           </div>
         )}
       </div>
-      <div className="flex flex-1 min-h-0 overflow-hidden" ref={splitContainerRef}>
+      <div className="flex flex-1 min-h-0" ref={splitContainerRef}>
         {/* Input panel */}
-        <div className="flex flex-col overflow-hidden" style={{ width: `${splitPercent}%` }}>
-          <div className="bg-(--gray-3) border-b px-3 py-2 shrink-0">
+        <div className="flex flex-col" style={{ width: `${splitPercent}%` }}>
+          <div className="bg-(--gray-3) border-b px-3 py-2">
             <span className="text-xs font-medium text-(--gray-11)">Input</span>
           </div>
-          <div className="flex-1 min-h-0 relative overflow-hidden">
+          <div className="flex-1 relative">
             <button
               onClick={handleRunCode}
               disabled={isRunning || disabled}
@@ -150,7 +150,7 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
               onChange={(value: string) => setInput(value)}
               readOnly={disabled}
               value={input}
-              className="h-full overflow-auto"
+              className="h-full"
             />
           </div>
         </div>
@@ -159,21 +159,21 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
         <button
           {...splitEvents}
           ref={splitButtonRef}
-          className="w-4 h-full bg-white border-l border-r cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center shrink-0"
+          className="w-4 h-full bg-white border-l border-r cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center"
         >
           <GripVertical size="0.9rem" />
         </button>
 
         {/* Output panel */}
-        <div className="flex flex-col flex-1 overflow-hidden">
-          <div className="bg-(--gray-3) border-b px-3 py-2 shrink-0">
+        <div className="flex flex-col flex-1">
+          <div className="bg-(--gray-3) border-b px-3 py-2">
             <span className="text-xs font-medium text-(--gray-11)">Output</span>
           </div>
-          <div className="flex-1 min-h-0 relative overflow-hidden">
+          <div className="flex-1 relative">
             <CodeMirror
               readOnly
               value={output}
-              className="h-full overflow-auto"
+              className="h-full"
             />
           </div>
         </div>
