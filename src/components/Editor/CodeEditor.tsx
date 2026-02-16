@@ -11,7 +11,7 @@ import type { CodeFile, IEditorSettings } from "./types/editor";
 
 function useDebouncedCallback<TArgs extends unknown[]>(
   callback: (...args: TArgs) => void,
-  delay: number
+  delay: number,
 ) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -24,7 +24,7 @@ function useDebouncedCallback<TArgs extends unknown[]>(
         callback(...args);
       }, delay);
     },
-    [callback, delay]
+    [callback, delay],
   );
 }
 
@@ -93,7 +93,7 @@ function CodeEditor({
     (newFiles: CodeFile[]) => {
       onFilesChange(newFiles);
     },
-    300
+    100,
   );
 
   const handleCodeChange = useCallback(
@@ -102,11 +102,11 @@ function CodeEditor({
 
       // Debounce the parent update - typing stays responsive
       const newFiles = files.map((f) =>
-        f.name === currentFile.name ? { ...f, content: value } : f
+        f.name === currentFile.name ? { ...f, content: value } : f,
       );
       debouncedOnFilesChange(newFiles);
     },
-    [currentFile, files, debouncedOnFilesChange]
+    [currentFile, files, debouncedOnFilesChange],
   );
 
   return (
