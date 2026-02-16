@@ -5,6 +5,7 @@
 @import "@radix-ui/colors/lime";
 @import "@radix-ui/colors/amber";
 @import "@radix-ui/colors/blue";
+@import "@radix-ui/colors/tomato";
 @import '../styles/_variables.scss';
 @import '../styles/_keyframe-animations.scss';
 
