@@ -1,25 +1,11 @@
 import { tool } from "ai";
-import { z } from "zod";
 import { cmsMaterialService } from "~/services/cms-material.service";
-
-const createMaterialSchema = z.object({
-  name: z.string(),
-  type: z.enum(["document", "code", "type"]),
-  tags: z.array(z.string()),
-  visibility: z.enum(["public", "private"]).default("public"),
-});
-
-const updateMaterialSchema = createMaterialSchema.partial().extend({
-  payload: z.any().nullable(),
-});
-
-const paginationSchema = z.object({
-  page: z.number().min(1),
-  limit: z.number().min(1),
-  search: z.string().optional(),
-  sortBy: z.string().optional(),
-  order: z.enum(["asc", "desc"]).optional(),
-});
+import {
+  createMaterialSchema,
+  paginationSchema,
+  updateMaterialSchema,
+} from "./schemas/material.schema";
+import z from "zod";
 
 export const materialTool = () => {
   const createMaterial = tool({
