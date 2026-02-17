@@ -14,12 +14,17 @@ interface CodeMaterialCompareScript {
   name: string;
 }
 
+interface CodeMaterialSolutionRunner {
+  id: string;
+  name: string;
+}
+
 export interface CodeMaterialResponse {
   description: string | null;
   test_case_groups: TestCaseGroup[];
   allowed_runners: CodeMaterialAllowedRunner[];
   compare_script: CodeMaterialCompareScript | null;
-  solution_runner_id: string | null;
+  solution_runner: CodeMaterialSolutionRunner | null;
   solution_files: CodeMaterialSolutionFile[];
   limit: CodeMaterialLimit;
 }

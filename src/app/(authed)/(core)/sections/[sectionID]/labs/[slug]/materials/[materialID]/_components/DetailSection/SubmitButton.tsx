@@ -9,7 +9,7 @@ import { coreSubmissionService } from "~/services/core-submission.service";
 import { queryKeys } from "~/queryKeys";
 import {
   submissionFilesAtom,
-  selectedRunnerIDAtom,
+  selectedRunnerAtom,
   submissionStatusAtom,
   activeSubmissionsAtom,
 } from "../../_stores/submission.store";
@@ -23,7 +23,7 @@ interface SubmitButtonProps {
 
 function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   const files = useAtomValue(submissionFilesAtom);
-  const selectedRunnerID = useAtomValue(selectedRunnerIDAtom);
+  const selectedRunner = useAtomValue(selectedRunnerAtom);
   const setSubmissionStatus = useSetAtom(submissionStatusAtom);
   const setActiveSubmissions = useSetAtom(activeSubmissionsAtom);
   const queryClient = useQueryClient();
@@ -36,7 +36,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
         section_id: sectionID,
         payload: {
           files,
-          runner_id: selectedRunnerID,
+          runner_id: selectedRunner?.id ?? "",
         },
       });
     },
@@ -66,7 +66,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   });
 
   const handleSubmit = () => {
-    if (!selectedRunnerID) {
+    if (!selectedRunner?.id) {
       toast.error("Please select a runner first");
       return;
     }
@@ -76,7 +76,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   return (
     <Button
       onClick={handleSubmit}
-      disabled={submitMutation.isPending || !selectedRunnerID}
+      disabled={submitMutation.isPending || !selectedRunner?.id}
       className="bg-(--amber-9) hover:bg-(--amber-10) text-white"
     >
       {submitMutation.isPending ? (

@@ -60,7 +60,6 @@ function DescriptionTab() {
       limits.max_open_files > 0 ||
       limits.max_file_size > 0 ||
       limits.network_allow);
-  console.log(limits);
 
   return (
     <div className="p-4 space-y-4">

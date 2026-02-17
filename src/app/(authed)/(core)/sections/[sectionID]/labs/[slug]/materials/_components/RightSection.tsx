@@ -4,14 +4,14 @@ import { useAtom } from "jotai";
 import CodeEditor from "~/components/Editor/CodeEditor";
 import {
   submissionFilesAtom,
-  selectedRunnerIDAtom,
+  selectedRunnerAtom,
 } from "../[materialID]/_stores/submission.store";
 import useGetCoreMaterial from "../[materialID]/_hooks/useGetCoreMaterial";
 import type { CoreCodeMaterial } from "~/types/core-code-material";
 
 function RightSection() {
   const [files, setFiles] = useAtom(submissionFilesAtom);
-  const [selectedRunnerID, setSelectedRunnerID] = useAtom(selectedRunnerIDAtom);
+  const [selectedRunner, setSelectedRunner] = useAtom(selectedRunnerAtom);
   const { data: material, isLoading } = useGetCoreMaterial<CoreCodeMaterial>();
 
   return (
@@ -27,8 +27,8 @@ function RightSection() {
             selectRunner: true,
           }}
           allowedRunners={material?.payload.allowed_runners ?? []}
-          initialSelectedRunnerID={selectedRunnerID}
-          onChangeSelectedRunnerID={setSelectedRunnerID}
+          initialSelectedRunner={selectedRunner}
+          onChangeSelectedRunner={setSelectedRunner}
           isLoading={isLoading}
         />
       </div>

@@ -2,23 +2,24 @@ import { atom } from "jotai";
 import { saveStatusAtom } from "./save-status.store";
 import { isOwnerAtom } from "./owner.store";
 import type { CodeFile } from "~/types/code-material";
+import type { Runner } from "~/components/Editor/types/runner";
 
-const internalSolutionRunnerIDAtom = atom("");
-export const initialSolutionRunnerIDAtom = atom(
+const internalSolutionRunnerAtom = atom<Runner | null>(null);
+export const initialSolutionRunnerAtom = atom(
   null,
-  (_get, set, runnerID: string) => {
-    set(internalSolutionRunnerIDAtom, runnerID);
+  (_get, set, runner: Runner | null) => {
+    set(internalSolutionRunnerAtom, runner);
   },
 );
-export const solutionRunnerIDAtom = atom(
-  (get) => get(internalSolutionRunnerIDAtom),
-  (get, set, newID: string) => {
-    const currentLimit = get(internalSolutionRunnerIDAtom);
-    if (currentLimit === newID) {
+export const solutionRunnerAtom = atom(
+  (get) => get(internalSolutionRunnerAtom),
+  (get, set, newRunner: Runner) => {
+    const currentRunner = get(internalSolutionRunnerAtom);
+    if (currentRunner?.id === newRunner.id) {
       return;
     }
 
-    set(internalSolutionRunnerIDAtom, newID);
+    set(internalSolutionRunnerAtom, newRunner);
     const isOwner = get(isOwnerAtom);
     if (isOwner) {
       set(saveStatusAtom, "UnSaved");

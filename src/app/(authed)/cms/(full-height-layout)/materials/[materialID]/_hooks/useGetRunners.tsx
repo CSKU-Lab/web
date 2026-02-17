@@ -1,15 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "~/queryKeys";
-import { configService } from "~/services/config.service";
+import {
+  configService,
+  GetRunnerPaginationParams,
+} from "~/services/config.service";
 
-interface Args {
-  includeScript: boolean;
-}
-
-export const useGetRunners = (args?: Args) => {
+export const useGetRunners = (args: GetRunnerPaginationParams) => {
   return useQuery({
-    queryKey: queryKeys.config.runners.all(args),
-    queryFn: () =>
-      configService.getRunners({ includeScript: args?.includeScript }),
+    queryKey: queryKeys.configs.runners.all(args),
+    queryFn: () => configService.getRunners(args),
   });
 };

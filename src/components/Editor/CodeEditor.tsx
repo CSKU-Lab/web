@@ -40,9 +40,10 @@ interface Props {
   onFilesChange: (files: CodeFile[]) => void;
   permissions?: Permission;
   allowedRunners: Runner[];
-  initialSelectedRunnerID?: string;
-  onChangeSelectedRunnerID?: (runnerID: string) => void;
+  initialSelectedRunner?: Runner | null;
+  onChangeSelectedRunner?: (runner: Runner) => void;
   isLoading?: boolean;
+  queryFn?: (query: string) => Promise<Runner[]>;
 }
 
 function CodeEditor({
@@ -50,15 +51,16 @@ function CodeEditor({
   onFilesChange,
   permissions,
   allowedRunners,
-  initialSelectedRunnerID,
-  onChangeSelectedRunnerID,
+  initialSelectedRunner,
+  onChangeSelectedRunner,
   isLoading,
+  queryFn,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings, setSettings] =
     useState<IEditorSettings>(getEditorSettings());
   const [runnerSelectError, setRunnerSelectError] = useState(false);
-  const [selectedRunnerID, setSelectedRunnerID] = useState<string>("");
+  const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
 
   const [previousFiles, setPreviousFiles] = useState<CodeFile[]>([]);
   if (previousFiles.length === 0 && files.length > 0) {
@@ -66,8 +68,8 @@ function CodeEditor({
     setPreviousFiles(files);
   }
 
-  if (initialSelectedRunnerID && selectedRunnerID === "") {
-    setSelectedRunnerID(initialSelectedRunnerID);
+  if (initialSelectedRunner && selectedRunner === null) {
+    setSelectedRunner(initialSelectedRunner);
   }
 
   const handleSelectFile = (name: string) => {
@@ -82,9 +84,9 @@ function CodeEditor({
     localStorage.setItem("editor-settings", JSON.stringify(newSettings));
   };
 
-  const handleSelectRunner = (runnerID: string) => {
-    setSelectedRunnerID(runnerID);
-    onChangeSelectedRunnerID?.(runnerID);
+  const handleSelectRunner = (runner: Runner) => {
+    setSelectedRunner(runner);
+    onChangeSelectedRunner?.(runner);
     setRunnerSelectError(false);
   };
 
@@ -123,11 +125,12 @@ function CodeEditor({
           <div className="border-b p-1 flex justify-between">
             <RunnerSelect
               runners={allowedRunners}
-              selectedRunnerID={selectedRunnerID}
+              selectedRunner={selectedRunner}
               onSelect={handleSelectRunner}
               isError={runnerSelectError}
               isLoading={isLoading}
               disabled={!permissions?.selectRunner}
+              queryFn={queryFn}
             />
             <EditorSettings
               settings={settings}
@@ -156,7 +159,7 @@ function CodeEditor({
 
       <Playground
         files={files}
-        runnerID={selectedRunnerID}
+        runnerID={selectedRunner?.id ?? ""}
         onError={() => setRunnerSelectError(true)}
         disabled={!permissions?.codeExecution}
       />
