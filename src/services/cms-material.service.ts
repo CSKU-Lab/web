@@ -11,7 +11,7 @@ export type CreateMaterialPayload = {
 };
 
 export type UpdateMaterialPayload = Partial<CreateMaterialPayload> & {
-  payload: any | null;
+  payload?: any | null;
 };
 
 export type GetMaterialPaginationParams = PaginationRequestParams<CMSMaterial>;

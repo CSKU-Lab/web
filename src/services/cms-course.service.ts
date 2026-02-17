@@ -1,4 +1,3 @@
-import { api } from "~/lib/api.client";
 import type { Course, WriteCourse } from "~/types/cms-course";
 import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
@@ -23,7 +22,7 @@ class CMSCourseService extends BaseService {
 
   async create({ name, creators, visibility }: WriteCourse): Promise<Course> {
     const creatorIds = creators.map((creator) => creator.id);
-    const res = await api.post(this._baseURL, {
+    const res = await this.api.post(this._baseURL, {
       name,
       creators: creatorIds,
       visibility,
@@ -32,7 +31,7 @@ class CMSCourseService extends BaseService {
   }
 
   async getById(courseId: string): Promise<Course> {
-    const res = await api.get<Course>(`${this._baseURL}/${courseId}`);
+    const res = await this.api.get<Course>(`${this._baseURL}/${courseId}`);
     return res.data;
   }
 
@@ -41,7 +40,7 @@ class CMSCourseService extends BaseService {
     { name, creators, visibility }: WriteCourse,
   ): Promise<void> {
     const creatorIds = creators.map((creator) => creator.id);
-    return api.patch(`${this._baseURL}/${courseId}`, {
+    return this.api.patch(`${this._baseURL}/${courseId}`, {
       name,
       visibility,
       creators: creatorIds,
@@ -49,7 +48,7 @@ class CMSCourseService extends BaseService {
   }
 
   async deleteByID(courseId: string): Promise<void> {
-    return api.delete(`${this._baseURL}/${courseId}`);
+    return this.api.delete(`${this._baseURL}/${courseId}`);
   }
 
   async getPagination(params: GetCoursePaginationParams) {
