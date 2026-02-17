@@ -4,7 +4,7 @@ import { cmsMaterialService } from "~/services/cms-material.service";
 import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "~/queryKeys";
-import { filesAtom, solutionRunnerIDAtom } from "../../_stores/editor.store";
+import { filesAtom, solutionRunnerAtom } from "../../_stores/editor.store";
 import { testCaseGroupsAtom } from "../../_stores/testcase-groups.store";
 import {
   allowedRunnersAtom,
@@ -23,7 +23,7 @@ function SaveButton() {
   const compareScript = useAtomValue(compareScriptAtom);
   const description = useAtomValue(descriptionAtom);
   const files = useAtomValue(filesAtom);
-  const solutionRunnerID = useAtomValue(solutionRunnerIDAtom);
+  const solutionRunner = useAtomValue(solutionRunnerAtom);
   const limit = useAtomValue(limitAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
   const isOwner = useAtomValue(isOwnerAtom);
@@ -39,7 +39,7 @@ function SaveButton() {
           test_case_groups: testCaseGroups,
           allowed_runner_ids: allowedRunners.map((runner) => runner.id) ?? [],
           compare_script_id: compareScript?.id ?? null,
-          solution_runner_id: solutionRunnerID,
+          solution_runner_id: solutionRunner?.id ?? null,
           solution_files: files,
           limit,
         } satisfies CodeMaterialPayload,

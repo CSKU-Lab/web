@@ -6,7 +6,7 @@ import DescriptionSection from "./_components/DescriptionSection";
 import DetailSection from "./_components/DetailSection/index";
 import MultipleTabsSection from "./_components/MultipleTabsSection";
 import { useSetAtom } from "jotai";
-import { filesAtom, initialSolutionRunnerIDAtom } from "./_stores/editor.store";
+import { filesAtom, initialSolutionRunnerAtom } from "./_stores/editor.store";
 import { initialTestCaseGroupsAtom } from "./_stores/testcase-groups.store";
 import { initialDescriptionAtom } from "./_stores/description.store";
 import type { CodeMaterialResponse } from "./_types/code-material-response";
@@ -27,7 +27,7 @@ function CodeMaterial({ isOwner }: Props) {
   const setDescription = useSetAtom(initialDescriptionAtom);
   const setTestCaseGroups = useSetAtom(initialTestCaseGroupsAtom);
   const setFiles = useSetAtom(filesAtom);
-  const setSolutionRunnerID = useSetAtom(initialSolutionRunnerIDAtom);
+  const setSolutionRunner = useSetAtom(initialSolutionRunnerAtom);
   const setAllowedRunners = useSetAtom(initialAllowedRunnersAtom);
   const setCompareScript = useSetAtom(initialCompareScriptAtom);
   const setLimit = useSetAtom(initialLimitAtom);
@@ -47,7 +47,7 @@ function CodeMaterial({ isOwner }: Props) {
         setDescription(JSON.parse(payload.description));
       }
       setTestCaseGroups(payload.test_case_groups);
-      setSolutionRunnerID(payload.solution_runner_id ?? "");
+      setSolutionRunner(payload.solution_runner);
 
       if (payload.solution_files?.length) {
         setFiles(payload.solution_files);
@@ -63,7 +63,7 @@ function CodeMaterial({ isOwner }: Props) {
     setTestCaseGroups,
     setDescription,
     setFiles,
-    setSolutionRunnerID,
+    setSolutionRunner,
     setAllowedRunners,
     setCompareScript,
     setLimit,

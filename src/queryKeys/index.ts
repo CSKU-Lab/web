@@ -49,6 +49,10 @@ export const queryKeys = {
         params,
       ],
     },
+    gradebook: (sectionId: string) => [
+      ...queryKeys.section.getById(sectionId),
+      "gradebook",
+    ],
   },
   user_group: {
     all: ["user_groups"],
@@ -95,13 +99,10 @@ export const queryKeys = {
       params,
     ],
   },
-  config: {
+  configs: {
     runners: {
-      all: (opts?: { includeScript?: boolean }) => {
-        if (opts?.includeScript) {
-          return ["config", "runners", "includeScript"];
-        }
-        return ["config", "runners"];
+      all: (params: Record<string, any>) => {
+        return ["configs", "runners", params];
       },
     },
   },

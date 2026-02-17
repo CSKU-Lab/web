@@ -1,60 +1,53 @@
 import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
-import type { CMSGradebook } from "~/types/cms-section-gradebook";
+import type { StudentRow, LabCol } from "~/types/cms-section-gradebook";
 
-const columnHelper = createColumnHelper<CMSGradebook>();
+const columnHelper = createColumnHelper<StudentRow>();
 
-export const columns: ColumnDef<CMSGradebook, any>[] = [
-  columnHelper.group({
-    header: "Students/Labs",
-    columns: [
-      columnHelper.accessor("username", {
-        header: () => <h6>Username</h6>,
-        cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
-      }),
-      columnHelper.accessor("display_name", {
-        header: () => <h6>Display Name</h6>,
-        cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
-      }),
-    ],
-  }),
-  ...[
-    "Lab 01",
-    "Lab 02",
-    "Lab 03",
-    "Lab 04",
-    "Lab 05",
-    "Lab 06",
-    "Lab 07",
-    "Lab 08",
-    "Lab 09",
-    "Lab 10",
-  ].map((labName) =>
+function getLabScore(
+  lab_scores: StudentRow["lab_scores"],
+  lab_id: string,
+  scoreType: "auto_score" | "manual_score"
+): number {
+  return lab_scores[lab_id]?.[scoreType] ?? 0;
+}
+
+export function getGradebookColumns(lab_cols: LabCol[]): ColumnDef<StudentRow, any>[] {
+  return [
     columnHelper.group({
-      header: labName,
+      header: "Students/Labs",
       columns: [
-        columnHelper.accessor(
-          (row) => {
-            const lab = row.labs.find((lab) => lab.name === labName);
-            return lab ? lab.auto_score : 0;
-          },
-          {
-            id: `${labName}-auto-score`,
-            header: () => <h6>Auto (8)</h6>,
-            cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
-          },
-        ),
-        columnHelper.accessor(
-          (row) => {
-            const lab = row.labs.find((lab) => lab.name === labName);
-            return lab ? lab.manual_score : 0;
-          },
-          {
-            id: `${labName}-manual-score`,
-            header: () => <h6>Manual (4)</h6>,
-            cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
-          },
-        ),
+        columnHelper.accessor("username", {
+          header: () => <h6>Username</h6>,
+          cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
+        }),
+        columnHelper.accessor("display_name", {
+          header: () => <h6>Display Name</h6>,
+          cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
+        }),
       ],
     }),
-  ),
-];
+    ...lab_cols.map((lab) =>
+      columnHelper.group({
+        header: lab.lab_name,
+        columns: [
+          columnHelper.accessor(
+            (row) => getLabScore(row.lab_scores, lab.lab_id, "auto_score"),
+            {
+              id: `${lab.lab_id}-auto-score`,
+              header: () => <h6>Auto ({lab.max_auto_score})</h6>,
+              cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
+            }
+          ),
+          columnHelper.accessor(
+            (row) => getLabScore(row.lab_scores, lab.lab_id, "manual_score"),
+            {
+              id: `${lab.lab_id}-manual-score`,
+              header: () => <h6>Manual ({lab.max_manual_score})</h6>,
+              cell: ({ cell }) => <h6>{cell.getValue()}</h6>,
+            }
+          ),
+        ],
+      })
+    ),
+  ];
+}

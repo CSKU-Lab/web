@@ -15,6 +15,7 @@ interface Props<T> extends ClassNameProps {
   value?: T | null;
   options?: T[];
   placeholder?: string;
+  emptyPlaceholder?: string;
   children?: (options: T[]) => React.ReactNode;
   queryFn?: (query: string) => Promise<T[]>;
   isError?: boolean;
@@ -24,6 +25,7 @@ interface Props<T> extends ClassNameProps {
 
 function SearchSelect<T extends { id: string; name: string }>({
   placeholder,
+  emptyPlaceholder,
   className,
   value,
   options: initialOptions,
@@ -96,10 +98,16 @@ function SearchSelect<T extends { id: string; name: string }>({
         )}
         onClick={() => !disabled && setIsOpen(!isOpen)}
       >
-        {value !== null && value !== undefined && (
+        {value !== null && value !== undefined ? (
           <h5 className="text-sm w-10/12 truncate">
             {customValueRender ? customValueRender(value) : value.name}
           </h5>
+        ) : (
+          emptyPlaceholder && (
+            <h5 className="text-sm w-10/12 truncate text-(--gray-10)">
+              {emptyPlaceholder}
+            </h5>
+          )
         )}
         <ChevronDown
           size="1rem"
