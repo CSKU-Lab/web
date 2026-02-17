@@ -1,6 +1,4 @@
 import { type Metadata } from "next";
-import CourseCard from "./components/CourseCard";
-import useCoreSectionPagination from "./_hooks/useCoreSectionInfPagination";
 import CourseList from "./components/CourseCard";
 
 export const metadata: Metadata = {
