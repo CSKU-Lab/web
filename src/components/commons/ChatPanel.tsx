@@ -110,7 +110,7 @@ const ChatMessages = ({
 
       {status === "submitted" && (
         <div className="flex justify-start">
-          <div className="bg-zinc-200 dark:bg-zinc-800 rounded-md p-2 animate-pulse">
+          <div className="bg-zinc-200 dark:bg-zinc-800 rounded-t-md roudned-bl-md p-2 animate-pulse">
             Thinking...
           </div>
         </div>
