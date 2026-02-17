@@ -10,13 +10,14 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { ChatStatus } from "ai";
+import { chatInstance } from "~/lib/aiChatProviders/openrouter";
 
 export default function ChatPanel() {
   const [input, setInput] = useState("");
   const { messages, sendMessage, status } = useChat();
 
   return (
-    <div className="fixed bottom-0 right-6 w-full max-w-md">
+    <div className="fixed bottom-0 right-6 w-full max-w-md z-50">
       <Accordion type="single" collapsible defaultValue="chat">
         <AccordionItem value="chat" className="border-none">
           <AccordionTrigger className="bg-black text-white px-4 py-3 shadow hover:no-underline">
@@ -63,39 +64,57 @@ const ChatMessages = ({
   status: ChatStatus;
 }) => {
   return (
-    <>
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${
-              message.role === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`bg-zinc-200 dark:bg-zinc-800 w-fit max-w-[85%] rounded-t-md p-2 break-words ${message.role == "user" ? "rounded-bl-md" : "rounded-br-md"}`}
-            >
-              {message.parts.map((part, i) => {
-                const key = `${message.id}-${i}`;
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {messages.map((message) => (
+        <div key={message.id} className="space-y-2">
+          {message.parts.map((part, i) => {
+            const key = `${message.id}-${i}`;
 
-                if (part.type === "text") {
-                  return <div key={key}>{part.text}</div>;
-                }
+            if (chatInstance.toolMapper(part.type)) {
+              const toolName = part.type;
 
-                return null;
-              })}
-            </div>
+              return (
+                <div key={key} className="flex justify-center">
+                  <div className="text-xs text-zinc-500 dark:bg-zinc-800 px-3 py-1 rounded-full">
+                    Using {toolName}
+                  </div>
+                </div>
+              );
+            }
+
+            if (part.type === "text") {
+              return (
+                <div
+                  key={key}
+                  className={`flex ${
+                    message.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`bg-zinc-200 dark:bg-zinc-800 w-fit max-w-[85%] rounded-t-md p-2 break-words ${
+                      message.role === "user"
+                        ? "rounded-bl-md"
+                        : "rounded-br-md"
+                    }`}
+                  >
+                    {part.text}
+                  </div>
+                </div>
+              );
+            }
+
+            return null;
+          })}
+        </div>
+      ))}
+
+      {status === "submitted" && (
+        <div className="flex justify-start">
+          <div className="bg-zinc-200 dark:bg-zinc-800 rounded-md p-2 animate-pulse">
+            Thinking...
           </div>
-        ))}
-
-        {status === "submitted" && (
-          <div className="flex justify-start">
-            <div className="bg-zinc-200 dark:bg-zinc-800 rounded-md p-2 animate-pulse">
-              Thinking...
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 };
