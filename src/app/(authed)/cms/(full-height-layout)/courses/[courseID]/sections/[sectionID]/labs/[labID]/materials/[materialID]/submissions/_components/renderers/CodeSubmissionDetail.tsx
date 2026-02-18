@@ -1,6 +1,5 @@
 import { useState, Fragment } from "react";
 import { ChevronRight, ChevronDown, Clock, HardDrive } from "lucide-react";
-import { Skeleton } from "~/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -15,6 +14,7 @@ import type { CodeSubmissionData } from "~/types/cms-section-submission";
 import type { CodeSubmissionResultStatus } from "~/types/core-code-submission";
 
 interface CodeSubmissionDetailProps {
+  created_at: string;
   submission: CodeSubmissionData;
 }
 
@@ -52,7 +52,10 @@ function formatMemory(bytes: number): string {
   return `${(bytes / 1024).toFixed(2)}KB`;
 }
 
-function CodeSubmissionDetail({ submission }: CodeSubmissionDetailProps) {
+function CodeSubmissionDetail({
+  created_at,
+  submission,
+}: CodeSubmissionDetailProps) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const toggleRow = (id: string) => {
@@ -80,8 +83,7 @@ function CodeSubmissionDetail({ submission }: CodeSubmissionDetailProps) {
           <span>Avg Memory: {formatMemory(submission.avg_memory)}</span>
         </div>
         <span className="text-xs text-(--gray-9)">
-          Submitted:{" "}
-          {new Date(submission.created_at).toLocaleString()}
+          Submitted: {new Date(created_at).toLocaleString()}
         </span>
       </div>
 
@@ -91,9 +93,7 @@ function CodeSubmissionDetail({ submission }: CodeSubmissionDetailProps) {
       {/* Test Case Table */}
       {allResults.length > 0 && (
         <>
-          <h6 className="text-sm font-semibold text-(--gray-11)">
-            Test Cases
-          </h6>
+          <h6 className="text-sm font-semibold text-(--gray-11)">Test Cases</h6>
           <Table className="overflow-visible">
             <TableHeader>
               <TableRow>

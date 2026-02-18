@@ -53,7 +53,7 @@ function SubmissionDetailPanel({
     <div className="flex flex-col h-full">
       <MaterialHeader material={material} />
       <div className="flex-1 min-h-0 overflow-auto">
-        <Renderer submission={selectedStudent.submission} />
+        <Renderer created_at={selectedStudent.created_at} submission={selectedStudent.submission} />
       </div>
     </div>
   );

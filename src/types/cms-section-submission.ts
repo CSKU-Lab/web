@@ -19,12 +19,12 @@ export interface CMSSectionStudentSubmission<T = unknown> {
   manual_score: number;
   ip: string | null;
   submission_status: SubmissionStatus;
+  created_at: string;
   submission: T | null;
 }
 
 export interface CodeSubmissionData {
   id: string;
-  created_at: string;
   files: CodeFile[];
   avg_wall_time: number;
   avg_memory: number;
