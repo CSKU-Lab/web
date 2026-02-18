@@ -1,7 +1,7 @@
 "use client";
 
 import { UIMessage, useChat } from "@ai-sdk/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LucideSend } from "lucide-react";
 import {
   Accordion,
@@ -10,7 +10,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { ChatStatus } from "ai";
-import { chatInstance } from "~/lib/aiChatProviders/openrouter";
+import { useToolMapper } from "~/hooks/useToolMapper";
 
 export default function ChatPanel() {
   const [input, setInput] = useState("");
@@ -63,16 +63,27 @@ const ChatMessages = ({
   messages: UIMessage[];
   status: ChatStatus;
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { isExist } = useToolMapper();
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages, status]);
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
       {messages.map((message) => (
         <div key={message.id} className="space-y-2">
           {message.parts.map((part, i) => {
             const key = `${message.id}-${i}`;
 
-            if (chatInstance.toolMapper(part.type)) {
-              const toolName = part.type;
-
+            if (isExist(part.type)) {
+              const toolName = part.type.replace("tool-", "");
               return (
                 <div key={key} className="flex justify-center">
                   <div className="text-xs text-zinc-500 dark:bg-zinc-800 px-3 py-1 rounded-full">

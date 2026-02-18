@@ -91,18 +91,16 @@ export class Chat {
 
   _getTools(): string[] {
     return [
-      ...Object.keys(this.instructorTools),
-      ...Object.keys(this.studentTools),
+      ...new Set([
+        ...Object.keys(this.instructorTools),
+        ...Object.keys(this.studentTools),
+      ]),
     ];
   }
 
   toolMapper(type: string): boolean {
     const prefix = "tool-";
-    const tools = [...new Set(this._getTools())].map(
-      (tool) => `${prefix}${tool}`,
-    );
-    console.log("Available tools:", tools);
-
+    const tools = this._getTools().map((tool) => `${prefix}${tool}`);
     return tools.includes(type);
   }
 }
