@@ -1,5 +1,6 @@
 "use client";
 
+import { AxiosError } from "axios";
 import { usePathname, useSearchParams } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect } from "react";
 import { api } from "~/lib/api.client";
@@ -41,7 +42,9 @@ function SessionProvider({ user, children }: Props) {
     try {
       await api.post("/auth/refresh-token");
     } catch (err) {
-      signOut();
+      if (err instanceof AxiosError && err.response?.status === 401) {
+        signOut();
+      }
     }
   }, []);
 
