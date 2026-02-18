@@ -28,9 +28,7 @@ interface PathName {
 }
 
 // Paths that exist as breadcrumb labels but don't have actual pages
-const INTERMEDIATE_PATHS = [
-  "/sections",
-];
+const INTERMEDIATE_PATHS = ["/sections"];
 
 function isNavigablePath(href: string): boolean {
   for (const intermediate of INTERMEDIATE_PATHS) {
@@ -45,10 +43,14 @@ function isNavigablePath(href: string): boolean {
 function getEntityNameFromPath(
   href: string,
   entities: {
-    course: { id: string | null; data: { name?: string; display_name?: string } | null };
+    course: {
+      id: string | null;
+      data: { name?: string; display_name?: string } | null;
+    };
     section: { id: string | null; data: { name?: string } | null };
     lab: { id: string | null; data: { display_name?: string } | null };
-  }
+    material: { id: string | null; data: { name?: string } | null };
+  },
 ): string | null {
   // Check if this is a course path
   const courseMatch = href.match(/\/courses\/([^/]+)$/);
@@ -66,6 +68,12 @@ function getEntityNameFromPath(
   const labMatch = href.match(/\/labs\/([^/]+)$/);
   if (labMatch && entities.lab.data) {
     return entities.lab.data.display_name || null;
+  }
+
+  // Check if this is a lab path
+  const materialMatch = href.match(/\/materials\/([^/]+)$/);
+  if (materialMatch && entities.material.data) {
+    return entities.material.data.name || null;
   }
 
   return null;
@@ -115,7 +123,11 @@ function BreadcrumbClient({ className }: ClassNameProps) {
       if (typeof path.label === "object") {
         return { ...path, label: (path.label["/"] as string) || "Unknown" };
       }
-      return path as unknown as { href: string; label: string; isLoading: boolean };
+      return path as unknown as {
+        href: string;
+        label: string;
+        isLoading: boolean;
+      };
     });
 
   const MAX_BREADCRUMB_ITEMS = 5;
