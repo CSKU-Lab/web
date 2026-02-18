@@ -18,6 +18,7 @@ function StudentCard({ studentSubmission }: StudentCardProps) {
 
   return (
     <button
+      data-student-id={student.id}
       onClick={() => setSelectedId(student.id)}
       className={cn(
         "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-(--gray-3)",

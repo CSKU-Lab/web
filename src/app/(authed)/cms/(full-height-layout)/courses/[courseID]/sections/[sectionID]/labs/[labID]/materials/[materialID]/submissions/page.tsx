@@ -3,7 +3,6 @@
 import { useParams } from "next/navigation";
 import { ArrowLeft, ServerCrash } from "lucide-react";
 import Link from "next/link";
-import RouteNavigation from "../../../../../_components/RouteNavigation";
 import PageTitle from "~/components/commons/PageTitle";
 import ResizableSplit from "~/components/commons/ResizableSplit";
 import Error from "~/components/commons/Error";
@@ -42,46 +41,27 @@ function Page() {
   } = useGetMaterial({ materialID });
 
   const isLoading = isStudentsLoading || isMaterialLoading;
-  const isError =
-    (isStudentsError && !isStudentsFetching) || isMaterialError;
-
-  const labMenus = [
-    {
-      name: "Materials",
-      href: `/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}`,
-    },
-    {
-      name: "Settings",
-      href: `/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}/settings`,
-    },
-  ];
+  const isError = (isStudentsError && !isStudentsFetching) || isMaterialError;
 
   return (
     <>
-      <RouteNavigation
-        headerContent={
-          <>
-            <Link
-              href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}`}
-              className="inline-flex items-center gap-2 text-sm text-(--gray-11) hover:text-(--gray-12) mb-2 transition-colors ml-4 my-2.5"
-            >
-              <ArrowLeft size={16} />
-              <span>Back to Materials</span>
-            </Link>
-            <PageTitle>
-              <Loading
-                isLoading={isMaterialLoading}
-                fallback={<Skeleton className="h-7 w-48" />}
-              >
-                {material?.name ?? "Submissions"}
-              </Loading>
-            </PageTitle>
-          </>
-        }
-        menus={labMenus}
-      />
+      <Link
+        href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}`}
+        className="inline-flex items-center gap-2 text-sm text-(--gray-11) hover:text-(--gray-12) mb-2 transition-colors ml-4 my-2.5"
+      >
+        <ArrowLeft size={16} />
+        <span>Back to Materials</span>
+      </Link>
+      <PageTitle>
+        <Loading
+          isLoading={isMaterialLoading}
+          fallback={<Skeleton className="h-7 w-48" />}
+        >
+          {material?.name ?? "Submissions"}
+        </Loading>
+      </PageTitle>
 
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 mt-4">
         <Error
           isError={isError}
           fallback={

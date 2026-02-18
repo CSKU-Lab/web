@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { cn } from "~/lib/utils";
+import { forwardRef } from "react";
 import type { ComponentProps } from "react";
 
 interface Props extends Omit<ComponentProps<"input">, "onChange"> {
@@ -7,8 +8,8 @@ interface Props extends Omit<ComponentProps<"input">, "onChange"> {
   isError?: boolean;
 }
 
-function SearchInput({ onChange, className, isError, ...props }: Props) {
-  return (
+const SearchInput = forwardRef<HTMLInputElement, Props>(
+  ({ onChange, className, isError, ...props }, ref) => (
     <div
       className={cn(
         "relative pl-7 pr-3 py-1.5 border border-(--gray-6) bg-white rounded-md w-64 flex items-center hover:bg-(--gray-2)",
@@ -23,11 +24,12 @@ function SearchInput({ onChange, className, isError, ...props }: Props) {
 
       <input
         {...props}
+        ref={ref}
         onChange={(e) => onChange(e.target.value)}
         className="block text-xs placeholder:text-xs w-full h-4 outline-hidden bg-transparent"
       />
     </div>
-  );
-}
+  ),
+);
 
 export default SearchInput;
