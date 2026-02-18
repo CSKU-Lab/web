@@ -139,7 +139,6 @@ class SectionService extends BaseService {
     return res.data;
   }
 
-  // TODO: Replace with real API endpoint when backend is ready
   async getStudentSubmissions<T = unknown>(
     sectionID: string,
     labID: string,
