@@ -1,6 +1,6 @@
 "use client";
 
-import { UIMessage, useChat } from "@ai-sdk/react";
+import { useChat } from "@ai-sdk/react";
 import { useEffect, useRef, useState } from "react";
 import { LucideSend } from "lucide-react";
 import {
@@ -9,44 +9,100 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import { ChatStatus } from "ai";
-import { useToolMapper } from "~/hooks/useToolMapper";
+import { Maximize2, Minimize2 } from "lucide-react";
+import { ChatMessages } from "./ChatMessages";
 
 export default function ChatPanel() {
   const [input, setInput] = useState("");
   const { messages, sendMessage, status } = useChat();
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [input]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (!input.trim() || status !== "ready") return;
+    sendMessage({ text: input });
+    setInput("");
+  };
 
   return (
-    <div className="fixed bottom-0 right-6 w-full max-w-md z-50">
-      <Accordion type="single" collapsible defaultValue="chat">
+    <div
+      className={`fixed z-50 transition-all duration-300 ${
+        isFullscreen ? "inset-4" : "bottom-0 right-6 w-full max-w-md"
+      }`}
+    >
+      <Accordion
+        type="single"
+        collapsible={!isFullscreen}
+        value={chatOpen ? "chat" : ""}
+        onValueChange={(val) => {
+          setChatOpen(val === "chat");
+        }}
+      >
         <AccordionItem value="chat" className="border-none">
-          <AccordionTrigger className="bg-black text-white px-4 py-3 shadow hover:no-underline">
-            AI Assistant
-          </AccordionTrigger>
-          <AccordionContent className="bg-white dark:bg-zinc-900 shadow-xl border h-[500px] flex flex-col">
+          <div className="relative">
+            <AccordionTrigger
+              className="bg-black text-white px-4 py-3 shadow hover:no-underline w-fit min-w-[200px]"
+              showChevron={false}
+            >
+              AI Assistant
+            </AccordionTrigger>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsFullscreen((prev) => !prev);
+                setChatOpen(true);
+              }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:scale-110"
+            >
+              {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+            </button>
+          </div>
+          <AccordionContent
+            className={`bg-white dark:bg-zinc-900 shadow-xl border flex flex-col ${
+              isFullscreen ? "h-[90vh]" : "h-[500px]"
+            }`}
+          >
             <ChatMessages messages={messages} status={status} />
             <form
-              className="p-3 border-t dark:border-zinc-800 flex gap-2"
+              className="p-3 border-t dark:border-zinc-800 flex items-end gap-2"
               onSubmit={(e) => {
                 e.preventDefault();
-                if (!input.trim()) return;
-                if (status !== "ready") return;
-
-                sendMessage({ text: input });
-                setInput("");
+                handleSendMessage();
               }}
             >
-              <input
-                className="w-full p-2 border border-zinc-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800"
+              <textarea
+                ref={textareaRef}
+                rows={1}
+                className="w-full p-2 border border-zinc-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800 resize-none max-h-32 overflow-y-auto"
                 value={input}
                 placeholder="Say something..."
-                onChange={(e) => setInput(e.currentTarget.value)}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
               <button
-                className="bg-black text-white p-2 rounded disabled:opacity-50"
+                type="submit"
+                className="bg-black text-white p-2 rounded disabled:opacity-50 h-10 w-10 flex items-center justify-center shrink-0"
                 disabled={status !== "ready"}
               >
-                <LucideSend size="1.5rem" />
+                <LucideSend size="1.2rem" />
               </button>
             </form>
           </AccordionContent>
@@ -55,77 +111,3 @@ export default function ChatPanel() {
     </div>
   );
 }
-
-const ChatMessages = ({
-  messages,
-  status,
-}: {
-  messages: UIMessage[];
-  status: ChatStatus;
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { isExist } = useToolMapper();
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    el.scrollTo({
-      top: el.scrollHeight,
-      behavior: "smooth",
-    });
-  }, [messages, status]);
-  return (
-    <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
-      {messages.map((message) => (
-        <div key={message.id} className="space-y-2">
-          {message.parts.map((part, i) => {
-            const key = `${message.id}-${i}`;
-
-            if (isExist(part.type)) {
-              const toolName = part.type.replace("tool-", "");
-              return (
-                <div key={key} className="flex justify-center">
-                  <div className="text-xs text-zinc-500 dark:bg-zinc-800 px-3 py-1 rounded-full">
-                    Using {toolName}
-                  </div>
-                </div>
-              );
-            }
-
-            if (part.type === "text") {
-              return (
-                <div
-                  key={key}
-                  className={`flex ${
-                    message.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`bg-zinc-200 dark:bg-zinc-800 w-fit max-w-[85%] rounded-t-md p-2 break-words ${
-                      message.role === "user"
-                        ? "rounded-bl-md"
-                        : "rounded-br-md"
-                    }`}
-                  >
-                    {part.text}
-                  </div>
-                </div>
-              );
-            }
-
-            return null;
-          })}
-        </div>
-      ))}
-
-      {status === "submitted" && (
-        <div className="flex justify-start">
-          <div className="bg-zinc-200 dark:bg-zinc-800 rounded-t-md rounded-br-md p-2 animate-pulse">
-            Thinking...
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};

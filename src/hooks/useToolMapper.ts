@@ -1,4 +1,4 @@
-import { chatInstance } from "~/lib/aiChatProviders/openrouter";
+import { chatInstance } from "~/lib/aiChatProviders/instructor.chat";
 
 export const useToolMapper = () => {
   const isExist = (type: string) => {
