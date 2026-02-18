@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
@@ -51,7 +51,7 @@ const statusConfig: Record<LabStatus, { text: string; colorClass: string }> = {
 export default function SettingsPage() {
   const { courseID, sectionID, labID } = useParams<PageParams>();
 
-  const { data: lab, isLoading: isLabLoading } = useGetSectionLab({
+  const { data: lab, isFetching } = useGetSectionLab({
     sectionID,
     labID,
   });
@@ -71,24 +71,25 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    if (lab) {
+    if (lab && !isFetching) {
       form.reset({
         status: lab.status,
         opened_at: lab.opened_at ? new Date(lab.opened_at) : null,
         closed_at: lab.closed_at ? new Date(lab.closed_at) : null,
       });
     }
-  }, [lab, form]);
+  }, [lab, isFetching, form]);
 
   const watchedStatus = form.watch("status");
   const showDateFields = showDateFieldsStatuses.includes(watchedStatus);
 
   useEffect(() => {
     if (!showDateFields) {
+      console.log("clear opened_at and closed_at because status");
       form.setValue("opened_at", null);
       form.setValue("closed_at", null);
     }
-  }, [showDateFields, form]);
+  }, [showDateFields, watchedStatus, form]);
 
   const statusStyle = lab ? statusConfig[lab.status] : null;
 
@@ -113,9 +114,7 @@ export default function SettingsPage() {
   };
 
   const disableSaveButton =
-    isLabLoading ||
-    updateSectionLab.isPending ||
-    !form.formState.isDirty;
+    isFetching || updateSectionLab.isPending || !form.formState.isDirty;
 
   return (
     <>
@@ -130,7 +129,7 @@ export default function SettingsPage() {
               <span>Back to Labs</span>
             </Link>
             <PageTitle>{lab?.lab_name ?? "Loading..."}</PageTitle>
-            {!isLabLoading && lab && (
+            {!isFetching && lab && (
               <div className="flex items-center gap-3 ml-4 mt-1 text-sm text-(--gray-11)">
                 <span className={cn("font-medium", statusStyle?.colorClass)}>
                   {statusStyle?.text}
@@ -166,33 +165,34 @@ export default function SettingsPage() {
 
               <div className="space-y-2">
                 <Label>Status</Label>
-                <Select
-                  value={form.watch("status")}
-                  onValueChange={(value: LabStatus) =>
-                    form.setValue("status", value)
-                  }
-                >
-                  <SelectTrigger className="w-full h-9">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {statusOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        <span
-                          className={cn(
-                            "inline-block w-2 h-2 rounded-full mr-2",
-                            option.value === "open" && "bg-(--grass-9)",
-                            option.value === "readonly" && "bg-(--blue-9)",
-                            option.value === "hidden" && "bg-(--gray-9)",
-                            option.value === "disabled" && "bg-(--amber-9)",
-                            option.value === "closed" && "bg-(--red-9)",
-                          )}
-                        />
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  control={form.control}
+                  name="status"
+                  render={({ field: { value, onChange } }) => (
+                    <Select value={value} onValueChange={onChange}>
+                      <SelectTrigger className="w-full h-9">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {statusOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            <span
+                              className={cn(
+                                "inline-block w-2 h-2 rounded-full mr-2",
+                                option.value === "open" && "bg-(--grass-9)",
+                                option.value === "readonly" && "bg-(--blue-9)",
+                                option.value === "hidden" && "bg-(--gray-9)",
+                                option.value === "disabled" && "bg-(--amber-9)",
+                                option.value === "closed" && "bg-(--red-9)",
+                              )}
+                            />
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
             </div>
 
@@ -210,11 +210,15 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Opened At</Label>
-                    <DateTimePicker
-                      value={form.watch("opened_at") ?? undefined}
-                      onChange={(date) =>
-                        form.setValue("opened_at", date ?? null)
-                      }
+                    <Controller
+                      control={form.control}
+                      name="opened_at"
+                      render={({ field: { value, onChange } }) => (
+                        <DateTimePicker
+                          value={value ?? undefined}
+                          onChange={(date) => onChange(date ?? null)}
+                        />
+                      )}
                     />
                     <p className="text-xs text-(--gray-9)">
                       When the lab becomes available to students
@@ -223,11 +227,15 @@ export default function SettingsPage() {
 
                   <div className="space-y-2">
                     <Label>Closed At</Label>
-                    <DateTimePicker
-                      value={form.watch("closed_at") ?? undefined}
-                      onChange={(date) =>
-                        form.setValue("closed_at", date ?? null)
-                      }
+                    <Controller
+                      control={form.control}
+                      name="closed_at"
+                      render={({ field: { value, onChange } }) => (
+                        <DateTimePicker
+                          value={value ?? undefined}
+                          onChange={(date) => onChange(date ?? null)}
+                        />
+                      )}
                     />
                     <p className="text-xs text-(--gray-9)">
                       When the lab closes for submissions
