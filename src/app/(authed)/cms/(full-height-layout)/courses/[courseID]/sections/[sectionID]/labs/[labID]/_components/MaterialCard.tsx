@@ -12,15 +12,20 @@ interface MaterialCardProps {
   labID: string;
 }
 
-function MaterialCard({ material, sectionID, labID }: MaterialCardProps) {
+function MaterialCard({
+  material,
+  courseID,
+  sectionID,
+  labID,
+}: MaterialCardProps) {
   const { logoMap } = useMaterialDisplay();
 
   return (
     <Link
-      href={`/cms/courses/${sectionID}/labs/${labID}/materials/${material.id}/submissions`}
+      href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}/materials/${material.id}/submissions`}
       className={cn(
         "block rounded-md overflow-hidden bg-white border border-(--gray-4)",
-        "hover:bg-(--gray-1) transition-colors cursor-pointer"
+        "hover:bg-(--gray-1) transition-colors cursor-pointer",
       )}
     >
       <div className="h-5 bg-linear-to-bl from-gray-400 to-gray-300" />
