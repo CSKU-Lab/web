@@ -53,6 +53,18 @@ export const queryKeys = {
       ...queryKeys.section.getById(sectionId),
       "gradebook",
     ],
+    submissions: (
+      sectionId: string,
+      labId: string,
+      materialId: string,
+    ) => [
+      ...queryKeys.section.getById(sectionId),
+      "labs",
+      labId,
+      "materials",
+      materialId,
+      "submissions",
+    ],
   },
   user_group: {
     all: ["user_groups"],
