@@ -8,6 +8,7 @@ import type {
   CMSSectionLabDetail,
 } from "~/types/cms-section-lab";
 import { CMSGradebook } from "~/types/cms-section-gradebook";
+import type { LabStatus } from "~/types/cms-section-lab";
 
 export type CreateSectionPayload = {
   name: string;
@@ -30,6 +31,12 @@ export type GetSectionLogPaginationParams =
 
 export type GetSectionLabPaginationParams =
   PaginationRequestParams<CMSSectionLab>;
+
+export type UpdateSectionLabPayload = {
+  status: LabStatus;
+  opened_at: string | null;
+  closed_at: string | null;
+};
 
 class SectionService extends BaseService {
   constructor() {
@@ -114,6 +121,14 @@ class SectionService extends BaseService {
       lab_id: labID,
       position,
     });
+  }
+
+  async updateSectionLab(
+    sectionID: string,
+    labID: string,
+    payload: UpdateSectionLabPayload,
+  ) {
+    return api.patch(`${this._baseURL}/${sectionID}/labs/${labID}`, payload);
   }
 
   async getGradebook(sectionID: string): Promise<CMSGradebook> {
