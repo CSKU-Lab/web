@@ -5,6 +5,7 @@ import ComingSoon from "../_components/renderers/ComingSoon";
 import type { CodeSubmissionData } from "~/types/cms-section-submission";
 
 export interface SubmissionRendererProps<T = unknown> {
+  created_at: string;
   submission: T;
 }
 
