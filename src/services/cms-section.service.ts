@@ -3,7 +3,10 @@ import type { Section, Student } from "~/types/cms-section";
 import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
 import type { CMSSectionLog } from "~/types/cms-section-logs";
-import type { CMSSectionLab } from "~/types/cms-section-lab";
+import type {
+  CMSSectionLab,
+  CMSSectionLabDetail,
+} from "~/types/cms-section-lab";
 import { CMSGradebook } from "~/types/cms-section-gradebook";
 
 export type CreateSectionPayload = {
@@ -82,6 +85,13 @@ class SectionService extends BaseService {
     params: GetSectionLabPaginationParams,
   ) {
     return this._getPagination<CMSSectionLab>(params, `/${sectionID}/labs`);
+  }
+
+  async getLabDetail(sectionID: string, labID: string) {
+    const res = await api.get<CMSSectionLabDetail>(
+      `${this._baseURL}/${sectionID}/labs/${labID}`,
+    );
+    return res.data;
   }
 
   async addLabs(sectionID: string, labIDs: string[]) {
