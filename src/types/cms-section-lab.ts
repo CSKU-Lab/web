@@ -1,12 +1,15 @@
 export type LabStatus = "hidden" | "open" | "readonly" | "disabled" | "closed";
 
 export interface CMSSectionLab {
-  id: string;
   lab_name: string;
-  section_id: string;
   lab_id: string;
   position: number;
   status: LabStatus;
-  created_at: Date;
-  updated_at: Date;
+  opened_at: string | null;
+  closed_at: string | null;
 }
+
+export type CMSSectionLabDetail = Omit<CMSSectionLab, "position" | "lab_id"> & {
+  completed_students: number;
+  total_students: number;
+};
