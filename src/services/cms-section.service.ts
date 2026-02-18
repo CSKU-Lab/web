@@ -9,6 +9,7 @@ import type {
 } from "~/types/cms-section-lab";
 import { CMSGradebook } from "~/types/cms-section-gradebook";
 import type { LabStatus } from "~/types/cms-section-lab";
+import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
 
 export type CreateSectionPayload = {
   name: string;
@@ -136,6 +137,18 @@ class SectionService extends BaseService {
       `${this._baseURL}/${sectionID}/gradebook`,
     );
     return res.data;
+  }
+
+  // TODO: Replace with real API endpoint when backend is ready
+  async getStudentSubmissions<T = unknown>(
+    sectionID: string,
+    labID: string,
+    materialID: string,
+  ): Promise<CMSSectionStudentSubmission<T>[]> {
+    const res = await api.get<{ data: CMSSectionStudentSubmission<T>[] }>(
+      `${this._baseURL}/${sectionID}/labs/${labID}/materials/${materialID}/submissions`,
+    );
+    return res.data.data;
   }
 }
 
