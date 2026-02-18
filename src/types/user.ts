@@ -21,7 +21,12 @@ export interface JWTUser {
 
 export type UserType = "credential" | "oauth";
 
-export type UserRole = "admin" | "instructor" | "student";
+export type UserRoleEnum = {
+  ADMIN: "admin";
+  STUDENT: "student";
+  INSTRUCTOR: "instructor";
+};
+export type UserRole = UserRoleEnum[keyof UserRoleEnum];
 
 export type UserGroup = { id: string; name: string };
 
