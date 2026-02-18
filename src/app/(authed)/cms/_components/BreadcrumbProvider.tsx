@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import type { ChildrenProps } from "~/types/children-props";
@@ -10,6 +10,8 @@ import { cmsLabService } from "~/services/cms-lab.service";
 import type { Course } from "~/types/cms-course";
 import type { Section } from "~/types/cms-section";
 import type { CMSLab } from "~/types/cms-lab";
+import { CMSMaterial } from "~/types/cms-material";
+import { cmsMaterialService } from "~/services/cms-material.service";
 
 interface EntityData<T = unknown> {
   id: string | null;
@@ -22,6 +24,7 @@ interface BreadcrumbContextType {
     course: EntityData<Course>;
     section: EntityData<Section>;
     lab: EntityData<CMSLab>;
+    material: EntityData<CMSMaterial>;
   };
 }
 
@@ -35,6 +38,7 @@ function parseUrlEntities(pathname: string) {
     course: null as string | null,
     section: null as string | null,
     lab: null as string | null,
+    material: null as string | null,
   };
 
   // Match course ID: /cms/courses/:courseId
@@ -53,6 +57,12 @@ function parseUrlEntities(pathname: string) {
   const labMatch = pathname.match(/\/labs\/([^/]+)/);
   if (labMatch) {
     entities.lab = labMatch[1];
+  }
+
+  // Match material ID: .../sections/:sectionId/labs/:labId/materials/:materialId
+  const materialMatch = pathname.match(/\/materials\/([^/]+)/);
+  if (materialMatch) {
+    entities.material = materialMatch[1];
   }
 
   return entities;
@@ -93,6 +103,16 @@ export function BreadcrumbProvider({ children }: ChildrenProps) {
     staleTime: 5 * 60 * 1000,
   });
 
+  const materialQuery = useQuery({
+    queryKey: ["breadcrumb", "material", entityIds.material],
+    queryFn: () =>
+      entityIds.material
+        ? cmsMaterialService.getById(entityIds.material)
+        : Promise.resolve(null),
+    enabled: !!entityIds.material,
+    staleTime: 5 * 60 * 1000,
+  });
+
   const value = useMemo(
     () => ({
       entities: {
@@ -111,6 +131,11 @@ export function BreadcrumbProvider({ children }: ChildrenProps) {
           data: labQuery.data ?? null,
           isLoading: labQuery.isLoading,
         },
+        material: {
+          id: entityIds.material,
+          data: materialQuery.data ?? null,
+          isLoading: materialQuery.isLoading,
+        },
       },
     }),
     [
@@ -121,6 +146,8 @@ export function BreadcrumbProvider({ children }: ChildrenProps) {
       sectionQuery.isLoading,
       labQuery.data,
       labQuery.isLoading,
+      materialQuery.data,
+      materialQuery.isLoading,
     ],
   );
 
@@ -143,7 +170,7 @@ export function useBreadcrumbContext() {
 
 // Hook for pages to access entity data
 export function useBreadcrumbEntity<T>(
-  type: "course" | "section" | "lab",
+  type: "course" | "section" | "lab" | "material",
 ): EntityData<T> {
   const { entities } = useBreadcrumbContext();
   return entities[type] as EntityData<T>;

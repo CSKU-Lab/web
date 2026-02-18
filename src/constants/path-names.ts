@@ -20,6 +20,7 @@ export const pathNames = {
                 "/": "Lab",
                 "/settings": "Settings",
                 "/materials": {
+                  "/": "Materials",
                   "/[materialID]": {
                     "/": "Material",
                     "/submissions": "Submissions",
