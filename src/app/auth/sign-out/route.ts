@@ -1,10 +1,9 @@
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
-export const GET = async () => {
+export const POST = async () => {
   const cookieJar = await cookies();
   cookieJar.delete("access_token");
   cookieJar.delete("refresh_token");
 
-  return redirect("/auth/sign-in");
+  return Response.json({ success: true }, { status: 200 });
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect } from "react";
 import { api } from "~/lib/api.client";
 import type { ChildrenProps } from "~/types/children-props";
@@ -26,10 +26,12 @@ interface Props extends ChildrenProps {
 }
 
 function SessionProvider({ user, children }: Props) {
-  const router = useRouter();
-
   const signOut = () => {
-    router.push("/auth/sign-out");
+    fetch("/auth/sign-out", { method: "POST", credentials: "include" }).then(
+      () => {
+        window.location.href = "/auth/sign-in";
+      },
+    );
   };
 
   const pathname = usePathname();
@@ -39,9 +41,9 @@ function SessionProvider({ user, children }: Props) {
     try {
       await api.post("/auth/refresh-token");
     } catch (err) {
-      router.push("/auth/sign-out");
+      signOut();
     }
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     refreshToken();
