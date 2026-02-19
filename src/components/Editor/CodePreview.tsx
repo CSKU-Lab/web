@@ -67,7 +67,7 @@ function CodePreview({ files, runner, className }: CodePreviewProps) {
         </Button>
       </div>
 
-      <div className="flex min-h-0 border rounded-lg overflow-hidden h-64">
+      <div className="flex-1 flex min-h-0 border rounded-lg overflow-hidden">
         <FileTree
           files={files}
           selectedFile={selectedFile}

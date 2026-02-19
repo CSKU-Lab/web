@@ -88,7 +88,7 @@ function CodeSubmissionDetail({
       </div>
 
       {/* Code Preview */}
-      <CodePreview files={submission.files} />
+      <CodePreview files={submission.files} className="h-140" />
 
       {/* Test Case Table */}
       {allResults.length > 0 && (
