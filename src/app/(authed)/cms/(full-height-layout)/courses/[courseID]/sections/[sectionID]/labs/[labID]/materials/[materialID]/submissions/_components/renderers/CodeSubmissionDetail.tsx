@@ -12,8 +12,11 @@ import { cn } from "~/lib/utils";
 import CodePreview from "~/components/Editor/CodePreview";
 import type { CodeSubmissionData } from "~/types/cms-section-submission";
 import type { CodeSubmissionResultStatus } from "~/types/core-code-submission";
+import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
+import { CMSMaterial } from "~/types/cms-material";
 
 interface CodeSubmissionDetailProps {
+  material: CMSMaterial;
   created_at: string;
   submission: CodeSubmissionData;
 }
@@ -53,10 +56,12 @@ function formatMemory(bytes: number): string {
 }
 
 function CodeSubmissionDetail({
+  material,
   created_at,
   submission,
 }: CodeSubmissionDetailProps) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [isDescriptionOpen, setDescriptionOpen] = useState(false);
 
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => {
@@ -71,7 +76,32 @@ function CodeSubmissionDetail({
     submission.test_case_groups?.flatMap((group) => group.results) ?? [];
 
   return (
-    <div className="p-4 space-y-4 overflow-auto">
+    <div className="p-4 pt-0 space-y-4 overflow-auto">
+      <div className="space-y-1">
+        <button
+          type="button"
+          className="flex items-center justify-between w-full text-sm font-semibold text-(--gray-11)"
+          onClick={() => setDescriptionOpen((prev) => !prev)}
+        >
+          <span>Description</span>
+          {isDescriptionOpen ? (
+            <ChevronDown size="1rem" className="text-(--gray-9)" />
+          ) : (
+            <ChevronRight size="1rem" className="text-(--gray-9)" />
+          )}
+        </button>
+        {isDescriptionOpen && (
+          <SimpleEditor
+            initialValue={JSON.parse(material.payload.description)}
+            readOnly
+          />
+        )}
+      </div>
+
+      <h6 className="text-sm font-semibold text-(--gray-11) mt-4">
+        Submission
+      </h6>
+
       {/* Metrics */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1.5 text-xs text-(--gray-11)">

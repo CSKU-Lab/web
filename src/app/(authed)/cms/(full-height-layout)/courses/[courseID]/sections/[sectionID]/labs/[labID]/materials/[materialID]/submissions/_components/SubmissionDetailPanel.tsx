@@ -3,9 +3,8 @@ import { useAtom } from "jotai";
 import type { CMSMaterial } from "~/types/cms-material";
 import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
 import { selectedStudentIdAtom } from "../_stores/selected-student.store";
-import { getSubmissionRenderer } from "../_configs/submission-renderers";
-import MaterialHeader from "./MaterialHeader";
 import EmptyDetailState from "./EmptyDetailState";
+import { getSubmissionRenderer } from "../_configs/submission-renderers";
 
 interface SubmissionDetailPanelProps {
   material: CMSMaterial;
@@ -29,7 +28,6 @@ function SubmissionDetailPanel({
   if (!selectedStudent) {
     return (
       <div className="flex flex-col h-full">
-        <MaterialHeader material={material} />
         <div className="flex-1">
           <EmptyDetailState />
         </div>
@@ -37,11 +35,20 @@ function SubmissionDetailPanel({
     );
   }
 
+  const render = () => {
+    return (
+      <Renderer
+        material={material}
+        created_at={selectedStudent.created_at}
+        submission={selectedStudent.submission}
+      />
+    );
+  };
+
   // Student hasn't submitted or submission is still processing
   if (!selectedStudent.submission) {
     return (
       <div className="flex flex-col h-full">
-        <MaterialHeader material={material} />
         <div className="flex-1">
           <EmptyDetailState status={selectedStudent.submission_status} />
         </div>
@@ -51,10 +58,7 @@ function SubmissionDetailPanel({
 
   return (
     <div className="flex flex-col h-full">
-      <MaterialHeader material={material} />
-      <div className="flex-1 min-h-0 overflow-auto">
-        <Renderer created_at={selectedStudent.created_at} submission={selectedStudent.submission} />
-      </div>
+      <div className="flex-1 min-h-0 overflow-auto">{render()}</div>
     </div>
   );
 }

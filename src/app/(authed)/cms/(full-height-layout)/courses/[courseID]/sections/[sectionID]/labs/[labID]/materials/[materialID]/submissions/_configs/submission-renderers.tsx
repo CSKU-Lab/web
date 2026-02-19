@@ -1,10 +1,11 @@
 import type { ComponentType } from "react";
-import { MaterialType } from "~/types/cms-material";
+import { CMSMaterial, MaterialType } from "~/types/cms-material";
 import CodeSubmissionDetail from "../_components/renderers/CodeSubmissionDetail";
 import ComingSoon from "../_components/renderers/ComingSoon";
 import type { CodeSubmissionData } from "~/types/cms-section-submission";
 
 export interface SubmissionRendererProps<T = unknown> {
+  material: CMSMaterial;
   created_at: string;
   submission: T;
 }
