@@ -1,4 +1,7 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import { GripVertical } from "lucide-react";
+import React from "react";
+import { cn } from "~/lib/utils";
+import useDrag from "~/hooks/useDrag";
 
 interface ResizableSplitProps {
   left: React.ReactNode;
@@ -19,80 +22,55 @@ export function ResizableSplit({
   direction = "horizontal",
   className = "",
 }: ResizableSplitProps) {
-  const [ratio, setRatio] = useState(initialRatio);
-  const [isDrag, setIsDrag] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const initialPercent = initialRatio * 100;
+  const minPercent = minRatio * 100;
+  const maxPercent = maxRatio * 100;
+
+  const { buttonRef, containerRef, size, events } = useDrag({
+    initialSize: initialPercent,
+    direction,
+    mode: "percent",
+  });
+
   const isHorizontal = direction === "horizontal";
-
-  useEffect(() => {
-    const handleDragEnd = () => setIsDrag(false);
-    window.addEventListener("mouseup", handleDragEnd);
-    window.addEventListener("touchend", handleDragEnd);
-    return () => {
-      window.removeEventListener("mouseup", handleDragEnd);
-      window.removeEventListener("touchend", handleDragEnd);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isDrag) return;
-
-    const dragHandler = (position: { x: number; y: number }) => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      const containerRect = container.getBoundingClientRect();
-      const containerSize = isHorizontal
-        ? containerRect.width
-        : containerRect.height;
-      const containerStart = isHorizontal ? containerRect.x : containerRect.y;
-      const pointerPosition = isHorizontal ? position.x : position.y;
-
-      const newRatio = (pointerPosition - containerStart) / containerSize;
-      setRatio(Math.min(Math.max(newRatio, minRatio), maxRatio));
-    };
-
-    const handleMouseMove = (e: MouseEvent) =>
-      dragHandler({ x: e.clientX, y: e.clientY });
-
-    const handleTouchMove = (e: TouchEvent) =>
-      dragHandler({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("touchmove", handleTouchMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("touchmove", handleTouchMove);
-    };
-  }, [isDrag, isHorizontal, minRatio, maxRatio]);
+  const clampedSize = Math.min(Math.max(size, minPercent), maxPercent);
 
   return (
     <div
       ref={containerRef}
-      className={`flex ${isHorizontal ? "flex-row" : "flex-col"} w-full h-full ${className}`}
+      className={cn(
+        "relative flex w-full h-full",
+        isHorizontal ? "flex-row" : "flex-col",
+        className
+      )}
     >
       <div
         style={{
-          [isHorizontal ? "width" : "height"]: `${ratio * 100}%`,
+          [isHorizontal ? "width" : "height"]: `${clampedSize}%`,
         }}
-        className="overflow-hidden"
+        className="overflow-hidden border-r"
       >
         {left}
       </div>
-      <div
-        className={`${
+      <button
+        {...events}
+        ref={buttonRef}
+        className={cn(
+          "bg-white border rounded z-10 cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center",
           isHorizontal
-            ? "w-1.5 hover:w-2 cursor-col-resize bg-gray-4 hover:bg-gray-6"
-            : "h-1.5 hover:h-2 cursor-row-resize bg-gray-4 hover:bg-gray-6"
-        } transition-all flex-shrink-0`}
-        onMouseDown={() => setIsDrag(true)}
-        onTouchStart={() => setIsDrag(true)}
-        onDoubleClick={() => setRatio(initialRatio)}
-      />
+            ? "w-4 h-8 absolute top-1/2 -translate-y-1/2"
+            : "h-4 w-8 absolute left-1/2 -translate-x-1/2"
+        )}
+        style={{
+          [isHorizontal ? "left" : "top"]: `${clampedSize}%`,
+          [isHorizontal ? "marginLeft" : "marginTop"]: "-8px",
+        }}
+      >
+        <GripVertical size="0.9rem" />
+      </button>
       <div
         style={{
-          [isHorizontal ? "width" : "height"]: `${(1 - ratio) * 100}%`,
+          [isHorizontal ? "width" : "height"]: `${100 - clampedSize}%`,
         }}
         className="overflow-hidden"
       >

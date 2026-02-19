@@ -61,6 +61,19 @@ function Page() {
         </Loading>
       </PageTitle>
 
+      {!!material && material?.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mt-2 ml-4">
+          {material.tags.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-(--gray-3) text-(--gray-11)"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
       <div className="flex-1 min-h-0 mt-4">
         <Error
           isError={isError}
