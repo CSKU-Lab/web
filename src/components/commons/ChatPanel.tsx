@@ -23,7 +23,7 @@ export default function ChatPanel() {
     const el = textareaRef.current;
     if (!el) return;
 
-    el.style.height = "auto";
+    el.style.height = "0px";
     el.style.height = `${el.scrollHeight}px`;
   }, [input]);
 
@@ -82,7 +82,7 @@ export default function ChatPanel() {
           >
             <ChatMessages messages={messages} status={status} />
             <form
-              className="p-3 border-t dark:border-zinc-800 flex items-end gap-2"
+              className="p-3 border-t dark:border-zinc-800 flex items-end gap-2 bg-white dark:bg-zinc-900"
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSendMessage();
@@ -91,7 +91,7 @@ export default function ChatPanel() {
               <textarea
                 ref={textareaRef}
                 rows={1}
-                className="w-full p-2 border border-zinc-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800 resize-none max-h-32 overflow-y-auto"
+                className="w-full p-2 border border-zinc-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800 resize-none overflow-y-auto max-h-40 min-h-[40px]"
                 value={input}
                 placeholder="Say something..."
                 onChange={(e) => setInput(e.target.value)}
