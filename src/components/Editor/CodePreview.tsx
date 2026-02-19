@@ -17,11 +17,9 @@ function CodePreview({ files, runner, className }: CodePreviewProps) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
-  useEffect(() => {
-    if (files.length > 0 && selectedFile === null) {
-      setSelectedFile(files[0].name);
-    }
-  }, [files, selectedFile]);
+  if (files.length > 0 && selectedFile === null) {
+    setSelectedFile(files[0].name);
+  }
 
   useEffect(() => {
     if (isCopied) {
