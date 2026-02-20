@@ -3,7 +3,6 @@ import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission
 import StudentCard from "./StudentCard";
 import SearchInput from "~/components/commons/SearchInput";
 import { useState, useMemo, useEffect, useRef } from "react";
-import useInputDebounce from "~/hooks/useInputDebounce";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
 import { useAtom } from "jotai";
 import { selectedStudentIdAtom } from "../_stores/selected-student.store";
@@ -15,21 +14,20 @@ interface StudentListProps {
 
 function StudentList({ students, isLoading }: StudentListProps) {
   const [search, setSearch] = useState("");
-  const debouncedSearch = useInputDebounce(search, 300);
   const [selectedId, setSelectedId] = useAtom(selectedStudentIdAtom);
   const listRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const lastGPressRef = useRef<number>(0);
 
   const filteredStudents = useMemo(() => {
-    if (!debouncedSearch) return students;
-    const query = debouncedSearch.toLowerCase();
+    if (!search) return students;
+    const query = search.toLowerCase();
     return students.filter(
       (s) =>
         s.student.display_name.toLowerCase().includes(query) ||
         s.student.username.toLowerCase().includes(query),
     );
-  }, [students, debouncedSearch]);
+  }, [students, search]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
