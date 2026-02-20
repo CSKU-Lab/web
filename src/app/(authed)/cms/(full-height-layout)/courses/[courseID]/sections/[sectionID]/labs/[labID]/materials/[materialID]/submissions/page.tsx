@@ -11,6 +11,7 @@ import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
 import StudentList from "./_components/StudentList";
 import SubmissionDetailPanel from "./_components/SubmissionDetailPanel";
+import { FuzzySearchPanel } from "./_components/fuzzy-search";
 import { useStudentSubmissions } from "./_hooks/useStudentSubmissions";
 import { useGetMaterial } from "./_hooks/useGetMaterial";
 
@@ -121,6 +122,11 @@ function Page() {
           />
         </Error>
       </div>
+
+      <FuzzySearchPanel
+        students={students ?? []}
+        materialType={material?.type}
+      />
     </>
   );
 }

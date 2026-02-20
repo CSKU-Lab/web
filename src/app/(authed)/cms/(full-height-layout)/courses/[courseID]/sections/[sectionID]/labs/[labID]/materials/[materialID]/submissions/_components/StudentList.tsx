@@ -1,4 +1,6 @@
 import { Skeleton } from "~/components/ui/skeleton";
+import { Button } from "~/components/ui/button";
+import { Sparkles } from "lucide-react";
 import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
 import StudentCard from "./StudentCard";
 import SearchInput from "~/components/commons/SearchInput";
@@ -6,6 +8,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
 import { useAtom } from "jotai";
 import { selectedStudentIdAtom } from "../_stores/selected-student.store";
+import { fuzzySearchOpenAtom } from "../_stores/fuzzy-search.store";
 
 interface StudentListProps {
   students: CMSSectionStudentSubmission[];
@@ -15,6 +18,7 @@ interface StudentListProps {
 function StudentList({ students, isLoading }: StudentListProps) {
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useAtom(selectedStudentIdAtom);
+  const [, setFuzzySearchOpen] = useAtom(fuzzySearchOpenAtom);
   const listRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const lastGPressRef = useRef<number>(0);
@@ -126,13 +130,23 @@ function StudentList({ students, isLoading }: StudentListProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-3 py-2 border-b border-(--gray-4)">
+      <div className="px-3 py-2 border-b border-(--gray-4) flex items-center gap-2">
         <SearchInput
           ref={searchRef}
           value={search}
           onChange={setSearch}
           placeholder="Search students..."
+          className="flex-1"
         />
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setFuzzySearchOpen(true)}
+          className="shrink-0"
+        >
+          <Sparkles size={16} className="mr-1.5" />
+          Fuzzy Search
+        </Button>
       </div>
 
       <div ref={listRef} className="flex-1 min-h-0 overflow-auto">
