@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { ClientEnv } from "~/lib/client-env";
 import { Toaster } from "~/components/ui/sonner";
 import ReactScan from "~/react-scan";
+import { ThemeProvider } from "~/providers/ThemeProvider";
 
 import "./globals.css";
 
@@ -61,17 +62,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <ClientEnv />
       </head>
       <body className={`${onest.className} ${anuphan.variable} ${boon.variable}`}>
-        <ReactScan />
-        <Suspense>
-          <AppLoading />
-          <Toaster richColors />
-        </Suspense>
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ReactScan />
+          <Suspense>
+            <AppLoading />
+            <Toaster richColors />
+          </Suspense>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
