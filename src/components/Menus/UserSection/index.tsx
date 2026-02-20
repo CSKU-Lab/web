@@ -10,6 +10,7 @@ import UserRole from "~/components/commons/UserRole";
 import SignoutButton from "./SignoutButton";
 import CMSButton from "./CMSButton";
 import BackToHomeButton from "./BackToHomeButton";
+import { ThemeToggle } from "~/components/commons/ThemeToggle";
 import { useSession } from "~/providers/SessionProvider";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
@@ -58,6 +59,15 @@ function UserSection() {
                 <UserRole key={role} {...{ role }} />
               ))}
             </div>
+          </div>
+        </div>
+        <hr />
+        <div className="p-2">
+          <div className="mb-2">
+            <span className="text-xs font-medium text-(--gray-10) px-2">
+              Theme
+            </span>
+            <ThemeToggle />
           </div>
         </div>
         <hr />
