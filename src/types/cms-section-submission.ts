@@ -20,11 +20,11 @@ export interface CMSSectionStudentSubmission<T = unknown> {
   ip: string | null;
   submission_status: SubmissionStatus;
   created_at: string;
-  submission: T | null;
+  payload: T | null;
 }
 
 export interface CodeSubmissionData {
-  id: string;
+  submission_id: string;
   files: CodeFile[];
   avg_wall_time: number;
   avg_memory: number;

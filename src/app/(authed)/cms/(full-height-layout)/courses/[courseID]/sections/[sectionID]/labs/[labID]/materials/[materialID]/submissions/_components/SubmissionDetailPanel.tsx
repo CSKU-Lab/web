@@ -38,15 +38,18 @@ function SubmissionDetailPanel({
   const render = () => {
     return (
       <Renderer
+        key={selectedStudent.student.id}
         material={material}
         created_at={selectedStudent.created_at}
-        submission={selectedStudent.submission}
+        payload={selectedStudent.payload}
+        auto_score={selectedStudent.auto_score}
+        manual_score={selectedStudent.manual_score}
       />
     );
   };
 
   // Student hasn't submitted or submission is still processing
-  if (!selectedStudent.submission) {
+  if (!selectedStudent.payload) {
     return (
       <div className="flex flex-col h-full">
         <div className="flex-1">

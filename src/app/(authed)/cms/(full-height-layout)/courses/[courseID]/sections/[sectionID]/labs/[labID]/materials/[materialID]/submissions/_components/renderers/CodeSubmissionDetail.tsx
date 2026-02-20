@@ -1,5 +1,12 @@
 import { useState, Fragment } from "react";
-import { ChevronRight, ChevronDown, Clock, HardDrive } from "lucide-react";
+import {
+  ChevronRight,
+  ChevronDown,
+  Clock,
+  HardDrive,
+  Loader2,
+} from "lucide-react";
+import { useParams } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -8,17 +15,22 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 import CodePreview from "~/components/Editor/CodePreview";
 import type { CodeSubmissionData } from "~/types/cms-section-submission";
 import type { CodeSubmissionResultStatus } from "~/types/core-code-submission";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 import { CMSMaterial } from "~/types/cms-material";
+import { useUpdateManualScore } from "../../_hooks/useUpdateManualScore";
 
 interface CodeSubmissionDetailProps {
   material: CMSMaterial;
   created_at: string;
-  submission: CodeSubmissionData;
+  payload: CodeSubmissionData;
+  auto_score: number;
+  manual_score: number;
 }
 
 const statusConfig: Record<
@@ -55,11 +67,78 @@ function formatMemory(bytes: number): string {
   return `${(bytes / 1024).toFixed(2)}KB`;
 }
 
+// Separate component for manual score input with key-based reset
+interface ManualScoreInputProps {
+  submissionID: string;
+  manualScore: number;
+  maxScore: number;
+  sectionId: string;
+  labId: string;
+  materialId: string;
+}
+
+function ManualScoreInput({
+  submissionID,
+  manualScore,
+  maxScore,
+  sectionId,
+  labId,
+  materialId,
+}: ManualScoreInputProps) {
+  const [inputValue, setInputValue] = useState(String(manualScore ?? 0));
+  
+  const { mutate: updateManualScore, isPending: isSaving } = useUpdateManualScore({
+    sectionId,
+    labId,
+    materialId,
+  });
+
+  const handleSave = () => {
+    const value = parseFloat(inputValue);
+    if (!isNaN(value) && value !== manualScore) {
+      updateManualScore({
+        submissionID,
+        score: value,
+      });
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <Input
+        id="manual-score"
+        type="number"
+        min={0}
+        max={maxScore}
+        step={1}
+        className="w-20 h-7 text-sm"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onBlur={handleSave}
+      />
+      <span className="text-sm text-(--gray-11)">/ {maxScore}</span>
+      {isSaving && (
+        <Loader2
+          size="0.875rem"
+          className="animate-spin text-(--gray-9)"
+        />
+      )}
+    </div>
+  );
+}
+
 function CodeSubmissionDetail({
   material,
   created_at,
-  submission,
+  payload,
+  auto_score,
+  manual_score,
 }: CodeSubmissionDetailProps) {
+  const params = useParams();
+  const sectionId = params.sectionID as string;
+  const labId = params.labID as string;
+  const materialId = params.materialID as string;
+
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [isDescriptionOpen, setDescriptionOpen] = useState(false);
 
@@ -73,7 +152,7 @@ function CodeSubmissionDetail({
   };
 
   const allResults =
-    submission.test_case_groups?.flatMap((group) => group.results) ?? [];
+    payload.test_case_groups?.flatMap((group) => group.results) ?? [];
 
   return (
     <div className="p-4 pt-0 space-y-4 overflow-auto">
@@ -106,19 +185,47 @@ function CodeSubmissionDetail({
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1.5 text-xs text-(--gray-11)">
           <Clock size="0.875rem" />
-          <span>Avg Time: {formatTime(submission.avg_wall_time)}</span>
+          <span>Avg Time: {formatTime(payload.avg_wall_time)}</span>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-(--gray-11)">
           <HardDrive size="0.875rem" />
-          <span>Avg Memory: {formatMemory(submission.avg_memory)}</span>
+          <span>Avg Memory: {formatMemory(payload.avg_memory)}</span>
         </div>
         <span className="text-xs text-(--gray-9)">
           Submitted: {new Date(created_at).toLocaleString()}
         </span>
       </div>
 
+      {/* Scores */}
+      <div className="flex items-center gap-6 p-3 bg-(--gray-3) rounded-lg">
+        <div className="flex items-center gap-2">
+          <Label className="text-xs font-medium text-(--gray-11)">
+            Auto Score:
+          </Label>
+          <span className="text-sm font-semibold text-(--gray-12)">
+            {auto_score} / {material.max_auto_score}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Label
+            htmlFor="manual-score"
+            className="text-xs font-medium text-(--gray-11)"
+          >
+            Manual Score:
+          </Label>
+          <ManualScoreInput
+            submissionID={payload.submission_id}
+            manualScore={manual_score}
+            maxScore={material.max_manual_score}
+            sectionId={sectionId}
+            labId={labId}
+            materialId={materialId}
+          />
+        </div>
+      </div>
+
       {/* Code Preview */}
-      <CodePreview files={submission.files} className="h-140" />
+      <CodePreview files={payload.files} className="h-140" />
 
       {/* Test Case Table */}
       {allResults.length > 0 && (
