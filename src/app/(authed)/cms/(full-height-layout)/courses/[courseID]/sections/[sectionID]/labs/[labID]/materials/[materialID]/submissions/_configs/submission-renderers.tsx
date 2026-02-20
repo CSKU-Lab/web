@@ -7,7 +7,9 @@ import type { CodeSubmissionData } from "~/types/cms-section-submission";
 export interface SubmissionRendererProps<T = unknown> {
   material: CMSMaterial;
   created_at: string;
-  submission: T;
+  payload: T;
+  auto_score: number;
+  manual_score: number;
 }
 
 // Register renderers for each material type here.
@@ -22,10 +24,10 @@ const submissionRenderers: Record<
   [MaterialType.CODE]: CodeSubmissionDetail as ComponentType<
     SubmissionRendererProps<CodeSubmissionData>
   >,
-  [MaterialType.DOCUMENT]: ({ submission }: SubmissionRendererProps) => (
+  [MaterialType.DOCUMENT]: ({ payload }: SubmissionRendererProps) => (
     <ComingSoon type="document" />
   ),
-  [MaterialType.TYPE]: ({ submission }: SubmissionRendererProps) => (
+  [MaterialType.TYPE]: ({ payload }: SubmissionRendererProps) => (
     <ComingSoon type="type" />
   ),
 };
@@ -35,7 +37,7 @@ export function getSubmissionRenderer(
 ): ComponentType<SubmissionRendererProps<any>> {
   return (
     submissionRenderers[materialType] ??
-    (({ submission }: SubmissionRendererProps) => (
+    (({ payload }: SubmissionRendererProps) => (
       <ComingSoon type={materialType} />
     ))
   );
