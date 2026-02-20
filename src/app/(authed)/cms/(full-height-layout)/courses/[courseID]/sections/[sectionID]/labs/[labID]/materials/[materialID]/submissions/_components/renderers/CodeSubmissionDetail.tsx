@@ -86,12 +86,13 @@ function ManualScoreInput({
   materialId,
 }: ManualScoreInputProps) {
   const [inputValue, setInputValue] = useState(String(manualScore ?? 0));
-  
-  const { mutate: updateManualScore, isPending: isSaving } = useUpdateManualScore({
-    sectionId,
-    labId,
-    materialId,
-  });
+
+  const { mutate: updateManualScore, isPending: isSaving } =
+    useUpdateManualScore({
+      sectionId,
+      labId,
+      materialId,
+    });
 
   const handleSave = () => {
     const value = parseFloat(inputValue);
@@ -118,10 +119,7 @@ function ManualScoreInput({
       />
       <span className="text-sm text-(--gray-11)">/ {maxScore}</span>
       {isSaving && (
-        <Loader2
-          size="0.875rem"
-          className="animate-spin text-(--gray-9)"
-        />
+        <Loader2 size="0.875rem" className="animate-spin text-(--gray-9)" />
       )}
     </div>
   );
@@ -260,14 +258,20 @@ function CodeSubmissionDetail({
                     >
                       <TableCell className="font-medium">{index + 1}</TableCell>
                       <TableCell>
-                        <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
-                          {result.input || "-"}
-                        </code>
+                        <textarea
+                          value={result.input || "-"}
+                          readOnly
+                          disabled
+                          className="w-full h-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5"
+                        />
                       </TableCell>
                       <TableCell>
-                        <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
-                          {result.output || "-"}
-                        </code>
+                        <textarea
+                          value={result.output || "-"}
+                          readOnly
+                          disabled
+                          className="w-full h-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5"
+                        />
                       </TableCell>
                       <TableCell>
                         <span
