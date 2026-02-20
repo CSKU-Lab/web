@@ -11,7 +11,7 @@ interface Props {
 
 function CoreLayout({ children, className }: Props) {
   return (
-    <div className={cn("h-screen flex bg-white", className)}>{children}</div>
+    <div className={cn("h-screen flex bg-(--gray-1)", className)}>{children}</div>
   );
 }
 
