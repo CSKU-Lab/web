@@ -2,16 +2,16 @@
 
 import { useAtom, useSetAtom } from "jotai";
 import { cn } from "~/lib/utils";
-import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
 import type { MaterialType } from "~/types/cms-material";
 import type { FuseResultMatch } from "fuse.js";
 import { selectedStudentAtom } from "../../_stores/selected-student.store";
 import { fuzzySearchOpenAtom } from "../../_stores/fuzzy-search.store";
 import { StudentBlock } from "./StudentBlock";
 import { ContentBlock } from "./ContentBlock";
+import { CMSSectionStudentLatestSubmission } from "~/types/cms-section-submission";
 
 interface ResultCardProps {
-  submission: CMSSectionStudentSubmission;
+  submission: CMSSectionStudentLatestSubmission;
   materialType: MaterialType;
   matches: readonly FuseResultMatch[];
   isSelected: boolean;

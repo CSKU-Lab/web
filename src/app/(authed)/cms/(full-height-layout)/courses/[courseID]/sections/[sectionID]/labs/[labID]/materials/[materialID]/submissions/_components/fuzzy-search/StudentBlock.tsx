@@ -2,18 +2,24 @@
 
 import type { FuseResultMatch } from "fuse.js";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
-import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
 import { FuzzySearchHighlight } from "../FuzzySearchHighlight";
 import StatusBadge from "../StatusBadge";
+import { CMSSectionStudentLatestSubmission } from "~/types/cms-section-submission";
 
 interface StudentBlockProps {
-  submission: CMSSectionStudentSubmission;
+  submission: CMSSectionStudentLatestSubmission;
   matches: readonly FuseResultMatch[];
 }
 
 export function StudentBlock({ submission, matches }: StudentBlockProps) {
-  const { student, auto_score, manual_score, ip, submission_status, created_at } =
-    submission;
+  const {
+    student,
+    auto_score,
+    manual_score,
+    ip,
+    status,
+    created_at,
+  } = submission;
 
   return (
     <div className="flex items-start gap-3">
@@ -33,7 +39,7 @@ export function StudentBlock({ submission, matches }: StudentBlockProps) {
               matchKey="student.display_name"
             />
           </span>
-          <StatusBadge status={submission_status} />
+          <StatusBadge status={status} />
         </div>
 
         {/* Secondary info row */}
