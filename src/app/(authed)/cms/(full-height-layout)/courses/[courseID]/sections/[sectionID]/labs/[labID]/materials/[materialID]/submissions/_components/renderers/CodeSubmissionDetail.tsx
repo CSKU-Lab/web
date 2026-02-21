@@ -175,9 +175,9 @@ function CodeSubmissionDetail({
         )}
       </div>
 
-      <h6 className="text-sm font-semibold text-(--gray-11) mt-4">
-        Submission
-      </h6>
+      <div className="flex items-center justify-between mt-4">
+        <h6 className="text-sm font-semibold text-(--gray-11)">Submission</h6>
+      </div>
 
       {/* Metrics */}
       <div className="flex items-center gap-4">

@@ -8,19 +8,28 @@ export type SubmissionStatus =
   | "running"
   | "not_submitted";
 
-export interface CMSSectionStudentSubmission<T = unknown> {
-  student: {
-    id: string;
-    username: string;
-    display_name: string;
-    profile_image: string | null;
-  };
+export interface CMSSectionSubmissionStudent {
+  id: string;
+  username: string;
+  display_name: string;
+  profile_image: string | null;
+}
+
+export interface CMSSectionSubmission<T = unknown> {
+  id: string;
+  order: number;
   auto_score: number;
   manual_score: number;
   ip: string | null;
-  submission_status: SubmissionStatus;
+  status: SubmissionStatus;
   created_at: string;
+  updated_at: string;
   payload: T | null;
+}
+
+export interface CMSSectionStudentLatestSubmission<T = unknown>
+  extends CMSSectionSubmission<T> {
+  student: CMSSectionSubmissionStudent;
 }
 
 export interface CodeSubmissionData {

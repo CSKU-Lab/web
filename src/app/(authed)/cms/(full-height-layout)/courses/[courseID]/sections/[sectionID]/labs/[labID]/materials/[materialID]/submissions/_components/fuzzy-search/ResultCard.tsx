@@ -1,11 +1,11 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { cn } from "~/lib/utils";
 import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
 import type { MaterialType } from "~/types/cms-material";
 import type { FuseResultMatch } from "fuse.js";
-import { selectedStudentIdAtom } from "../../_stores/selected-student.store";
+import { selectedStudentAtom } from "../../_stores/selected-student.store";
 import { fuzzySearchOpenAtom } from "../../_stores/fuzzy-search.store";
 import { StudentBlock } from "./StudentBlock";
 import { ContentBlock } from "./ContentBlock";
@@ -23,11 +23,11 @@ export function ResultCard({
   matches,
   isSelected,
 }: ResultCardProps) {
-  const [, setSelectedId] = useAtom(selectedStudentIdAtom);
+  const setSelectedStudent = useSetAtom(selectedStudentAtom);
   const [, setIsOpen] = useAtom(fuzzySearchOpenAtom);
 
   const handleClick = () => {
-    setSelectedId(submission.student.id);
+    setSelectedStudent(submission.student);
     setIsOpen(false);
   };
 

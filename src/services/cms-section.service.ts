@@ -9,7 +9,7 @@ import type {
 } from "~/types/cms-section-lab";
 import { CMSGradebook } from "~/types/cms-section-gradebook";
 import type { LabStatus } from "~/types/cms-section-lab";
-import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
+import { CMSSectionStudentLatestSubmission } from "~/types/cms-section-submission";
 
 export type CreateSectionPayload = {
   name: string;
@@ -32,6 +32,10 @@ export type GetSectionLogPaginationParams =
 
 export type GetSectionLabPaginationParams =
   PaginationRequestParams<CMSSectionLab>;
+
+export type GetStudentSubmissionsPaginationParams<T> = PaginationRequestParams<
+  CMSSectionStudentLatestSubmission<T>
+>;
 
 export type UpdateSectionLabPayload = {
   status: LabStatus;
@@ -139,12 +143,25 @@ class SectionService extends BaseService {
     return res.data;
   }
 
-  async getStudentSubmissions<T = unknown>(
+  async getStudentSubmissions<T>(
     sectionID: string,
     labID: string,
     materialID: string,
-  ): Promise<CMSSectionStudentSubmission<T>[]> {
-    const res = await api.get<{ data: CMSSectionStudentSubmission<T>[] }>(
+    studentID: string,
+    params: GetStudentSubmissionsPaginationParams<T>,
+  ) {
+    return await this._getPagination<CMSSectionStudentLatestSubmission<T>>(
+      params,
+      `/${sectionID}/labs/${labID}/materials/${materialID}/submissions?student_id=${studentID}`,
+    );
+  }
+
+  async getAllStudentsLatestSubmission<T>(
+    sectionID: string,
+    labID: string,
+    materialID: string,
+  ): Promise<CMSSectionStudentLatestSubmission<T>[]> {
+    const res = await api.get(
       `${this._baseURL}/${sectionID}/labs/${labID}/materials/${materialID}/submissions`,
     );
     return res.data.data;
