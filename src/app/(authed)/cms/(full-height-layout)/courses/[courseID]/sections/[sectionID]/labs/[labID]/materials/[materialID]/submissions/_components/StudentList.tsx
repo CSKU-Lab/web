@@ -59,7 +59,7 @@ function StudentList() {
     const studentEl = listRef.current.querySelector(
       `[data-student-id="${selectedStudent.id}"]`,
     );
-    studentEl?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    studentEl?.scrollIntoView({ block: "center" });
   }, [currentIndex, students]);
 
   return (

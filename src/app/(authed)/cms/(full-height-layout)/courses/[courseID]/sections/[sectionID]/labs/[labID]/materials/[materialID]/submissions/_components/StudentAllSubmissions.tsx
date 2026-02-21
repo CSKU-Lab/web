@@ -14,8 +14,45 @@ import { useEffect, useRef } from "react";
 import { selectedSubmissionAtom } from "../_stores/selected-submission.store";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 
+function StudentAllSubmissionsSkeleton() {
+  return (
+    <div className="flex flex-col h-full">
+      <div className="p-2 pb-4 border-b border-(--gray-4) flex items-center gap-2">
+        <Skeleton className="h-9 w-28" />
+      </div>
+
+      <div className="flex-1 min-h-0 overflow-auto">
+        <div className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-(--gray-3) bg-(--gray-3) border-l-2 border-l-accent">
+          <Skeleton className="size-9 rounded-full" />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2">
+              <Skeleton className="h-4 w-32" />
+            </div>
+            <Skeleton className="h-3 w-20 mt-1" />
+          </div>
+        </div>
+
+        <div className="space-y-1 p-2">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="p-2 hover:bg-(--gray-3) w-full">
+              <div className="flex items-center justify-between gap-2">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-5 w-16 rounded-full" />
+              </div>
+              <div className="flex items-center gap-2 mt-0.5">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-3 w-12" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function StudentAllSubmissions() {
-  const isLoading = false;
   const { sectionID, labID, materialID } = useParams<{
     sectionID: string;
     labID: string;
@@ -27,6 +64,8 @@ function StudentAllSubmissions() {
   const {
     data: submissions,
     hasNextPage,
+    isFetching: isLoading,
+    isInitialLoading,
     fetchNextPage,
   } = useStudentSubmissions({
     sectionID,
@@ -77,7 +116,7 @@ function StudentAllSubmissions() {
     const submissionEl = listRef.current.querySelector(
       `[data-submission-id="${selectedSubmission.id}"]`,
     );
-    submissionEl?.scrollIntoView({ block: "nearest", });
+    submissionEl?.scrollIntoView({ block: "center" });
   }, [currentIndex, allSubmissions]);
 
   return (
@@ -113,31 +152,45 @@ function StudentAllSubmissions() {
           </div>
         )}
 
-        {isLoading ? (
-          <div className="space-y-1 p-2">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 py-3">
-                <Skeleton className="size-9 rounded-xl" />
-                <div className="flex-1 space-y-1.5">
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-3 w-48" />
-                </div>
-              </div>
-            ))}
-          </div>
+        {isInitialLoading && allSubmissions.length === 0 ? (
+          <StudentAllSubmissionsSkeleton />
         ) : allSubmissions?.length === 0 ? (
           <div className="py-12">
             <NoDataAvailable />
           </div>
         ) : (
-          allSubmissions?.map((submission, i) => (
-            <SubmissionCard
-              key={submission.created_at}
-              submission={submission}
-              isSelected={currentIndex === i}
-              onClick={() => setCurrentIndex(i)}
-            />
-          ))
+          <div className="ml-1.5">
+            {allSubmissions?.map((submission, i) => (
+              <SubmissionCard
+                key={submission.created_at}
+                submission={submission}
+                isSelected={currentIndex === i}
+                onClick={() => setCurrentIndex(i)}
+              />
+            ))}
+            {isLoading && hasNextPage && (
+              <div className="p-2">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="p-2 w-full">
+                    <div className="flex items-center justify-between gap-2">
+                      <Skeleton className="h-4 w-28" />
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                    </div>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-3 w-12" />
+                      <Skeleton className="h-3 w-16" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {!isLoading && !hasNextPage && allSubmissions.length > 0 && (
+              <div className="py-4 text-center text-xs text-(--gray-10)">
+                End of results
+              </div>
+            )}
+          </div>
         )}
         <div ref={bottomDivRef}></div>
       </div>

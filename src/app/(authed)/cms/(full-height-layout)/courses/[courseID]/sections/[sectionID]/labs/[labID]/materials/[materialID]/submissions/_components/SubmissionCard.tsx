@@ -17,8 +17,8 @@ function SubmissionCard({ submission, isSelected, onClick }: Props) {
       data-submission-id={id}
       onClick={onClick}
       className={cn(
-        "p-2 hover:bg-(--gray-3) w-full",
-        isSelected && "bg-(--gray-3)",
+        "p-2 hover:bg-(--gray-2) w-full",
+        isSelected && "bg-(--gray-3) border-l-2 border-l-accent",
       )}
     >
       <div className="flex items-center justify-between gap-2">
