@@ -7,6 +7,7 @@ export const queryKeys = {
       ...queryKeys.user.all,
       params,
     ],
+    getById: (userId: string) => [...queryKeys.user.all, userId],
   },
   labMaterial: {
     all: ["labMaterials"],
@@ -53,17 +54,25 @@ export const queryKeys = {
       ...queryKeys.section.getById(sectionId),
       "gradebook",
     ],
-    submissions: (
-      sectionId: string,
-      labId: string,
-      materialId: string,
-    ) => [
+    submissions: (sectionId: string, labId: string, materialId: string) => [
       ...queryKeys.section.getById(sectionId),
       "labs",
       labId,
       "materials",
       materialId,
       "submissions",
+    ],
+    submissionsOfStudent: (
+      sectionId: string,
+      labId: string,
+      materialId: string,
+      studentId: string,
+      params?: Record<string, any>,
+    ) => [
+      ...queryKeys.section.submissions(sectionId, labId, materialId),
+      "student",
+      studentId,
+      params,
     ],
   },
   user_group: {

@@ -38,3 +38,8 @@ export type UserDetail = Pick<
   User,
   "id" | "username" | "display_name" | "profile_image"
 >;
+
+export type CMSUser = Pick<
+  User,
+  "id" | "username" | "display_name" | "profile_image"
+>;

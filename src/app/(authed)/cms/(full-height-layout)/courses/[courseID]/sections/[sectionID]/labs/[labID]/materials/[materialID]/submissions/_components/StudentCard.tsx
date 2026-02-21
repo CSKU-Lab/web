@@ -1,27 +1,34 @@
-import { useAtom } from "jotai";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
 import { cn } from "~/lib/utils";
-import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
-import { selectedStudentIdAtom } from "../_stores/selected-student.store";
 import StatusBadge from "./StatusBadge";
+import { Button } from "~/components/commons/Button";
+import { useRouter } from "next/navigation";
+import { CMSSectionStudentLatestSubmission } from "~/types/cms-section-submission";
 
 interface StudentCardProps {
-  studentSubmission: CMSSectionStudentSubmission;
+  studentSubmission: CMSSectionStudentLatestSubmission;
+  isSelected?: boolean;
+  onClick?: () => void;
 }
 
-function StudentCard({ studentSubmission }: StudentCardProps) {
-  const { student, auto_score, manual_score, ip, submission_status } =
-    studentSubmission;
-  const [selectedId, setSelectedId] = useAtom(selectedStudentIdAtom);
+function StudentCard({
+  studentSubmission,
+  isSelected,
+  onClick,
+}: StudentCardProps) {
+  const { student, auto_score, manual_score, ip, status } = studentSubmission;
 
-  const isSelected = selectedId === student.id;
+  const router = useRouter();
+  const handleViewAllSubmissions = () => {
+    router.push(window.location.pathname + `?student_id=${student.id}`);
+  };
 
   return (
-    <button
+    <div
       data-student-id={student.id}
-      onClick={() => setSelectedId(student.id)}
+      onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-(--gray-3)",
+        "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-(--gray-3) cursor-pointer",
         "hover:bg-(--gray-2)",
         isSelected && "bg-(--gray-3) border-l-2 border-l-accent",
       )}
@@ -30,6 +37,7 @@ function StudentCard({ studentSubmission }: StudentCardProps) {
         username={student.username}
         src={student.profile_image}
         size="2.25rem"
+        className="self-start"
       />
 
       <div className="flex-1 min-w-0">
@@ -37,7 +45,7 @@ function StudentCard({ studentSubmission }: StudentCardProps) {
           <h6 className="text-sm font-medium text-(--gray-12) truncate">
             {student.display_name}
           </h6>
-          <StatusBadge status={submission_status} />
+          <StatusBadge status={status} />
         </div>
 
         <div className="flex items-center gap-2 mt-0.5">
@@ -55,8 +63,13 @@ function StudentCard({ studentSubmission }: StudentCardProps) {
             </>
           )}
         </div>
+        {isSelected && (
+          <Button onClick={handleViewAllSubmissions} className="h-6 mt-2">
+            View all submissions
+          </Button>
+        )}
       </div>
-    </button>
+    </div>
   );
 }
 

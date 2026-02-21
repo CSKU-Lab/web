@@ -9,11 +9,11 @@ import Error from "~/components/commons/Error";
 import ErrorFallback from "~/components/commons/Error/ErrorFallback";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
-import StudentList from "./_components/StudentList";
 import SubmissionDetailPanel from "./_components/SubmissionDetailPanel";
 import { FuzzySearchPanel } from "./_components/fuzzy-search";
-import { useStudentSubmissions } from "./_hooks/useStudentSubmissions";
+import { useAllStudentsLatestSubmissions } from "./_hooks/useStudentSubmissions";
 import { useGetMaterial } from "./_hooks/useGetMaterial";
+import LeftPanel from "./_components/LeftPanel";
 
 interface PageParams {
   [key: string]: string;
@@ -32,7 +32,7 @@ function Page() {
     isError: isStudentsError,
     refetch: refetchStudents,
     isFetching: isStudentsFetching,
-  } = useStudentSubmissions({ sectionID, labID, materialID });
+  } = useAllStudentsLatestSubmissions({ sectionID, labID, materialID });
 
   const {
     data: material,
@@ -94,12 +94,7 @@ function Page() {
             initialRatio={0.35}
             minRatio={0.2}
             maxRatio={0.6}
-            left={
-              <StudentList
-                students={students ?? []}
-                isLoading={isStudentsLoading}
-              />
-            }
+            left={<LeftPanel />}
             right={
               <Loading
                 isLoading={isLoading}

@@ -50,8 +50,17 @@ export class BaseService {
       searchParams.append(key, value.toString());
     });
 
+    const pathname = query.split("?")[0];
+    const hasQueryParams = query.includes("?");
+    if (hasQueryParams) {
+      const searchParamsFromQuery = new URLSearchParams(query.split("?")[1]);
+      searchParamsFromQuery.forEach((value, key) => {
+        searchParams.append(key, value);
+      });
+    }
+
     const res = await this.api.get<PaginationResponse<Item>>(
-      this._baseURL + `${query}` + "?" + searchParams.toString(),
+      this._baseURL + pathname + "?" + searchParams.toString(),
     );
 
     return res.data;

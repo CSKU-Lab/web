@@ -1,29 +1,40 @@
 import { Skeleton } from "~/components/ui/skeleton";
-import { Button } from "~/components/ui/button";
-import { Sparkles } from "lucide-react";
-import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
 import StudentCard from "./StudentCard";
 import SearchInput from "~/components/commons/SearchInput";
 import { useState, useMemo, useEffect, useRef } from "react";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
-import { useAtom } from "jotai";
-import { selectedStudentIdAtom } from "../_stores/selected-student.store";
+import { useAtom, useSetAtom } from "jotai";
+import { selectedStudentAtom } from "../_stores/selected-student.store";
+import { Button } from "~/components/commons/Button";
+import { Sparkles } from "lucide-react";
 import { fuzzySearchOpenAtom } from "../_stores/fuzzy-search.store";
+import { useParams } from "next/navigation";
+import { useAllStudentsLatestSubmissions } from "../_hooks/useStudentSubmissions";
+import useVimMotion from "../_hooks/useVimMotion";
+import { selectedSubmissionAtom } from "../_stores/selected-submission.store";
 
-interface StudentListProps {
-  students: CMSSectionStudentSubmission[];
-  isLoading: boolean;
-}
-
-function StudentList({ students, isLoading }: StudentListProps) {
+function StudentList() {
   const [search, setSearch] = useState("");
-  const [selectedId, setSelectedId] = useAtom(selectedStudentIdAtom);
-  const [, setFuzzySearchOpen] = useAtom(fuzzySearchOpenAtom);
+  const [selectedStudent, setSelectedStudent] = useAtom(selectedStudentAtom);
+  const setFuzzySearchOpen = useSetAtom(fuzzySearchOpenAtom);
   const listRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const lastGPressRef = useRef<number>(0);
 
+  const { sectionID, labID, materialID } = useParams<{
+    sectionID: string;
+    labID: string;
+    materialID: string;
+  }>();
+
+  const { data: students, isLoading } = useAllStudentsLatestSubmissions({
+    sectionID,
+    labID,
+    materialID,
+  });
+
   const filteredStudents = useMemo(() => {
+    if (!students) return [];
     if (!search) return students;
     const query = search.toLowerCase();
     return students.filter(
@@ -33,100 +44,26 @@ function StudentList({ students, isLoading }: StudentListProps) {
     );
   }, [students, search]);
 
+  const { currentIndex, setCurrentIndex } = useVimMotion({
+    maxIndex: filteredStudents.length - 1,
+  });
+
+  const setSelectedSubmission = useSetAtom(selectedSubmissionAtom);
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const activeEl = document.activeElement;
-      const isTypingField =
-        activeEl instanceof HTMLInputElement ||
-        activeEl instanceof HTMLTextAreaElement ||
-        activeEl?.getAttribute("contenteditable") === "true";
-
-      if (e.key === "Escape" && isTypingField) {
-        e.preventDefault();
-        searchRef.current?.blur();
-        const firstStudent = filteredStudents[0];
-        if (firstStudent) {
-          setSelectedId(firstStudent.student.id);
-        }
-        setSearch("");
-        return;
-      }
-
-      if (isTypingField && e.key !== "/") {
-        return;
-      }
-
-      if (!["j", "k", "g", "G", "/"].includes(e.key)) return;
-
-      e.preventDefault();
-
-      const now = Date.now();
-
-      if (e.key === "/") {
-        setSearch("");
-        searchRef.current?.focus();
-        return;
-      }
-
-      if (e.key === "G") {
-        const lastStudent = filteredStudents[filteredStudents.length - 1];
-        if (lastStudent) {
-          setSelectedId(lastStudent.student.id);
-        }
-        return;
-      }
-
-      if (e.key === "g") {
-        if (now - lastGPressRef.current < 500) {
-          const firstStudent = filteredStudents[0];
-          if (firstStudent) {
-            setSelectedId(firstStudent.student.id);
-          }
-          lastGPressRef.current = 0;
-        } else {
-          lastGPressRef.current = now;
-        }
-        return;
-      }
-
-      const currentIndex = filteredStudents.findIndex(
-        (s) => s.student.id === selectedId,
-      );
-
-      let newIndex: number;
-
-      if (e.key === "j") {
-        if (currentIndex === -1) {
-          newIndex = 0;
-        } else {
-          newIndex = Math.min(currentIndex + 1, filteredStudents.length - 1);
-        }
-      } else {
-        if (currentIndex === -1) {
-          newIndex = filteredStudents.length - 1;
-        } else {
-          newIndex = Math.max(currentIndex - 1, 0);
-        }
-      }
-
-      const newStudent = filteredStudents[newIndex];
-      if (newStudent) {
-        setSelectedId(newStudent.student.id);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [filteredStudents, selectedId, setSelectedId]);
+    if (!filteredStudents[currentIndex]) return;
+    setSelectedSubmission(filteredStudents[currentIndex]);
+  }, [currentIndex, filteredStudents, setSelectedSubmission]);
 
   useEffect(() => {
-    if (!selectedId || !listRef.current) return;
+    if (!listRef.current || !students) return;
+
+    const selectedStudent = students[currentIndex];
 
     const studentEl = listRef.current.querySelector(
-      `[data-student-id="${selectedId}"]`,
+      `[data-student-id="${selectedStudent.id}"]`,
     );
     studentEl?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }, [selectedId]);
+  }, [currentIndex, students]);
 
   return (
     <div className="flex flex-col h-full">
@@ -138,14 +75,9 @@ function StudentList({ students, isLoading }: StudentListProps) {
           placeholder="Search students..."
           className="flex-1"
         />
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setFuzzySearchOpen(true)}
-          className="shrink-0"
-        >
+        <Button onClick={() => setFuzzySearchOpen(true)} className="shrink-0">
           <Sparkles size={16} className="mr-1.5" />
-          Fuzzy Search
+          Advanced Search
         </Button>
       </div>
 
@@ -167,10 +99,12 @@ function StudentList({ students, isLoading }: StudentListProps) {
             <NoDataAvailable />
           </div>
         ) : (
-          filteredStudents.map((studentSubmission) => (
+          filteredStudents.map((studentSubmission, i) => (
             <StudentCard
               key={studentSubmission.student.id}
               studentSubmission={studentSubmission}
+              isSelected={currentIndex === i}
+              onClick={() => setCurrentIndex(i)}
             />
           ))
         )}
