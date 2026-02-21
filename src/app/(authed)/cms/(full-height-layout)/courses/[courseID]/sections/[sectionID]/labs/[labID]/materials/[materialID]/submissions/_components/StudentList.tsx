@@ -3,8 +3,7 @@ import StudentCard from "./StudentCard";
 import SearchInput from "~/components/commons/SearchInput";
 import { useState, useMemo, useEffect, useRef } from "react";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
-import { useAtom, useSetAtom } from "jotai";
-import { selectedStudentAtom } from "../_stores/selected-student.store";
+import { useSetAtom } from "jotai";
 import { Button } from "~/components/commons/Button";
 import { Sparkles } from "lucide-react";
 import { fuzzySearchOpenAtom } from "../_stores/fuzzy-search.store";
@@ -15,11 +14,9 @@ import { selectedSubmissionAtom } from "../_stores/selected-submission.store";
 
 function StudentList() {
   const [search, setSearch] = useState("");
-  const [selectedStudent, setSelectedStudent] = useAtom(selectedStudentAtom);
   const setFuzzySearchOpen = useSetAtom(fuzzySearchOpenAtom);
   const listRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const lastGPressRef = useRef<number>(0);
 
   const { sectionID, labID, materialID } = useParams<{
     sectionID: string;
