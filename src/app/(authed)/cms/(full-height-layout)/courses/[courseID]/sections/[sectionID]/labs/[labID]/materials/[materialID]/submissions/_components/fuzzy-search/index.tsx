@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useAtom } from "jotai";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
-import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
 import { MaterialType } from "~/types/cms-material";
 import {
   fuzzySearchOpenAtom,
@@ -13,9 +12,10 @@ import {
 import { useFuzzySearch } from "../../_hooks/useFuzzySearch";
 import { SearchInput } from "./SearchInput";
 import { ResultCard } from "./ResultCard";
+import { CMSSectionStudentLatestSubmission } from "~/types/cms-section-submission";
 
 interface FuzzySearchPanelProps {
-  students: CMSSectionStudentSubmission[];
+  students: CMSSectionStudentLatestSubmission[];
   materialType?: MaterialType;
 }
 

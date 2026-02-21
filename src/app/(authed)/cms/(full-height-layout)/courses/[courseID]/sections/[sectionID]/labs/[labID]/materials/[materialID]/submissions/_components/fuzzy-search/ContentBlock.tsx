@@ -2,14 +2,16 @@
 
 import type { FuseResultMatch } from "fuse.js";
 import { MaterialType } from "~/types/cms-material";
-import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
-import type { CodeSubmissionData } from "~/types/cms-section-submission";
+import type {
+  CMSSectionStudentLatestSubmission,
+  CodeSubmissionData,
+} from "~/types/cms-section-submission";
 import { CodeContent } from "./renderers/CodeContent";
 import { DocumentContent } from "./renderers/DocumentContent";
 import { TypeContent } from "./renderers/TypeContent";
 
 interface ContentBlockProps {
-  submission: CMSSectionStudentSubmission;
+  submission: CMSSectionStudentLatestSubmission;
   materialType: MaterialType;
   matches: readonly FuseResultMatch[];
 }
@@ -26,9 +28,7 @@ export function ContentBlock({
   matches,
 }: ContentBlockProps) {
   if (!submission.payload) {
-    return (
-      <p className="text-xs text-(--gray-10) italic">No submission yet</p>
-    );
+    return <p className="text-xs text-(--gray-10) italic">No submission yet</p>;
   }
 
   if (materialType === MaterialType.CODE && isCodePayload(submission.payload)) {
@@ -43,5 +43,7 @@ export function ContentBlock({
     return <TypeContent />;
   }
 
-  return <p className="text-xs text-(--gray-10) italic">Unknown submission type</p>;
+  return (
+    <p className="text-xs text-(--gray-10) italic">Unknown submission type</p>
+  );
 }

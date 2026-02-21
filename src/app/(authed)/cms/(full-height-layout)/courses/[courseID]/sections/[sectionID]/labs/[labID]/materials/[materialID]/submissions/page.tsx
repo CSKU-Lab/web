@@ -106,12 +106,7 @@ function Page() {
                   </div>
                 }
               >
-                {material && (
-                  <SubmissionDetailPanel
-                    material={material}
-                    students={students ?? []}
-                  />
-                )}
+                {material && <SubmissionDetailPanel material={material} />}
               </Loading>
             }
           />
