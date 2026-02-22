@@ -15,7 +15,7 @@ import NoDataAvailable from "~/components/commons/NoDataAvailable";
 import { Skeleton } from "~/components/ui/skeleton";
 import Loading from "~/components/commons/Loading";
 import MaterialCard from "./_components/MaterialCard";
-import { useMaterialInfPagination } from "./_hooks/useMaterialInfPagination";
+import { useMaterialPagination } from "./_hooks/useMaterialPagination";
 import { useGetSectionLab } from "./_hooks/useGetSectionLab";
 import { cn } from "~/lib/utils";
 import type { LabStatus } from "~/types/cms-section-lab";
@@ -52,8 +52,12 @@ function Page() {
     isFetching,
     isError,
     refetch,
-  } = useMaterialInfPagination({
+  } = useMaterialPagination({
+    sectionID,
     labID,
+    params: {
+      page_size: 12,
+    },
   });
 
   const bottomDivRef = useOnElementAppear({

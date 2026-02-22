@@ -49,6 +49,23 @@ export const queryKeys = {
         "labs",
         params,
       ],
+      materials: {
+        all: (sectionId: string, labId: string) => [
+          ...queryKeys.section.labs.all(sectionId),
+          labId,
+          "materials",
+        ],
+        allWithParams: (
+          sectionId: string,
+          labId: string,
+          params: Record<string, any>,
+        ) => [
+          ...queryKeys.section.labs.all(sectionId),
+          labId,
+          "materials",
+          params,
+        ],
+      },
     },
     gradebook: (sectionId: string) => [
       ...queryKeys.section.getById(sectionId),
