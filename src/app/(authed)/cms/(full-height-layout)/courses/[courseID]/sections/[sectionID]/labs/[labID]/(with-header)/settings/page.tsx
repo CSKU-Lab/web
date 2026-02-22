@@ -2,14 +2,10 @@
 
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Save } from "lucide-react";
-import Link from "next/link";
+import { Save } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
-import RouteNavigation from "../../../_components/RouteNavigation";
-import PageTitle from "~/components/commons/PageTitle";
 import { Button } from "~/components/commons/Button";
 import Label from "~/components/commons/Label";
 import {
@@ -23,7 +19,7 @@ import { DateTimePicker } from "~/components/commons/DateTimePicker";
 import SettingPaper from "~/components/commons/SettingPaper";
 import { cn } from "~/lib/utils";
 
-import { useGetSectionLab } from "../_hooks/useGetSectionLab";
+import { useGetSectionLab } from "../../_hooks/useGetSectionLab";
 import {
   updateSectionLabSchema,
   statusOptions,
@@ -31,25 +27,13 @@ import {
   type UpdateSectionLabSchema,
 } from "./_schemas/update-section-lab.schema";
 import { useUpdateSectionLab } from "./_hooks/useUpdateSectionLab";
-import type { LabStatus } from "~/types/cms-section-lab";
-
-interface PageParams {
-  [key: string]: string;
-  courseID: string;
-  sectionID: string;
-  labID: string;
-}
-
-const statusConfig: Record<LabStatus, { text: string; colorClass: string }> = {
-  open: { text: "Open", colorClass: "text-(--grass-9)" },
-  readonly: { text: "Readonly", colorClass: "text-(--blue-9)" },
-  hidden: { text: "Hidden", colorClass: "text-(--gray-9)" },
-  disabled: { text: "Disabled", colorClass: "text-(--amber-9)" },
-  closed: { text: "Closed", colorClass: "text-(--red-9)" },
-};
 
 export default function SettingsPage() {
-  const { courseID, sectionID, labID } = useParams<PageParams>();
+  const { sectionID, labID } = useParams<{
+    courseID: string;
+    sectionID: string;
+    labID: string;
+  }>();
 
   const { data: lab, isFetching } = useGetSectionLab({
     sectionID,
@@ -91,19 +75,6 @@ export default function SettingsPage() {
     }
   }, [showDateFields, watchedStatus, form]);
 
-  const statusStyle = lab ? statusConfig[lab.status] : null;
-
-  const labMenus = [
-    {
-      name: "Materials",
-      href: `/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}`,
-    },
-    {
-      name: "Settings",
-      href: `/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}/settings`,
-    },
-  ];
-
   const handleSubmit = async (data: UpdateSectionLabSchema) => {
     try {
       await updateSectionLab.mutateAsync(data);
@@ -118,34 +89,6 @@ export default function SettingsPage() {
 
   return (
     <>
-      <RouteNavigation
-        headerContent={
-          <>
-            <Link
-              href={`/cms/courses/${courseID}/sections/${sectionID}/labs`}
-              className="inline-flex items-center gap-2 text-sm text-(--gray-11) hover:text-(--gray-12) mb-2 transition-colors ml-4 my-2.5"
-            >
-              <ArrowLeft size={16} />
-              <span>Back to Labs</span>
-            </Link>
-            <PageTitle>{lab?.lab_name ?? "Loading..."}</PageTitle>
-            {!isFetching && lab && (
-              <div className="flex items-center gap-3 ml-4 mt-1 text-sm text-(--gray-11)">
-                <span className={cn("font-medium", statusStyle?.colorClass)}>
-                  {statusStyle?.text}
-                </span>
-                <span>•</span>
-                <span>
-                  {lab.completed_students}/{lab.total_students} students
-                  completed
-                </span>
-              </div>
-            )}
-          </>
-        }
-        menus={labMenus}
-      />
-
       <div className="flex flex-col h-full px-4 py-6">
         <SettingPaper
           title="Lab Status Settings"
