@@ -5,6 +5,7 @@ import {
   Clock,
   HardDrive,
   Loader2,
+  CircleDashed,
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import {
@@ -28,7 +29,7 @@ import { useUpdateManualScore } from "../../_hooks/useUpdateManualScore";
 interface CodeSubmissionDetailProps {
   material: CMSMaterial;
   created_at: string;
-  payload: CodeSubmissionData;
+  payload: CodeSubmissionData | null;
   auto_score: number;
   manual_score: number;
 }
@@ -148,6 +149,15 @@ function CodeSubmissionDetail({
       return next;
     });
   };
+
+  if (payload === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-8 text-(--gray-11)">
+        <CircleDashed size="2rem" />
+        <span className="text-sm">No submission data available.</span>
+      </div>
+    );
+  }
 
   const allResults =
     payload.test_case_groups?.flatMap((group) => group.results) ?? [];
