@@ -18,6 +18,7 @@ export const pathNames = {
               "/": "Labs",
               "/[labID]": {
                 "/": "Lab",
+                "/status": "Status",
                 "/settings": "Settings",
                 "/materials": {
                   "/": "Materials",
@@ -61,7 +62,4 @@ export const pathNames = {
 };
 
 // Paths that exist as breadcrumb labels but don't have actual pages
-export const INTERMEDIATE_PATHS = [
-  /\/sections$/,
-  /\/labs\/.+\/materials\/?.*/,
-];
+export const INTERMEDIATE_PATHS = [/\/sections$/, /\/labs\/.+\/materials\/?.*/];
