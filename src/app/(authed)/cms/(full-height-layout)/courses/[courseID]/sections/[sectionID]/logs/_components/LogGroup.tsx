@@ -31,11 +31,11 @@ const LogGroup = ({ date, logs }: LogGroupProps) => {
       </div>
       <div className="space-y-2 mb-4">
         {logs.map((log) => (
-          <div key={log.id} className="grid grid-cols-12 gap-16 text-sm mr-4">
-            <h6 className="text-(--gray-11) col-span-1">
+          <div key={log.id} className="flex gap-4 text-sm mr-4">
+            <h6 className="text-(--gray-11) shrink-0 min-w-20">
               {dayjs(log.timestamp).format("HH:mm:ss")}
             </h6>
-            <div className="flex gap-1.5 flex-1 col-span-9">
+            <div className="flex gap-1.5 flex-1">
               <HoverCard>
                 <HoverCardTrigger>
                   <h6 className="font-semibold underline">
