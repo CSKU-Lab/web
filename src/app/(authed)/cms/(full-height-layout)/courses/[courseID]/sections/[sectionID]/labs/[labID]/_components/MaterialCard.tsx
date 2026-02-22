@@ -51,7 +51,7 @@ function MaterialCard({
           <div>
             <h6 className="text-xs text-(--gray-9) leading-tight">Tags</h6>
             <div className="flex flex-wrap gap-1.5 mt-1">
-              {material.tags.map((tag) => (
+              {material.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
                   className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-(--gray-3) text-(--gray-11)"
@@ -59,6 +59,11 @@ function MaterialCard({
                   {tag}
                 </span>
               ))}
+              {material.tags.length > 3 && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-(--gray-3) text-(--gray-11)">
+                  +{material.tags.length - 3} more
+                </span>
+              )}
             </div>
           </div>
         )}
