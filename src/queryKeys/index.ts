@@ -49,10 +49,13 @@ export const queryKeys = {
         "labs",
         params,
       ],
+      getById: (sectionId: string, labId: string) => [
+        ...queryKeys.section.labs.all(sectionId),
+        labId,
+      ],
       materials: {
         all: (sectionId: string, labId: string) => [
-          ...queryKeys.section.labs.all(sectionId),
-          labId,
+          ...queryKeys.section.labs.getById(sectionId, labId),
           "materials",
         ],
         allWithParams: (
@@ -60,12 +63,15 @@ export const queryKeys = {
           labId: string,
           params: Record<string, any>,
         ) => [
-          ...queryKeys.section.labs.all(sectionId),
-          labId,
+          ...queryKeys.section.labs.getById(sectionId, labId),
           "materials",
           params,
         ],
       },
+      status: (sectionId: string, labId: string) => [
+        ...queryKeys.section.labs.getById(sectionId, labId),
+        "status",
+      ],
     },
     gradebook: (sectionId: string) => [
       ...queryKeys.section.getById(sectionId),
