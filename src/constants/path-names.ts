@@ -63,6 +63,5 @@ export const pathNames = {
 // Paths that exist as breadcrumb labels but don't have actual pages
 export const INTERMEDIATE_PATHS = [
   /\/sections$/,
-  /\/materials$/,
-  /\/materials\/.+$/,
+  /\/labs\/.+\/materials\/?.*/,
 ];
