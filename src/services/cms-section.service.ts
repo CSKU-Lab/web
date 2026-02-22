@@ -1,4 +1,3 @@
-import { api } from "~/lib/api.client";
 import type { Section, Student } from "~/types/cms-section";
 import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
@@ -10,6 +9,7 @@ import type {
 import { CMSGradebook } from "~/types/cms-section-gradebook";
 import type { LabStatus } from "~/types/cms-section-lab";
 import { CMSSectionStudentLatestSubmission } from "~/types/cms-section-submission";
+import { CMSLabStatus } from "~/types/cms-lab-status";
 
 export type CreateSectionPayload = {
   name: string;
@@ -49,40 +49,40 @@ class SectionService extends BaseService {
   }
 
   async create(payload: CreateSectionPayload) {
-    const res = await api.postForm<{ id: string }>(this._baseURL, payload);
+    const res = await this.api.postForm<{ id: string }>(this._baseURL, payload);
     return res.data.id;
   }
 
   async getByID(id: string): Promise<Section> {
-    const res = await api.get<Section>(`${this._baseURL}/${id}`);
+    const res = await this.api.get<Section>(`${this._baseURL}/${id}`);
     return res.data;
   }
 
   async addStudents(sectionID: string, studentUsernames: string[]) {
-    return api.post(`${this._baseURL}/${sectionID}/students`, {
+    return this.api.post(`${this._baseURL}/${sectionID}/students`, {
       student_usernames: studentUsernames,
     });
   }
 
   async removeStudents(sectionID: string, studentIDs: string[]) {
-    return api.post(`${this._baseURL}/${sectionID}/students/remove`, {
+    return this.api.post(`${this._baseURL}/${sectionID}/students/remove`, {
       student_ids: studentIDs,
     });
   }
 
   async getStudents(id: string) {
-    const res = await api.get<{ data: Student[] }>(
+    const res = await this.api.get<{ data: Student[] }>(
       `${this._baseURL}/${id}/students`,
     );
     return res.data.data;
   }
 
   async update(id: string, payload: UpdateSectionPayload) {
-    return api.patchForm(`${this._baseURL}/${id}`, payload);
+    return this.api.patchForm(`${this._baseURL}/${id}`, payload);
   }
 
   async deleteByID(id: string) {
-    return api.delete(`${this._baseURL}/${id}`);
+    return this.api.delete(`${this._baseURL}/${id}`);
   }
 
   async getLogsPagination(
@@ -100,19 +100,19 @@ class SectionService extends BaseService {
   }
 
   async getLabDetail(sectionID: string, labID: string) {
-    const res = await api.get<CMSSectionLabDetail>(
+    const res = await this.api.get<CMSSectionLabDetail>(
       `${this._baseURL}/${sectionID}/labs/${labID}`,
     );
     return res.data;
   }
 
   async addLabs(sectionID: string, labIDs: string[]) {
-    return api.post(`${this._baseURL}/${sectionID}/labs`, {
+    return this.api.post(`${this._baseURL}/${sectionID}/labs`, {
       lab_ids: labIDs,
     });
   }
   async removeLabs(sectionID: string, labIDs: string[]) {
-    return api.post(`${this._baseURL}/${sectionID}/labs/delete`, {
+    return this.api.post(`${this._baseURL}/${sectionID}/labs/delete`, {
       lab_ids: labIDs,
     });
   }
@@ -122,7 +122,7 @@ class SectionService extends BaseService {
     labID: string,
     position: number,
   ) {
-    return api.patch(`${this._baseURL}/${sectionID}/labs`, {
+    return this.api.patch(`${this._baseURL}/${sectionID}/labs`, {
       lab_id: labID,
       position,
     });
@@ -133,7 +133,10 @@ class SectionService extends BaseService {
     labID: string,
     payload: UpdateSectionLabPayload,
   ) {
-    return api.patch(`${this._baseURL}/${sectionID}/labs/${labID}`, payload);
+    return this.api.patch(
+      `${this._baseURL}/${sectionID}/labs/${labID}`,
+      payload,
+    );
   }
 
   async getGradebook(sectionID: string): Promise<CMSGradebook> {
@@ -161,10 +164,20 @@ class SectionService extends BaseService {
     labID: string,
     materialID: string,
   ): Promise<CMSSectionStudentLatestSubmission<T>[]> {
-    const res = await api.get(
+    const res = await this.api.get(
       `${this._baseURL}/${sectionID}/labs/${labID}/materials/${materialID}/submissions`,
     );
     return res.data.data;
+  }
+
+  async getStudentLabStatus(
+    sectionID: string,
+    labID: string,
+  ): Promise<CMSLabStatus> {
+    const res = await this.api.get<CMSLabStatus>(
+      `${this._baseURL}/${sectionID}/labs/${labID}/student-status`,
+    );
+    return res.data;
   }
 }
 
