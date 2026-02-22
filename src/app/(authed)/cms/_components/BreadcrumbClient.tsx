@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { Fragment, useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { pathNames } from "~/constants/path-names";
+import { INTERMEDIATE_PATHS, pathNames } from "~/constants/path-names";
 import { cn } from "~/lib/utils";
 import type { ClassNameProps } from "~/types/classname-props";
 import { useBreadcrumbContext } from "./BreadcrumbProvider";
@@ -27,12 +27,9 @@ interface PathName {
   [key: string]: string | PathName | Promise<string>;
 }
 
-// Paths that exist as breadcrumb labels but don't have actual pages
-const INTERMEDIATE_PATHS = ["/sections"];
-
 function isNavigablePath(href: string): boolean {
   for (const intermediate of INTERMEDIATE_PATHS) {
-    if (href.endsWith(intermediate)) {
+    if (intermediate.test(href)) {
       return false;
     }
   }
