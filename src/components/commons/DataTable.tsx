@@ -48,7 +48,7 @@ interface Props {
 
   rowIds?: string[];
   onDragEnd?: (event: any) => void;
-  textAlign?: "left" | "center" | "right";
+  headerTextAlign?: "left" | "center" | "right";
   columnBordered?: boolean;
 }
 
@@ -64,7 +64,7 @@ function DataTable({
 
   rowIds,
   onDragEnd,
-  textAlign,
+  headerTextAlign,
   columnBordered = false,
 }: Props) {
   const visibleColumns = useMemo(
@@ -117,8 +117,8 @@ function DataTable({
                         }}
                         className={cn(
                           "flex gap-1.5 text-xs",
-                          textAlign === "center" && "justify-center",
-                          textAlign === "right" && "justify-end",
+                          headerTextAlign === "center" && "justify-center",
+                          headerTextAlign === "right" && "justify-end",
                           header.column.getCanSort() && "cursor-pointer",
                         )}
                       >
@@ -194,14 +194,7 @@ function DataTable({
                         columnBordered={columnBordered}
                       >
                         {row.getVisibleCells().map((cell) => (
-                          <TableCell
-                            key={cell.id}
-                            className={cn(
-                              "py-1.5",
-                              textAlign === "center" && "text-center",
-                              textAlign === "right" && "text-right",
-                            )}
-                          >
+                          <TableCell key={cell.id} className={cn("py-1.5")}>
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext(),
