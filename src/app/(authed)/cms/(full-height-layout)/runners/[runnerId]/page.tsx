@@ -86,7 +86,7 @@ function RunnerDetailPage() {
         />
       }
     >
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full border mt-4">
         <DetailSection />
         <RunnerEditor />
       </div>
