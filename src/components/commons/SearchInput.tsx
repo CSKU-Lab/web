@@ -12,7 +12,7 @@ const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ onChange, className, isError, ...props }, ref) => (
     <div
       className={cn(
-        "relative pl-7 pr-3 py-1.5 border border-(--gray-6) bg-white rounded-md w-64 flex items-center hover:bg-(--gray-2)",
+        "relative pl-7 pr-3 py-1.5 border border-(--gray-6) bg-(--gray-1) rounded-md w-64 flex items-center hover:bg-(--gray-2)",
         isError && "border-(--red-9)",
         className,
       )}
@@ -31,5 +31,7 @@ const SearchInput = forwardRef<HTMLInputElement, Props>(
     </div>
   ),
 );
+
+SearchInput.displayName = "SearchInput";
 
 export default SearchInput;

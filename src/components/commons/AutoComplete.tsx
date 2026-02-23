@@ -225,7 +225,7 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
         <div
           onClick={handleDivClick}
           className={cn(
-            "flex flex-wrap items-center border border-(--gray-6) rounded-md px-3 py-1 min-h-9 gap-2 bg-white",
+            "flex flex-wrap items-center border border-(--gray-6) rounded-md px-3 py-1 min-h-9 gap-2 bg-(--gray-1)",
             isError && "border-(--red-9)",
             disabled && "opacity-50 cursor-not-allowed bg-gray-100",
             className,

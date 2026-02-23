@@ -35,7 +35,7 @@ export function ResultCard({
     <button
       onClick={handleClick}
       className={cn(
-        "w-full text-left rounded-xl border-2 transition-all bg-white",
+        "w-full text-left rounded-xl border-2 transition-all bg-(--gray-1)",
         "hover:border-(--gray-6)",
         isSelected
           ? "border-accent ring-2 ring-accent/20"

@@ -24,8 +24,8 @@ function MaterialCard({
     <Link
       href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}/materials/${material.id}/submissions`}
       className={cn(
-        "block rounded-md overflow-hidden bg-white border border-(--gray-4)",
-        "hover:bg-(--gray-1) transition-colors cursor-pointer",
+        "block rounded-md overflow-hidden bg-(--gray-1) border border-(--gray-4)",
+        "hover:bg-(--gray-2) transition-colors cursor-pointer",
       )}
     >
       <div className="h-5 bg-linear-to-bl from-gray-400 to-gray-300" />

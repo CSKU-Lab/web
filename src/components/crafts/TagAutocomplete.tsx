@@ -56,7 +56,7 @@ function TagAutocomplete({
       )}
       queryFn={queryTags}
       allowAdditionalOptions
-      popoverContentClasses="bg-white border border-(--gray-5) shadow-xl shadow-black/5 rounded-lg"
+      popoverContentClasses="bg-(--gray-1) border border-(--gray-5) shadow-xl shadow-black/5 rounded-lg"
     >
       {({ options, handleOnAdd, highlightedIndex, getItemId }) =>
         options.map((tag, index) => (

@@ -76,7 +76,7 @@ function SortableGroupCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`border-2 rounded-md bg-white mb-4 transition-all duration-300 ${
+      className={`border-2 rounded-md bg-(--gray-1) mb-4 transition-all duration-300 ${
         isDragging 
           ? "shadow-xl opacity-60 border-blue-400 scale-[1.01]" 
           : isOver
@@ -289,14 +289,14 @@ function TestCaseTab() {
       const groupId = activeId.replace("group-", "");
       const group = sortedTestCaseGroups.find((g) => g.id === groupId);
       return (
-        <div className="bg-white border-2 border-blue-400 rounded-lg shadow-2xl p-4 rotate-2">
+        <div className="bg-(--gray-1) border-2 border-blue-400 rounded-lg shadow-2xl p-4 rotate-2">
           <p className="text-sm font-semibold text-gray-900">{group?.name ?? "Group"}</p>
           <p className="text-xs text-gray-500 mt-1">{group?.test_cases?.length ?? 0} test cases</p>
         </div>
       );
     } else if (activeId.startsWith("testcase-")) {
       return (
-        <div className="bg-white border-2 border-blue-400 rounded-lg shadow-2xl p-4 rotate-1 scale-105">
+        <div className="bg-(--gray-1) border-2 border-blue-400 rounded-lg shadow-2xl p-4 rotate-1 scale-105">
           <p className="text-sm font-medium text-gray-900">Test Case</p>
           <p className="text-xs text-blue-500 mt-1">Drop to move</p>
         </div>
@@ -312,7 +312,7 @@ function TestCaseTab() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="border border-gray-4 rounded-md bg-white p-3 animate-pulse"
+              className="border border-gray-4 rounded-md bg-(--gray-1) p-3 animate-pulse"
             >
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-5 h-5 bg-gray-2 rounded" />

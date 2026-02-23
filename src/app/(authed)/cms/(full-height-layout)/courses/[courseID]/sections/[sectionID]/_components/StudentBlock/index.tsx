@@ -35,7 +35,7 @@ function StudentBlock({ student }: Props) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "border shadow-xs shadow-gray-50 rounded-lg space-y-2 relative bg-white hover:bg-(--gray-2) transition-colors",
+        "border shadow-xs shadow-gray-50 rounded-lg space-y-2 relative bg-(--gray-1) hover:bg-(--gray-2) transition-colors",
         isSelected && "border-accent bg-(--gray-2)",
       )}
     >

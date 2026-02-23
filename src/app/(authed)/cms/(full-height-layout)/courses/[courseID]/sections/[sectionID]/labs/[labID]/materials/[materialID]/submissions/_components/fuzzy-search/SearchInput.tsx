@@ -21,7 +21,7 @@ export function SearchInput({
   return (
     <div className="w-full">
       {/* Input box */}
-      <div className="relative bg-white rounded-2xl shadow-2xl">
+      <div className="relative bg-(--gray-1) rounded-2xl shadow-2xl">
         <Search
           size={22}
           className="absolute left-4 top-1/2 -translate-y-1/2 text-(--gray-9) pointer-events-none"
@@ -48,15 +48,15 @@ export function SearchInput({
       <div className="flex items-center justify-between mt-3 px-1 text-xs text-white/70">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 bg-white/20 rounded font-mono text-white">↑↓</kbd>
+            <kbd className="px-1.5 py-0.5 bg-(--gray-1)/20 rounded font-mono text-white">↑↓</kbd>
             Navigate
           </span>
           <span className="flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 bg-white/20 rounded font-mono text-white">↵</kbd>
+            <kbd className="px-1.5 py-0.5 bg-(--gray-1)/20 rounded font-mono text-white">↵</kbd>
             Select
           </span>
           <span className="flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 bg-white/20 rounded font-mono text-white">esc</kbd>
+            <kbd className="px-1.5 py-0.5 bg-(--gray-1)/20 rounded font-mono text-white">esc</kbd>
             Close
           </span>
         </div>

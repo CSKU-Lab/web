@@ -100,8 +100,8 @@ export default function SettingsPage() {
           >
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <h3 className="text-lg font-medium text-gray-900">Status</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="text-lg font-medium text-(--gray-12)">Status</h3>
+                <p className="text-sm text-(--gray-11)">
                   Set the visibility and availability of this lab.
                 </p>
               </div>
@@ -142,10 +142,10 @@ export default function SettingsPage() {
             {showDateFields && (
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-lg font-medium text-(--gray-12)">
                     Schedule
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-(--gray-11)">
                     Set when the lab should open and close.
                   </p>
                 </div>

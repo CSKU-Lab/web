@@ -10,7 +10,7 @@ import UserProfileImage from "~/components/Menus/UserProfileImage";
 function DetailSection() {
   const { data: detail, isLoading } = useGetMaterial();
   return (
-    <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 w-full flex items-center jubstify-between gap-4">
+    <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 w-full flex items-center jubstify-between gap-4 mt-4">
       <div className="flex-1 flex gap-4 overflow-x-auto">
         <HeaderItem label="Name" value={detail?.name} isLoading={isLoading} />
         <HeaderItem

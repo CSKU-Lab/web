@@ -10,7 +10,7 @@ export default function SectionHeader() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center bg-white gap-4 shadow-md relative">
+      <div className="flex items-center bg-(--gray-1) gap-4 shadow-md relative">
         <div className="absolute top-10 left-6 z-10 flex text-white w-full">
           <div className="space-y-0.5 flex-1 overflow-hidden flex flex-col">
             <Skeleton className="w-2/12 h-[1rem]" />
@@ -32,7 +32,7 @@ export default function SectionHeader() {
   const { section, course } = data;
 
   return (
-    <div className="flex items-center bg-white gap-4 shadow-md relative">
+    <div className="flex items-center bg-(--gray-1) gap-4 shadow-md relative">
       <div className="absolute top-10 left-6 z-10 flex text-white w-full">
         <div className="space-y-0.5 flex-1 overflow-hidden flex flex-col">
           <h6 className="text-sm">{section.name} • Fri 14-16 pm</h6>
