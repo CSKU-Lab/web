@@ -58,6 +58,12 @@ export const pathNames = {
         "/": "Details",
       },
     },
+    "/runners": {
+      "/": "Runners",
+      "/new": "New Runner",
+      "/[runnerID]": { "/": "Details" },
+    },
+    "/compares": { "/": "Compares" },
   },
 };
 

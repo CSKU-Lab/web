@@ -25,6 +25,9 @@ export const getLangFromExtension = (ext: string): LanguageSupport | null => {
     case "ts":
     case "tsx":
       return javascript({ typescript: true });
+    case "sh":
+    case "bash":
+      return javascript({ typescript: true });
     default:
       return null;
   }

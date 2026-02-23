@@ -12,10 +12,7 @@ import readOnlyRangeExtension from "codemirror-readonly-ranges";
 import { getReadOnlyRanges } from "./utils/getReadOnlyRanges";
 import { highlightExtension } from "./extensions/highlightRanges";
 import {
-  githubDark,
   githubDarkInit,
-  githubDarkStyle,
-  githubLight,
   githubLightInit,
 } from "@uiw/codemirror-theme-github";
 import ReactCodeMirror from "@uiw/react-codemirror";
