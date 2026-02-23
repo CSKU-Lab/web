@@ -3,7 +3,10 @@ import { go } from "@codemirror/lang-go";
 import { cpp } from "@codemirror/lang-cpp";
 import { java } from "@codemirror/lang-java";
 import { javascript } from "@codemirror/lang-javascript";
-import type { LanguageSupport } from "@codemirror/language";
+import { LanguageSupport, StreamLanguage } from "@codemirror/language";
+import { shell } from "@codemirror/legacy-modes/mode/shell";
+
+const shellLanguage = () => new LanguageSupport(StreamLanguage.define(shell));
 
 export const getLangFromExtension = (ext: string): LanguageSupport | null => {
   switch (ext.toLowerCase()) {
@@ -27,7 +30,7 @@ export const getLangFromExtension = (ext: string): LanguageSupport | null => {
       return javascript({ typescript: true });
     case "sh":
     case "bash":
-      return javascript({ typescript: true });
+      return shellLanguage();
     default:
       return null;
   }
