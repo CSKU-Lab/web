@@ -123,7 +123,7 @@ function GroupHeader({
           onChange={(e) => setNameValue(e.target.value)}
           onBlur={handleNameBlur}
           onKeyDown={handleNameKeyDown}
-          className="flex-1 px-2 py-1 text-sm font-medium border rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-5"
+          className="flex-1 px-2 py-1 text-sm font-medium border rounded bg-(--gray-1) focus:outline-none focus:ring-2 focus:ring-blue-5"
           autoFocus
         />
       ) : (

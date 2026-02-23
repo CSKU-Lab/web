@@ -37,7 +37,7 @@ export const PreviewCMSSectionCard = ({
           />
         )}
       </div>
-      <div className="flex items-center gap-4 bg-white p-4 w-full group-hover:bg-(--gray-1) transition-colors">
+      <div className="flex items-center gap-4 bg-(--gray-1) p-4 w-full group-hover:bg-(--gray-1) transition-colors">
         <div className="space-y-0.5 flex-1 overflow-hidden flex flex-col">
           <h4 className="font-semibold truncate">{name}</h4>
           <h6 className="font-anuphan text-sm">{instructors.join(", ")}</h6>
@@ -73,7 +73,7 @@ export const CMSSectionCard = ({
           />
         )}
       </div>
-      <div className="flex items-center gap-4 bg-white p-4 w-full group-hover:bg-(--gray-1) transition-colors">
+      <div className="flex items-center gap-4 bg-(--gray-1) p-4 w-full group-hover:bg-(--gray-1) transition-colors">
         <div className="space-y-0.5 flex-1 overflow-hidden flex flex-col">
           <h4 className="font-semibold truncate">{name}</h4>
           <h6 className="font-anuphan text-sm">{instructors.join(", ")}</h6>
@@ -91,7 +91,7 @@ export const FallbackSectionCard = () => {
       )}
     >
       <Skeleton className="min-h-50" />
-      <div className="flex items-center gap-4 bg-white p-4 w-full">
+      <div className="flex items-center gap-4 bg-(--gray-1) p-4 w-full">
         <div className="space-y-0.5 flex-1 overflow-hidden flex flex-col">
           <Skeleton className="w-20 h-4" />
           <div className="flex flex-wrap gap-1 mt-2">

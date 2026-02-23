@@ -149,11 +149,11 @@ function SettingPage() {
                       <div className="flex flex-col">
                         <Label
                           htmlFor="public"
-                          className="font-medium text-gray-900"
+                          className="font-medium text-(--gray-12)"
                         >
                           Public
                         </Label>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-(--gray-11)">
                           Everyone can see this course
                         </p>
                       </div>
@@ -165,10 +165,13 @@ function SettingPage() {
                         className="font-medium"
                       />
                       <div className="flex flex-col">
-                        <Label htmlFor="private" className="font-medium">
+                        <Label
+                          htmlFor="private"
+                          className="font-medium text-(--gray-12)"
+                        >
                           Private
                         </Label>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-(--gray-11)">
                           Only invited users would see this course
                         </p>
                       </div>

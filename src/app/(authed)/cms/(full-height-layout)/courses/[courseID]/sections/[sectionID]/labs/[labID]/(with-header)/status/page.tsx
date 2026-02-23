@@ -98,7 +98,7 @@ function Page() {
   }
 
   return (
-    <div className="space-y-4 flex-1 flex flex-col">
+    <div className="space-y-4 flex-1 flex flex-col px-4">
       <div className="flex items-center justify-between gap-4">
         <SearchInput
           value={globalFilter}

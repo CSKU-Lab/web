@@ -66,7 +66,7 @@ function DescriptionSection() {
       <button
         {...events}
         ref={buttonRef}
-        className="w-4 h-8 bg-white border rounded absolute -right-2 z-10 top-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center"
+        className="w-4 h-8 bg-(--gray-1) border rounded absolute -right-2 z-10 top-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing active:bg-(--gray-1)/90 flex items-center justify-center"
       >
         <GripVertical size="0.9rem" />
       </button>

@@ -91,9 +91,9 @@ function SearchSelect<T extends { id: string; name: string }>({
         ref={triggerRef}
         disabled={disabled}
         className={cn(
-          "relative w-40 border bg-white rounded-md text-left px-2 h-9",
+          "relative w-40 border bg-(--gray-1) rounded-md text-left px-2 h-9",
           isError && "border-(--red-9)",
-          disabled && "opacity-50 cursor-not-allowed bg-gray-100",
+          disabled && "opacity-50 cursor-not-allowed bg-(--gray-2)",
           className,
         )}
         onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -132,7 +132,7 @@ function SearchSelect<T extends { id: string; name: string }>({
           e.stopPropagation();
         }}
       >
-        <div className="relative bg-white px-2 py-1.5">
+        <div className="relative bg-(--gray-1) px-2 py-1.5">
           <Search
             size="0.9rem"
             className="absolute left-1.5 top-1/2 -translate-y-1/2"

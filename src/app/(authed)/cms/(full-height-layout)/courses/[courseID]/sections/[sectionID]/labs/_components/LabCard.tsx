@@ -75,7 +75,7 @@ function LabCard({ lab, courseID, sectionID }: LabCardProps) {
         className={cn(
           "absolute top-1/2 -translate-y-1/2 -left-3 z-10",
           "flex items-center justify-center w-6 h-10 rounded-md",
-          "bg-white border border-(--gray-4) shadow-sm",
+          "bg-(--gray-1) border border-(--gray-4) shadow-sm",
           "text-(--gray-8) hover:text-(--gray-12) hover:bg-(--gray-2)",
           "cursor-grab active:cursor-grabbing touch-none",
           "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0",
@@ -91,7 +91,7 @@ function LabCard({ lab, courseID, sectionID }: LabCardProps) {
       <Link
         href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${lab_id}`}
         className={cn(
-          "block rounded-md overflow-hidden bg-white border border-(--gray-4) hover:bg-(--gray-1)",
+          "block rounded-md overflow-hidden bg-(--gray-1) border border-(--gray-4) hover:bg-(--gray-2)",
           isDragging && "shadow-lg",
         )}
       >

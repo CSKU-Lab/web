@@ -30,12 +30,6 @@ interface CodeMirrorProps {
   style?: React.CSSProperties;
 }
 
-const theme = EditorView.theme({
-  "&": {
-    height: "100%",
-  },
-});
-
 function CodeMirror(props: CodeMirrorProps) {
   const {
     onChange,
@@ -74,6 +68,7 @@ function CodeMirror(props: CodeMirrorProps) {
           getReadOnlyRanges(state, initialCode),
         ),
         placeholder: placeHolderExtension(placeholder || "Start typing..."),
+        theme: githubLight,
       }).filter((ext) => ext !== null),
     [langExtension, vimMode, initialCode, placeholder],
   );
@@ -85,7 +80,6 @@ function CodeMirror(props: CodeMirrorProps) {
       extensions={[
         basicSetup,
         theme,
-        githubLight,
         ...mergedExtensions,
         indentWithTab,
         EditorView.updateListener.of((update) => {

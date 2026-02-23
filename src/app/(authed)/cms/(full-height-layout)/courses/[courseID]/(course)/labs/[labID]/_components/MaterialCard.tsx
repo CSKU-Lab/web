@@ -31,7 +31,7 @@ export default function MaterialCard({
         className="
       flex flex-col gap-3
       rounded-xl border border-gray-200
-      bg-white p-5
+      bg-(--gray-1) p-5
       transition-all duration-200
       hover:-translate-y-0.5
       hover:shadow-lg hover:border-gray-300

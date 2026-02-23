@@ -50,7 +50,7 @@ function FilterBlock({ filter }: Props) {
           <Operator value={operator} onChange={setOperator} />
         </div>
         <Input
-          className="h-8 bg-white mt-1.5"
+          className="h-8 bg-(--gray-1) mt-1.5"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onBlur={handleOnApply}

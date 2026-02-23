@@ -56,7 +56,7 @@ export function ResizableSplit({
         {...events}
         ref={buttonRef}
         className={cn(
-          "bg-white border rounded z-10 cursor-grab active:cursor-grabbing active:bg-white/90 flex items-center justify-center",
+          "bg-(--gray-1) border rounded z-10 cursor-grab active:cursor-grabbing active:bg-(--gray-1)/90 flex items-center justify-center",
           isHorizontal
             ? "w-4 h-8 absolute top-1/2 -translate-y-1/2"
             : "h-4 w-8 absolute left-1/2 -translate-x-1/2"

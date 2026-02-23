@@ -22,7 +22,7 @@ export function SettingCard({
   return (
     <div
       className={cn(
-        "bg-white border border-(--gray-5) rounded-lg p-6",
+        "bg-(--gray-1) border border-(--gray-5) rounded-lg p-6",
         variant === "danger" && "bg-(--red-3) border-(--red-6)",
       )}
     >

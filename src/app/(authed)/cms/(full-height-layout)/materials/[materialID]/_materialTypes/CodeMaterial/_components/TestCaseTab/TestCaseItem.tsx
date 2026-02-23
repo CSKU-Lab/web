@@ -41,7 +41,7 @@ function TestCaseItem({
 
   return (
     <div
-      className={`p-2 border rounded-md bg-white transition-all ${
+      className={`p-2 border rounded-md bg-(--gray-1) transition-all ${
         isSelected ? "ring-2 ring-blue-5 border-blue-5" : "border-gray-4"
       }`}
     >

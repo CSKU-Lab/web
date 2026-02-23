@@ -25,7 +25,7 @@ export const Button = ({
   ...props
 }: Props) => {
   let normalColor =
-    "border-(--gray-6) bg-white hover:bg-(--gray-3) text-(--gray-11)";
+    "border-(--gray-6) bg-(--gray-1) hover:bg-(--gray-3) text-(--gray-11)";
   let activeColor =
     "bg-accent hover:bg-accent/90 hover:text-accent-foreground text-accent-foreground/90";
 

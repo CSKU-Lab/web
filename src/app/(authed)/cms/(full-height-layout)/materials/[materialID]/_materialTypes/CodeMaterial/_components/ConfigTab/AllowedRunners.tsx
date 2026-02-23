@@ -67,7 +67,7 @@ function AllowedRunners({ value, onChange, isOwner }: Props) {
           </HoverCardContent>
         </HoverCard>
       )}
-      popoverContentClasses="max-h-60 bg-white border border-(--gray-5) shadow-xl shadow-black/5 rounded-lg p-2"
+      popoverContentClasses="max-h-60 bg-(--gray-1) border border-(--gray-5) shadow-xl shadow-black/5 rounded-lg p-2"
     >
       {({ options, handleOnAdd, highlightedIndex, getItemId }) => (
         <div className="flex flex-col gap-1">

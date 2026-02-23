@@ -24,7 +24,7 @@ function Input({
     <div className="space-y-2">
       <Label>{label}</Label>
       <SharedInput
-        className="bg-white"
+        className="bg-(--gray-1)"
         placeholder={placeholder}
         disabled={disabled}
         {...formProps}

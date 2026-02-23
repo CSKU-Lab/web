@@ -76,13 +76,13 @@ export default function ChatPanel() {
             </button>
           </div>
           <AccordionContent
-            className={`bg-white dark:bg-zinc-900 shadow-xl border flex flex-col ${
+            className={`bg-(--gray-1) dark:bg-zinc-900 shadow-xl border flex flex-col ${
               isFullscreen ? "h-[90vh]" : "h-[500px]"
             }`}
           >
             <ChatMessages messages={messages} status={status} />
             <form
-              className="p-3 border-t dark:border-zinc-800 flex items-end gap-2 bg-white dark:bg-zinc-900"
+              className="p-3 border-t dark:border-zinc-800 flex items-end gap-2 bg-(--gray-1) dark:bg-zinc-900"
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSendMessage();
@@ -91,7 +91,7 @@ export default function ChatPanel() {
               <textarea
                 ref={textareaRef}
                 rows={1}
-                className="w-full p-2 border border-zinc-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800 resize-none overflow-y-auto max-h-40 min-h-[40px]"
+                className="w-full p-2 border border-zinc-300 dark:border-zinc-700 rounded bg-(--gray-1) dark:bg-zinc-800 resize-none overflow-y-auto max-h-40 min-h-[40px]"
                 value={input}
                 placeholder="Say something..."
                 onChange={(e) => setInput(e.target.value)}
