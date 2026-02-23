@@ -1,4 +1,11 @@
-import { Book, CalendarDays, Library, UserRound } from "lucide-react";
+import {
+  Book,
+  CalendarDays,
+  Library,
+  SquareChartGantt,
+  Terminal,
+  UserRound,
+} from "lucide-react";
 import type { SidebarMenuCategory } from "~/types/sidebar-menu";
 import type { User } from "~/types/user";
 
@@ -36,6 +43,22 @@ export const getSidebarMenus = (
           icon: <CalendarDays size="1rem" />,
           label: "Semesters Management",
           href: "/cms/semesters",
+        },
+      ],
+    });
+
+    categories.push({
+      category: "Configs",
+      menus: [
+        {
+          icon: <Terminal size="1rem" />,
+          label: "Runners",
+          href: "/cms/runners",
+        },
+        {
+          icon: <SquareChartGantt size="1rem" />,
+          label: "Compares",
+          href: "/cms/compares",
         },
       ],
     });

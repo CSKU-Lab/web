@@ -150,6 +150,14 @@ export const queryKeys = {
       },
     },
   },
+  runner: {
+    all: ["runners"],
+    allWithParams: (params: Record<string, any>) => [
+      ...queryKeys.runner.all,
+      params,
+    ],
+    getById: (runnerId: string) => [...queryKeys.runner.all, runnerId],
+  },
   affectedEntities: {
     get: (type: AffectedType, id: string) => ["affectedEntities", type, id],
   },
