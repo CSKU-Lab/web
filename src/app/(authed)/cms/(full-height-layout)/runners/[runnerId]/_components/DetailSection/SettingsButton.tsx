@@ -1,7 +1,7 @@
 "use client";
 
 import { Settings } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -27,6 +27,7 @@ import {
 } from "../../_stores/runner-info.store";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import { cn } from "~/lib/utils";
+import { UpdateRunnerConfig } from "~/types/cms-runner";
 
 const settingsSchema = z.object({
   name: z.string().min(1, "Runner name is required"),
@@ -38,7 +39,7 @@ type SettingsSchema = z.infer<typeof settingsSchema>;
 function SettingsButton() {
   const { runnerId } = useParams<{ runnerId: string }>();
   const queryClient = useQueryClient();
-  const { data: runner } = useRunner();
+  const { data: runner } = useRunner(runnerId);
 
   const [, setName] = useAtom(runnerNameAtom);
   const [, setDescription] = useAtom(runnerDescriptionAtom);
@@ -57,7 +58,7 @@ function SettingsButton() {
   });
 
   const updateRunner = useMutation({
-    mutationFn: (payload: { name: string; description?: string }) =>
+    mutationFn: (payload: UpdateRunnerConfig) =>
       cmsRunnerService.updateById(runnerId, payload),
     onSuccess: () => {
       toast.success("Runner settings updated successfully");
@@ -129,7 +130,7 @@ function SettingsButton() {
                 "w-full rounded-md border border-(--gray-6) bg-(--gray-1) px-3 py-2 text-sm",
                 "placeholder:text-(--gray-9) text-(--gray-12)",
                 "focus:outline-none focus:ring-1 focus:ring-(--gray-8)",
-                "resize-none"
+                "resize-none",
               )}
               {...form.register("description")}
             />

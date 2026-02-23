@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import EditorSettings from "~/components/Editor/EditorSettings";
 import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
-import type { IEditorSettings, CodeFile } from "~/components/Editor/types/editor";
+import type { IEditorSettings } from "~/components/Editor/types/editor";
 import RunnerFileTree from "./RunnerFileTree";
 import RunnerPlayground from "./RunnerPlayground";
 import { runnerFilesAtom } from "../../_stores/runner-files.store";
@@ -17,7 +17,7 @@ import { runnerToEditorFiles } from "../../_utils/transform-files";
 
 function useDebouncedCallback<TArgs extends unknown[]>(
   callback: (...args: TArgs) => void,
-  delay: number
+  delay: number,
 ) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -30,31 +30,31 @@ function useDebouncedCallback<TArgs extends unknown[]>(
         callback(...args);
       }, delay);
     },
-    [callback, delay]
+    [callback, delay],
   );
 }
 
 function RunnerEditor() {
   const { runnerId } = useParams<{ runnerId: string }>();
-  const { data: runner, isLoading } = useRunner();
+  const { data: runner, isLoading } = useRunner(runnerId);
 
   const [files, setFiles] = useAtom(runnerFilesAtom);
   const setSaveStatus = useSetAtom(saveStatusAtom);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [settings, setSettings] = useState<IEditorSettings>(getEditorSettings());
-  
-  // Track previous runner data for initialization (pattern from CodeEditor)
-  const [previousRunner, setPreviousRunner] = useState<typeof runner>(undefined);
+  const [settings, setSettings] =
+    useState<IEditorSettings>(getEditorSettings());
+
+  const [runnerHasValue, setRunnerHasValue] = useState(false);
 
   // Initialize files from API data without useEffect
-  if (runner && previousRunner !== runner) {
+  if (runner && !runnerHasValue) {
     const editorFiles = runnerToEditorFiles(runner);
     setFiles(editorFiles);
     // Select first script file by default if none selected
     if (selectedFile === null && editorFiles.length > 0) {
       setSelectedFile(editorFiles[0].name);
     }
-    setPreviousRunner(runner);
+    setRunnerHasValue(true);
   }
 
   const handleSelectFile = (name: string) => {
@@ -75,7 +75,7 @@ function RunnerEditor() {
       setFiles(newFiles);
       setSaveStatus("UnSaved");
     },
-    [setFiles, setSaveStatus]
+    [setFiles, setSaveStatus],
   );
 
   // Debounced callback for code changes
@@ -83,7 +83,7 @@ function RunnerEditor() {
     (newFiles: typeof files) => {
       handleFilesChange(newFiles);
     },
-    100
+    100,
   );
 
   const handleCodeChange = useCallback(
@@ -91,11 +91,11 @@ function RunnerEditor() {
       if (!currentFile) return;
 
       const newFiles = files.map((f) =>
-        f.name === currentFile.name ? { ...f, content: value } : f
+        f.name === currentFile.name ? { ...f, content: value } : f,
       );
       debouncedFilesChange(newFiles);
     },
-    [currentFile, files, debouncedFilesChange]
+    [currentFile, files, debouncedFilesChange],
   );
 
   return (
