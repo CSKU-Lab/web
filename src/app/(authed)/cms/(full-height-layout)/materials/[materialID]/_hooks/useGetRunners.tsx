@@ -3,7 +3,7 @@ import { queryKeys } from "~/queryKeys";
 import {
   configService,
   GetRunnerPaginationParams,
-} from "~/services/config.service";
+} from "~/services/cms-compare.service";
 
 export const useGetRunners = (args: GetRunnerPaginationParams) => {
   return useQuery({

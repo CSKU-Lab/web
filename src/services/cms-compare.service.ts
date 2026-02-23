@@ -1,23 +1,13 @@
-import type {
-  CompareScriptConfig,
-  CompareScriptDetail,
-  RunnerConfig,
-  RunnerConfigDetail,
-} from "~/types/config";
+import type { CompareScriptConfig, CompareScriptDetail } from "~/types/config";
 import { BaseService } from "./base.service";
 import { PaginationRequestParams } from "~/types/pagination";
 
-export type GetRunnerPaginationParams = PaginationRequestParams<RunnerConfig>;
 export type GetCompareScriptPaginationParams =
   PaginationRequestParams<CompareScriptConfig>;
 
-export class ConfigService extends BaseService {
+export class CompareService extends BaseService {
   constructor() {
-    super("/cms/configs");
-  }
-
-  async getRunners(params: GetRunnerPaginationParams) {
-    return this._getPagination<RunnerConfig>(params, `/runners`);
+    super("/cms/configs/compares");
   }
 
   async getCompareScripts<T extends boolean>(opts?: {
@@ -52,4 +42,4 @@ export class ConfigService extends BaseService {
   }
 }
 
-export const configService = new ConfigService();
+export const cmsCompareService = new CompareService();

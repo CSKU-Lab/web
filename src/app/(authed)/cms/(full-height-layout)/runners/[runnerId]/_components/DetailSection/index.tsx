@@ -3,9 +3,11 @@ import SaveButton from "./SaveButton";
 import SaveStatus from "./SaveStatus";
 import SettingsButton from "./SettingsButton";
 import useRunner from "../../_hooks/useRunner";
+import { useParams } from "next/navigation";
 
 function DetailSection() {
-  const { data: runner, isLoading } = useRunner();
+  const { runnerId } = useParams<{ runnerId: string }>();
+  const { data: runner, isLoading } = useRunner(runnerId);
 
   return (
     <div className="border border-l-0 2xl:border-l pl-4 pr-2 py-3 w-full flex items-center justify-between gap-4 mt-4">

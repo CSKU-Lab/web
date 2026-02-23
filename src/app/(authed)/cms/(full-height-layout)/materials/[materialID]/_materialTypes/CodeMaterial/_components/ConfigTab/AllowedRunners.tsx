@@ -6,9 +6,9 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "~/components/ui/hover-card";
-import { configService } from "~/services/config.service";
-import type { RunnerConfigDetail } from "~/types/config";
 import { cn } from "~/lib/utils";
+import { cmsRunnerService } from "~/services/cms-runner.service";
+import { RunnerConfigDetail } from "~/types/cms-runner";
 
 interface Props {
   value: RunnerConfigDetail[];
@@ -20,9 +20,13 @@ function AllowedRunners({ value, onChange, isOwner }: Props) {
     <AutoComplete
       value={value}
       onChange={onChange}
-      queryFn={(query) =>
-        configService.getRunners({ search: query, includeScript: true })
-      }
+      queryFn={async (query) => {
+        const res = await cmsRunnerService.getPagination({
+          params: { search: query },
+          includeScript: true,
+        });
+        return res.data;
+      }}
       disabled={!isOwner}
       placeHolder="Search runners..."
       renderSelected={({ option, handleOnRemove }) => (
@@ -52,7 +56,9 @@ function AllowedRunners({ value, onChange, isOwner }: Props) {
           </HoverCardTrigger>
           <HoverCardContent className="p-0 w-80 border border-(--gray-5) shadow-xl shadow-black/5 rounded-lg">
             <div className="p-3 rounded-md">
-              <h5 className="text-sm font-medium text-(--gray-12)">{option.name}</h5>
+              <h5 className="text-sm font-medium text-(--gray-12)">
+                {option.name}
+              </h5>
               <h6 className="text-xs mt-2 text-(--gray-10)">Build Script</h6>
               <CodeMirror
                 value={option.build_script}
@@ -79,7 +85,7 @@ function AllowedRunners({ value, onChange, isOwner }: Props) {
                 "w-full text-left p-2 rounded-md cursor-pointer transition-all duration-150",
                 index === highlightedIndex
                   ? "bg-(--accent-color)/10"
-                  : "hover:bg-(--gray-2)"
+                  : "hover:bg-(--gray-2)",
               )}
               onClick={() => handleOnAdd(option)}
             >
@@ -90,15 +96,19 @@ function AllowedRunners({ value, onChange, isOwner }: Props) {
                     "transition-colors duration-150",
                     index === highlightedIndex
                       ? "text-(--accent-color)"
-                      : "text-(--gray-8)"
+                      : "text-(--gray-8)",
                   )}
                 />
-                <h5 className={cn(
-                  "text-sm font-medium",
-                  index === highlightedIndex
-                    ? "text-(--accent-color)"
-                    : "text-(--gray-11)"
-                )}>{option.name}</h5>
+                <h5
+                  className={cn(
+                    "text-sm font-medium",
+                    index === highlightedIndex
+                      ? "text-(--accent-color)"
+                      : "text-(--gray-11)",
+                  )}
+                >
+                  {option.name}
+                </h5>
               </div>
               <h6 className="text-xs mt-1.5 text-(--gray-10)">Build Script</h6>
               <CodeMirror

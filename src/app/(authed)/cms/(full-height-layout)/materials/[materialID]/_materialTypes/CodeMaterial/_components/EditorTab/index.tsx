@@ -5,8 +5,8 @@ import { isOwnerAtom } from "../../_stores/owner.store";
 import type { CodeFile } from "~/types/code-material";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import { useCallback } from "react";
-import { configService } from "~/services/config.service";
 import type { Runner } from "~/components/Editor/types/runner";
+import { cmsRunnerService } from "~/services/cms-runner.service";
 
 function EditorSection() {
   const [files, setFiles] = useAtom(filesAtom);
@@ -26,9 +26,11 @@ function EditorSection() {
 
   const handleSearchRunners = useCallback(
     async (query: string): Promise<Runner[]> => {
-      const response = await configService.getRunners({
-        search: query,
-        page_size: 20,
+      const response = await cmsRunnerService.getPagination({
+        params: {
+          search: query,
+          page_size: 20,
+        },
       });
       return response.data;
     },

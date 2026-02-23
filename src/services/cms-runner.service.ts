@@ -1,35 +1,44 @@
-import type { Runner, RunnerListItem, WriteRunner } from "~/types/cms-runner";
+import type {
+  RunnerConfig,
+  RunnerConfigDetail,
+  WriteRunner,
+} from "~/types/cms-runner";
 import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
 
-export type GetRunnerPaginationParams = PaginationRequestParams<RunnerListItem>;
+export type GetRunnerPaginationWithScriptParams =
+  PaginationRequestParams<RunnerConfigDetail>;
+
+export type GetRunnerPaginationParams = PaginationRequestParams<RunnerConfig>;
 
 class CMSRunnerService extends BaseService {
   constructor() {
     super("/cms/configs/runners");
   }
 
-  async create(data: WriteRunner): Promise<Runner> {
+  async create(data: WriteRunner): Promise<{ id: string }> {
     const res = await this.api.post(this._baseURL, data);
     return res.data;
   }
 
-  async getById(runnerId: string): Promise<Runner> {
-    const res = await this.api.get<Runner>(`${this._baseURL}/${runnerId}`);
-    return {
-      ...res.data,
-      initial_files: [],
-    };
+  async getById<T extends boolean>({
+    runnerId,
+    includeScript,
+  }: {
+    runnerId: string;
+    includeScript: T;
+  }): Promise<T extends true ? RunnerConfigDetail : RunnerConfig> {
+    const res = await this.api.get(
+      `${this._baseURL}/${runnerId}?include_script=${includeScript}`,
+    );
+    return res.data;
   }
 
   async updateById(
     runnerId: string,
     data: Partial<WriteRunner>,
-  ): Promise<Runner> {
-    const res = await this.api.patch<Runner>(
-      `${this._baseURL}/${runnerId}`,
-      data,
-    );
+  ): Promise<void> {
+    const res = await this.api.patch(`${this._baseURL}/${runnerId}`, data);
     return res.data;
   }
 
@@ -37,8 +46,16 @@ class CMSRunnerService extends BaseService {
     return this.api.delete(`${this._baseURL}/${runnerId}`);
   }
 
-  async getPagination(params: GetRunnerPaginationParams) {
-    return this._getPagination<RunnerListItem>(params);
+  async getPagination<T extends boolean>({
+    params,
+    includeScript,
+  }: {
+    params: T extends true
+      ? GetRunnerPaginationWithScriptParams
+      : GetRunnerPaginationParams;
+    includeScript?: T;
+  }) {
+    return this._getPagination(params, `?include_script=${includeScript}`);
   }
 
   async testRunner(

@@ -1,28 +1,26 @@
-import type { CodeFile } from "~/components/Editor/types/editor";
+import { ConfigFile } from "./cms-config";
 
-export interface Runner {
+export interface RunnerConfigDetail {
   id: string;
   name: string;
-  description?: string;
+  description: string;
   build_script: string;
   run_script: string;
-  initial_files: CodeFile[];
+  initial_files: ConfigFile[];
   created_at: string;
   updated_at: string;
 }
 
-export interface RunnerListItem {
-  id: string;
-  name: string;
+export interface UpdateRunnerConfig {
+  name?: string;
   description?: string;
-  created_at: string;
-  updated_at: string;
+  build_script?: string;
+  run_script?: string;
+  initial_files?: ConfigFile[];
 }
 
-export interface WriteRunner {
+export interface RunnerConfig {
+  id: string;
   name: string;
-  description?: string;
-  build_script: string;
-  run_script: string;
-  initial_files: CodeFile[];
+  description: string;
 }

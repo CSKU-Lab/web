@@ -10,8 +10,11 @@ export default function useRunnersPagination(args: GetRunnerPaginationParams) {
     queryKey: queryKeys.runner.allWithParams(args),
     queryFn: ({ pageParam }) =>
       cmsRunnerService.getPagination({
-        ...args,
-        page: pageParam,
+        params: {
+          ...args,
+          page: pageParam,
+        },
+        includeScript: false,
       }),
   });
 }

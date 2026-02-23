@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSetAtom } from "jotai";
 import { Skeleton } from "~/components/ui/skeleton";
 import Error from "~/components/commons/Error";
@@ -14,23 +14,44 @@ import {
   runnerDescriptionAtom,
 } from "./_stores/runner-info.store";
 import { saveStatusAtom } from "./_stores/save-status.store";
-import type { Runner } from "~/types/cms-runner";
+import { useParams } from "next/navigation";
+import { runnerFilesAtom } from "./_stores/runner-files.store";
+import { CodeFile } from "~/types/code-material";
 
 function RunnerDetailPage() {
-  const { data: runner, isLoading, isError, refetch } = useRunner();
+  const { runnerId } = useParams<{ runnerId: string }>();
+  const { data: runner, isLoading, isError, refetch } = useRunner(runnerId);
   const setName = useSetAtom(runnerNameAtom);
   const setDescription = useSetAtom(runnerDescriptionAtom);
   const setSaveStatus = useSetAtom(saveStatusAtom);
-
-  // Track previous runner for initialization without useEffect
-  const [previousRunner, setPreviousRunner] = useState<Runner | undefined>(undefined);
+  const setFiles = useSetAtom(runnerFilesAtom);
+  const [initialRender, setInitialRender] = useState(true);
 
   // Initialize runner info atoms when data arrives
-  if (runner && previousRunner !== runner) {
+  if (runner && initialRender) {
     setName(runner.name);
     setDescription(runner.description || "");
     setSaveStatus("Saved");
-    setPreviousRunner(runner);
+
+    const files: CodeFile[] = [
+      {
+        name: "scripts/build_script.sh",
+        content: runner.build_script,
+      },
+      {
+        name: "scripts/run_script.sh",
+        content: runner.run_script,
+      },
+    ];
+
+    runner.initial_files.forEach((file) => {
+      files.push({
+        name: `initial/${file.name}`,
+        content: file.content,
+      });
+    });
+    setFiles(files);
+    setInitialRender(false);
   }
 
   if (isLoading) {

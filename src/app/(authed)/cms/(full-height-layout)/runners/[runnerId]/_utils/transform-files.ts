@@ -1,12 +1,12 @@
 import type { CodeFile } from "~/components/Editor/types/editor";
-import type { Runner } from "~/types/cms-runner";
+import { RunnerConfigDetail } from "~/types/cms-runner";
 
 /**
  * Transform API runner data to editor file format
  * Converts build_script, run_script, and initial_files into a flat file array
  * with folder prefixes
  */
-export function runnerToEditorFiles(runner: Runner): CodeFile[] {
+export function runnerToEditorFiles(runner: RunnerConfigDetail): CodeFile[] {
   const files: CodeFile[] = [
     { name: "scripts/build_script.sh", content: runner.build_script },
     { name: "scripts/run_script.sh", content: runner.run_script },
@@ -32,9 +32,9 @@ export function editorFilesToRunnerPayload(files: CodeFile[]): {
   initial_files: CodeFile[];
 } {
   const buildScript =
-    files.find((f) => f.name === "scripts/build.sh")?.content ?? "";
+    files.find((f) => f.name === "scripts/build_script.sh")?.content ?? "";
   const runScript =
-    files.find((f) => f.name === "scripts/run.sh")?.content ?? "";
+    files.find((f) => f.name === "scripts/run_script.sh")?.content ?? "";
 
   const initialFiles = files
     .filter((f) => f.name.startsWith("initial/"))
@@ -54,7 +54,7 @@ export function editorFilesToRunnerPayload(files: CodeFile[]): {
  * Check if a file is a required script file that cannot be deleted
  */
 export function isRequiredFile(fileName: string): boolean {
-  return fileName === "scripts/build.sh" || fileName === "scripts/run.sh";
+  return fileName === "scripts/build_script.sh" || fileName === "scripts/run_script.sh";
 }
 
 /**

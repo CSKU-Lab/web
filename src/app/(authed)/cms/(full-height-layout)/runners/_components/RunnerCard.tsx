@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Terminal } from "lucide-react";
-import type { RunnerListItem } from "~/types/cms-runner";
+import type { RunnerConfig } from "~/types/cms-runner";
 
 interface RunnerCardProps {
-  runner: RunnerListItem;
+  runner: RunnerConfig;
 }
 
 function RunnerCard({ runner }: RunnerCardProps) {
@@ -23,16 +23,12 @@ function RunnerCard({ runner }: RunnerCardProps) {
             <h3 className="text-lg font-medium line-clamp-1">{name}</h3>
           </div>
         </div>
-        {description && (
-          <div>
-            <h6 className="text-xs text-(--gray-9) leading-tight">
-              Description
-            </h6>
-            <p className="text-sm text-(--gray-11) line-clamp-2 mt-1">
-              {description}
-            </p>
-          </div>
-        )}
+        <div>
+          <h6 className="text-xs text-(--gray-9) leading-tight">Description</h6>
+          <p className="text-sm text-(--gray-11) line-clamp-2 mt-1">
+            {description ? description : "No description provided."}
+          </p>
+        </div>
       </div>
     </Link>
   );

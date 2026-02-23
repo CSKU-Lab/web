@@ -1,5 +1,5 @@
 import SearchSelect from "~/components/commons/SearchSelect";
-import { configService } from "~/services/config.service";
+import { cmsCompareService } from "~/services/cms-compare.service";
 
 interface Props {
   value: { id: string; name: string } | null;
@@ -8,7 +8,7 @@ interface Props {
 }
 function CompareScript({ value, onChange, isOwner }: Props) {
   const queryCompareScripts = async (query: string) => {
-    const compares = await configService.getCompareScriptsList({
+    const compares = await cmsCompareService.getCompareScripts({
       search: query,
     });
     return compares;
