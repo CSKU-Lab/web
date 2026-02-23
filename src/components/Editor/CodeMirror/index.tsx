@@ -11,9 +11,16 @@ import { vim } from "@replit/codemirror-vim";
 import readOnlyRangeExtension from "codemirror-readonly-ranges";
 import { getReadOnlyRanges } from "./utils/getReadOnlyRanges";
 import { highlightExtension } from "./extensions/highlightRanges";
-import { githubLight } from "@uiw/codemirror-theme-github";
+import {
+  githubDark,
+  githubDarkInit,
+  githubDarkStyle,
+  githubLight,
+  githubLightInit,
+} from "@uiw/codemirror-theme-github";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { indentWithTab } from "./extensions/indentWithTab";
+import { useTheme } from "next-themes";
 
 interface CodeMirrorProps {
   value?: string;
@@ -56,6 +63,8 @@ function CodeMirror(props: CodeMirrorProps) {
     [fontSize],
   );
 
+  const { theme: currentTheme } = useTheme();
+
   const mergedExtensions = useMemo(
     () =>
       Object.values({
@@ -68,15 +77,42 @@ function CodeMirror(props: CodeMirrorProps) {
           getReadOnlyRanges(state, initialCode),
         ),
         placeholder: placeHolderExtension(placeholder || "Start typing..."),
-        theme: githubLight,
       }).filter((ext) => ext !== null),
     [langExtension, vimMode, initialCode, placeholder],
+  );
+
+  const customGithubDark = useMemo(
+    () =>
+      githubDarkInit({
+        settings: {
+          background: "var(--gray-1)",
+          caret: "var(--gray-11)",
+          gutterBackground: "var(--gray-2)",
+          selection: "var(--gray-3)",
+          lineHighlight: "var(--gray-3)",
+        },
+      }),
+    [],
+  );
+  const customGithubLight = useMemo(
+    () =>
+      githubLightInit({
+        settings: {
+          background: "var(--gray-1)",
+          caret: "var(--gray-11)",
+          gutterBackground: "var(--gray-2)",
+          selection: "var(--gray-3)",
+          lineHighlight: "var(--gray-3)",
+        },
+      }),
+    [],
   );
 
   return (
     <ReactCodeMirror
       {...others}
       indentWithTab={false}
+      theme={currentTheme === "light" ? customGithubLight : customGithubDark}
       extensions={[
         basicSetup,
         theme,
