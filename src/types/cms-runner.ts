@@ -11,6 +11,11 @@ export interface RunnerConfigDetail {
   updated_at: string;
 }
 
+export interface CreateRunnerConfig {
+  name: string;
+  description: string;
+}
+
 export interface UpdateRunnerConfig {
   name?: string;
   description?: string;

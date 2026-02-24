@@ -23,7 +23,6 @@ function SaveButton() {
   const name = useAtomValue(runnerNameAtom);
   const description = useAtomValue(runnerDescriptionAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
-  console.log(files);
 
   const save = useMutation({
     mutationFn: () => {

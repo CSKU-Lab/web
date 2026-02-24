@@ -18,13 +18,13 @@ export const initialFilesAtom = atom((get) =>
 // Get build script content
 export const buildScriptAtom = atom((get) => {
   const files = get(runnerFilesAtom);
-  return files.find((f) => f.name === "scripts/build.sh")?.content ?? "";
+  return files.find((f) => f.name === "scripts/build_script.sh")?.content ?? "";
 });
 
 // Get run script content
 export const runScriptAtom = atom((get) => {
   const files = get(runnerFilesAtom);
-  return files.find((f) => f.name === "scripts/run.sh")?.content ?? "";
+  return files.find((f) => f.name === "scripts/run_script.sh")?.content ?? "";
 });
 
 // Get initial files without the "initial/" prefix

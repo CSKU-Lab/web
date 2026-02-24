@@ -17,6 +17,7 @@ import {
   runScriptAtom,
   initialFilesWithoutPrefixAtom,
 } from "../../_stores/runner-files.store";
+import { fetchSSE } from "~/lib/sse-handler";
 
 const kiloToMegaBytes = (kb: number) => (kb / 1024).toFixed(2);
 
@@ -27,7 +28,6 @@ interface RunnerPlaygroundProps {
 
 function RunnerPlayground({ runnerId, disabled }: RunnerPlaygroundProps) {
   const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
 
   const buildScript = useAtomValue(buildScriptAtom);
   const runScript = useAtomValue(runScriptAtom);
@@ -58,65 +58,25 @@ function RunnerPlayground({ runnerId, disabled }: RunnerPlaygroundProps) {
       return;
     }
 
-    setResult(null);
-    setOutput("");
-
-    try {
-      const res = await fetch(
-        env("API_URL") + `/cms/runners/${runnerId}/test`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "text/event-stream",
-          },
-          body: JSON.stringify({
-            files: initialFiles,
-            input,
-            build_script: buildScript,
-            run_script: runScript,
-          }),
-        }
-      );
-
-      const reader = res.body?.getReader();
-      const decoder = new TextDecoder("utf-8");
-
-      while (reader) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const decodedData = decoder.decode(value, { stream: true });
-        const messages = decodedData.split("\n\n");
-        messages.pop();
-
-        for (const message of messages) {
-          if (!message.trim()) continue;
-          const lines = message.split("\n");
-          const eventLine = lines.find((l) => l.startsWith("event:"));
-          const dataLine = lines.find((l) => l.startsWith("data:"));
-
-          if (eventLine && dataLine) {
-            const event = eventLine.slice(6).trim();
-            if (event === "done") break;
-
-            const data = JSON.parse(dataLine.slice(5)) as CodeExecutionResult;
-
-            if (
-              data.status !== "STATUS_QUEUED" &&
-              data.status !== "STATUS_RUNNING"
-            ) {
-              setOutput(data.output);
-            }
-            setResult(data);
-          }
-        }
-      }
-    } catch (error) {
-      setOutput("Error: Failed to execute code");
-      setResult(null);
-    }
+    fetchSSE(env("API_URL") + `/cms/configs/runners/${runnerId}/test`, {
+      method: "POST",
+      body: {
+        input,
+        build_script: buildScript,
+        run_script: runScript,
+        initial_files: initialFiles,
+      },
+      onMessage: (_, message) => {
+        const data = JSON.parse(message) as CodeExecutionResult;
+        setResult(data);
+      },
+      onError: (err) => console.log(err),
+      onClose: () => {
+        console.log("SSE connection closed");
+      },
+    });
   };
+  console.log("Render Playground", { result });
 
   return (
     <div
@@ -190,7 +150,7 @@ function RunnerPlayground({ runnerId, disabled }: RunnerPlaygroundProps) {
             <span className="text-xs font-medium text-(--gray-11)">Output</span>
           </div>
           <div className="flex-1 relative">
-            <CodeMirror readOnly value={output} className="h-full" />
+            <CodeMirror readOnly value={result?.output} className="h-full" />
           </div>
         </div>
       </div>
