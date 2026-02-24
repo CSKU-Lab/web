@@ -7,6 +7,7 @@ import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import type { CMSMaterial } from "~/types/cms-material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import UserProfileImage from "~/components/Menus/UserProfileImage";
 
 dayjs.extend(relativeTime);
 
@@ -62,6 +63,19 @@ export const columns = [
         <User size="1rem" /> Created By
       </>
     ),
+    cell: ({ cell }) => {
+      const creator = cell.getValue<CMSMaterial["created_by"]>();
+      return (
+        <div className="flex items-center gap-1.5">
+          <UserProfileImage
+            src={creator.profile_image}
+            username={creator.username ?? ""}
+            size="1.25rem"
+          />
+          <h4 className="font-medium">{creator.display_name}</h4>
+        </div>
+      );
+    },
   }),
   columnHelper.accessor("created_at", {
     id: "created_at",
