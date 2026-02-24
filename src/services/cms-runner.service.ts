@@ -1,7 +1,8 @@
 import type {
+  CreateRunnerConfig,
   RunnerConfig,
   RunnerConfigDetail,
-  WriteRunner,
+  UpdateRunnerConfig,
 } from "~/types/cms-runner";
 import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
@@ -16,7 +17,7 @@ class CMSRunnerService extends BaseService {
     super("/cms/configs/runners");
   }
 
-  async create(data: WriteRunner): Promise<{ id: string }> {
+  async create(data: CreateRunnerConfig): Promise<{ id: string }> {
     const res = await this.api.post(this._baseURL, data);
     return res.data;
   }
@@ -34,10 +35,7 @@ class CMSRunnerService extends BaseService {
     return res.data;
   }
 
-  async updateById(
-    runnerId: string,
-    data: Partial<WriteRunner>,
-  ): Promise<void> {
+  async updateById(runnerId: string, data: UpdateRunnerConfig): Promise<void> {
     const res = await this.api.patch(`${this._baseURL}/${runnerId}`, data);
     return res.data;
   }
@@ -56,22 +54,6 @@ class CMSRunnerService extends BaseService {
     includeScript?: T;
   }) {
     return this._getPagination(params, `?include_script=${includeScript}`);
-  }
-
-  async testRunner(
-    runnerId: string,
-    payload: {
-      files: { name: string; content: string }[];
-      input: string;
-      build_script: string;
-      run_script: string;
-    },
-  ) {
-    const res = await this.api.post(
-      `${this._baseURL}/${runnerId}/test`,
-      payload,
-    );
-    return res.data;
   }
 }
 

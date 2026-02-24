@@ -1,5 +1,5 @@
 export interface CodeExecutionResult {
-  execution_id: string;
+  id: string;
   status: string;
   output: string;
   wall_time: number;
