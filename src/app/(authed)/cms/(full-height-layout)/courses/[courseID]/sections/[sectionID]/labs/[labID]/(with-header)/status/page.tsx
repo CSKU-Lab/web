@@ -118,8 +118,8 @@ function Page() {
       </div>
 
       <div className="border border-(--gray-4) rounded-md overflow-hidden">
-        <div className="flex items-center gap-4 py-2 px-3 bg-(--gray-2) border-b border-(--gray-4)">
-          <div className="w-[140px] shrink-0 text-xs font-medium text-(--gray-11)">
+        <div className="flex items-center gap-8 py-2 px-3 bg-(--gray-2) border-b border-(--gray-4)">
+          <div className="w-[300px] shrink-0 text-xs font-medium text-(--gray-11)">
             Student
           </div>
           <div className="flex-1 shrink-0 text-xs font-medium text-(--gray-11)">
