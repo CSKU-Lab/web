@@ -46,14 +46,14 @@ class CMSRunnerService extends BaseService {
 
   async getPagination<T extends boolean>({
     params,
-    includeScript,
+    includeScripts,
   }: {
     params: T extends true
       ? GetRunnerPaginationWithScriptParams
       : GetRunnerPaginationParams;
-    includeScript?: T;
+    includeScripts?: T;
   }) {
-    return this._getPagination(params, `?include_script=${includeScript}`);
+    return this._getPagination(params, `?include_scripts=${includeScripts}`);
   }
 }
 
