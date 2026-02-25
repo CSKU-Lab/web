@@ -35,7 +35,7 @@ function ConfigTab() {
     <div className="p-4">
       <h5 className="my-2 font-medium">General</h5>
       <h6 className="my-2 text-sm">Allowed Runner</h6>
-      <AllowedRunners value={allowedRunners} onChange={setAllowedRunner} isOwner={isOwner} />
+      {/* <AllowedRunners value={allowedRunners} onChange={setAllowedRunner} isOwner={isOwner} /> */}
       <h6 className="my-2 text-sm">Compare Script</h6>
       <CompareScript value={compareScript} onChange={setCompareScript} isOwner={isOwner} />
       <div className="h-1 border-b my-4"></div>

@@ -48,7 +48,7 @@ function EditorSection() {
         selectRunner: isOwner,
       }}
       allowedRunners={[]}
-      initialSelectedRunner={selectedRunner}
+      // initialSelectedRunner={selectedRunner}
       onChangeSelectedRunner={setSelectedRunner}
       queryFn={handleSearchRunners}
     />

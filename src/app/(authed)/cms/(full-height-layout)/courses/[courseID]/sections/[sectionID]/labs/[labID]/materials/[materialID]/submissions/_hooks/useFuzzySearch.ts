@@ -3,20 +3,20 @@
 import { useMemo } from "react";
 import Fuse from "fuse.js";
 import type { FuseResultMatch, IFuseOptions } from "fuse.js";
-import type { CMSSectionStudentSubmission } from "~/types/cms-section-submission";
+import type { CMSSectionStudentLatestSubmission } from "~/types/cms-section-submission";
 
 interface UseFuzzySearchParams {
-  students: CMSSectionStudentSubmission[];
+  students: CMSSectionStudentLatestSubmission[];
   query: string;
 }
 
 interface FuzzySearchResult {
-  item: CMSSectionStudentSubmission;
+  item: CMSSectionStudentLatestSubmission;
   score: number;
   matches: readonly FuseResultMatch[];
 }
 
-const fuseOptions: IFuseOptions<CMSSectionStudentSubmission> = {
+const fuseOptions: IFuseOptions<CMSSectionStudentLatestSubmission> = {
   keys: [
     { name: "student.display_name", weight: 5 },
     { name: "student.username", weight: 4 },

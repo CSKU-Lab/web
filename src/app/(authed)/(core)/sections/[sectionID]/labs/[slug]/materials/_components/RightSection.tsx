@@ -26,7 +26,12 @@ function RightSection() {
             codeExecution: true,
             selectRunner: true,
           }}
-          allowedRunners={material?.payload.allowed_runners ?? []}
+          allowedRunners={
+            material?.payload.allowed_runners.map((runner) => ({
+              ...runner,
+              initial_files: [],
+            })) ?? []
+          }
           initialSelectedRunner={selectedRunner}
           onChangeSelectedRunner={setSelectedRunner}
           isLoading={isLoading}

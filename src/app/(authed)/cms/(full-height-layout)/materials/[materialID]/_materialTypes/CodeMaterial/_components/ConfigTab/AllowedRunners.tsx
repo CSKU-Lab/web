@@ -23,7 +23,7 @@ function AllowedRunners({ value, onChange, isOwner }: Props) {
       queryFn={async (query) => {
         const res = await cmsRunnerService.getPagination({
           params: { search: query },
-          includeScript: true,
+          includeScripts: true,
         });
         return res.data;
       }}

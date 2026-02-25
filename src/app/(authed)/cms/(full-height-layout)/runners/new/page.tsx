@@ -17,36 +17,10 @@ import { cn } from "~/lib/utils";
 
 const createRunnerSchema = z.object({
   name: z.string().min(1, "Runner name is required"),
-  description: z.string().optional(),
+  description: z.string(),
 });
 
 type CreateRunnerForm = z.infer<typeof createRunnerSchema>;
-
-const DEFAULT_BUILD_SCRIPT = `#!/bin/bash
-# Build script - compile your code here
-# Available variables:
-#   $MAIN_FILE - The main source file
-#   $FILES - All source files
-
-# Example for compiled languages:
-# gcc -o main $MAIN_FILE
-
-# For interpreted languages, you can leave this empty or add syntax checking:
-# python3 -m py_compile $MAIN_FILE
-`;
-
-const DEFAULT_RUN_SCRIPT = `#!/bin/bash
-# Run script - execute your code here
-# Available variables:
-#   $MAIN_FILE - The main source file
-#   $INPUT_FILE - The input file (stdin)
-
-# Example:
-# ./main < $INPUT_FILE
-
-# For interpreted languages:
-# python3 $MAIN_FILE < $INPUT_FILE
-`;
 
 function NewRunnerPage() {
   const form = useForm<CreateRunnerForm>({
@@ -64,9 +38,6 @@ function NewRunnerPage() {
       await cmsRunnerService.create({
         name: data.name,
         description: data.description,
-        build_script: DEFAULT_BUILD_SCRIPT,
-        run_script: DEFAULT_RUN_SCRIPT,
-        initial_files: [{ name: "main.txt", content: "// Your code here\n" }],
       }),
     onSuccess: (res) => {
       toast.success("Runner created successfully!");
@@ -74,7 +45,8 @@ function NewRunnerPage() {
     },
     onError: (err) => {
       if (err instanceof AxiosError) {
-        const errorMessage = err.response?.data?.error || "Failed to create runner";
+        const errorMessage =
+          err.response?.data?.error || "Failed to create runner";
         form.setError("name", { message: errorMessage });
         return;
       }
@@ -121,7 +93,7 @@ function NewRunnerPage() {
                 "w-full rounded-md border border-(--gray-6) bg-(--gray-1) px-3 py-2 text-sm",
                 "placeholder:text-(--gray-9) text-(--gray-12)",
                 "focus:outline-none focus:ring-1 focus:ring-(--gray-8)",
-                "resize-none"
+                "resize-none",
               )}
               {...form.register("description")}
             />
@@ -158,11 +130,7 @@ function NewRunnerPage() {
           </div>
         </div>
 
-        <Button
-          type="submit"
-          variant="action"
-          disabled={mutation.isPending}
-        >
+        <Button type="submit" variant="action" disabled={mutation.isPending}>
           {mutation.isPending ? "Creating..." : "Create Runner"}
         </Button>
       </form>
