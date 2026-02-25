@@ -96,6 +96,7 @@ function MaterialPage() {
         isError={isError}
         onRetry={refetch}
         isLoading={isFetching}
+        totalData={materialPagination.pagination.total_rows}
       />
     </>
   );
