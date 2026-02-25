@@ -3,11 +3,12 @@ import { saveStatusAtom } from "./save-status.store";
 import { isOwnerAtom } from "./owner.store";
 import type { CodeFile } from "~/types/code-material";
 import type { Runner } from "~/components/Editor/types/runner";
+import { SolutionRunner } from "~/types/cms-runner";
 
-const internalSolutionRunnerAtom = atom<Runner | null>(null);
+const internalSolutionRunnerAtom = atom<SolutionRunner | null>(null);
 export const initialSolutionRunnerAtom = atom(
   null,
-  (_get, set, runner: Runner | null) => {
+  (_get, set, runner: SolutionRunner | null) => {
     set(internalSolutionRunnerAtom, runner);
   },
 );
