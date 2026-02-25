@@ -47,6 +47,7 @@ export default function DefaultLabTable() {
 
   useEffect(() => {
     if (labPagination?.data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRows(labPagination.data);
     }
   }, [labPagination?.data]);

@@ -143,6 +143,7 @@ function HunkBlock({ hunk, language }: HunkBlockProps) {
 
   useEffect(() => {
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHighlightedHtml("");
     codeToHtml(preview, { lang: language, theme: "github-light" }).then(
       (html) => {

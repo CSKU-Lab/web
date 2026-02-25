@@ -8,11 +8,20 @@ import { PanelLeft } from "lucide-react";
 import { SIDEBAR_WIDTH } from "~/constants";
 import UserSection from "./UserSection";
 
+const ToggleButton = ({ toggleSidebar }: { toggleSidebar: () => void }) => (
+  <button
+    onClick={toggleSidebar}
+    className="text-(--gray-10) focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 mb-4 hover:text-accent rounded-md z-50 w-fit"
+  >
+    <PanelLeft size="1.25rem" />
+  </button>
+);
+
 interface Props {
   children: ReactNode;
 }
 function SidebarWrapper({ children }: Props) {
-  const [{ isCollapse, width }, setSidebar] = useAtom(sidebarAtom);
+  const [{ isCollapse }, setSidebar] = useAtom(sidebarAtom);
 
   const toggleSidebar = () => {
     setSidebar((prev) => ({
@@ -20,15 +29,6 @@ function SidebarWrapper({ children }: Props) {
       isCollapse: !prev.isCollapse,
     }));
   };
-
-  const ToggleButton = () => (
-    <button
-      onClick={toggleSidebar}
-      className="text-(--gray-10) focus:outline-none focus:ring-2 focus:ring-(--gray-7) focus:ring-offset-2 mb-4 hover:text-accent rounded-md z-50 w-fit"
-    >
-      <PanelLeft size="1.25rem" />
-    </button>
-  );
 
   return (
     <>
@@ -38,7 +38,7 @@ function SidebarWrapper({ children }: Props) {
           animate={{ width: isCollapse ? 54 : SIDEBAR_WIDTH }}
           className="flex flex-col justify-between border-r border-(--gray-4) bg-(--gray-2) p-4"
         >
-          <ToggleButton />
+          <ToggleButton toggleSidebar={toggleSidebar} />
           {!isCollapse && (
             <>
               <motion.section
