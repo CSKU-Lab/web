@@ -1,13 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { cn } from "~/lib/utils";
 import SearchInput from "~/components/commons/SearchInput";
-import DataTable from "~/components/commons/DataTable";
 import { useParams } from "next/navigation";
 import { useLabStatus } from "./_hooks/useLabStatus";
-import { getStatusColumns } from "./_columns/status.columns";
+import { StudentStatusGrid } from "./_components/StudentStatusGrid";
 import useResolvePath from "~/hooks/useResolvePath";
 
 type FilterOption = "all" | "has_failed" | "not_submitted";
@@ -30,16 +28,18 @@ function Page() {
   const { data, isLoading, isError } = useLabStatus({ sectionID, labID });
   const [globalFilter, setGlobalFilter] = useState("");
   const [filterOption, setFilterOption] = useState<FilterOption>("all");
+  const [hoveredMaterialIndex, setHoveredMaterialIndex] = useState<
+    number | null
+  >(null);
+
+  const onHoverMaterial = (index: number | null) => {
+    setHoveredMaterialIndex(index);
+  };
 
   const getPath = useResolvePath();
   const baseURL = getPath(
     "/cms/courses/:courseID/sections/:sectionID/labs/:labID",
   );
-
-  const columns = useMemo(() => {
-    if (!data) return [];
-    return getStatusColumns(baseURL, data.material_cols);
-  }, [data, baseURL]);
 
   const filteredData = useMemo(() => {
     if (!data) return [];
@@ -71,16 +71,6 @@ function Page() {
     return students;
   }, [data, globalFilter, filterOption]);
 
-  const table = useReactTable({
-    getCoreRowModel: getCoreRowModel(),
-    columns,
-    data: filteredData,
-    state: {
-      globalFilter,
-    },
-    onGlobalFilterChange: setGlobalFilter,
-  });
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -89,7 +79,7 @@ function Page() {
     );
   }
 
-  if (isError) {
+  if (isError || !data) {
     return (
       <div className="flex items-center justify-center h-64 text-(--red-11)">
         Failed to load status data
@@ -127,13 +117,33 @@ function Page() {
         </div>
       </div>
 
-      <DataTable
-        table={table}
-        totalData={data?.student_rows.length}
-        columnBordered
-        hidePagination
-        headerTextAlign="center"
-      />
+      <div className="border border-(--gray-4) rounded-md overflow-hidden">
+        <div className="flex items-center gap-4 py-2 px-3 bg-(--gray-2) border-b border-(--gray-4)">
+          <div className="w-[140px] shrink-0 text-xs font-medium text-(--gray-11)">
+            Student
+          </div>
+          <div className="flex-1 shrink-0 text-xs font-medium text-(--gray-11)">
+            Status
+          </div>
+        </div>
+        <div className="max-h-[calc(100vh-220px)] overflow-y-auto">
+          {filteredData.map((student) => (
+            <StudentStatusGrid
+              key={student.id}
+              student={student}
+              materials={data.material_cols}
+              hoveredMaterialIndex={hoveredMaterialIndex}
+              onHoverMaterial={onHoverMaterial}
+              baseUrl={baseURL}
+            />
+          ))}
+          {filteredData.length === 0 && (
+            <div className="py-8 text-center text-(--gray-10)">
+              No students found
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
