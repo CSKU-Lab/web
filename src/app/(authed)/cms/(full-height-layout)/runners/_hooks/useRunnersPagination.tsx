@@ -14,7 +14,7 @@ export default function useRunnersPagination(args: GetRunnerPaginationParams) {
           ...args,
           page: pageParam,
         },
-        includeScript: false,
+        includeScripts: false,
       }),
   });
 }

@@ -8,7 +8,7 @@ import useGradebook from "./_hooks/useGradebook";
 
 function GradebookPage() {
   const { data, isLoading, isError } = useGradebook();
-  
+
   const columns = useMemo(() => {
     if (!data) return [];
     return getGradebookColumns(data.lab_cols);
@@ -27,7 +27,7 @@ function GradebookPage() {
         table={table}
         columnBordered
         hidePagination
-        textAlign="center"
+        headerTextAlign="center"
         isLoading={isLoading}
         isError={isError}
         totalData={data?.student_rows.length ?? 0}
