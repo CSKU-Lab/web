@@ -14,6 +14,7 @@ function SectionBanner({ value, onChange }: Props) {
 
   useEffect(() => {
     if (typeof value === "string") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPreviewImage(value);
     }
   }, [value]);

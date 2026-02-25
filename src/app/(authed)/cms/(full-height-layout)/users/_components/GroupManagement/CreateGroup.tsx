@@ -32,6 +32,7 @@ function CreateGroup() {
 
   useEffect(() => {
     if (isError && name !== submittedName) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setErrorMessage("");
     }
   }, [name, submittedName, isError]);

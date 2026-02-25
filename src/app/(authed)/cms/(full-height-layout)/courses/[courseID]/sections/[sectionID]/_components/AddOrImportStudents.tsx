@@ -90,6 +90,7 @@ function AddOrImportStudents() {
             <h6 className="text-sm text-(--gray-11)">or import by username</h6>
           </div>
           <StudentImport
+            // eslint-disable-next-line react-hooks/refs
             key={clearRef.current ? "clear" : "no-clear"}
             value={importedStudents}
             onChange={setImportStudents}

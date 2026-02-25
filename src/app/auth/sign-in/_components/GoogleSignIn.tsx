@@ -7,6 +7,7 @@ import Loading from "~/components/commons/Loading";
 function GoogleSignIn() {
   const handleOnSignIn = () => {
     setIsLoading(true);
+    // eslint-disable-next-line react-hooks/immutability
     window.location.href = window.env.CLIENT_API_URL + "/auth/sign-in/google";
   };
 
