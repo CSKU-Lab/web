@@ -8,7 +8,7 @@ import ChatPanel from "~/components/commons/ChatPanel";
 
 const COLLAPSED_WIDTH = 54;
 
-export default function ChatProvider({
+export default function InstructorChatProvider({
   children,
 }: {
   children: React.ReactNode;

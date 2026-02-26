@@ -5,13 +5,8 @@ import SubmissionsTab from "./SubmissionsTab";
 import { useState } from "react";
 import useDrag from "~/hooks/useDrag";
 import { cn } from "~/lib/utils";
-import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
-import MOCK_DESCRIPTION from "../__mocks__/description.json";
-import useGetCoreMaterial from "../[materialID]/_hooks/useGetCoreMaterial";
-import { CoreCodeMaterial } from "~/types/core-code-material";
-import Loading from "~/components/commons/Loading";
-import { Skeleton } from "~/components/ui/skeleton";
 import DescriptionTab from "./DescriptionTab";
+import AIAssistantTab from "./AIAssistantTab";
 
 interface TabButtonProps {
   isActive?: boolean;
@@ -38,9 +33,25 @@ function LeftSection() {
     initialSize: 500,
     direction: "horizontal",
   });
-  const [selectedTab, setSelectedTab] = useState<"description" | "submissions">(
-    "description",
-  );
+  const [selectedTab, setSelectedTab] = useState<
+    "description" | "submissions" | "aiAssistant"
+  >("description");
+
+  const renderContent = () => {
+    switch (selectedTab) {
+      case "description":
+        return <DescriptionTab />;
+
+      case "submissions":
+        return <SubmissionsTab />;
+
+      case "aiAssistant":
+        return <AIAssistantTab />;
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -68,14 +79,13 @@ function LeftSection() {
             isActive={selectedTab === "submissions"}
             onClick={() => setSelectedTab("submissions")}
           />
+          <TabButton
+            value="AI Assistant"
+            isActive={selectedTab === "aiAssistant"}
+            onClick={() => setSelectedTab("aiAssistant")}
+          />
         </div>
-        <div className="flex-1 min-h-0 overflow-auto">
-          {selectedTab === "description" ? (
-            <DescriptionTab />
-          ) : (
-            <SubmissionsTab />
-          )}
-        </div>
+        <div className="flex-1 min-h-0 overflow-auto">{renderContent()}</div>
       </div>
     </>
   );
