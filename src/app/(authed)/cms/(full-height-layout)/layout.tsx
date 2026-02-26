@@ -9,7 +9,7 @@ import { BreadcrumbProvider } from "../_components/BreadcrumbProvider";
 import SidebarMenus from "../_components/SidebarMenus";
 import { getUser } from "~/lib/get-user";
 import { getSidebarMenus } from "../_configs/sidebar-menus";
-import ChatProvider from "~/providers/ChatProvider";
+import ChatProvider from "~/providers/InstructorChatProvider";
 
 async function Layout({ children }: ChildrenProps) {
   const user = await getUser();

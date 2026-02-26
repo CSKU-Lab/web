@@ -3,7 +3,6 @@ import { Provider as JotaiProvider } from "jotai";
 import SessionProvider from "~/providers/SessionProvider";
 import QueryProvider from "~/providers/QueryProvider";
 import { getUser } from "~/lib/get-user";
-import ChatProvider from "~/providers/ChatProvider";
 
 interface Props {
   children: ReactNode;
