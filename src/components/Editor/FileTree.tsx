@@ -72,7 +72,10 @@ function FileTree({
 
   const handleCreateFile = () => {
     if (!isInvalid) {
-      const newFiles = [...files, { name: newFileName.trim(), content: "" }];
+      const newFiles = [
+        ...files,
+        { name: newFileName.trim(), content: "", required: false },
+      ];
       onChange(newFiles);
       setNewFileName("");
       setIsDialogOpen(false);
@@ -209,8 +212,13 @@ function FileTree({
               >
                 <FileIcon className="w-4 h-4 shrink-0" />
                 <span className="truncate">{file.name}</span>
+                {file.required && (
+                  <span className="text-(--red-11) text-xs font-medium">
+                    Required
+                  </span>
+                )}
               </button>
-              {allowModify && (
+              {allowModify && !file.required && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="absolute right-1 p-1 opacity-0 group-hover:opacity-100 hover:bg-(--gray-6) rounded transition-opacity">

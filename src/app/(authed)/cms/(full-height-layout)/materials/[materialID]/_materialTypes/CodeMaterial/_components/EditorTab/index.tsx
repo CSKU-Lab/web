@@ -31,10 +31,28 @@ function EditorSection() {
           search: query,
           page_size: 20,
         },
+        includeScripts: true,
       });
       return response.data;
     },
     [],
+  );
+
+  const handleOnChangeSelectedRunner = useCallback(
+    (runner: Runner) => {
+      setSelectedRunner(runner);
+      console.log(runner);
+      if (isOwner) {
+        setSaveStatus("UnSaved");
+        setFiles(
+          runner.initial_files.map((file) => ({
+            ...file,
+            required: true,
+          })),
+        );
+      }
+    },
+    [setSelectedRunner, setSaveStatus, setFiles, isOwner],
   );
 
   return (
@@ -49,7 +67,7 @@ function EditorSection() {
       }}
       allowedRunners={[]}
       // initialSelectedRunner={selectedRunner}
-      onChangeSelectedRunner={setSelectedRunner}
+      onChangeSelectedRunner={handleOnChangeSelectedRunner}
       queryFn={handleSearchRunners}
     />
   );
