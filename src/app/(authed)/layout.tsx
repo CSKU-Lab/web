@@ -15,9 +15,7 @@ export default async function Layout({ children }: Props) {
   return (
     <JotaiProvider>
       <QueryProvider>
-        <SessionProvider {...{ user }}>
-          <ChatProvider>{children}</ChatProvider>
-        </SessionProvider>
+        <SessionProvider {...{ user }}>{children}</SessionProvider>
       </QueryProvider>
     </JotaiProvider>
   );

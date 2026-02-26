@@ -4,9 +4,15 @@ interface Props {
   initialSize?: number;
   direction?: "horizontal" | "vertical";
   mode?: "pixel" | "percent";
+  anchor?: "left" | "right" | "top" | "bottom";
 }
 
-function useDrag({ initialSize = 500, direction = "horizontal", mode = "pixel" }: Props) {
+function useDrag({
+  initialSize = 500,
+  direction = "horizontal",
+  mode = "pixel",
+  anchor = "left",
+}: Props) {
   const [isDrag, setIsDrag] = useState(false);
   const [size, setSize] = useState(initialSize);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,32 +44,23 @@ function useDrag({ initialSize = 500, direction = "horizontal", mode = "pixel" }
       const containerRect = container.getBoundingClientRect();
 
       if (direction === "horizontal") {
+        const pointerX = position.x;
+
         if (mode === "percent") {
-          // Calculate percentage based on container width
-          const pointerPosition = position.x;
           const containerLeft = containerRect.left;
           const containerWidth = containerRect.width;
-          const dragButtonWidth = button.clientWidth;
-          
-          const offsetX = pointerPosition - containerLeft - dragButtonWidth / 2;
-          const percent = (offsetX / containerWidth) * 100;
-          
-          // Clamp between 10% and 90%
+          const percent = ((pointerX - containerLeft) / containerWidth) * 100;
+
           setSize(Math.max(10, Math.min(90, percent)));
         } else {
-          // Pixel mode (original behavior)
-          const pointerPosition = position.x;
-          const containerOffset = containerRect.x;
-          const dragButtonWidth = button.clientWidth;
-          const buttonMargin =
-            parseFloat(window.getComputedStyle(button).marginLeft) || 0;
-
-          setSize(
-            pointerPosition -
-              containerOffset -
-              dragButtonWidth -
-              buttonMargin / 2,
-          );
+          if (anchor === "right") {
+            const newSize = window.innerWidth - pointerX;
+            setSize(Math.max(200, newSize));
+          } else {
+            const containerLeft = containerRect.left;
+            const newSize = pointerX - containerLeft;
+            setSize(Math.max(200, newSize));
+          }
         }
       }
 
@@ -74,10 +71,10 @@ function useDrag({ initialSize = 500, direction = "horizontal", mode = "pixel" }
           const containerTop = containerRect.top;
           const containerHeight = containerRect.height;
           const dragButtonHeight = button.clientHeight;
-          
+
           const offsetY = pointerPosition - containerTop - dragButtonHeight / 2;
           const percent = 100 - (offsetY / containerHeight) * 100;
-          
+
           // Clamp between 10% and 90%
           setSize(Math.max(10, Math.min(90, percent)));
         } else {
