@@ -38,9 +38,7 @@ export default function MaterialCard({
     "
       >
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-base text-gray-900 truncate">
-            {name}
-          </h3>
+          <h3 className="font-semibold text-base truncate">{name}</h3>
 
           <Badge
             variant="outline"
