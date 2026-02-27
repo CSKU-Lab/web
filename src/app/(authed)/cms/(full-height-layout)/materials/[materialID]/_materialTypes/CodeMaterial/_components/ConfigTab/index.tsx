@@ -1,19 +1,13 @@
 import Input from "~/components/crafts/Input";
-import AllowedRunners from "./AllowedRunners";
 import CompareScript from "./CompareScript";
 import { useAtom, useAtomValue } from "jotai";
-import {
-  allowedRunnersAtom,
-  compareScriptAtom,
-  limitAtom,
-} from "../../_stores/config.store";
+import { compareScriptAtom, limitAtom } from "../../_stores/config.store";
 import { isOwnerAtom } from "../../_stores/owner.store";
 import Label from "~/components/commons/Label";
 import { Switch } from "~/components/ui/switch";
 import type { CodeMaterialLimit } from "../../_types/limit";
 
 function ConfigTab() {
-  const [allowedRunners, setAllowedRunner] = useAtom(allowedRunnersAtom);
   const [compareScript, setCompareScript] = useAtom(compareScriptAtom);
   const [limit, setLimit] = useAtom(limitAtom);
   const isOwner = useAtomValue(isOwnerAtom);
@@ -34,15 +28,17 @@ function ConfigTab() {
   return (
     <div className="p-4">
       <h5 className="my-2 font-medium">General</h5>
-      <h6 className="my-2 text-sm">Allowed Runner</h6>
-      {/* <AllowedRunners value={allowedRunners} onChange={setAllowedRunner} isOwner={isOwner} /> */}
       <h6 className="my-2 text-sm">Compare Script</h6>
-      <CompareScript value={compareScript} onChange={setCompareScript} isOwner={isOwner} />
+      <CompareScript
+        value={compareScript}
+        onChange={setCompareScript}
+        isOwner={isOwner}
+      />
       <div className="h-1 border-b my-4"></div>
       <h5 className="my-2 font-medium">Limits</h5>
       <div className="space-y-2">
         <Input
-          label="CPU Time"
+          label="CPU Time (seconds)"
           errorMessage="CPU Time must be a positive integer or zero."
           isError={limit.cpu_time < 0}
           value={limit?.cpu_time.toString()}
@@ -50,7 +46,7 @@ function ConfigTab() {
           disabled={!isOwner}
         />
         <Input
-          label="CPU Extra Time"
+          label="CPU Extra Time (seconds)"
           errorMessage="CPU Extra Time must be a positive integer or zero."
           isError={limit.cpu_extra_time < 0}
           value={limit?.cpu_extra_time.toString()}
@@ -60,7 +56,7 @@ function ConfigTab() {
           disabled={!isOwner}
         />
         <Input
-          label="Wall Time"
+          label="Wall Time (seconds)"
           errorMessage="Wall Time must be a positive integer or zero."
           isError={limit.wall_time < 0}
           value={limit?.wall_time.toString()}
@@ -68,7 +64,7 @@ function ConfigTab() {
           disabled={!isOwner}
         />
         <Input
-          label="Memory"
+          label="Memory (KB)"
           errorMessage="Memory must be a positive integer or zero."
           isError={limit.memory < 0}
           value={limit?.memory.toString()}
@@ -76,7 +72,7 @@ function ConfigTab() {
           disabled={!isOwner}
         />
         <Input
-          label="Stack"
+          label="Stack (KB)"
           errorMessage="Stack must be a positive integer or zero."
           isError={limit.stack < 0}
           value={limit?.stack.toString()}
@@ -94,7 +90,7 @@ function ConfigTab() {
           disabled={!isOwner}
         />
         <Input
-          label="Max File Sizes"
+          label="Max File Sizes (KB)"
           errorMessage="Max File Sizes must be a positive integer or zero."
           isError={limit.max_file_size < 0}
           value={limit?.max_file_size.toString()}
