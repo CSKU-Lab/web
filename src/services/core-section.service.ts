@@ -27,6 +27,13 @@ class SectionService extends BaseService {
     return this._getPagination<SectionLab>(params, `/${sectionID}/labs`);
   }
 
+  async getLabInSectionById(sectionID: string, labID: string) {
+    const res = await this.api.get<SectionLab>(
+      `${this._baseURL}/${sectionID}/labs/${labID}`,
+    );
+    return res.data;
+  }
+
   async getCourseSectionById(sectionID: string) {
     const res = await this.api.get<GetCourseSectionResponse>(
       `${this._baseURL}/${sectionID}`,
