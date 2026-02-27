@@ -5,15 +5,10 @@ import MaterialInfList from "../_components/MaterialInfList";
 import useCoreLab from "../_hooks/useCoreLab";
 import { dateFormatter } from "~/lib/formatters/dateFormatter";
 import { Skeleton } from "~/components/ui/skeleton";
-import { notFound } from "next/navigation";
 
 export default function LabPage() {
   const { useGetLabDetail } = useCoreLab();
   const { data: labDetail, isLoading, isError } = useGetLabDetail();
-
-  if (isError) {
-    return notFound();
-  }
 
   return (
     <div className="p-4 grid grid-cols-4 min-h-[100vh] h-full gap-6">
@@ -31,9 +26,17 @@ export default function LabPage() {
                 <>
                   <h2 className="font-bold">{labDetail?.display_name}</h2>
                   <p className="text-xs">
-                    Posted: {dateFormatter(labDetail?.created_at ?? "") ?? ""}
+                    Posted:{" "}
+                    {labDetail?.created_at
+                      ? dateFormatter(labDetail.created_at)
+                      : "N/A"}
                   </p>
-                  <p className="text-xs">Due date: 12/12/2025</p>
+                  <p className="text-xs">
+                    Due date:{" "}
+                    {labDetail?.created_at
+                      ? dateFormatter(labDetail.created_at)
+                      : "N/A"}
+                  </p>
                 </>
               )}
             </div>

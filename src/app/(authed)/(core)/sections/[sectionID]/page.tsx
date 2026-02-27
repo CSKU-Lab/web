@@ -24,8 +24,8 @@ async function MainCoursePage() {
   return (
     <div className="flex flex-col h-full overflow-x-hidden">
       <SectionHeader />
-      <div className="px-4 lg:px-12 py-4">
-        <h4 className="font-semibold text-2xl">Labs</h4>
+      <div className="px-4 lg:px-12 py-4 flex flex-col flex-1">
+        <h4 className="font-semibold text-2xl h-fit">Labs</h4>
         <LabList />
       </div>
     </div>
