@@ -27,13 +27,12 @@ class LabService extends BaseService {
 
   async getMaterialsInLabPagination(
     labID: string,
-    payload: GetLabPayload,
+    sectionID: string,
     params: GetMaterialPaginationParams,
   ) {
-    return this._getPaginationWithBody<LabMaterial>(
+    return this._getPagination<LabMaterial>(
       params,
-      `/${labID}/materials`,
-      payload,
+      `/${labID}/materials?section_id=${sectionID}`,
     );
   }
 }
