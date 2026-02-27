@@ -11,7 +11,7 @@ interface Args<T> {
 }
 
 function useInfinitePagination<T>({ queryKey, queryFn }: Args<T>) {
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey,
     queryFn,
     initialPageParam: 1,
@@ -27,6 +27,12 @@ function useInfinitePagination<T>({ queryKey, queryFn }: Args<T>) {
       pageParams: [],
     },
   });
+  const totalRows = query.data?.pages?.[0]?.pagination?.total_rows ?? 0;
+
+  return {
+    ...query,
+    totalRows,
+  };
 }
 
 export default useInfinitePagination;
