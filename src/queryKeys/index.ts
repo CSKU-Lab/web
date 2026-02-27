@@ -39,6 +39,9 @@ export const queryKeys = {
         params,
       ],
     },
+    lab: {
+      getById: (sectionId: string, labId: string) => [labId, sectionId],
+    },
     labs: {
       all: (sectionId: string) => [
         ...queryKeys.section.getById(sectionId),
@@ -177,6 +180,20 @@ export const queryKeys = {
       getPagination: (materialID: string) => [
         ...queryKeys.core.material.all,
         materialID,
+        "submissions-pagination",
+      ],
+    },
+    submission: {
+      all: "submissions",
+      getPagination: (
+        materialID?: string,
+        labID?: string,
+        sectionID?: string,
+      ) => [
+        ...queryKeys.core.submission.all,
+        materialID,
+        labID,
+        sectionID,
         "submissions-pagination",
       ],
     },
