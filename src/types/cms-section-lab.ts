@@ -1,4 +1,4 @@
-export type LabStatus = "hidden" | "open" | "readonly" | "disabled" | "closed";
+export type LabStatus = "hidden" | "open" | "readonly" | "disabled";
 
 export interface CMSSectionLab {
   lab_name: string;
