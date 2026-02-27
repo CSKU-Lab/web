@@ -6,20 +6,13 @@ import {
   coreLabService,
   GetMaterialPaginationParams,
 } from "~/services/core-lab.service";
+import { coreSectionService } from "~/services/core-section.service";
 
 const useCoreLab = () => {
   const { slug: labID, sectionID } = useParams<{
     slug: string;
     sectionID: string;
   }>();
-  const useGetLabDetail = () => {
-    return useQuery({
-      queryKey: queryKeys.lab.getById(labID),
-      queryFn: async () =>
-        coreLabService.getLabById(labID, { section_id: sectionID }),
-      placeholderData: keepPreviousData,
-    });
-  };
   const useGetInfMaterial = (params: GetMaterialPaginationParams) => {
     return useInfinitePagination({
       queryKey: queryKeys.lab.materials.allWithParams(labID, params),
@@ -31,7 +24,16 @@ const useCoreLab = () => {
     });
   };
 
-  return { useGetLabDetail, useGetInfMaterial };
+  const useGetLabSection = () => {
+    return useQuery({
+      queryKey: queryKeys.section.lab.getById(sectionID, labID),
+      queryFn: async () =>
+        coreSectionService.getLabInSectionById(sectionID, labID),
+      placeholderData: keepPreviousData,
+    });
+  };
+
+  return { useGetInfMaterial, useGetLabSection };
 };
 
 export default useCoreLab;
