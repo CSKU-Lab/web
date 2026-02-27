@@ -24,16 +24,10 @@ const useCoreLab = () => {
     return useInfinitePagination({
       queryKey: queryKeys.lab.materials.allWithParams(labID, params),
       queryFn: ({ pageParam }) =>
-        coreLabService.getMaterialsInLabPagination(
-          labID,
-          {
-            section_id: sectionID,
-          },
-          {
-            ...params,
-            page: pageParam,
-          },
-        ),
+        coreLabService.getMaterialsInLabPagination(labID, sectionID, {
+          ...params,
+          page: pageParam,
+        }),
     });
   };
 

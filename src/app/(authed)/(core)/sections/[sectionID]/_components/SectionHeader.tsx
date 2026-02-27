@@ -30,9 +30,7 @@ export default function SectionHeader() {
     <div className="flex items-center bg-(--gray-1) gap-4 shadow-md relative">
       <div className="absolute top-10 left-6 z-10 flex text-white w-full">
         <div className="space-y-0.5 flex-1 overflow-hidden flex flex-col">
-          <h6 className="text-sm">
-            {data?.section.name ?? "N/A"} • Fri 14-16 pm
-          </h6>
+          <h6 className="text-sm">{data?.section.name ?? "N/A"}</h6>
           <h4 className="font-semibold text-2xl line-clamp-2">
             {data?.course.name ?? "N/A"}
           </h4>
