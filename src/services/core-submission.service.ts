@@ -1,5 +1,6 @@
 import type { SubmissionResult } from "~/types/core-submission";
 import { BaseService } from "./base.service";
+import { PaginationRequestParams } from "~/types/pagination";
 
 interface BaseSubmissionPayload<T> {
   material_id: string;
@@ -16,6 +17,10 @@ type SubmissionPayload<T> = BaseSubmissionPayload<T> &
         course_id: string;
       }
   );
+
+export type GetSubmissionPaginationParams<T> = PaginationRequestParams<
+  SubmissionResult<T>
+>;
 
 class SubmissionService extends BaseService {
   constructor() {
@@ -41,6 +46,18 @@ class SubmissionService extends BaseService {
       },
     );
     return eventSource;
+  }
+
+  async getSubmissionPagination<T>(
+    params: GetSubmissionPaginationParams<T>,
+    materialID?: string,
+    labID?: string,
+    sectionID?: string,
+  ) {
+    return this._getPagination<SubmissionResult<T>>(
+      params,
+      `submissions/?lab_id=${labID}&section_id=${sectionID}&material_id=${materialID}`,
+    );
   }
 }
 
