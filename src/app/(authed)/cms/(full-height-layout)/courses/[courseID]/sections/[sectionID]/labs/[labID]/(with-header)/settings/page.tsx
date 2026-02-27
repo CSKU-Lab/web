@@ -126,7 +126,6 @@ export default function SettingsPage() {
                                 option.value === "readonly" && "bg-(--blue-9)",
                                 option.value === "hidden" && "bg-(--gray-9)",
                                 option.value === "disabled" && "bg-(--amber-9)",
-                                option.value === "closed" && "bg-(--red-9)",
                               )}
                             />
                             {option.label}
@@ -146,13 +145,13 @@ export default function SettingsPage() {
                     Schedule
                   </h3>
                   <p className="text-sm text-(--gray-11)">
-                    Set when the lab should open and close.
+                    Set when the lab should start and end.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Opened At</Label>
+                    <Label>Started At</Label>
                     <Controller
                       control={form.control}
                       name="opened_at"
@@ -169,7 +168,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Closed At</Label>
+                    <Label>Eneded At</Label>
                     <Controller
                       control={form.control}
                       name="closed_at"
