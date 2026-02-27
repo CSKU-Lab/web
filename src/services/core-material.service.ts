@@ -12,13 +12,15 @@ class CoreMaterialService extends BaseService {
     super("/materials");
   }
 
-  async getPagination<T>(
+  async getSubmissionPagination<T>(
     materialID: string,
+    labID: string,
+    sectionID: string,
     params: GetSubmissionPaginationParams<T>,
   ) {
     return this._getPagination<SubmissionResult<T>>(
       params,
-      `/${materialID}/submissions`,
+      `/${materialID}/submissions?lab_id=${labID}&section_id=${sectionID}`,
     );
   }
 
