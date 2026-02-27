@@ -1,13 +1,25 @@
+import { notFound } from "next/navigation";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import CodeMaterial from "./_materialTypes/CodeMaterial";
 import { getUser } from "~/lib/get-user";
 
+async function getMaterial(materialID: string) {
+  try {
+    return await cmsMaterialService.getById(materialID);
+  } catch (error: any) {
+    if (error) {
+      notFound();
+    }
+    throw error;
+  }
+}
+
 async function MaterialPage(props: {
   params: Promise<{ materialID: string }>;
 }) {
-  const params = await props.params;
-  const material = await cmsMaterialService.getById(params.materialID);
+  const { materialID } = await props.params;
+  const material = await getMaterial(materialID);
   const user = await getUser();
   const isOwner = material.created_by.id === user.sub;
 

@@ -10,11 +10,14 @@ import SearchInput from "~/components/commons/SearchInput";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { useMaterialDisplay } from "~/hooks/useMaterialDisplay";
 import useResolvePath from "~/hooks/useResolvePath";
-import { CircleCheck, CirclePlay, CircleX } from "lucide-react";
+import { CircleCheck, CirclePlay, CircleX, ServerCrash } from "lucide-react";
 import useCoreLab from "../_hooks/useCoreLab";
 import { LabMaterial } from "~/types/core-lab-material";
 import { Material } from "~/types/core-material";
 import MaterialListItemSkeleton from "./MaterialListItemSkeleton";
+import NoDataAvailable from "~/components/commons/NoDataAvailable";
+import ErrorFallback from "~/components/commons/Error/ErrorFallback";
+import Error from "~/components/commons/Error";
 
 function MaterialInfList() {
   const [search, setSearch] = useState("");
@@ -37,6 +40,8 @@ function MaterialInfList() {
     fetchNextPage,
     hasNextPage,
     isFetching,
+    isError,
+    refetch,
   } = useGetInfMaterial({
     page_size: 5,
     sort_by: "created_at",
@@ -49,6 +54,10 @@ function MaterialInfList() {
     onAppear: () => fetchNextPage(),
     enabled: hasNextPage,
   });
+
+  const isNoData =
+    materialPagination.pages.every((page) => page.data.length === 0) &&
+    !isFetching;
 
   return (
     <div className="flex flex-col h-full flex-1">
@@ -72,31 +81,48 @@ function MaterialInfList() {
         <span></span>
         <p className="col-span-9">Name</p>
       </div>
-      <div className="flex flex-col divide-y divide-(--gray-3)">
-        {isFetching && materialPagination.pages.length === 0 ? (
-          <div className="flex flex-col divide-y divide-(--gray-3)">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <MaterialListItemSkeleton key={index} />
-            ))}
-          </div>
-        ) : (
-          materialPagination.pages.map((page, pageIndex) => (
-            <Fragment key={pageIndex}>
-              {page.data.map((material) => {
-                const { id, material_id, material_data } = material;
 
-                return (
-                  <MaterialListItem
-                    key={id}
-                    id={material_id}
-                    data={material_data}
-                  />
-                );
-              })}
-            </Fragment>
-          ))
+      <Error
+        isError={isError && !isFetching}
+        fallback={
+          <ErrorFallback
+            icon={<ServerCrash size="2rem" />}
+            onRetry={refetch}
+            title="Cannot get the materials"
+            message="There was an error to get the materials. Please try again later or report issue"
+          />
+        }
+      >
+        {isNoData ? (
+          <NoDataAvailable />
+        ) : (
+          <div className="flex flex-col divide-y divide-(--gray-3)">
+            {isFetching && materialPagination.pages.length === 0 ? (
+              <div className="flex flex-col divide-y divide-(--gray-3)">
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <MaterialListItemSkeleton key={index} />
+                ))}
+              </div>
+            ) : (
+              materialPagination.pages.map((page, pageIndex) => (
+                <Fragment key={pageIndex}>
+                  {page.data.map((material) => {
+                    const { id, material_id, material_data } = material;
+
+                    return (
+                      <MaterialListItem
+                        key={id}
+                        id={material_id}
+                        data={material_data}
+                      />
+                    );
+                  })}
+                </Fragment>
+              ))
+            )}
+          </div>
         )}
-      </div>
+      </Error>
       <div ref={bottomDivRef} className="h-20"></div>
     </div>
   );
