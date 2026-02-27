@@ -9,6 +9,9 @@ export interface Material {
   created_by: string;
   created_at: Date;
   payload: Record<string, any>;
+
+  auto_score: number;
+  manual_score: number;
 }
 
 export enum MaterialType {
