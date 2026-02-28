@@ -4,10 +4,23 @@ import { useChat } from "@ai-sdk/react";
 import { useEffect, useRef, useState } from "react";
 import { LucideSend } from "lucide-react";
 import { ChatMessages } from "./ChatMessages";
+import { DefaultChatTransport } from "ai";
+import { ProblemProps } from "~/app/api/chat/route";
 
-export default function ChatPanel() {
+interface ChatPanelProps {
+  probIDs?: ProblemProps;
+}
+
+export default function ChatPanel({ probIDs }: ChatPanelProps) {
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      body: {
+        probIDs,
+      },
+    }),
+  });
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 

@@ -38,21 +38,23 @@ class StudentChat extends Chat {
     messages: UIMessage[];
     probIDs: ProblemProps;
   }) {
-    const matContext = await this._getMaterial(probIDs);
+    let context = null;
 
-    const systemPrompt = matContext
-      ? `${studentPrompt}\n\n${matContext}`
+    if (messages.length === 1) {
+      context = await this._getMaterial(probIDs);
+    }
+
+    const systemPrompt = context
+      ? `${studentPrompt}\n\n${context}`
       : studentPrompt;
 
-    const result = streamText({
+    return streamText({
       model: this.chatModel,
       messages: await convertToModelMessages(messages),
       system: systemPrompt,
       temperature: 0.2,
       output: Output.text(),
-    });
-
-    return result.toUIMessageStreamResponse();
+    }).toUIMessageStreamResponse();
   }
 }
 
