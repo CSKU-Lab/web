@@ -1,4 +1,5 @@
 import { tool } from "ai";
+import { marked } from "marked";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import {
   createMaterialSchema,
@@ -6,6 +7,10 @@ import {
   updateMaterialSchema,
 } from "./schemas/material.schema";
 import z from "zod";
+import { generateJSON } from "@tiptap/html";
+import { createCodeBlockExt } from "~/components/tiptap-templates/extensions";
+
+export const extensions = createCodeBlockExt();
 
 export const materialTool = () => {
   const createMaterial = tool({
@@ -28,6 +33,11 @@ export const materialTool = () => {
     },
   });
 
+  async function textToTiptapJSON(text: string) {
+    const html = await marked.parse(text);
+    return generateJSON(html, extensions);
+  }
+
   const updateMaterial = tool({
     description: "Update a material by id",
     inputSchema: z.object({
@@ -35,6 +45,12 @@ export const materialTool = () => {
       data: updateMaterialSchema,
     }),
     execute: async ({ id, data }) => {
+      const { payload } = data;
+      if (payload.description) {
+        const description = await textToTiptapJSON(payload.description);
+        data.payload.description = JSON.stringify(description);
+      }
+
       await cmsMaterialService.update(id, data);
       return { success: true };
     },
