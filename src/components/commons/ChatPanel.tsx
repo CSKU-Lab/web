@@ -4,23 +4,19 @@ import { useChat } from "@ai-sdk/react";
 import { useEffect, useRef, useState } from "react";
 import { LucideSend } from "lucide-react";
 import { ChatMessages } from "./ChatMessages";
-import { DefaultChatTransport } from "ai";
-import { ProblemProps } from "~/app/api/chat/route";
 
 interface ChatPanelProps {
-  probIDs?: ProblemProps;
+  messages: ReturnType<typeof useChat>["messages"];
+  sendMessage: ReturnType<typeof useChat>["sendMessage"];
+  status: ReturnType<typeof useChat>["status"];
 }
 
-export default function ChatPanel({ probIDs }: ChatPanelProps) {
+export default function ChatPanel({
+  messages,
+  sendMessage,
+  status,
+}: ChatPanelProps) {
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({
-      api: "/api/chat",
-      body: {
-        probIDs,
-      },
-    }),
-  });
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -28,9 +24,24 @@ export default function ChatPanel({ probIDs }: ChatPanelProps) {
     const el = textareaRef.current;
     if (!el) return;
 
-    el.style.height = "auto"; // reset first
-    el.style.height = `${el.scrollHeight}px`; // grow to content
+    if (!input) {
+      el.style.height = "40px";
+      return;
+    }
+
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
   }, [input]);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {

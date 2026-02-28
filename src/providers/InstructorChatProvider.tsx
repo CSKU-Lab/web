@@ -5,6 +5,8 @@ import { useState } from "react";
 import { GripVertical, MessageCircleMore } from "lucide-react";
 import useDrag from "~/hooks/useDrag";
 import ChatPanel from "~/components/commons/ChatPanel";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 
 const COLLAPSED_WIDTH = 54;
 
@@ -19,6 +21,12 @@ export default function InstructorChatProvider({
     initialSize: 400,
     direction: "horizontal",
     anchor: "right",
+  });
+
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/cms/chat",
+    }),
   });
 
   return (
@@ -77,7 +85,11 @@ export default function InstructorChatProvider({
               </button>
 
               <div className="overflow-hidden flex-1">
-                <ChatPanel />
+                <ChatPanel
+                  messages={messages}
+                  sendMessage={sendMessage}
+                  status={status}
+                />
               </div>
             </motion.div>
           )}
