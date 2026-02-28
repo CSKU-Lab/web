@@ -77,6 +77,7 @@ import "~/components/tiptap-templates/simple/simple-editor.scss";
 import type { ClassNameProps } from "~/types/classname-props";
 import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
+import { createCodeBlockExt } from "../extensions";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -220,7 +221,9 @@ export function SimpleEditor({
       },
     },
     extensions: [
+      ...createCodeBlockExt(),
       StarterKit.configure({
+        codeBlock: false,
         horizontalRule: false,
         link: {
           openOnClick: false,
