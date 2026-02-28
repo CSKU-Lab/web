@@ -12,11 +12,12 @@ export default function ChatPanel() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const el = scrollRef.current;
+    const el = textareaRef.current;
     if (!el) return;
 
-    el.scrollTop = el.scrollHeight;
-  }, [messages]);
+    el.style.height = "auto"; // reset first
+    el.style.height = `${el.scrollHeight}px`; // grow to content
+  }, [input]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
