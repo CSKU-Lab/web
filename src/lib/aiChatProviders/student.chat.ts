@@ -1,8 +1,8 @@
 import { Chat } from "./chat";
 import { convertToModelMessages, Output, streamText, UIMessage } from "ai";
 import { studentPrompt } from "./prompts/student";
-import { coreMaterialService } from "~/services/core-material.service";
 import { ProblemProps } from "~/app/api/chat/route";
+import { coreMaterialService } from "~/services/core-material.service";
 
 class StudentChat extends Chat {
   constructor() {
@@ -20,11 +20,8 @@ class StudentChat extends Chat {
     );
     materialContext = `
       Title: ${material.name}
-
       Status: ${material.status}
-
-      Payload:
-      ${material.payload}
+      Payload: ${material.payload}
 
       Only answer based on this problem.
     `;
