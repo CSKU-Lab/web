@@ -33,7 +33,11 @@ const limitSchema = z.object({
 });
 
 const codeMaterialPayloadSchema = z.object({
-  description: z.string().describe("Problem description in JSON string format"),
+  description: z
+    .string()
+    .describe(
+      "Problem description in markdown format which contains lecture and code block",
+    ),
   test_case_groups: z
     .array(testCaseGroupSchema)
     .describe("Problem test case groups"),
