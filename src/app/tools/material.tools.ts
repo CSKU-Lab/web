@@ -46,9 +46,14 @@ export const materialTool = () => {
       try {
         const { payload } = data;
 
-        if (payload.description) {
+        if (
+          payload &&
+          typeof payload === "object" &&
+          "description" in payload &&
+          payload.description
+        ) {
           const descriptionJSON = await textToTiptapJSON(payload.description);
-          data.payload.description = JSON.stringify(descriptionJSON);
+          payload.description = JSON.stringify(descriptionJSON);
         }
 
         await cmsMaterialService.update(id, data);
