@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useSetAtom } from "jotai";
 import { Skeleton } from "~/components/ui/skeleton";
 import Error from "~/components/commons/Error";
