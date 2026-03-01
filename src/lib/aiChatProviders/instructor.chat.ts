@@ -39,11 +39,11 @@ class InstructorChat extends Chat {
         prepareCall: ({ options, ...settings }) => {
           return {
             ...settings,
-            maxToolCalls: 3,
+            maxToolCalls: 5,
             instructions: instructorPrompt,
           };
         },
-        temperature: 0.1,
+        temperature: 0.0,
         output: Output.text(),
       }));
   }
