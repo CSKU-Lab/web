@@ -8,9 +8,7 @@ import {
 } from "./schemas/material.schema";
 import z from "zod";
 import { generateJSON } from "@tiptap/html";
-import { createCodeBlockExt } from "~/components/tiptap-templates/extensions";
-
-export const extensions = createCodeBlockExt();
+import { ext } from "~/components/tiptap-templates/simple/extensions";
 
 export const materialTool = () => {
   const createMaterial = tool({
@@ -35,7 +33,7 @@ export const materialTool = () => {
 
   async function textToTiptapJSON(text: string) {
     const html = await marked.parse(text);
-    return generateJSON(html, extensions);
+    return generateJSON(html, ext);
   }
 
   const updateMaterial = tool({
@@ -45,14 +43,23 @@ export const materialTool = () => {
       data: updateMaterialSchema,
     }),
     execute: async ({ id, data }) => {
-      const { payload } = data;
-      if (payload.description) {
-        const description = await textToTiptapJSON(payload.description);
-        data.payload.description = JSON.stringify(description);
-      }
+      try {
+        const { payload } = data;
 
-      await cmsMaterialService.update(id, data);
-      return { success: true };
+        if (payload.description) {
+          const descriptionJSON = await textToTiptapJSON(payload.description);
+          data.payload.description = JSON.stringify(descriptionJSON);
+        }
+
+        await cmsMaterialService.update(id, data);
+        return { success: true };
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred",
+        };
+      }
     },
   });
 
