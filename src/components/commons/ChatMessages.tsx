@@ -62,56 +62,54 @@ export const ChatMessages = ({
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
-                        code({
-                          node,
-                          inline,
-                          className,
-                          children,
-                          ...props
-                        }: any) {
+                        p({ children }) {
+                          return (
+                            <div className="mb-2 last:mb-0">{children}</div>
+                          );
+                        },
+
+                        code({ inline, className, children, ...props }: any) {
                           const match = /language-(\w+)/.exec(className || "");
                           const codeContent = String(children).replace(
                             /\n$/,
                             "",
                           );
-
-                          const isBlock = !inline;
                           const language = match?.[1] ?? "plaintext";
 
-                          if (isBlock) {
+                          if (inline) {
                             return (
-                              <div className="my-3 rounded-md overflow-hidden border border-zinc-700 shadow-sm">
-                                <div className="bg-zinc-900 px-3 py-1.5 text-[10px] uppercase font-bold text-zinc-400 border-b border-zinc-800 flex justify-between items-center">
-                                  <span>{language}</span>
-                                  <CopyButton text={codeContent} />
-                                </div>
-
-                                <SyntaxHighlighter
-                                  {...props}
-                                  style={vscDarkPlus}
-                                  language={language}
-                                  PreTag="div"
-                                  customStyle={{
-                                    margin: 0,
-                                    padding: "1rem",
-                                    fontSize: "0.85rem",
-                                    lineHeight: "1.5",
-                                    backgroundColor: "#1e1e1e",
-                                  }}
-                                >
-                                  {codeContent}
-                                </SyntaxHighlighter>
-                              </div>
+                              <code
+                                className="bg-zinc-300 dark:bg-zinc-700 px-1 py-0.5 rounded text-sm"
+                                {...props}
+                              >
+                                {children}
+                              </code>
                             );
                           }
 
                           return (
-                            <code
-                              className="bg-zinc-300 dark:bg-zinc-700 px-1 py-0.5 rounded text-sm"
-                              {...props}
-                            >
-                              {children}
-                            </code>
+                            <div className="my-3 rounded-md overflow-hidden border border-zinc-700 shadow-sm">
+                              <div className="bg-zinc-900 px-3 py-1.5 text-[10px] uppercase font-bold text-zinc-400 border-b border-zinc-800 flex justify-between items-center">
+                                <span>{language}</span>
+                                <CopyButton text={codeContent} />
+                              </div>
+
+                              <SyntaxHighlighter
+                                {...props}
+                                style={vscDarkPlus}
+                                language={language}
+                                PreTag="div"
+                                customStyle={{
+                                  margin: 0,
+                                  padding: "1rem",
+                                  fontSize: "0.85rem",
+                                  lineHeight: "1.5",
+                                  backgroundColor: "#1e1e1e",
+                                }}
+                              >
+                                {codeContent}
+                              </SyntaxHighlighter>
+                            </div>
                           );
                         },
                       }}
