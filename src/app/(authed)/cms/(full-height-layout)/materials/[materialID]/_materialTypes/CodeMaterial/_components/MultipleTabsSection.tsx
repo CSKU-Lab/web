@@ -6,6 +6,7 @@ import TestcaseTab from "./TestCaseTab";
 import ConfigTab from "./ConfigTab";
 import { useAtom, useAtomValue } from "jotai";
 import { type Tab, tabAtom } from "../_stores/tab.store";
+import RunnersTab from "./RunnersTab";
 
 const TabButton = ({ children }: PropsWithChildren) => {
   const [activeTab, setActiveTab] = useAtom(tabAtom);
@@ -36,13 +37,15 @@ function MultipleTabsSection() {
     <div className="flex-1 border-t-0 border-l-0 border flex flex-col min-h-0 min-w-[300px] overflow-hidden">
       <div className="flex flex-col">
         <div className="border-b p-2 flex gap-4">
-          <TabButton>Editor</TabButton>
+          <TabButton>Runners</TabButton>
+          <TabButton>Files</TabButton>
+          <TabButton>Solution</TabButton>
           <TabButton>Test Cases</TabButton>
           <TabButton>Config</TabButton>
         </div>
       </div>
       <div className="flex-1 min-h-0 overflow-auto flex flex-col">
-        {activeTab === "Editor" && <EditorTab />}
+        {activeTab === "Runners" && <RunnersTab />}
         {activeTab === "Test Cases" && <TestcaseTab />}
         {activeTab === "Config" && <ConfigTab />}
       </div>
