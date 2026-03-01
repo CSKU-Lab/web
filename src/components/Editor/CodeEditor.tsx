@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { FileCode } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
@@ -8,25 +8,7 @@ import { getEditorSettings } from "./utils/get-editor-settings";
 import type { Runner } from "./types/runner";
 import Playground from "./Playground";
 import type { CodeFile, IEditorSettings } from "./types/editor";
-
-function useDebouncedCallback<TArgs extends unknown[]>(
-  callback: (...args: TArgs) => void,
-  delay: number,
-) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  return useCallback(
-    (...args: TArgs) => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => {
-        callback(...args);
-      }, delay);
-    },
-    [callback, delay],
-  );
-}
+import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
 
 interface Permission {
   modifyFiles?: boolean;

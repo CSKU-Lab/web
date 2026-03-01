@@ -14,6 +14,7 @@ import {
 import { descriptionAtom } from "../../_stores/description.store";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import { isOwnerAtom } from "../../_stores/owner.store";
+import { runnerTemplatesAtom } from "../../_components/RunnersTab/_stores/runner-templates.store";
 import type { CodeMaterialPayload } from "../../_types/code-material-payload";
 import { Button } from "~/components/commons/Button";
 
@@ -25,6 +26,7 @@ function SaveButton() {
   const files = useAtomValue(filesAtom);
   const solutionRunner = useAtomValue(solutionRunnerAtom);
   const limit = useAtomValue(limitAtom);
+  const runnerTemplates = useAtomValue(runnerTemplatesAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
   const isOwner = useAtomValue(isOwnerAtom);
 
@@ -38,6 +40,15 @@ function SaveButton() {
           description: JSON.stringify(description),
           test_case_groups: testCaseGroups,
           allowed_runner_ids: allowedRunners.map((runner) => runner.id) ?? [],
+          allowed_runner_templates: runnerTemplates.map((rt) => ({
+            runner_id: rt.id,
+            build_script: rt.buildScript,
+            run_script: rt.runScript,
+            initial_files: rt.initialFiles.map((f) => ({
+              name: f.name,
+              content: f.content,
+            })),
+          })),
           compare_script_id: compareScript?.id ?? null,
           solution_runner_id: solutionRunner?.id ?? null,
           solution_files: files,
