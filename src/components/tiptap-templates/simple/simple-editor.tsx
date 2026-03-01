@@ -7,7 +7,7 @@ import {
 } from "@tiptap/react";
 
 // --- Tiptap Core Extensions ---
-import { StarterKit } from "@tiptap/starter-kit";
+import StarterKit from "@tiptap/starter-kit";
 import { Image } from "@tiptap/extension-image";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import { TextAlign } from "@tiptap/extension-text-align";
@@ -17,6 +17,15 @@ import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Selection } from "@tiptap/extensions";
 import { TableKit } from "@tiptap/extension-table";
+
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+
+import { createLowlight } from "lowlight";
+import go from "highlight.js/lib/languages/go";
+import c from "highlight.js/lib/languages/c";
+import python from "highlight.js/lib/languages/python";
+import javascript from "highlight.js/lib/languages/javascript";
+import cpp from "highlight.js/lib/languages/cpp";
 
 // --- UI Primitives ---
 import { Button } from "~/components/tiptap-ui-primitive/button";
@@ -77,7 +86,7 @@ import "~/components/tiptap-templates/simple/simple-editor.scss";
 import type { ClassNameProps } from "~/types/classname-props";
 import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
-import { createCodeBlockExt } from "../extensions";
+import { ext } from "./extensions";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -221,32 +230,13 @@ export function SimpleEditor({
       },
     },
     extensions: [
-      ...createCodeBlockExt(),
-      StarterKit.configure({
-        codeBlock: false,
-        horizontalRule: false,
-        link: {
-          openOnClick: false,
-          enableClickSelection: true,
-        },
-      }),
-      HorizontalRule,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      Highlight.configure({ multicolor: true }),
-      Image,
-      Typography,
-      Superscript,
-      Subscript,
-      Selection,
+      ...ext,
       ImageUploadNode.configure({
         accept: "image/*",
         maxSize: maxFileUploadSize,
         upload: onUploadImage,
         onError: (error) => console.error("Upload failed:", error),
       }),
-      TableKit,
     ],
     content: initialValue,
     onUpdate: ({ editor, transaction }) => {

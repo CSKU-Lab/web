@@ -1,6 +1,5 @@
 import { openrouter } from "@openrouter/ai-sdk-provider";
 import { LanguageModel, UIMessage } from "ai";
-import { coreMaterialService } from "~/services/core-material.service";
 
 interface ChatOptions {
   model_id: string;
