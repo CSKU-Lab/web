@@ -58,6 +58,13 @@ export function isRequiredFile(fileName: string): boolean {
 }
 
 /**
+ * Check if a folder is required and cannot be deleted
+ */
+export function isRequiredFolder(folderName: string): boolean {
+  return folderName === "scripts" || folderName === "initial";
+}
+
+/**
  * Check if a file is in the scripts folder
  */
 export function isScriptFile(fileName: string): boolean {

@@ -6,14 +6,19 @@ import { useAtom, useSetAtom } from "jotai";
 import { useParams } from "next/navigation";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import EditorSettings from "~/components/Editor/EditorSettings";
+import FileTree from "~/components/Editor/FileTree";
 import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
 import type { IEditorSettings } from "~/components/Editor/types/editor";
-import RunnerFileTree from "./RunnerFileTree";
 import RunnerPlayground from "./RunnerPlayground";
 import { runnerFilesAtom } from "../../_stores/runner-files.store";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import useRunner from "../../_hooks/useRunner";
-import { runnerToEditorFiles } from "../../_utils/transform-files";
+import {
+  runnerToEditorFiles,
+  isRequiredFile,
+  isRequiredFolder,
+  getDisplayName,
+} from "../../_utils/transform-files";
 
 function useDebouncedCallback<TArgs extends unknown[]>(
   callback: (...args: TArgs) => void,
@@ -101,12 +106,17 @@ function RunnerEditor() {
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       <div className="flex-1 flex min-h-0">
-        <RunnerFileTree
+        <FileTree
           files={files}
           selectedFile={selectedFile}
           onSelectFile={handleSelectFile}
           onChange={handleFilesChange}
           isLoading={isLoading}
+          initialExpandedFolders={["scripts", "initial"]}
+          isRequiredFile={isRequiredFile}
+          isRequiredFolder={isRequiredFolder}
+          getDisplayName={getDisplayName}
+          getNewFilePath={(name) => `initial/${name}`}
         />
         <div className="flex-1 min-h-0 overflow-auto flex flex-col min-w-40">
           <div className="border-b p-1 flex justify-end">
