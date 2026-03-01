@@ -56,7 +56,7 @@ const createMaterialSchema = z.object({
 });
 
 const updateMaterialSchema = createMaterialSchema.partial().extend({
-  payload: z.union([codeMaterialPayloadSchema, z.any()]).nullable(),
+  payload: codeMaterialPayloadSchema.partial().nullable(),
 });
 
 const paginationSchema = z.object({
