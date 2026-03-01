@@ -43,7 +43,7 @@ class InstructorChat extends Chat {
             instructions: instructorPrompt,
           };
         },
-        temperature: 0.2,
+        temperature: 0.1,
         output: Output.text(),
       }));
   }
