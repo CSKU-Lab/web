@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Server, Search, X } from "lucide-react";
-import { useSetAtom } from "jotai";
+import { useSetAtom, useAtomValue } from "jotai";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import {
   Dialog,
@@ -17,7 +17,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
 import { cmsRunnerService } from "~/services/cms-runner.service";
 import { RunnerConfigDetail } from "~/types/cms-runner";
-import { addRunnerTemplateAtom } from "../_stores/runner-templates.store";
+import { addRunnerTemplateAtom, runnerTemplatesAtom } from "../_stores/runner-templates.store";
 import type { RunnerTemplate } from "../_types/runner-template";
 import type { CodeFile } from "~/components/Editor/types/editor";
 import useInputDebounce from "~/hooks/useInputDebounce";
@@ -34,6 +34,9 @@ function RunnerSelector({ disabled }: RunnerSelectorProps) {
   const [runners, setRunners] = useState<RunnerConfigDetail[]>([]);
   const debouncedSearch = useInputDebounce(search, 500);
   const addRunnerTemplate = useSetAtom(addRunnerTemplateAtom);
+  const runnerTemplates = useAtomValue(runnerTemplatesAtom);
+
+  const existingRunnerIds = new Set(runnerTemplates.map(rt => rt.id));
 
   const fetchRunners = async (query: string) => {
     setIsLoading(true);
@@ -42,7 +45,7 @@ function RunnerSelector({ disabled }: RunnerSelectorProps) {
         params: { search: query, page: 1, page_size: 20 },
         includeScripts: true,
       });
-      setRunners(res.data);
+      setRunners(res.data.filter(runner => !existingRunnerIds.has(runner.id)));
     } finally {
       setIsLoading(false);
     }
