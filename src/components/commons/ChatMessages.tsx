@@ -75,30 +75,37 @@ export const ChatMessages = ({
                             "",
                           );
 
-                          return !inline && match ? (
-                            <div className="my-3 rounded-md overflow-hidden border border-zinc-700 shadow-sm">
-                              <div className="bg-zinc-900 px-3 py-1.5 text-[10px] uppercase font-bold text-zinc-400 border-b border-zinc-800 flex justify-between items-center">
-                                <span>{match[1]}</span>
-                                <CopyButton text={codeContent} />
-                              </div>
+                          const isBlock = !inline;
+                          const language = match?.[1] ?? "plaintext";
 
-                              <SyntaxHighlighter
-                                {...props}
-                                style={vscDarkPlus}
-                                language={match[1]}
-                                PreTag="div"
-                                customStyle={{
-                                  margin: 0,
-                                  padding: "1rem",
-                                  fontSize: "0.85rem",
-                                  lineHeight: "1.5",
-                                  backgroundColor: "#1e1e1e",
-                                }}
-                              >
-                                {codeContent}
-                              </SyntaxHighlighter>
-                            </div>
-                          ) : (
+                          if (isBlock) {
+                            return (
+                              <div className="my-3 rounded-md overflow-hidden border border-zinc-700 shadow-sm">
+                                <div className="bg-zinc-900 px-3 py-1.5 text-[10px] uppercase font-bold text-zinc-400 border-b border-zinc-800 flex justify-between items-center">
+                                  <span>{language}</span>
+                                  <CopyButton text={codeContent} />
+                                </div>
+
+                                <SyntaxHighlighter
+                                  {...props}
+                                  style={vscDarkPlus}
+                                  language={language}
+                                  PreTag="div"
+                                  customStyle={{
+                                    margin: 0,
+                                    padding: "1rem",
+                                    fontSize: "0.85rem",
+                                    lineHeight: "1.5",
+                                    backgroundColor: "#1e1e1e",
+                                  }}
+                                >
+                                  {codeContent}
+                                </SyntaxHighlighter>
+                              </div>
+                            );
+                          }
+
+                          return (
                             <code
                               className="bg-zinc-300 dark:bg-zinc-700 px-1 py-0.5 rounded text-sm"
                               {...props}
