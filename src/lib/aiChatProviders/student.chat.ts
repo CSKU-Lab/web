@@ -3,6 +3,7 @@ import { convertToModelMessages, Output, streamText, UIMessage } from "ai";
 import { studentPrompt } from "./prompts/student";
 import { ProblemProps } from "~/app/api/chat/route";
 import { coreMaterialService } from "~/services/core-material.service";
+import { CoreCodeMaterial } from "~/types/core-code-material";
 
 class StudentChat extends Chat {
   constructor() {
@@ -13,17 +14,19 @@ class StudentChat extends Chat {
 
   protected async _getMaterial({ materialID, sectionID, labID }: ProblemProps) {
     let materialContext = "";
-    const material = await coreMaterialService.getById(
-      materialID,
-      sectionID,
-      labID,
-    );
+    const { name, status, payload } =
+      await coreMaterialService.getById<CoreCodeMaterial>(
+        materialID,
+        sectionID,
+        labID,
+      );
     materialContext = `
-      Title: ${material.name}
-      Status: ${material.status}
-      Payload: ${material.payload}
+      Title: ${name}
+      Status: ${status}
+      Allowed Languages: ${payload.allowed_runners}
+      Payload: ${payload.description}
 
-      Only answer based on this problem.
+      Only answer based on this material problem.
     `;
     return materialContext;
   }
