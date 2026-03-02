@@ -1,5 +1,10 @@
 import { openrouter } from "@openrouter/ai-sdk-provider";
-import { LanguageModel, UIMessage } from "ai";
+import {
+  createUIMessageStream,
+  createUIMessageStreamResponse,
+  LanguageModel,
+  UIMessage,
+} from "ai";
 
 interface ChatOptions {
   model_id: string;
@@ -17,4 +22,28 @@ export abstract class Chat {
   }: {
     messages: UIMessage[];
   }): Promise<Response>;
+
+  protected customResponse(text: string) {
+    return createUIMessageStreamResponse({
+      stream: createUIMessageStream({
+        execute({ writer }) {
+          writer.write({
+            type: "text-start",
+            id: "refusal",
+          });
+
+          writer.write({
+            type: "text-delta",
+            id: "refusal",
+            delta: text,
+          });
+
+          writer.write({
+            type: "text-end",
+            id: "refusal",
+          });
+        },
+      }),
+    });
+  }
 }
