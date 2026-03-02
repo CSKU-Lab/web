@@ -71,7 +71,7 @@ class StudentChat extends Chat {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
-      return this.errorStreamResponse(errorMessage);
+      return this.dataStreamResponse(errorMessage, "error");
     }
 
     const systemPrompt = context
@@ -79,7 +79,7 @@ class StudentChat extends Chat {
       : studentPrompt;
 
     if (this._isAskingForSolution(messages)) {
-      return this.customResponse(askForSolutionResponse);
+      return this.textStreamResponse(askForSolutionResponse);
     }
 
     return streamText({

@@ -23,7 +23,7 @@ export abstract class Chat {
     messages: UIMessage[];
   }): Promise<Response>;
 
-  protected customResponse(text: string) {
+  protected textStreamResponse(text: string) {
     return createUIMessageStreamResponse({
       stream: createUIMessageStream({
         execute({ writer }) {
@@ -47,12 +47,12 @@ export abstract class Chat {
     });
   }
 
-  protected errorStreamResponse(message: string) {
+  protected dataStreamResponse(message: string, type: string) {
     return createUIMessageStreamResponse({
       stream: createUIMessageStream({
         execute({ writer }) {
           writer.write({
-            type: "data-error",
+            type: `data-${type}`,
             data: message,
           });
         },
