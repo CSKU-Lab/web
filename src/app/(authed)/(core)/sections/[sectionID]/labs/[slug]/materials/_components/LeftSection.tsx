@@ -7,6 +7,10 @@ import useDrag from "~/hooks/useDrag";
 import { cn } from "~/lib/utils";
 import DescriptionTab from "./DescriptionTab";
 import AIAssistantTab from "./AIAssistantTab";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { ProblemProps } from "~/app/api/chat/route";
+import { useParams } from "next/navigation";
 
 interface TabButtonProps {
   isActive?: boolean;
@@ -37,6 +41,27 @@ function LeftSection() {
     "description" | "submissions" | "aiAssistant"
   >("description");
 
+  const {
+    materialID,
+    sectionID,
+    slug: labID,
+  } = useParams<{ materialID: string; sectionID: string; slug: string }>();
+
+  const probIDs: ProblemProps = {
+    materialID,
+    sectionID,
+    labID,
+  };
+
+  const chat = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      body: {
+        probIDs,
+      },
+    }),
+  });
+
   const renderContent = () => {
     switch (selectedTab) {
       case "description":
@@ -46,7 +71,7 @@ function LeftSection() {
         return <SubmissionsTab />;
 
       case "aiAssistant":
-        return <AIAssistantTab />;
+        return <AIAssistantTab chat={chat} />;
 
       default:
         return null;
