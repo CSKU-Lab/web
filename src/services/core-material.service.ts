@@ -30,7 +30,7 @@ class CoreMaterialService extends BaseService {
     labID: string,
   ): Promise<MaterialDetail<T>> {
     const res = await this.api.get<MaterialDetail<T>>(
-      `/materials/${materialID}?section_id=${sectionID}&lab_id=${labID}`,
+      `/materialss/${materialID}?section_id=${sectionID}&lab_id=${labID}`,
     );
     return res.data;
   }

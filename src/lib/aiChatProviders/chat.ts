@@ -46,4 +46,17 @@ export abstract class Chat {
       }),
     });
   }
+
+  protected errorStreamResponse(message: string) {
+    return createUIMessageStreamResponse({
+      stream: createUIMessageStream({
+        execute({ writer }) {
+          writer.write({
+            type: "data-error",
+            data: message,
+          });
+        },
+      }),
+    });
+  }
 }

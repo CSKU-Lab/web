@@ -40,7 +40,21 @@ export const ChatMessages = ({
               return (
                 <div key={key} className="flex justify-center">
                   <div className="text-xs text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-full">
-                    Using {toolName}
+                    <span className="text-info">USING: </span>
+                    {toolName}
+                  </div>
+                </div>
+              );
+            }
+
+            if (part.type === "data-error") {
+              let errMessage = part.data as string;
+
+              return (
+                <div key={key} className="flex justify-center">
+                  <div className="text-xs text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-full">
+                    <span className="text-error">ERROR: </span>
+                    {errMessage}
                   </div>
                 </div>
               );

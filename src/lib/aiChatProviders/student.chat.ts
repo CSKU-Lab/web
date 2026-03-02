@@ -10,34 +10,40 @@ import { askForSolutionPhrases } from "./prevents/solution.phrases";
 class StudentChat extends Chat {
   solutionRegex: RegExp;
   constructor() {
-    const escaped = askForSolutionPhrases.map((p) =>
-      p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-    );
-    const regex = new RegExp(`\\b(${escaped.join("|")})\\b`, "i");
-
     super({
       model_id: process.env.MODEL_ID || "",
     });
-    this.solutionRegex = regex;
+    this.solutionRegex = this._buildRegex();
+  }
+
+  private _buildRegex() {
+    const escaped = askForSolutionPhrases.map((p) =>
+      p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+    );
+    return new RegExp(`\\b(${escaped.join("|")})\\b`, "i");
   }
 
   private async _getMaterial({ materialID, sectionID, labID }: ProblemProps) {
-    let materialContext = "";
-    const { name, status, payload } =
-      await coreMaterialService.getById<CoreCodeMaterial>(
-        materialID,
-        sectionID,
-        labID,
-      );
-    materialContext = `
-      Title: ${name}
-      Status: ${status}
-      Allowed Languages: ${payload.allowed_runners}
-      Payload: ${payload.description}
+    try {
+      let materialContext = "";
+      const { name, status, payload } =
+        await coreMaterialService.getById<CoreCodeMaterial>(
+          materialID,
+          sectionID,
+          labID,
+        );
+      materialContext = `
+        Title: ${name}
+        Status: ${status}
+        Allowed Languages: ${payload.allowed_runners?.join(", ")}
+        Payload: ${payload.description}
 
-      Only answer based on this material problem.
-    `;
-    return materialContext;
+        Only answer based on this material problem.
+      `;
+      return materialContext;
+    } catch (error) {
+      throw new Error("Failed to fetch material context");
+    }
   }
 
   private _isAskingForSolution(messages: UIMessage[]): boolean {
@@ -58,8 +64,14 @@ class StudentChat extends Chat {
   }) {
     let context = null;
 
-    if (messages.length === 1) {
-      context = await this._getMaterial(probIDs);
+    try {
+      if (messages.length === 1) {
+        context = await this._getMaterial(probIDs);
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      return this.errorStreamResponse(errorMessage);
     }
 
     const systemPrompt = context
