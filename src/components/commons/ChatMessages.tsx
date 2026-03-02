@@ -134,7 +134,7 @@ export const ChatMessages = ({
         </div>
       )}
 
-      {status !== "ready" && status !== "submitted" && (
+      {status === "streaming" && (
         <div className="flex justify-start">
           <div className="bg-zinc-200 dark:bg-zinc-800 rounded-2xl rounded-bl-sm p-3 animate-pulse text-sm">
             Generating...
