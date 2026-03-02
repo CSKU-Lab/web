@@ -11,10 +11,7 @@ import { vim } from "@replit/codemirror-vim";
 import readOnlyRangeExtension from "codemirror-readonly-ranges";
 import { getReadOnlyRanges } from "./utils/getReadOnlyRanges";
 import { highlightExtension } from "./extensions/highlightRanges";
-import {
-  githubDarkInit,
-  githubLightInit,
-} from "@uiw/codemirror-theme-github";
+import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { indentWithTab } from "./extensions/indentWithTab";
 import { useTheme } from "next-themes";
@@ -85,7 +82,7 @@ function CodeMirror(props: CodeMirrorProps) {
           background: "var(--gray-1)",
           caret: "var(--gray-11)",
           gutterBackground: "var(--gray-2)",
-          selection: "var(--gray-3)",
+          selection: "var(--gray-4)",
           lineHighlight: "var(--gray-3)",
         },
       }),
@@ -98,7 +95,7 @@ function CodeMirror(props: CodeMirrorProps) {
           background: "var(--gray-1)",
           caret: "var(--gray-11)",
           gutterBackground: "var(--gray-2)",
-          selection: "var(--gray-3)",
+          selection: "var(--gray-5)",
           lineHighlight: "var(--gray-3)",
         },
       }),
