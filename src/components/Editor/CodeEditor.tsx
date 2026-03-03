@@ -110,7 +110,7 @@ function CodeEditor({
           isRequiredFile={isRequiredFile}
         />
         <div className="flex-1 min-h-0 overflow-auto flex flex-col min-w-40">
-          <div className="border-b p-1 flex justify-between">
+          <div className="border-b p-1 flex justify-between items-center">
             <RunnerSelect
               runners={allowedRunners}
               selectedRunner={selectedRunner}

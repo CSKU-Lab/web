@@ -12,7 +12,6 @@ import {
   Pencil,
   ChevronRight,
   ChevronDown,
-  ChevronUp,
   UnfoldHorizontal,
   UnfoldVertical,
 } from "lucide-react";
