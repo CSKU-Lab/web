@@ -53,6 +53,7 @@ interface FileTreeProps {
   initialExpandedFolders?: string[];
   isReadonlyFile?: (name: string) => boolean;
   isRequiredFile?: (name: string) => boolean;
+  isRequiredFolder?: (name: string) => boolean;
   getDisplayName?: (name: string) => string;
   getNewFilePath?: (name: string) => string;
 }
@@ -123,6 +124,7 @@ function FileTree({
   initialExpandedFolders = [],
   isReadonlyFile,
   isRequiredFile,
+  isRequiredFolder,
   getDisplayName,
   getNewFilePath,
 }: FileTreeProps) {
@@ -226,7 +228,7 @@ function FileTree({
   };
 
   const handleDeleteFolder = (folderPath: string) => {
-    if (isRequiredFile?.(folderPath)) return;
+    if (isRequiredFolder?.(folderPath)) return;
     setFileToDelete(folderPath);
     setIsFolderToDelete(true);
     setDeleteDialogOpen(true);
@@ -279,7 +281,8 @@ function FileTree({
       const isExpanded = expandedFolders.has(node.path);
       const FolderIcon = isExpanded ? FolderOpen : Folder;
       const ChevronIcon = isExpanded ? ChevronDown : ChevronRight;
-      const canModify = allowModify;
+      const isRequired = isRequiredFolder?.(node.path);
+      const canModify = allowModify && !isRequired;
 
       return (
         <div key={node.path} className="mb-0.5 group">
@@ -291,6 +294,9 @@ function FileTree({
               <ChevronIcon size="0.875rem" className="text-(--gray-9) shrink-0" />
               <FolderIcon size="1rem" className="text-(--gray-11) shrink-0" />
               <span className="font-medium truncate">{node.name}</span>
+              {isRequired && (
+                <span className="text-xs text-(--gray-9)">(required)</span>
+              )}
             </button>
             {canModify && (
               <>

@@ -54,7 +54,10 @@ export function editorFilesToRunnerPayload(files: CodeFile[]): {
  * Check if a file is a required script file that cannot be deleted
  */
 export function isRequiredFile(fileName: string): boolean {
-  return fileName === "scripts/build_script.sh" || fileName === "scripts/run_script.sh";
+  return (
+    fileName === "scripts/build_script.sh" ||
+    fileName === "scripts/run_script.sh"
+  );
 }
 
 /**
