@@ -26,7 +26,7 @@ function HeaderItem({ label, value, isLoading = false }: Props) {
                 <h4 className="font-medium truncate">{value}</h4>
               </div>
             </TooltipTrigger>
-            <TooltipContent>{value}</TooltipContent>
+            <TooltipContent className="max-w-120 text-justify">{value}</TooltipContent>
           </Tooltip>
         );
       } else {
