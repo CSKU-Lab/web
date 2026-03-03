@@ -63,7 +63,7 @@ function RunnerEditor({
   const currentFile = allFiles.find((f) => f.name === selectedFile);
   const fileExtension = currentFile?.name.split(".").pop();
 
-  const isRequiredFile = (name: string): boolean => {
+  const isReadonlyFile = (name: string): boolean => {
     return name.startsWith("scripts/");
   };
 
@@ -95,7 +95,7 @@ function RunnerEditor({
         onChange={handleInitialFilesChange}
         allowModify={false}
         initialExpandedFolders={["scripts", "initial"]}
-        isRequiredFile={isRequiredFile}
+        isReadonlyFile={isReadonlyFile}
         getDisplayName={getDisplayName}
       />
       <div className="flex-1 flex flex-col min-h-0 min-w-40">

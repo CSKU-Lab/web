@@ -1,13 +1,13 @@
 "use client";
 import type { PropsWithChildren } from "react";
 import { cn } from "~/lib/tiptap-utils";
-import EditorTab from "./EditorTab";
 import TestcaseTab from "./TestCaseTab";
 import ConfigTab from "./ConfigTab";
 import { useAtom, useAtomValue } from "jotai";
 import { type Tab, tabAtom } from "../_stores/tab.store";
 import RunnersTab from "./RunnersTab";
 import FilesTab from "./FilesTab";
+import SolutionTab from "./SolutionTab";
 
 const TabButton = ({ children }: PropsWithChildren) => {
   const [activeTab, setActiveTab] = useAtom(tabAtom);
@@ -48,6 +48,7 @@ function MultipleTabsSection() {
       <div className="flex-1 min-h-0 overflow-auto flex flex-col">
         {activeTab === "Runners" && <RunnersTab />}
         {activeTab === "Files" && <FilesTab />}
+        {activeTab === "Solution" && <SolutionTab />}
         {activeTab === "Test Cases" && <TestcaseTab />}
         {activeTab === "Config" && <ConfigTab />}
       </div>
