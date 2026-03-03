@@ -17,6 +17,7 @@ import {
 } from "./_stores/config.store";
 import { isLoadingAtom } from "./_stores/loading.store";
 import { isOwnerAtom } from "./_stores/owner.store";
+import { initialResourceFilesAtom } from "./_stores/resource-files.store";
 
 interface Props {
   isOwner: boolean;
@@ -33,6 +34,7 @@ function CodeMaterial({ isOwner }: Props) {
   const setLimit = useSetAtom(initialLimitAtom);
   const setIsLoading = useSetAtom(isLoadingAtom);
   const setIsOwner = useSetAtom(isOwnerAtom);
+  const setResourceFiles = useSetAtom(initialResourceFilesAtom);
 
   useEffect(() => {
     setIsOwner(isOwner);
@@ -53,6 +55,10 @@ function CodeMaterial({ isOwner }: Props) {
         setFiles(payload.solution_files);
       }
 
+      if (payload.resource_files?.length) {
+        setResourceFiles(payload.resource_files);
+      }
+
       setAllowedRunners(payload.allowed_runners);
       setCompareScript(payload.compare_script);
       setLimit(payload.limit);
@@ -64,6 +70,7 @@ function CodeMaterial({ isOwner }: Props) {
     setDescription,
     setFiles,
     setSolutionRunner,
+    setResourceFiles,
     setAllowedRunners,
     setCompareScript,
     setLimit,
