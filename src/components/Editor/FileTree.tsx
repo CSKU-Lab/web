@@ -51,8 +51,8 @@ interface FileTreeProps {
   isLoading?: boolean;
   allowModify?: boolean;
   initialExpandedFolders?: string[];
+  isReadonlyFile?: (name: string) => boolean;
   isRequiredFile?: (name: string) => boolean;
-  isRequiredFolder?: (name: string) => boolean;
   getDisplayName?: (name: string) => string;
   getNewFilePath?: (name: string) => string;
 }
@@ -121,8 +121,8 @@ function FileTree({
   isLoading,
   allowModify = true,
   initialExpandedFolders = [],
+  isReadonlyFile,
   isRequiredFile,
-  isRequiredFolder,
   getDisplayName,
   getNewFilePath,
 }: FileTreeProps) {
@@ -196,7 +196,7 @@ function FileTree({
       }
       const newFiles = [
         ...files,
-        { name: fileName, content: "", required: false },
+        { name: fileName, content: "", readonly: false },
       ];
       onChange(newFiles);
       setNewFileName("");
@@ -219,13 +219,14 @@ function FileTree({
   };
 
   const handleDeleteClick = (fileName: string) => {
-    if (isRequiredFile?.(fileName)) return;
+    if (isReadonlyFile?.(fileName) || isRequiredFile?.(fileName)) return;
     setFileToDelete(fileName);
     setIsFolderToDelete(false);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteFolder = (folderPath: string) => {
+    if (isRequiredFile?.(folderPath)) return;
     setFileToDelete(folderPath);
     setIsFolderToDelete(true);
     setDeleteDialogOpen(true);
@@ -247,7 +248,7 @@ function FileTree({
   };
 
   const handleRenameClick = (fileName: string) => {
-    if (isRequiredFile?.(fileName)) return;
+    if (isReadonlyFile?.(fileName)) return;
     setFileToRename(fileName);
     setRenameValue(getDisplayName ? getDisplayName(fileName) : fileName);
     setRenameDialogOpen(true);
@@ -278,8 +279,7 @@ function FileTree({
       const isExpanded = expandedFolders.has(node.path);
       const FolderIcon = isExpanded ? FolderOpen : Folder;
       const ChevronIcon = isExpanded ? ChevronDown : ChevronRight;
-      const isRequired = isRequiredFolder?.(node.path);
-      const canModify = allowModify && !isRequired;
+      const canModify = allowModify;
 
       return (
         <div key={node.path} className="mb-0.5 group">
@@ -291,9 +291,6 @@ function FileTree({
               <ChevronIcon size="0.875rem" className="text-(--gray-9) shrink-0" />
               <FolderIcon size="1rem" className="text-(--gray-11) shrink-0" />
               <span className="font-medium truncate">{node.name}</span>
-              {isRequired && (
-                <span className="text-xs text-(--gray-9)">(required)</span>
-              )}
             </button>
             {canModify && (
               <>
@@ -346,8 +343,9 @@ function FileTree({
     const displayName = getDisplayName
       ? getDisplayName(node.path)
       : node.name;
+    const isReadonly = isReadonlyFile?.(node.path);
     const isRequired = isRequiredFile?.(node.path);
-    const canModify = allowModify && !isRequired;
+    const canModify = allowModify && !isReadonly && !isRequired;
 
     return (
       <div
@@ -366,7 +364,10 @@ function FileTree({
         >
           <FileIcon className="w-4 h-4 shrink-0" />
           <span className="truncate">{displayName}</span>
-          {isRequired && (
+          {isReadonly && (
+            <span className="text-xs text-(--gray-9)">(readonly)</span>
+          )}
+          {isRequired && !isReadonly && (
             <span className="text-xs text-(--gray-9)">(required)</span>
           )}
         </button>

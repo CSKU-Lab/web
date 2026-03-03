@@ -26,6 +26,8 @@ interface Props {
   onChangeSelectedRunner?: (runner: Runner) => void;
   isLoading?: boolean;
   queryFn?: (query: string) => Promise<Runner[]>;
+  isReadonlyFile?: (name: string) => boolean;
+  isRequiredFile?: (name: string) => boolean;
 }
 
 function CodeEditor({
@@ -37,6 +39,8 @@ function CodeEditor({
   onChangeSelectedRunner,
   isLoading,
   queryFn,
+  isReadonlyFile,
+  isRequiredFile,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings, setSettings] =
@@ -102,6 +106,8 @@ function CodeEditor({
           selectedFile={selectedFile}
           onSelectFile={handleSelectFile}
           onChange={onFilesChange}
+          isReadonlyFile={isReadonlyFile}
+          isRequiredFile={isRequiredFile}
         />
         <div className="flex-1 min-h-0 overflow-auto flex flex-col min-w-40">
           <div className="border-b p-1 flex justify-between">

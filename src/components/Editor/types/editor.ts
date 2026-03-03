@@ -6,4 +6,5 @@ export interface IEditorSettings {
 export interface CodeFile {
   name: string;
   content: string;
+  readonly?: boolean;
 }
