@@ -1,4 +1,4 @@
-import type { CodeMaterialSolutionFile } from "./file";
+import type { CodeMaterialSolutionFile, CodeMaterialResourceFile } from "./file";
 import type { CodeMaterialLimit } from "./limit";
 import type { TestCaseGroup } from "./testcase-group";
 import type { RunnerTemplatePayload } from "../_components/RunnersTab/_types/runner-template";
@@ -11,5 +11,6 @@ export interface CodeMaterialPayload {
   compare_script_id: string | null;
   solution_runner_id: string | null;
   solution_files: CodeMaterialSolutionFile[];
+  resource_files: CodeMaterialResourceFile[];
   limit: CodeMaterialLimit | null;
 }

@@ -15,6 +15,7 @@ import { descriptionAtom } from "../../_stores/description.store";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import { isOwnerAtom } from "../../_stores/owner.store";
 import { runnerTemplatesAtom } from "../../_components/RunnersTab/_stores/runner-templates.store";
+import { resourceFilesAtom } from "../../_stores/resource-files.store";
 import type { CodeMaterialPayload } from "../../_types/code-material-payload";
 import { Button } from "~/components/commons/Button";
 
@@ -27,6 +28,7 @@ function SaveButton() {
   const solutionRunner = useAtomValue(solutionRunnerAtom);
   const limit = useAtomValue(limitAtom);
   const runnerTemplates = useAtomValue(runnerTemplatesAtom);
+  const resourceFiles = useAtomValue(resourceFilesAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
   const isOwner = useAtomValue(isOwnerAtom);
 
@@ -52,6 +54,7 @@ function SaveButton() {
           compare_script_id: compareScript?.id ?? null,
           solution_runner_id: solutionRunner?.id ?? null,
           solution_files: files,
+          resource_files: resourceFiles,
           limit,
         } satisfies CodeMaterialPayload,
       });

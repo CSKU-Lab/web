@@ -7,6 +7,7 @@ import ConfigTab from "./ConfigTab";
 import { useAtom, useAtomValue } from "jotai";
 import { type Tab, tabAtom } from "../_stores/tab.store";
 import RunnersTab from "./RunnersTab";
+import FilesTab from "./FilesTab";
 
 const TabButton = ({ children }: PropsWithChildren) => {
   const [activeTab, setActiveTab] = useAtom(tabAtom);
@@ -46,6 +47,7 @@ function MultipleTabsSection() {
       </div>
       <div className="flex-1 min-h-0 overflow-auto flex flex-col">
         {activeTab === "Runners" && <RunnersTab />}
+        {activeTab === "Files" && <FilesTab />}
         {activeTab === "Test Cases" && <TestcaseTab />}
         {activeTab === "Config" && <ConfigTab />}
       </div>
