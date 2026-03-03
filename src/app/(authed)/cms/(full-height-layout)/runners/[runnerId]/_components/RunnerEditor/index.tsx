@@ -119,7 +119,7 @@ function RunnerEditor() {
           getNewFilePath={(name) => `initial/${name}`}
         />
         <div className="flex-1 min-h-0 overflow-auto flex flex-col min-w-40">
-          <div className="border-b p-1 flex justify-end">
+          <div className="border-b p-2 flex justify-end">
             <EditorSettings
               settings={settings}
               onChange={handleSettingsChange}
