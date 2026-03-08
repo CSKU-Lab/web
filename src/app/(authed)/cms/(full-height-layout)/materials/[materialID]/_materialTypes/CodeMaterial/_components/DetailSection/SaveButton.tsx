@@ -7,7 +7,6 @@ import { queryKeys } from "~/queryKeys";
 import { filesAtom, solutionRunnerAtom } from "../../_stores/editor.store";
 import { testCaseGroupsAtom } from "../../_stores/testcase-groups.store";
 import {
-  allowedRunnersAtom,
   compareScriptAtom,
   limitAtom,
 } from "../../_stores/config.store";
@@ -21,7 +20,6 @@ import { Button } from "~/components/commons/Button";
 
 function SaveButton() {
   const testCaseGroups = useAtomValue(testCaseGroupsAtom);
-  const allowedRunners = useAtomValue(allowedRunnersAtom);
   const compareScript = useAtomValue(compareScriptAtom);
   const description = useAtomValue(descriptionAtom);
   const files = useAtomValue(filesAtom);
@@ -41,19 +39,23 @@ function SaveButton() {
         payload: {
           description: JSON.stringify(description),
           test_case_groups: testCaseGroups,
-          allowed_runner_ids: allowedRunners.map((runner) => runner.id) ?? [],
-          allowed_runner_templates: runnerTemplates.map((rt) => ({
+          allowed_runners: runnerTemplates.map((rt) => ({
             runner_id: rt.id,
-            build_script: rt.buildScript,
-            run_script: rt.runScript,
-            initial_files: rt.initialFiles.map((f) => ({
+            files: rt.initialFiles.map((f) => ({
               name: f.name,
               content: f.content,
             })),
           })),
           compare_script_id: compareScript?.id ?? null,
-          solution_runner_id: solutionRunner?.id ?? null,
-          solution_files: files,
+          solution: solutionRunner
+            ? {
+                runner_id: solutionRunner.id,
+                files: files.map((f) => ({
+                  name: f.name,
+                  content: f.content,
+                })),
+              }
+            : null,
           resource_files: resourceFiles,
           limit,
         } satisfies CodeMaterialPayload,
