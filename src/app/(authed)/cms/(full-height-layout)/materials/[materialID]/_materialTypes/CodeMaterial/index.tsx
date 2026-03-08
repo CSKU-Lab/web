@@ -11,13 +11,13 @@ import { initialTestCaseGroupsAtom } from "./_stores/testcase-groups.store";
 import { initialDescriptionAtom } from "./_stores/description.store";
 import type { CodeMaterialResponse } from "./_types/code-material-response";
 import {
-  initialAllowedRunnersAtom,
   initialCompareScriptAtom,
   initialLimitAtom,
 } from "./_stores/config.store";
 import { isLoadingAtom } from "./_stores/loading.store";
 import { isOwnerAtom } from "./_stores/owner.store";
 import { initialResourceFilesAtom } from "./_stores/resource-files.store";
+import { initialRunnerTemplatesAtom } from "./_components/RunnersTab/_stores/runner-templates.store";
 
 interface Props {
   isOwner: boolean;
@@ -29,12 +29,12 @@ function CodeMaterial({ isOwner }: Props) {
   const setTestCaseGroups = useSetAtom(initialTestCaseGroupsAtom);
   const setFiles = useSetAtom(filesAtom);
   const setSolutionRunner = useSetAtom(initialSolutionRunnerAtom);
-  const setAllowedRunners = useSetAtom(initialAllowedRunnersAtom);
   const setCompareScript = useSetAtom(initialCompareScriptAtom);
   const setLimit = useSetAtom(initialLimitAtom);
   const setIsLoading = useSetAtom(isLoadingAtom);
   const setIsOwner = useSetAtom(isOwnerAtom);
   const setResourceFiles = useSetAtom(initialResourceFilesAtom);
+  const setRunnerTemplates = useSetAtom(initialRunnerTemplatesAtom);
 
   useEffect(() => {
     setIsOwner(isOwner);
@@ -49,19 +49,44 @@ function CodeMaterial({ isOwner }: Props) {
         setDescription(JSON.parse(payload.description));
       }
       setTestCaseGroups(payload.test_case_groups);
-      setSolutionRunner(payload.solution_runner);
 
-      if (payload.solution_files?.length) {
-        setFiles(payload.solution_files);
+      if (payload.solution) {
+        setSolutionRunner({
+          id: payload.solution.id,
+          name: payload.solution.name,
+        });
+        if (payload.solution.files?.length) {
+          setFiles(payload.solution.files);
+        }
       }
 
       if (payload.resource_files?.length) {
         setResourceFiles(payload.resource_files);
       }
 
-      setAllowedRunners(payload.allowed_runners);
       setCompareScript(payload.compare_script);
-      setLimit(payload.limit);
+      setLimit(
+        payload.limit ?? {
+          cpu_time: 0,
+          cpu_extra_time: 0,
+          wall_time: 0,
+          memory: 0,
+          stack: 0,
+          max_open_files: 0,
+          max_file_size: 0,
+          network_allow: false,
+        },
+      );
+
+      setRunnerTemplates(
+        payload.allowed_runners.map((r) => ({
+          id: r.id,
+          name: r.name,
+          buildScript: r.build_script,
+          runScript: r.run_script,
+          initialFiles: r.files,
+        })),
+      );
     }
   }, [
     data,
@@ -71,10 +96,10 @@ function CodeMaterial({ isOwner }: Props) {
     setFiles,
     setSolutionRunner,
     setResourceFiles,
-    setAllowedRunners,
     setCompareScript,
     setLimit,
     setIsLoading,
+    setRunnerTemplates,
   ]);
 
   return (

@@ -1,4 +1,3 @@
-import type { CodeMaterialSolutionFile } from "./file";
 import type { CodeMaterialLimit } from "./limit";
 import type { TestCaseGroup } from "./testcase-group";
 import type { CodeMaterialResourceFile } from "./file";
@@ -6,8 +5,9 @@ import type { CodeMaterialResourceFile } from "./file";
 interface CodeMaterialAllowedRunner {
   id: string;
   name: string;
-  run_script: string;
   build_script: string;
+  run_script: string;
+  files: { name: string; content: string }[];
 }
 
 interface CodeMaterialCompareScript {
@@ -15,9 +15,10 @@ interface CodeMaterialCompareScript {
   name: string;
 }
 
-interface CodeMaterialSolutionRunner {
+interface CodeMaterialSolution {
   id: string;
   name: string;
+  files: { name: string; content: string }[];
 }
 
 export interface CodeMaterialResponse {
@@ -25,8 +26,8 @@ export interface CodeMaterialResponse {
   test_case_groups: TestCaseGroup[];
   allowed_runners: CodeMaterialAllowedRunner[];
   compare_script: CodeMaterialCompareScript | null;
-  solution_runner: CodeMaterialSolutionRunner | null;
-  solution_files: CodeMaterialSolutionFile[];
+  solution: CodeMaterialSolution | null;
   resource_files: CodeMaterialResourceFile[];
   limit: CodeMaterialLimit;
+  hide_test_cases?: boolean;
 }

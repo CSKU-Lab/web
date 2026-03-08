@@ -25,20 +25,13 @@ function EditorSection() {
 
   const initialSelectedRunner = useMemo(() => {
     if (!selectedRunner) return null;
-    const matchedTemplate = runnerTemplates.find((rt) => rt.id === selectedRunner.id);
-    if (matchedTemplate) {
-      return {
-        id: matchedTemplate.id,
-        name: matchedTemplate.name,
-        initial_files: matchedTemplate.initialFiles,
-      };
-    }
     return {
       id: selectedRunner.id,
       name: selectedRunner.name,
       initial_files: [],
     };
-  }, [selectedRunner, runnerTemplates]);
+  }, [selectedRunner]);
+	console.log("intialSelectedRunner", initialSelectedRunner);
 
   const resourceFileNames = useMemo(
     () => new Set(resourceFiles.map((f) => f.name)),
@@ -71,7 +64,7 @@ function EditorSection() {
   const handleFilesChange = useCallback(
     (newFiles: CodeFile[]) => {
       const solutionFiles = newFiles.filter(
-        (f) => !resourceFileNames.has(f.name)
+        (f) => !resourceFileNames.has(f.name),
       );
       setFiles(solutionFiles);
       if (isOwner) {
