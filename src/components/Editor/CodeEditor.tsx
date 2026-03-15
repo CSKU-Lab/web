@@ -133,7 +133,10 @@ function CodeEditor({
           ) : (
             <CodeMirror
               key={currentFile.name}
-              readOnly={permissions ? !permissions.writeFiles : true}
+              readOnly={
+                (permissions ? !permissions.writeFiles : true) ||
+                (currentFile.readonly ?? false)
+              }
               className="flex-1 min-h-0"
               extension={fileExtension}
               fontSize={settings.fontSize}
