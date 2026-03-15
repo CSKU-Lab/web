@@ -4,7 +4,7 @@ import { cmsMaterialService } from "~/services/cms-material.service";
 import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "~/queryKeys";
-import { filesAtom, solutionRunnerAtom } from "../../_stores/editor.store";
+import { solutionAtom } from "../../_stores/solution.store";
 import { testCaseGroupsAtom } from "../../_stores/testcase-groups.store";
 import {
   compareScriptAtom,
@@ -22,8 +22,7 @@ function SaveButton() {
   const testCaseGroups = useAtomValue(testCaseGroupsAtom);
   const compareScript = useAtomValue(compareScriptAtom);
   const description = useAtomValue(descriptionAtom);
-  const files = useAtomValue(filesAtom);
-  const solutionRunner = useAtomValue(solutionRunnerAtom);
+  const solution = useAtomValue(solutionAtom);
   const limit = useAtomValue(limitAtom);
   const runnerTemplates = useAtomValue(runnerTemplatesAtom);
   const resourceFiles = useAtomValue(resourceFilesAtom);
@@ -47,10 +46,10 @@ function SaveButton() {
             })),
           })),
           compare_script_id: compareScript?.id ?? null,
-          solution: solutionRunner
+          solution: solution
             ? {
-                runner_id: solutionRunner.id,
-                files: files.map((f) => ({
+                runner_id: solution.runner.id,
+                files: solution.files.map((f) => ({
                   name: f.name,
                   content: f.content,
                 })),
