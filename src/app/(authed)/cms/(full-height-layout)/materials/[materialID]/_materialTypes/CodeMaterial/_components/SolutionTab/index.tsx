@@ -1,6 +1,6 @@
 import CodeEditor from "~/components/Editor/CodeEditor";
-import { filesAtom, solutionRunnerAtom } from "../../_stores/editor.store";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { solutionAtom } from "../../_stores/solution.store";
+import { useAtom, useAtomValue } from "jotai";
 import { isOwnerAtom } from "../../_stores/owner.store";
 import type { CodeFile } from "~/types/code-material";
 import { saveStatusAtom } from "../../_stores/save-status.store";
@@ -10,10 +10,9 @@ import { runnerTemplatesAtom } from "../RunnersTab/_stores/runner-templates.stor
 import { resourceFilesAtom } from "../../_stores/resource-files.store";
 
 function EditorSection() {
-  const [files, setFiles] = useAtom(filesAtom);
-  const setSaveStatus = useSetAtom(saveStatusAtom);
+  const [solution, setSolution] = useAtom(solutionAtom);
+  const [, setSaveStatus] = useAtom(saveStatusAtom);
   const isOwner = useAtomValue(isOwnerAtom);
-  const [selectedRunner, setSelectedRunner] = useAtom(solutionRunnerAtom);
   const runnerTemplates = useAtomValue(runnerTemplatesAtom);
   const resourceFiles = useAtomValue(resourceFilesAtom);
 
@@ -24,23 +23,22 @@ function EditorSection() {
   }));
 
   const initialSelectedRunner = useMemo(() => {
-    if (!selectedRunner) return null;
+    if (!solution?.runner) return null;
     return {
-      id: selectedRunner.id,
-      name: selectedRunner.name,
+      id: solution.runner.id,
+      name: solution.runner.name,
       initial_files: [],
     };
-  }, [selectedRunner]);
-	console.log("intialSelectedRunner", initialSelectedRunner);
+  }, [solution?.runner]);
 
   const resourceFileNames = useMemo(
     () => new Set(resourceFiles.map((f) => f.name)),
     [resourceFiles],
   );
 
-  const runnerFileNames = useMemo(
-    () => new Set(files.map((f) => f.name)),
-    [files],
+  const solutionFileNames = useMemo(
+    () => new Set((solution?.files ?? []).map((f) => f.name)),
+    [solution?.files],
   );
 
   const isReadonlyFile = useCallback(
@@ -49,8 +47,8 @@ function EditorSection() {
   );
 
   const isRequiredFile = useCallback(
-    (name: string) => !resourceFileNames.has(name) && runnerFileNames.has(name),
-    [resourceFileNames, runnerFileNames],
+    (name: string) => !resourceFileNames.has(name) && solutionFileNames.has(name),
+    [resourceFileNames, solutionFileNames],
   );
 
   const combinedFiles = useMemo(() => {
@@ -58,37 +56,27 @@ function EditorSection() {
       ...f,
       readonly: true,
     }));
-    return [...files, ...resourceFilesWithReadonly];
-  }, [files, resourceFiles]);
+    return [...(solution?.files ?? []), ...resourceFilesWithReadonly];
+  }, [solution?.files, resourceFiles]);
 
   const handleFilesChange = useCallback(
     (newFiles: CodeFile[]) => {
-      const solutionFiles = newFiles.filter(
-        (f) => !resourceFileNames.has(f.name),
-      );
-      setFiles(solutionFiles);
-      if (isOwner) {
-        setSaveStatus("UnSaved");
-      }
+      const solutionFiles = newFiles.filter((f) => !resourceFileNames.has(f.name));
+      setSolution(solution ? { ...solution, files: solutionFiles } : null);
+      if (isOwner) setSaveStatus("UnSaved");
     },
-    [setFiles, setSaveStatus, isOwner, resourceFileNames],
+    [setSolution, setSaveStatus, isOwner, resourceFileNames, solution],
   );
 
   const handleOnChangeSelectedRunner = useCallback(
     (runner: Runner) => {
-      setSelectedRunner(runner);
-      console.log(runner);
-      if (isOwner) {
-        setSaveStatus("UnSaved");
-        setFiles(
-          runner.initial_files.map((file) => ({
-            ...file,
-            readonly: true,
-          })),
-        );
-      }
+      const files = solution?.runner.id === runner.id
+        ? (solution?.files ?? [])
+        : runner.initial_files;
+      setSolution({ runner: { id: runner.id, name: runner.name }, files });
+      if (isOwner) setSaveStatus("UnSaved");
     },
-    [setSelectedRunner, setSaveStatus, setFiles, isOwner],
+    [setSolution, setSaveStatus, isOwner, solution],
   );
 
   return (

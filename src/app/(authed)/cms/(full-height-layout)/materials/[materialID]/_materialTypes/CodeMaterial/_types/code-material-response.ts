@@ -15,9 +15,13 @@ interface CodeMaterialCompareScript {
   name: string;
 }
 
-interface CodeMaterialSolution {
+interface CodeMaterialSolutionRunner {
   id: string;
   name: string;
+}
+
+interface CodeMaterialSolution {
+  runner: CodeMaterialSolutionRunner;
   files: { name: string; content: string }[];
 }
 
