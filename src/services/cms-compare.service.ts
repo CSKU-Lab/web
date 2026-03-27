@@ -1,13 +1,21 @@
 import type { CompareScriptConfig, CompareScriptDetail } from "~/types/config";
 import { BaseService } from "./base.service";
-import { PaginationRequestParams } from "~/types/pagination";
+import type { PaginationRequestParams, PaginationResponse } from "~/types/pagination";
 
 export type GetCompareScriptPaginationParams =
-  PaginationRequestParams<CompareScriptConfig>;
+  PaginationRequestParams<CompareScriptDetail>;
 
 export class CompareService extends BaseService {
   constructor() {
-    super("/cms/configs/compares");
+    super("/cms/configs");
+  }
+
+  async getPagination({
+    params,
+  }: {
+    params: GetCompareScriptPaginationParams;
+  }): Promise<PaginationResponse<CompareScriptDetail>> {
+    return this._getPagination(params, "/compare-scripts");
   }
 
   async getCompareScripts<T extends boolean>(opts?: {
