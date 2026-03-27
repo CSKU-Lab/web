@@ -1,20 +1,27 @@
 import SearchSelect from "~/components/commons/SearchSelect";
 import { cmsCompareService } from "~/services/cms-compare.service";
+import type { CompareScriptDetail } from "~/types/config";
 
 interface Props {
   value: { id: string; name: string } | null;
   onChange: (value: { id: string; name: string }) => void;
   isOwner: boolean;
 }
+
 function CompareScript({ value, onChange, isOwner }: Props) {
   const queryCompareScripts = async (query: string) => {
-    const compares = await cmsCompareService.getCompareScripts({
-      search: query,
+    const response = await cmsCompareService.getPagination({
+      params: {
+        search: query,
+        page: 1,
+        page_size: 20,
+      },
     });
-    return compares;
+    return response.data;
   };
+
   return (
-    <SearchSelect
+    <SearchSelect<CompareScriptDetail>
       value={value}
       className="w-full"
       queryFn={queryCompareScripts}
