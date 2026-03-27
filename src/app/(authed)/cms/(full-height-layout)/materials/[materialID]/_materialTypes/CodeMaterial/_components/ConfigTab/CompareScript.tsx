@@ -7,7 +7,9 @@ interface Props {
 }
 function CompareScript({ value, onChange }: Props) {
   const queryCompareScripts = async (query: string) => {
-    const compares = await configService.getCompareScripts({ search: query });
+    const compares = await configService.getCompareScriptsList({
+      search: query,
+    });
     return compares;
   };
   return (

@@ -45,6 +45,19 @@ export class ConfigService extends BaseService {
     const res = await this.api.get(this._baseURL + url);
     return res.data;
   }
+
+  async getCompareScriptsList(opts?: {
+    search?: string;
+  }): Promise<CompareScriptConfig[]> {
+    const searchParams = new URLSearchParams();
+    if (opts?.search) {
+      searchParams.append("search", opts.search);
+    }
+
+    const url = `/compare-scripts-list?${searchParams.toString()}`;
+    const res = await this.api.get(this._baseURL + url);
+    return res.data;
+  }
 }
 
 export const configService = new ConfigService();
