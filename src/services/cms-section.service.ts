@@ -179,6 +179,19 @@ class SectionService extends BaseService {
     );
     return res.data;
   }
+
+  async exportGradebook(
+    sectionID: string,
+    format: "csv" | "xlsx",
+  ): Promise<Blob> {
+    const res = await this.api.get(
+      `${this._baseURL}/${sectionID}/gradebook/export?format=${format}`,
+      {
+        responseType: "blob",
+      },
+    );
+    return res.data;
+  }
 }
 
 export const cmsSectionService = new SectionService();

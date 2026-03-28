@@ -2,9 +2,11 @@
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { useMemo } from "react";
 import DataTable from "~/components/commons/DataTable";
+import PageTitle from "~/components/commons/PageTitle";
 import RouteNavigation from "../_components/RouteNavigation";
 import { getGradebookColumns } from "./_columns/gradebook.columns";
 import useGradebook from "./_hooks/useGradebook";
+import { ExportGradebookButton } from "./_components/ExportGradebookButton";
 
 function GradebookPage() {
   const { data, isLoading, isError } = useGradebook();
@@ -22,7 +24,16 @@ function GradebookPage() {
 
   return (
     <>
-      <RouteNavigation title="Gradebook" />
+      <RouteNavigation
+        headerContent={
+          <div className="flex items-center justify-between w-full">
+            <PageTitle>Gradebook</PageTitle>
+            <div className="mr-4">
+              <ExportGradebookButton />
+            </div>
+          </div>
+        }
+      />
       <DataTable
         table={table}
         columnBordered
