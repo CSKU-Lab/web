@@ -1,5 +1,7 @@
+import MainPageEmptyState from "./_components/MainPageEmptyState";
+
 function CMSMainPage() {
-  return <div>CMSMainPage</div>;
+  return <MainPageEmptyState />;
 }
 
 export default CMSMainPage;
