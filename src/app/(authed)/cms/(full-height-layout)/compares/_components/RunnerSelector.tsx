@@ -10,7 +10,7 @@ import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Button } from "~/components/commons/Button";
 import type { RunnerConfig } from "~/types/cms-runner";
-import useRunnersPagination from "../../_hooks/useRunnersPagination";
+import useRunnersPagination from "../../runners/_hooks/useRunnersPagination";
 
 interface RunnerSelectorProps {
   label: string;
