@@ -14,7 +14,7 @@ export type GetComparePaginationParams = PaginationRequestParams<CompareConfig>;
 
 class CMSCompareService extends BaseService {
   constructor() {
-    super("/cms/configs/compares");
+    super("/cms/configs/compare-scripts");
   }
 
   async create(data: CreateCompareConfig): Promise<{ id: string }> {

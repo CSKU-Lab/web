@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { FileCode } from "lucide-react";
+import { FileCode, MoreVertical, FileCheck } from "lucide-react";
 import { useAtom, useSetAtom } from "jotai";
 import { useParams } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import EditorSettings from "~/components/Editor/EditorSettings";
 import FileTree from "~/components/Editor/FileTree";
@@ -12,6 +14,7 @@ import type { IEditorSettings } from "~/components/Editor/types/editor";
 import ComparePlayground from "./ComparePlayground";
 import { compareFilesAtom } from "../../_stores/compare-files.store";
 import { saveStatusAtom } from "../../_stores/save-status.store";
+import { compareRunNameAtom } from "../../_stores/compare-info.store";
 import useCompare from "../../_hooks/useCompare";
 import {
   compareToEditorFiles,
@@ -19,6 +22,15 @@ import {
   isRequiredFolder,
   getDisplayName,
 } from "../../_utils/transform-files";
+import { queryKeys } from "~/queryKeys";
+import { cmsCompareService } from "~/services/cms-compare.service";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { Button } from "~/components/commons/Button";
 
 function useDebouncedCallback<TArgs extends unknown[]>(
   callback: (...args: TArgs) => void,
@@ -42,9 +54,11 @@ function useDebouncedCallback<TArgs extends unknown[]>(
 function CompareEditor() {
   const { compareId } = useParams<{ compareId: string }>();
   const { data: compare, isLoading } = useCompare(compareId);
+  const queryClient = useQueryClient();
 
   const [files, setFiles] = useAtom(compareFilesAtom);
   const setSaveStatus = useSetAtom(saveStatusAtom);
+  const [, setRunName] = useAtom(compareRunNameAtom);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings, setSettings] =
     useState<IEditorSettings>(getEditorSettings());
@@ -103,6 +117,44 @@ function CompareEditor() {
     [currentFile, files, debouncedFilesChange],
   );
 
+  // Mutation to update compare run name
+  const updateCompare = useMutation({
+    mutationFn: (runName: string) =>
+      cmsCompareService.updateById(compareId, { run_name: runName }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.compare.getById(compareId),
+      });
+      toast.success("Run name updated successfully");
+    },
+    onError: () => {
+      toast.error("Failed to update run name");
+    },
+  });
+
+  // Handle "Save as Run Name" menu option
+  const handleSaveAsRunName = () => {
+    if (!currentFile) return;
+
+    // Only allow for files in the files/ folder
+    if (!currentFile.name.startsWith("files/")) {
+      toast.error("Can only set files from the files folder as run name");
+      return;
+    }
+
+    // Extract file name without the "files/" prefix
+    const fileName = currentFile.name.replace("files/", "");
+
+    // Update the atom
+    setRunName(fileName);
+
+    // Persist to backend
+    updateCompare.mutate(fileName);
+  };
+
+  // Check if current file is in the files folder (eligible for "Save as Run Name")
+  const canSaveAsRunName = currentFile?.name.startsWith("files/") ?? false;
+
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       <div className="flex-1 flex min-h-0">
@@ -119,11 +171,31 @@ function CompareEditor() {
           getNewFilePath={(name) => `files/${name}`}
         />
         <div className="flex-1 min-h-0 overflow-auto flex flex-col min-w-40">
-          <div className="border-b p-2 flex justify-end">
-            <EditorSettings
-              settings={settings}
-              onChange={handleSettingsChange}
-            />
+          <div className="border-b p-2 flex justify-between items-center">
+            <div className="flex-1" />
+            <div className="flex items-center gap-2">
+              <EditorSettings
+                settings={settings}
+                onChange={handleSettingsChange}
+              />
+              {/* 3-dots menu for additional options */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <MoreVertical size="1rem" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={handleSaveAsRunName}
+                    disabled={!canSaveAsRunName || updateCompare.isPending}
+                  >
+                    <FileCheck size="1rem" className="mr-2" />
+                    Save as Run Name
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
           {isLoading || currentFile === undefined ? (
             <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
