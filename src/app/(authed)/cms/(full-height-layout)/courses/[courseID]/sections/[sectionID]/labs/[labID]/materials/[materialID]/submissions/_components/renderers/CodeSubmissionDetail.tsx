@@ -206,16 +206,6 @@ function CodeSubmissionDetail({
   const allResults =
     payload.test_case_groups?.flatMap((group) => group.results) ?? [];
 
-  // Calculate auto score from test case groups
-  // Sum up scores from groups where ALL test cases pass
-  const calculatedAutoScore =
-    payload.test_case_groups?.reduce((total, group) => {
-      const allTestsPassed = group.results.every(
-        (result) => result.status === "RUN_PASSED"
-      );
-      return allTestsPassed ? total + group.score : total;
-    }, 0) ?? 0;
-
   // Calculate max possible score from all test case groups
   const maxAutoScore =
     payload.test_case_groups?.reduce((total, group) => total + group.score, 0) ??
@@ -270,7 +260,7 @@ function CodeSubmissionDetail({
             Auto Score:
           </Label>
           <span className="text-sm font-semibold text-(--gray-12)">
-            {calculatedAutoScore} / {maxAutoScore}
+            {auto_score} / {maxAutoScore}
           </span>
         </div>
         <div className="flex items-center gap-2">
