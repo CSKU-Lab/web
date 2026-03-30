@@ -206,6 +206,16 @@ function CodeSubmissionDetail({
   const allResults =
     payload.test_case_groups?.flatMap((group) => group.results) ?? [];
 
+  // Calculate auto score from test case groups
+  // Sum up scores from groups where ALL test cases pass
+  const calculatedAutoScore =
+    payload.test_case_groups?.reduce((total, group) => {
+      const allTestsPassed = group.results.every(
+        (result) => result.status === "RUN_PASSED"
+      );
+      return allTestsPassed ? total + group.score : total;
+    }, 0) ?? 0;
+
   return (
     <div className="p-4 pt-0 space-y-4 overflow-auto">
       <div className="space-y-1">
@@ -255,7 +265,7 @@ function CodeSubmissionDetail({
             Auto Score:
           </Label>
           <span className="text-sm font-semibold text-(--gray-12)">
-            {auto_score} / {material.auto_score}
+            {calculatedAutoScore} / {material.auto_score}
           </span>
         </div>
         <div className="flex items-center gap-2">
