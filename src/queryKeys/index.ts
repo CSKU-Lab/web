@@ -161,6 +161,14 @@ export const queryKeys = {
     ],
     getById: (runnerId: string) => [...queryKeys.runner.all, runnerId],
   },
+  compare: {
+    all: ["compares"],
+    allWithParams: (params: Record<string, any>) => [
+      ...queryKeys.compare.all,
+      params,
+    ],
+    getById: (compareId: string) => [...queryKeys.compare.all, compareId],
+  },
   affectedEntities: {
     get: (type: AffectedType, id: string) => ["affectedEntities", type, id],
   },
