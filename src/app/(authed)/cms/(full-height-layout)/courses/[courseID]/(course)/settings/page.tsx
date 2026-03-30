@@ -54,8 +54,17 @@ function SettingPage() {
       await cmsCourseService.updateByID(courseID, course),
     onSuccess: async () => {
       toast.success("Course updated successfully!");
+      // Invalidate standard course queries
       await ctx.invalidateQueries({
         queryKey: queryKeys.course.getById(courseID),
+      });
+      // Invalidate all course queries in case other components are watching the course list
+      await ctx.invalidateQueries({
+        queryKey: queryKeys.course.all,
+      });
+      // Invalidate breadcrumb cache for this course
+      await ctx.invalidateQueries({
+        queryKey: ["breadcrumb", "course", courseID],
       });
     },
   });

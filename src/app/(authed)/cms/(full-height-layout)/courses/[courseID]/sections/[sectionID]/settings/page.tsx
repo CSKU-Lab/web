@@ -65,16 +65,33 @@ function SettingsPage() {
     }
   }, [section, isFetching, form]);
 
-  const { sectionID } = useParams<{ sectionID: string }>();
+  const { sectionID, courseID } = useParams<{ sectionID: string; courseID: string }>();
   const queryClient = useQueryClient();
 
   const updateSection = useMutation({
     mutationFn: (payload: UpdateSectionPayload) =>
       cmsSectionService.update(sectionID, payload),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Section updated successfully");
-      queryClient.invalidateQueries({
+      // Invalidate specific section detail query
+      await queryClient.invalidateQueries({
         queryKey: queryKeys.section.getById(sectionID),
+      });
+      // Invalidate all sections list queries (for section lists in other views)
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.section.all,
+      });
+      // Invalidate parent course to refresh course detail views that show section info
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.course.getById(courseID),
+      });
+      // Invalidate breadcrumb cache for this section
+      await queryClient.invalidateQueries({
+        queryKey: ["breadcrumb", "section", sectionID],
+      });
+      // Invalidate breadcrumb cache for parent course
+      await queryClient.invalidateQueries({
+        queryKey: ["breadcrumb", "course", courseID],
       });
     },
   });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, ServerCrash } from "lucide-react";
+import { Plus, ServerCrash, GitCompare } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -57,6 +57,14 @@ function CMSRunnersPage() {
             onChange={setSearch}
             placeholder="Search runners..."
           />
+          <Button
+            onClick={() => router.push("/cms/runners/compare")}
+            className="my-4 shrink-0 px-3 py-1.5"
+            variant="ghost"
+          >
+            <GitCompare size="1rem" />
+            Compare
+          </Button>
           <Button
             onClick={() => router.push("/cms/runners/new")}
             className="my-4 shrink-0 px-3 py-1.5"

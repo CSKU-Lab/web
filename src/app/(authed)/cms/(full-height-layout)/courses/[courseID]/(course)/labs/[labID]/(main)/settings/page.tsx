@@ -24,7 +24,7 @@ import DeleteLabDialog, {
 } from "./_components/DeleteLabDialog";
 
 export default function SettingPage() {
-  const { labID } = useParams<{ labID: string }>();
+  const { labID, courseID } = useParams<{ labID: string; courseID: string }>();
   const { data: lab } = useGetLab({ labID });
 
   type FormValues = z.infer<typeof updateLabSchema>;
@@ -43,8 +43,29 @@ export default function SettingPage() {
       await cmsLabService.updateById(labID, lab),
     onSuccess: async () => {
       toast.success("Lab updated successfully!");
+      // Invalidate specific lab detail query
       await ctx.invalidateQueries({
         queryKey: queryKeys.lab.getById(labID),
+      });
+      // Invalidate all labs list queries (for lab lists in other views)
+      await ctx.invalidateQueries({
+        queryKey: queryKeys.lab.all,
+      });
+      // Invalidate lab materials since they may reference lab details
+      await ctx.invalidateQueries({
+        queryKey: queryKeys.lab.materials.all(labID),
+      });
+      // Invalidate parent course to refresh course detail views that show lab info
+      await ctx.invalidateQueries({
+        queryKey: queryKeys.course.getById(courseID),
+      });
+      // Invalidate breadcrumb cache for this lab
+      await ctx.invalidateQueries({
+        queryKey: ["breadcrumb", "lab", labID],
+      });
+      // Invalidate breadcrumb cache for parent course
+      await ctx.invalidateQueries({
+        queryKey: ["breadcrumb", "course", courseID],
       });
     },
   });
