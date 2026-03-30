@@ -216,6 +216,11 @@ function CodeSubmissionDetail({
       return allTestsPassed ? total + group.score : total;
     }, 0) ?? 0;
 
+  // Calculate max possible score from all test case groups
+  const maxAutoScore =
+    payload.test_case_groups?.reduce((total, group) => total + group.score, 0) ??
+    0;
+
   return (
     <div className="p-4 pt-0 space-y-4 overflow-auto">
       <div className="space-y-1">
@@ -265,7 +270,7 @@ function CodeSubmissionDetail({
             Auto Score:
           </Label>
           <span className="text-sm font-semibold text-(--gray-12)">
-            {calculatedAutoScore} / {material.auto_score}
+            {calculatedAutoScore} / {maxAutoScore}
           </span>
         </div>
         <div className="flex items-center gap-2">
