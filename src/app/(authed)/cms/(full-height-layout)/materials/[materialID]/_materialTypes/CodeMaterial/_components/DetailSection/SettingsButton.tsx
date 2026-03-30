@@ -29,6 +29,10 @@ const settingsSchema = z.object({
   name: z.string().min(1, "Material name is required"),
   tags: z.array(z.object({ id: z.string(), display: z.string() })),
   visibility: z.enum(["public", "private"]),
+  manual_score: z
+    .number()
+    .int("Manual score must be an integer")
+    .min(0, "Manual score must be non-negative"),
 });
 
 type SettingsSchema = z.infer<typeof settingsSchema>;
@@ -49,6 +53,7 @@ function SettingsButton() {
           display: tag,
         })) || [],
       visibility: material?.visibility || "public",
+      manual_score: material?.manual_score || 0,
     },
     values: {
       name: material?.name || "",
@@ -58,6 +63,7 @@ function SettingsButton() {
           display: tag,
         })) || [],
       visibility: material?.visibility || "public",
+      manual_score: material?.manual_score || 0,
     },
   });
 
@@ -66,6 +72,7 @@ function SettingsButton() {
       name: string;
       tags: string[];
       visibility: "public" | "private";
+      manual_score: number;
     }) =>
       cmsMaterialService.update(materialID, {
         ...payload,
@@ -92,6 +99,7 @@ function SettingsButton() {
       name: data.name,
       tags: data.tags.map((tag) => tag.display),
       visibility: data.visibility,
+      manual_score: data.manual_score,
     });
   };
 
@@ -140,6 +148,26 @@ function SettingsButton() {
                 <TagAutocomplete value={value} onChange={onChange} />
               )}
             />
+          </div>
+
+          <div className="space-y-2">
+            <h4 className="text-sm">Manual Score</h4>
+            <p className="text-xs text-(--gray-10)">
+              Maximum points available for manual grading
+            </p>
+            <input
+              type="number"
+              min="0"
+              step="1"
+              className="w-full rounded-md border border-(--gray-7) bg-(--gray-1) px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-(--accent-8)"
+              placeholder="0"
+              {...form.register("manual_score", { valueAsNumber: true })}
+            />
+            {form.formState.errors.manual_score && (
+              <p className="text-xs text-red-500">
+                {form.formState.errors.manual_score.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-4 mt-6">

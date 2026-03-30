@@ -126,6 +126,7 @@ export default function SettingsPage() {
                                 option.value === "readonly" && "bg-(--blue-9)",
                                 option.value === "hidden" && "bg-(--gray-9)",
                                 option.value === "disabled" && "bg-(--amber-9)",
+                                option.value === "closed" && "bg-(--red-9)",
                               )}
                             />
                             {option.label}

@@ -28,6 +28,7 @@ function NewMaterialPage() {
       tags: [],
       type: null,
       visibility: "public",
+      manual_score: 0,
     },
   });
 
@@ -54,6 +55,7 @@ function NewMaterialPage() {
       ...data,
       type: data.type!,
       tags: data.tags.map((tag) => tag.display),
+      manual_score: data.manual_score ?? 0,
     });
   };
 
@@ -97,6 +99,29 @@ function NewMaterialPage() {
             <MaterialTypeSelect value={value} onChange={onChange} />
           )}
         />
+
+        <div className="space-y-2">
+          <h4 className="text-sm">
+            Manual Score{" "}
+            <span className="text-xs text-(--gray-11)">(optional)</span>
+          </h4>
+          <p className="text-xs text-(--gray-10)">
+            Maximum points available for manual grading
+          </p>
+          <input
+            type="number"
+            min="0"
+            step="1"
+            className="w-full rounded-md border border-(--gray-7) bg-(--gray-1) px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-(--accent-8)"
+            placeholder="0"
+            {...form.register("manual_score", { valueAsNumber: true })}
+          />
+          {form.formState.errors.manual_score && (
+            <p className="text-xs text-red-500">
+              {form.formState.errors.manual_score.message}
+            </p>
+          )}
+        </div>
 
         <div className="space-y-4 mt-6">
           <div className="space-y-1.5">

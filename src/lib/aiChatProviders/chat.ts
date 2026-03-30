@@ -1,4 +1,4 @@
-import { openrouter } from "@openrouter/ai-sdk-provider";
+import { fireworks } from '@ai-sdk/fireworks';
 import {
   createUIMessageStream,
   createUIMessageStreamResponse,
@@ -14,7 +14,7 @@ export abstract class Chat {
   chatModel: LanguageModel;
 
   constructor({ model_id }: ChatOptions) {
-    this.chatModel = openrouter.chat(model_id);
+    this.chatModel = fireworks(model_id);
   }
 
   abstract getStream({

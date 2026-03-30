@@ -10,6 +10,12 @@ export const createMaterialSchema = z
       .nullable(),
     tags: z.array(z.object({ id: z.string(), display: z.string() })),
     visibility: z.enum(["public", "private"]).default("public"),
+    manual_score: z
+      .number()
+      .int("Manual score must be an integer")
+      .min(0, "Manual score must be non-negative")
+      .default(0)
+      .optional(),
   })
   .refine((data) => data.type !== null, {
     message: "Material type is required",

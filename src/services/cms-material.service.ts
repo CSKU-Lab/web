@@ -8,6 +8,7 @@ export type CreateMaterialPayload = {
   type: "document" | "code" | "type";
   tags: string[];
   visibility: "public" | "private";
+  manual_score?: number;
 };
 
 export type UpdateMaterialPayload = Partial<CreateMaterialPayload> & {

@@ -9,8 +9,8 @@ export interface CMSMaterial {
   created_by: User;
   created_at: Date;
   payload: Record<string, any>;
-  max_auto_score: number;
-  max_manual_score: number;
+  auto_score: number;
+  manual_score: number;
 }
 
 export enum MaterialType {

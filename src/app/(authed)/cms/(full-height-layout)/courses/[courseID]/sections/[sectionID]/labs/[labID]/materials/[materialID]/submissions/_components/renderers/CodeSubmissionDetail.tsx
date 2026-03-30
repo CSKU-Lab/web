@@ -19,6 +19,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
+import { toast } from "sonner";
 import CodePreview from "~/components/Editor/CodePreview";
 import type { CodeSubmissionData } from "~/types/cms-section-submission";
 import type { CodeSubmissionResultStatus } from "~/types/core-code-submission";
@@ -87,6 +88,7 @@ function ManualScoreInput({
   materialId,
 }: ManualScoreInputProps) {
   const [inputValue, setInputValue] = useState(String(manualScore ?? 0));
+  const [error, setError] = useState<string | null>(null);
 
   const { mutate: updateManualScore, isPending: isSaving } =
     useUpdateManualScore({
@@ -97,7 +99,33 @@ function ManualScoreInput({
 
   const handleSave = () => {
     const value = parseFloat(inputValue);
-    if (!isNaN(value) && value !== manualScore) {
+    
+    // Clear previous error
+    setError(null);
+    
+    // Validation: Check if valid number
+    if (isNaN(value)) {
+      setError("Please enter a valid number");
+      toast.error("Please enter a valid number");
+      return;
+    }
+    
+    // Validation: Check if non-negative
+    if (value < 0) {
+      setError("Score must be non-negative");
+      toast.error("Score must be non-negative");
+      return;
+    }
+    
+    // Validation: Check if exceeds maximum
+    if (value > maxScore) {
+      setError(`Score cannot exceed maximum of ${maxScore}`);
+      toast.error(`Score cannot exceed maximum of ${maxScore}`);
+      return;
+    }
+    
+    // Only update if value has changed
+    if (value !== manualScore) {
       updateManualScore({
         submissionID,
         score: value,
@@ -107,17 +135,33 @@ function ManualScoreInput({
 
   return (
     <div className="flex items-center gap-2">
-      <Input
-        id="manual-score"
-        type="number"
-        min={0}
-        max={maxScore}
-        step={1}
-        className="w-20 h-7 text-sm"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onBlur={handleSave}
-      />
+      <div className="flex flex-col">
+        <Input
+          id="manual-score"
+          type="number"
+          min={0}
+          max={maxScore}
+          step={1}
+          className={cn(
+            "w-20 h-7 text-sm",
+            error && "border-red-500 focus-visible:ring-red-500"
+          )}
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            setError(null); // Clear error on change
+          }}
+          onBlur={handleSave}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSave();
+            }
+          }}
+        />
+        {error && (
+          <span className="text-xs text-red-500 mt-1">{error}</span>
+        )}
+      </div>
       <span className="text-sm text-(--gray-11)">/ {maxScore}</span>
       {isSaving && (
         <Loader2 size="0.875rem" className="animate-spin text-(--gray-9)" />
@@ -211,7 +255,7 @@ function CodeSubmissionDetail({
             Auto Score:
           </Label>
           <span className="text-sm font-semibold text-(--gray-12)">
-            {auto_score} / {material.max_auto_score}
+            {auto_score} / {material.auto_score}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -224,7 +268,7 @@ function CodeSubmissionDetail({
           <ManualScoreInput
             submissionID={payload.submission_id}
             manualScore={manual_score}
-            maxScore={material.max_manual_score}
+            maxScore={material.manual_score}
             sectionId={sectionId}
             labId={labId}
             materialId={materialId}
