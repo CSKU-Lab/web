@@ -17,6 +17,7 @@ import { runnerTemplatesAtom } from "../../_components/RunnersTab/_stores/runner
 import { resourceFilesAtom } from "../../_stores/resource-files.store";
 import type { CodeMaterialPayload } from "../../_types/code-material-payload";
 import { Button } from "~/components/commons/Button";
+import useGetMaterial from "../../../../_hooks/useGetMaterial";
 
 function SaveButton() {
   const testCaseGroups = useAtomValue(testCaseGroupsAtom);
@@ -28,6 +29,7 @@ function SaveButton() {
   const resourceFiles = useAtomValue(resourceFilesAtom);
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
   const isOwner = useAtomValue(isOwnerAtom);
+  const { data: material } = useGetMaterial();
 
   const { materialID } = useParams<{ materialID: string }>();
   const queryCleint = useQueryClient();
@@ -58,6 +60,7 @@ function SaveButton() {
           resource_files: resourceFiles,
           limit,
         } satisfies CodeMaterialPayload,
+        manual_score: material?.manual_score ?? 0,
       });
     },
     onSuccess: async () => {
