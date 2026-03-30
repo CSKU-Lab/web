@@ -1,53 +1,63 @@
-import type { CompareScriptConfig, CompareScriptDetail } from "~/types/config";
+import type {
+  CompareConfig,
+  CompareConfigDetail,
+  CreateCompareConfig,
+  UpdateCompareConfig,
+} from "~/types/cms-compare";
 import { BaseService } from "./base.service";
-import type { PaginationRequestParams, PaginationResponse } from "~/types/pagination";
+import type { PaginationRequestParams } from "~/types/pagination";
 
-export type GetCompareScriptPaginationParams =
-  PaginationRequestParams<CompareScriptDetail>;
+export type GetComparePaginationWithScriptParams =
+  PaginationRequestParams<CompareConfigDetail>;
 
-export class CompareService extends BaseService {
+export type GetComparePaginationParams = PaginationRequestParams<CompareConfig>;
+
+class CMSCompareService extends BaseService {
   constructor() {
-    super("/cms/configs");
+    super("/cms/configs/compares");
   }
 
-  async getPagination({
-    params,
+  async create(data: CreateCompareConfig): Promise<{ id: string }> {
+    const res = await this.api.post(this._baseURL, data);
+    return res.data;
+  }
+
+  async getById<T extends boolean>({
+    compareId,
+    includeScript,
   }: {
-    params: GetCompareScriptPaginationParams;
-  }): Promise<PaginationResponse<CompareScriptDetail>> {
-    return this._getPagination(params, "/compare-scripts");
-  }
-
-  async getCompareScripts<T extends boolean>(opts?: {
-    fullDetail?: T;
-    search?: string;
-  }): Promise<T extends true ? CompareScriptDetail[] : CompareScriptConfig[]> {
-    const searchParams = new URLSearchParams();
-    if (opts?.search) {
-      searchParams.append("search", opts.search);
-    }
-
-    if (opts?.fullDetail) {
-      searchParams.append("full_detail", "true");
-    }
-
-    const url = `/compare-scripts?${searchParams.toString()}`;
-    const res = await this.api.get(this._baseURL + url);
+    compareId: string;
+    includeScript: T;
+  }): Promise<T extends true ? CompareConfigDetail : CompareConfig> {
+    const res = await this.api.get(
+      `${this._baseURL}/${compareId}?include_script=${includeScript}`,
+    );
     return res.data;
   }
 
-  async getCompareScriptsList(opts?: {
-    search?: string;
-  }): Promise<CompareScriptConfig[]> {
-    const searchParams = new URLSearchParams();
-    if (opts?.search) {
-      searchParams.append("search", opts.search);
-    }
-
-    const url = `/compare-scripts-list?${searchParams.toString()}`;
-    const res = await this.api.get(this._baseURL + url);
+  async updateById(
+    compareId: string,
+    data: UpdateCompareConfig,
+  ): Promise<void> {
+    const res = await this.api.patch(`${this._baseURL}/${compareId}`, data);
     return res.data;
+  }
+
+  async deleteById(compareId: string): Promise<void> {
+    return this.api.delete(`${this._baseURL}/${compareId}`);
+  }
+
+  async getPagination<T extends boolean>({
+    params,
+    includeScripts,
+  }: {
+    params: T extends true
+      ? GetComparePaginationWithScriptParams
+      : GetComparePaginationParams;
+    includeScripts?: T;
+  }) {
+    return this._getPagination(params, `?include_scripts=${includeScripts}`);
   }
 }
 
-export const cmsCompareService = new CompareService();
+export const cmsCompareService = new CMSCompareService();
