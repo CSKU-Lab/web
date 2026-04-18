@@ -177,6 +177,20 @@ export const queryKeys = {
   },
   core: {
     all: "core",
+    featuredCourses: {
+      all: ["featuredCourses"],
+      allWithParams: (params: Record<string, any>) => [
+        ...queryKeys.core.featuredCourses.all,
+        params,
+      ],
+    },
+    courses: {
+      all: ["courses"],
+      allWithParams: (params: Record<string, any>) => [
+        ...queryKeys.core.courses.all,
+        params,
+      ],
+    },
     material: {
       all: "materials",
       getById: (materialID: string) => [...queryKeys.core.all, materialID],
