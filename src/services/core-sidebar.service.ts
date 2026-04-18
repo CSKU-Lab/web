@@ -1,11 +1,13 @@
 import { BaseService } from "./base.service";
 
-export interface GetSidebarResponse {
+export interface SidebarItem {
   name: string;
   id: string;
-  status: string;
-  sub_items: GetSidebarResponse[];
+  status?: string;
+  sub_items: SidebarItem[] | null;
 }
+
+export type GetSidebarResponse = SidebarItem;
 
 class SidebarService extends BaseService {
   constructor() {

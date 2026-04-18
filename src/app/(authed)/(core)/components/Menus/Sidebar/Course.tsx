@@ -1,30 +1,32 @@
 import { GetSidebarResponse } from "~/services/core-sidebar.service";
-import type { SidebarCourse } from "../../../types";
 import CourseItem from "./CourseItem";
 import NavChevron from "./NavChevron";
 
-const Course = ({ name, id, status, sub_items }: GetSidebarResponse) => {
-  const _icon = "📚";
+const Course = ({
+  name,
+  id,
+  course_name,
+  sub_items,
+}: GetSidebarResponse & { course_name?: string }) => {
+  const labs = sub_items || [];
+  const displayName = course_name ?? name;
 
   return (
-    <NavChevron href={`/sections/${id}`} _icon={_icon} name={name}>
+    <NavChevron href={`/sections/${id}`} name={displayName} subtitle={name}>
       <div className="space-y-3">
         <p className="text-xs text-(--gray-10)">Labs</p>
 
         <div className="space-y-4">
-          {sub_items.map(({ name, sub_items, status, id: labID }) => (
+          {labs.map((lab) => (
             <NavChevron
-              key={id + labID}
-              href={`/sections/${id}/labs/${labID}`}
-              name={name}
+              key={lab.id}
+              href={`/sections/${id}/labs/${lab.id}`}
+              name={lab.name}
             >
               <CourseItem
-                name={name}
-                sub_items={sub_items}
-                status={status}
-                id={labID}
+                sub_items={lab.sub_items}
                 sectionID={id}
-                type="materials"
+                labID={lab.id}
               />
             </NavChevron>
           ))}

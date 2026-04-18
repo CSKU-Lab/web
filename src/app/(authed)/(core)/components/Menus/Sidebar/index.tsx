@@ -28,7 +28,7 @@ function Sidebar() {
             key={data.id}
             name={data.name}
             id={data.id}
-            status={data.status}
+            course_name={data.course_name}
             sub_items={data.sub_items}
           />
         ))}

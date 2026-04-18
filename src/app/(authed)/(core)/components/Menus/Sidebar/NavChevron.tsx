@@ -7,8 +7,9 @@ interface NavChevronProps {
   href: string;
   _icon?: React.ReactNode;
   name: string;
+  subtitle?: string;
 }
-const NavChevron = ({ href, _icon, name, children }: NavChevronProps) => {
+const NavChevron = ({ href, _icon, name, subtitle, children }: NavChevronProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const hasChildren = Boolean(children);
 
@@ -21,7 +22,12 @@ const NavChevron = ({ href, _icon, name, children }: NavChevronProps) => {
               {_icon}
             </div>
           )}
-          <h3 className="truncate text-xs">{name}</h3>
+          <div className="flex flex-col min-w-0">
+            <h3 className="truncate text-xs font-medium">{name}</h3>
+            {subtitle && (
+              <p className="text-[10px] text-(--gray-10) truncate">{subtitle}</p>
+            )}
+          </div>
         </Link>
 
         {hasChildren && (
