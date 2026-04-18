@@ -10,39 +10,43 @@ export default function SectionHeader() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center bg-(--gray-1) gap-4 shadow-md relative">
-        <div className="absolute top-10 left-6 z-10 flex text-white w-full">
-          <div className="space-y-0.5 flex-1 overflow-hidden flex flex-col">
-            <Skeleton className="w-2/12 h-[1rem]" />
-            <Skeleton className="w-4/12 h-[1.5rem]" />
-            <h6 className="font-anuphan text-sm mt-4 truncate">
-              <Skeleton className="w-2/12 h-[1rem]" />
-            </h6>
+      <div className="px-4 lg:px-12 py-4">
+        <div className="relative">
+          <SectionBanner />
+          <div className="absolute bottom-4 left-6 z-10">
+            <div className="bg-white dark:bg-(--gray-2) rounded-lg shadow p-4">
+              <div className="flex flex-col gap-1">
+                <Skeleton className="w-20 h-4" />
+                <Skeleton className="w-48 h-6" />
+                <Skeleton className="w-32 h-4 mt-1" />
+              </div>
+            </div>
           </div>
         </div>
-        <SectionBanner />
-        <div className="absolute inset-0 bg-black/60" />
       </div>
     );
   }
 
   return (
-    <div className="flex items-center bg-(--gray-1) gap-4 shadow-md relative">
-      <div className="absolute top-10 left-6 z-10 flex text-white w-full">
-        <div className="space-y-0.5 flex-1 overflow-hidden flex flex-col">
-          <h6 className="text-sm">{data?.section.name ?? "N/A"}</h6>
-          <h4 className="font-semibold text-2xl line-clamp-2">
-            {data?.course.name ?? "N/A"}
-          </h4>
-          <h6 className="font-anuphan text-sm mt-4 truncate">
-            {data?.section.instructors
-              .map((inst: Instructor) => inst.display_name)
-              .join(", ")}
-          </h6>
+    <div className="relative">
+      <SectionBanner banner={data?.section.banner} />
+      <div className="absolute bottom-6 left-6 z-10">
+        <div className="bg-white dark:bg-(--gray-2) rounded-lg shadow p-4">
+          <div className="flex flex-col gap-1">
+            <h6 className="text-sm text-(--gray-10)">
+              {data?.section.name ?? "N/A"}
+            </h6>
+            <h4 className="font-semibold text-2xl text-(--gray-12) line-clamp-2">
+              {data?.course.name ?? "N/A"}
+            </h4>
+            <h6 className="font-anuphan text-sm text-(--gray-10) truncate">
+              {data?.section.instructors
+                .map((inst: Instructor) => inst.display_name)
+                .join(", ")}
+            </h6>
+          </div>
         </div>
       </div>
-      <SectionBanner banner={data?.section.banner} />
-      <div className="absolute inset-0 bg-black/60" />
     </div>
   );
 }

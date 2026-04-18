@@ -16,8 +16,8 @@ function MainCoursePage() {
   return (
     <div className="flex flex-col h-full overflow-x-hidden">
       <SectionHeader />
-      <div className="px-4 lg:px-12 py-4 flex flex-col flex-1">
-        <div className="flex justify-between items-center gap-4">
+      <div className="px-4 lg:px-12 pb-4 flex flex-col flex-1">
+        <div className="flex justify-between items-center gap-4 mt-6">
           <h4 className="font-semibold text-2xl h-fit">Labs</h4>
           <SearchInput
             value={search}

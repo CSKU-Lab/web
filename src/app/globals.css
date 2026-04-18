@@ -190,3 +190,7 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--gray-7);
 }
+
+.animate-subtle-scale {
+  animation: subtle-scale 20s ease-in-out infinite;
+}

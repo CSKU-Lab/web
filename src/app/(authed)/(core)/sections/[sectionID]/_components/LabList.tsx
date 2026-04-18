@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { LabItem } from "./LabItem";
 import useCoreLabInfPagination from "../_hooks/useCoreLabInfPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
@@ -9,9 +8,6 @@ import ErrorFallback from "~/components/commons/Error/ErrorFallback";
 import Error from "~/components/commons/Error";
 import { ServerCrash } from "lucide-react";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
-import { useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "~/queryKeys";
-import { useParams } from "next/navigation";
 import type { IFilter } from "~/types/filter";
 
 interface Props {
@@ -20,8 +16,6 @@ interface Props {
 }
 
 export default function LabList({ search, filters }: Props) {
-  const { sectionID } = useParams<{ sectionID: string }>();
-
   const {
     data: labPagination,
     fetchNextPage,
@@ -39,8 +33,6 @@ export default function LabList({ search, filters }: Props) {
 
   const isNoData =
     labPagination.pages.every((page) => page.data.length === 0) && !isFetching;
-
-  const queryClient = useQueryClient();
 
   const bottomDivRef = useOnElementAppear({
     onAppear: () => fetchNextPage(),
@@ -63,17 +55,31 @@ export default function LabList({ search, filters }: Props) {
         {isNoData ? (
           <NoDataAvailable />
         ) : (
-          <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @6xl:grid-cols-4 gap-4">
-            {labPagination.pages.map((page) =>
-              page.data.map(({ id, lab_name, lab_id, opened_at, closed_at }) => (
-                <LabItem
-                  key={id}
-                  id={lab_id}
-                  name={lab_name}
-                  openedAt={opened_at}
-                  closedAt={closed_at}
-                />
-              )),
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+{labPagination.pages.map((page) =>
+              page.data.map(
+                ({
+                  id,
+                  name,
+                  lab_id,
+                  closed_at,
+                  status,
+                  student_status,
+                  total_materials,
+                  completed_materials,
+                }) => (
+                  <LabItem
+                    key={id}
+                    id={lab_id}
+                    name={name}
+                    closedAt={closed_at}
+                    status={status}
+                    studentStatus={student_status}
+                    totalMaterials={total_materials}
+                    completedMaterials={completed_materials}
+                  />
+                ),
+              ),
             )}
 
             {isFetching &&
