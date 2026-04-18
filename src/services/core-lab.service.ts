@@ -4,7 +4,6 @@ import type { Section } from "~/types/core-section";
 import type { SectionLab } from "~/types/core-section-lab";
 import { api } from "~/lib/api.client";
 import type { Lab } from "~/types/core-lab";
-import type { Material } from "~/types/core-material";
 import { LabMaterial } from "~/types/core-lab-material";
 
 export type GetSectionPaginationParams = PaginationRequestParams<Section>;

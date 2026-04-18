@@ -56,12 +56,11 @@ export default function LabList({ search, filters }: Props) {
           <NoDataAvailable />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-{labPagination.pages.map((page) =>
+            {labPagination.pages.map((page) =>
               page.data.map(
                 ({
                   id,
                   name,
-                  lab_id,
                   closed_at,
                   status,
                   student_status,
@@ -70,7 +69,7 @@ export default function LabList({ search, filters }: Props) {
                 }) => (
                   <LabItem
                     key={id}
-                    id={lab_id}
+                    id={id}
                     name={name}
                     closedAt={closed_at}
                     status={status}

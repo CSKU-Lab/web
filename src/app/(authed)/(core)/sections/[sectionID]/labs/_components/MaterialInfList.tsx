@@ -1,38 +1,28 @@
 "use client";
 
-import { Fragment, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import useInputDebounce from "~/hooks/useInputDebounce";
-import type { IFilter } from "~/types/filter";
-import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
-import Filters from "~/components/commons/Filters";
-import SearchInput from "~/components/commons/SearchInput";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
-import { useMaterialDisplay } from "~/hooks/useMaterialDisplay";
 import useResolvePath from "~/hooks/useResolvePath";
-import { CircleCheck, CirclePlay, CircleX, ServerCrash } from "lucide-react";
+import { cn } from "~/lib/utils";
 import useCoreLab from "../_hooks/useCoreLab";
-import { LabMaterial } from "~/types/core-lab-material";
-import { Material } from "~/types/core-material";
 import MaterialListItemSkeleton from "./MaterialListItemSkeleton";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
 import ErrorFallback from "~/components/commons/Error/ErrorFallback";
 import Error from "~/components/commons/Error";
+import { ServerCrash, FileText } from "lucide-react";
+
+const studentStatusConfig = {
+  passed: "from-green-500 to-green-500/40",
+  not_passed: "from-red-500 to-red-500/40",
+  in_progress: "from-yellow-500 to-yellow-500/40",
+  not_started: "from-gray-400 to-gray-400/40",
+};
 
 function MaterialInfList() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
-
-  const filterFields = [
-    { display: "Name", value: "name" },
-    { display: "Type", value: "type" },
-  ];
-
-  const searchParams = useSearchParams();
-
-  const [filters, setFilters] = useState<IFilter[]>(() =>
-    searchParamsToFilter(searchParams, filterFields),
-  );
 
   const { useGetInfMaterial } = useCoreLab();
   const {
@@ -43,7 +33,7 @@ function MaterialInfList() {
     isError,
     refetch,
   } = useGetInfMaterial({
-    page_size: 5,
+    page_size: 12,
     sort_by: "created_at",
     sort_order: "desc",
     filters: [],
@@ -60,28 +50,7 @@ function MaterialInfList() {
     !isFetching;
 
   return (
-    <div className="flex flex-col h-full flex-1">
-      <div className="flex justify-end items-center gap-2 my-4">
-        <SearchInput
-          placeholder="Search labs..."
-          className="w-full md:w-fit"
-          value={search}
-          onChange={setSearch}
-        />
-      </div>
-      <div className="flex justify-end ">
-        <Filters
-          value={filters}
-          onChange={setFilters}
-          className="mt-2"
-          fields={filterFields}
-        />
-      </div>
-      <div className="grid grid-cols-10 gap-4 w-full text-sm py-3 px-4 font-bold mt-6 border-b mb-3">
-        <span></span>
-        <p className="col-span-9">Name</p>
-      </div>
-
+    <div className="flex flex-col flex-1">
       <Error
         isError={isError && !isFetching}
         fallback={
@@ -96,84 +65,72 @@ function MaterialInfList() {
         {isNoData ? (
           <NoDataAvailable />
         ) : (
-          <div className="flex flex-col divide-y divide-(--gray-3)">
-            {isFetching && materialPagination.pages.length === 0 ? (
-              <div className="flex flex-col divide-y divide-(--gray-3)">
-                {Array.from({ length: 10 }).map((_, index) => (
-                  <MaterialListItemSkeleton key={index} />
-                ))}
-              </div>
-            ) : (
-              materialPagination.pages.map((page, pageIndex) => (
-                <Fragment key={pageIndex}>
-                  {page.data.map((material) => {
-                    const { id, material_id, material_data } = material;
-
-                    return (
-                      <MaterialListItem
-                        key={id}
-                        id={material_id}
-                        data={material_data}
-                      />
-                    );
-                  })}
-                </Fragment>
-              ))
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {materialPagination.pages.map((page) =>
+              page.data.map((material) => {
+                const { id, name, student_status, type } = material;
+                return (
+                  <MaterialItem
+                    key={id}
+                    id={id}
+                    name={name}
+                    student_status={student_status}
+                    type={type}
+                  />
+                );
+              }),
             )}
+
+            {isFetching &&
+              Array.from({ length: 8 }).map((_, index) => (
+                <MaterialListItemSkeleton key={`skeleton-${index}`} />
+              ))}
+
+            <div ref={bottomDivRef} className="h-20" />
           </div>
         )}
       </Error>
-      <div ref={bottomDivRef} className="h-20"></div>
     </div>
   );
 }
 
-interface MaterialListItemProps {
+interface MaterialItemProps {
   id: string;
-  data: Material;
+  name: string;
+  student_status?: "passed" | "not_passed" | "in_progress" | "not_started";
+  type: string;
 }
 
-const MaterialListItem = ({ id, data }: MaterialListItemProps) => {
+export const MaterialItem = ({
+  id,
+  name,
+  student_status = "not_started",
+  type,
+}: MaterialItemProps) => {
   const router = useRouter();
   const generatePath = useResolvePath();
   const handleMaterialRoute = (id: string) => {
-    router.push(
-      generatePath(`/sections/:sectionID/labs/:slug/materials/${id}`),
-    );
-  };
-  const statusColorMap = {
-    passed: (
-      <div className="text-green-500 flex items-center gap-2">
-        <CircleCheck />
-      </div>
-    ),
-    not_passed: (
-      <div className="text-red-500 flex items-center gap-2">
-        <CircleX />
-      </div>
-    ),
-    in_progress: (
-      <div className="text-yellow-500 flex items-center gap-2">
-        <CirclePlay />
-      </div>
-    ),
+    router.push(generatePath(`/sections/:sectionID/labs/:slug/materials/${id}`));
   };
 
+  const config = studentStatusConfig[student_status];
+
   return (
-    <button
+    <div
+      className="rounded-md overflow-hidden bg-(--gray-1) border border-(--gray-4) hover:bg-(--gray-2) cursor-pointer transition-colors duration-200 flex flex-col"
       onClick={() => handleMaterialRoute(id)}
-      key={id}
-      className="
-        grid grid-cols-10 gap-4
-        w-full px-4 py-3 text-sm items-center
-        hover:underline transition-colors
-        cursor-pointer
-        odd:bg-(--gray-2)
-      "
     >
-      {statusColorMap["not_passed"]}
-      <p className="font-medium truncate w-fit col-span-9">{data.name}</p>
-    </button>
+      <div className={cn("h-5 bg-gradient-to-br", config)} />
+      <div className="p-4 flex flex-col gap-2 justify-between flex-1">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2 text-(--gray-11)">
+            <FileText className="w-3 h-3" />
+            <span className="text-xs">{type}</span>
+          </div>
+          <h3 className="text-lg font-medium line-clamp-2">{name}</h3>
+        </div>
+      </div>
+    </div>
   );
 };
 

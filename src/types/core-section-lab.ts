@@ -2,7 +2,6 @@ export interface SectionLab {
   id: string;
   name: string;
   section_id: string;
-  lab_id: string;
   position: number;
   created_at: Date;
   updated_at: Date;
