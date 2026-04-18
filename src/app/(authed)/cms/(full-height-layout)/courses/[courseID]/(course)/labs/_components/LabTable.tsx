@@ -2,7 +2,7 @@ import DataTable from "~/components/commons/DataTable";
 import { Button } from "~/components/commons/Button";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Plus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import useTable from "~/hooks/useTable";
 import useTableState from "~/hooks/useTableState";
 import useInputDebounce from "~/hooks/useInputDebounce";
@@ -13,11 +13,22 @@ import SearchInput from "~/components/commons/SearchInput";
 import type { CMSLab } from "~/types/cms-lab";
 import { columns } from "../_columns/lab";
 import useLabPagination from "../_hooks/useLabPagination";
+import useTablePageSize from "~/hooks/useTablePageSize";
 
 export default function LabTable() {
   const { courseID } = useParams<{ courseID: string }>();
   const memoizedColumns = useMemo(() => columns, []);
-  const { sorting, setSorting, pagination, setPagination } = useTableState();
+  const { containerRef, pageSize, hasCalculated } = useTablePageSize({ rowHeight: 36, headerHeight: 36, buffer: 28 });
+  const [initialized, setInitialized] = useState(false);
+  const initialPageSize = hasCalculated && pageSize ? pageSize : undefined;
+  const { sorting, setSorting, pagination, setPagination } = useTableState(initialPageSize);
+
+  useEffect(() => {
+    if (hasCalculated && pageSize && !initialized) {
+      setPagination((prev) => ({ ...prev, pageSize }));
+      setInitialized(true);
+    }
+  }, [hasCalculated, pageSize, initialized, setPagination]);
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
   const filterFields = [{ display: "Name", value: "display_name" }];
@@ -89,6 +100,7 @@ export default function LabTable() {
         onRetry={refetch}
         isLoading={isFetching}
         totalData={labPagination.pagination.total_rows}
+        containerRef={containerRef}
       />
     </div>
   );

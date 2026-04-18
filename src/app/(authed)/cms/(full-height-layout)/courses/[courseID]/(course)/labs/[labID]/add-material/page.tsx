@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { columns } from "./_columns";
 import useTableState from "~/hooks/useTableState";
 import useInputDebounce from "~/hooks/useInputDebounce";
+import useTablePageSize from "~/hooks/useTablePageSize";
 import type { IFilter } from "~/types/filter";
 import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
 import type { CMSMaterial } from "~/types/cms-material";
@@ -22,7 +23,17 @@ import { useSaveLabMaterials } from "./_hooks/useSaveLabMaterials";
 export default function NewLabMaterialPage() {
   const { labID } = useParams<{ labID: string }>();
   const memoizedColumns = useMemo(() => columns, []);
-  const { sorting, setSorting, pagination, setPagination } = useTableState();
+  const { containerRef, pageSize, hasCalculated } = useTablePageSize({ rowHeight: 36, headerHeight: 36, buffer: 28 });
+  const [initialized, setInitialized] = useState(false);
+  const initialPageSize = hasCalculated && pageSize ? pageSize : undefined;
+  const { sorting, setSorting, pagination, setPagination } = useTableState(initialPageSize);
+
+  useEffect(() => {
+    if (hasCalculated && pageSize && !initialized) {
+      setPagination((prev) => ({ ...prev, pageSize }));
+      setInitialized(true);
+    }
+  }, [hasCalculated, pageSize, initialized, setPagination]);
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
 
@@ -128,6 +139,7 @@ export default function NewLabMaterialPage() {
         isError={isError || isLabMatError}
         onRetry={refetch}
         isLoading={isFetching || isLabMatFetching}
+        containerRef={containerRef}
       />
     </div>
   );

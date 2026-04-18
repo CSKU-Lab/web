@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import DataTable from "~/components/commons/DataTable";
 import Filter from "~/components/commons/Filters";
 import SearchInput from "~/components/commons/SearchInput";
@@ -15,13 +15,24 @@ import EditSemester from "./_components/EditSemester";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import PageTitle from "~/components/commons/PageTitle";
 import DeleteSemesterDialog from "./_components/DeleteSemesterDialog";
+import useTablePageSize from "~/hooks/useTablePageSize";
 
 function SemesterManagementPage() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [filters, setFilters] = useState<IFilter[]>([]);
 
+  const { containerRef, pageSize, hasCalculated } = useTablePageSize({ rowHeight: 36, headerHeight: 36, buffer: 28 });
+  const [initialized, setInitialized] = useState(false);
+  const initialPageSize = hasCalculated && pageSize ? pageSize : undefined;
   const { rowSelection, setRowSelection, pagination, setPagination } =
-    useTableState();
+    useTableState(initialPageSize);
+
+  useEffect(() => {
+    if (hasCalculated && pageSize && !initialized) {
+      setPagination((prev) => ({ ...prev, pageSize }));
+      setInitialized(true);
+    }
+  }, [hasCalculated, pageSize, initialized, setPagination]);
 
   const memoizedColumns = useMemo(() => columns, []);
 
@@ -111,6 +122,7 @@ function SemesterManagementPage() {
         onRetry={refetch}
         search={globalFilter}
         totalData={semesterPagination.pagination.total_rows}
+        containerRef={containerRef}
       />
     </>
   );

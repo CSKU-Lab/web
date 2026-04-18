@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { cn } from "~/lib/utils";
 import { GetSidebarResponse } from "~/services/core-sidebar.service";
 
-const studentStatusConfig = {
+const studentStatusConfig: Record<string, string> = {
   passed: "bg-green-500",
   not_passed: "bg-red-500",
   in_progress: "bg-yellow-500",

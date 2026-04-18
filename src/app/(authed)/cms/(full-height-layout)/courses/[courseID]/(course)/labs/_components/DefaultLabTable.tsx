@@ -10,6 +10,7 @@ import SearchInput from "~/components/commons/SearchInput";
 import { columns } from "../_columns/defaultLab";
 import type { CMSDefaultLab } from "~/types/cms-default-lab";
 import useDefaultLabPagination from "../_hooks/useDefaultLabPagination";
+import useTablePageSize from "~/hooks/useTablePageSize";
 import { arrayMove } from "@dnd-kit/sortable";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { useMutation } from "@tanstack/react-query";
@@ -23,10 +24,20 @@ import {
 export default function DefaultLabTable() {
   const { courseID } = useParams<{ courseID: string }>();
   const memoizedColumns = useMemo(() => columns, []);
-  const { sorting, setSorting, pagination, setPagination } = useTableState();
+  const { containerRef, pageSize, hasCalculated } = useTablePageSize({ rowHeight: 36, headerHeight: 36, buffer: 28 });
+  const [initialized, setInitialized] = useState(false);
+  const initialPageSize = hasCalculated && pageSize ? pageSize : undefined;
+  const { sorting, setSorting, pagination, setPagination } = useTableState(initialPageSize);
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
   const [rows, setRows] = useState<CMSDefaultLab[]>([]);
+
+  useEffect(() => {
+    if (hasCalculated && pageSize && !initialized) {
+      setPagination((prev) => ({ ...prev, pageSize }));
+      setInitialized(true);
+    }
+  }, [hasCalculated, pageSize, initialized, setPagination]);
 
   const {
     data: labPagination,
@@ -127,6 +138,7 @@ export default function DefaultLabTable() {
         hidePagination={true}
         rowIds={rows.map((r) => r.lab_id)}
         onDragEnd={handleDragEnd}
+        containerRef={containerRef}
       />
     </div>
   );

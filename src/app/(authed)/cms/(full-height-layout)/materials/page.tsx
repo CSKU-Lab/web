@@ -10,6 +10,7 @@ import PageTitle from "~/components/commons/PageTitle";
 import useMaterialPagination from "./_hooks/useMaterialPagination";
 import useTableState from "~/hooks/useTableState";
 import useInputDebounce from "~/hooks/useInputDebounce";
+import useTablePageSize from "~/hooks/useTablePageSize";
 import type { CMSMaterial } from "~/types/cms-material";
 import type { IFilter } from "~/types/filter";
 import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
@@ -19,7 +20,9 @@ import SearchInput from "~/components/commons/SearchInput";
 function MaterialPage() {
   const memoizedColumns = useMemo(() => columns, []);
 
-  const { sorting, setSorting, pagination, setPagination } = useTableState();
+  const { containerRef, pageSize, hasCalculated } = useTablePageSize({ rowHeight: 36, headerHeight: 36, buffer: 20 });
+  const initialPageSize = pageSize || 25;
+  const { sorting, setSorting, pagination, setPagination } = useTableState(initialPageSize);
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
@@ -97,6 +100,7 @@ function MaterialPage() {
         onRetry={refetch}
         isLoading={isFetching}
         totalData={materialPagination.pagination.total_rows}
+        containerRef={containerRef}
       />
     </>
   );

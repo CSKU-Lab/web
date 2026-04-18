@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import { toast } from "sonner";
 
 import {
@@ -17,12 +16,14 @@ type DefaultSwitchProps = {
   courseID: string;
   data: CreateDefaultLabSchema;
   isDefault: boolean;
+  onToggle?: (labId: string, isDefault: boolean) => void;
 };
 
 export default function DefaultSwitch({
   courseID,
   data,
   isDefault,
+  onToggle,
 }: DefaultSwitchProps) {
   const [checked, setChecked] = useState(isDefault);
 
@@ -31,19 +32,12 @@ export default function DefaultSwitch({
 
     onSuccess: () => {
       toast.success("Default Lab unset successfully");
-      setChecked(false);
+      onToggle?.(data.lab_id, false);
     },
 
-    onError: (err) => {
-      if (err instanceof AxiosError) {
-        toast.error("Error", {
-          description:
-            err.response?.data.error || "Failed to unset Default Lab",
-        });
-        return;
-      }
-
-      toast.error("Something went wrong. Please try again.");
+    onError: () => {
+      setChecked(true);
+      toast.error("Failed to unset Default Lab");
     },
   });
 
@@ -53,22 +47,17 @@ export default function DefaultSwitch({
 
     onSuccess: () => {
       toast.success("Default Lab set successfully");
-      setChecked(true);
+      onToggle?.(data.lab_id, true);
     },
 
-    onError: (err) => {
-      if (err instanceof AxiosError) {
-        toast.error("Error", {
-          description: err.response?.data.error || "Failed to set Default Lab",
-        });
-        return;
-      }
-
-      toast.error("Something went wrong. Please try again.");
+    onError: () => {
+      setChecked(false);
+      toast.error("Failed to set Default Lab");
     },
   });
 
   const handleCheckedChange = (next: boolean) => {
+    setChecked(next);
     if (next) {
       createDefaultLab.mutate({
         courseID,
@@ -82,10 +71,15 @@ export default function DefaultSwitch({
   };
 
   return (
-    <Switch
-      checked={checked}
-      disabled={createDefaultLab.isPending || deleteDefaultLab.isPending}
-      onCheckedChange={handleCheckedChange}
-    />
+    <label
+      className="relative inline-flex items-center cursor-pointer"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <Switch
+        checked={checked}
+        disabled={createDefaultLab.isPending || deleteDefaultLab.isPending}
+        onCheckedChange={handleCheckedChange}
+      />
+    </label>
   );
 }

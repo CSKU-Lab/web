@@ -10,9 +10,10 @@ import ImportUser from "./_components/import-users";
 import Filters from "~/components/commons/Filters";
 import DataTable from "~/components/commons/DataTable";
 import useTableState from "~/hooks/useTableState";
-import { useMemo, useState } from "react";
 import useInputDebounce from "~/hooks/useInputDebounce";
+import useTablePageSize from "~/hooks/useTablePageSize";
 import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 import type { IFilter } from "~/types/filter";
 import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
 import useUserPagination from "./_hooks/useUserPagination";
@@ -28,6 +29,8 @@ import { mapUserColumnID } from "./_utils/mapColumnID";
 import PageTitle from "~/components/commons/PageTitle";
 
 function UsersManagementPage() {
+  const { containerRef, pageSize, hasCalculated } = useTablePageSize({ rowHeight: 48, headerHeight: 40, buffer: 28 });
+  const initialPageSize = pageSize || 20;
   const {
     rowSelection,
     setRowSelection,
@@ -37,7 +40,7 @@ function UsersManagementPage() {
     setSorting,
     pagination,
     setPagination,
-  } = useTableState();
+  } = useTableState(initialPageSize);
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
@@ -198,6 +201,7 @@ function UsersManagementPage() {
           isError={isError && !isFetching}
           onRetry={refetch}
           totalData={userPagination.pagination.total_rows}
+          containerRef={containerRef}
         />
       </div>
     </>

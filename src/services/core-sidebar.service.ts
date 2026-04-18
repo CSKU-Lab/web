@@ -4,6 +4,7 @@ export interface SidebarItem {
   name: string;
   id: string;
   status?: string;
+  course_name?: string;
   sub_items: SidebarItem[] | null;
 }
 

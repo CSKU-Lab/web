@@ -21,10 +21,9 @@ import {
   TableRow,
 } from "~/components/commons/Table";
 import { cn } from "~/lib/utils";
-import PageSize from "./PageSize";
 import TablePagination from "./TablePagination";
 import TableSkeleton from "./TableSkeleton";
-import { useMemo } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import Loading from "./Loading";
 import Error from "./Error";
 import ErrorFallback from "./Error/ErrorFallback";
@@ -45,6 +44,7 @@ interface Props {
   className?: string;
   hidePagination?: boolean;
   onRetry?: () => void;
+  containerRef?: React.RefObject<HTMLDivElement | null>;
 
   rowIds?: string[];
   onDragEnd?: (event: any) => void;
@@ -61,12 +61,15 @@ function DataTable({
   className,
   hidePagination,
   onRetry,
+  containerRef,
 
   rowIds,
   onDragEnd,
   headerTextAlign,
   columnBordered = false,
 }: Props) {
+  const innerRef = useRef<HTMLDivElement>(null);
+  const effectiveRef = containerRef ?? innerRef;
   const visibleColumns = useMemo(
     () =>
       table
@@ -82,6 +85,7 @@ function DataTable({
 
   return (
     <div
+      ref={effectiveRef}
       className={cn(
         "border border-(--gray-4) overflow-hidden mt-4 h-full flex flex-col relative 2xl:rounded-md border-l-1 2xl:border-l",
         className,
@@ -251,10 +255,6 @@ function DataTable({
         </p>
         {!hidePagination && (
           <div className="flex items-center gap-4">
-            <PageSize
-              value={table.getState().pagination.pageSize}
-              onChange={(value) => table.setPageSize(Number(value))}
-            />
             <TablePagination
               totalPages={table.getPageCount()}
               currentPage={table.getState().pagination.pageIndex + 1}

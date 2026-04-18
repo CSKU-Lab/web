@@ -10,10 +10,16 @@ import {
 interface PageSizeProps {
   value: number;
   onChange: (value: string) => void;
+  calculatedPageSize?: number | null;
 }
 
-function PageSize({ value, onChange }: PageSizeProps) {
-  const pageSizes = [10, 25, 50, 100];
+const DEFAULT_PAGE_SIZES = [10, 25, 50, 100];
+
+function PageSize({ value, onChange, calculatedPageSize }: PageSizeProps) {
+  const pageSizes = calculatedPageSize && !DEFAULT_PAGE_SIZES.includes(calculatedPageSize)
+    ? [...DEFAULT_PAGE_SIZES, calculatedPageSize].sort((a, b) => a - b)
+    : DEFAULT_PAGE_SIZES;
+
   return (
     <div className="flex gap-1.5 items-center">
       <span className="text-xs tracking-wide font-light text-(--gray-12)">per page</span>
