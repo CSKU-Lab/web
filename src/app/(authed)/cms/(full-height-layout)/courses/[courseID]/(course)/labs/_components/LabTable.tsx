@@ -1,7 +1,5 @@
 import DataTable from "~/components/commons/DataTable";
-import { Button } from "~/components/commons/Button";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { Plus } from "lucide-react";
+import { useParams, useSearchParams } from "next/navigation";
 import { useMemo, useState, useEffect } from "react";
 import useTable from "~/hooks/useTable";
 import useTableState from "~/hooks/useTableState";
@@ -14,6 +12,7 @@ import type { CMSLab } from "~/types/cms-lab";
 import { columns } from "../_columns/lab";
 import useLabPagination from "../_hooks/useLabPagination";
 import useTablePageSize from "~/hooks/useTablePageSize";
+import CreateLabDialog from "./CreateLabDialog";
 
 export default function LabTable() {
   const { courseID } = useParams<{ courseID: string }>();
@@ -67,8 +66,6 @@ export default function LabTable() {
     onSortingChange: setSorting,
   });
 
-  const router = useRouter();
-
   return (
     <div className="flex flex-col h-full">
       <div className="flex justify-end items-center gap-2 px-4 my-4">
@@ -78,13 +75,7 @@ export default function LabTable() {
           value={search}
           onChange={setSearch}
         />
-        <Button
-          onClick={() => router.push(`/cms/courses/${courseID}/labs/new`)}
-          className="shrink-0"
-        >
-          <Plus size="1rem" />
-          New lab
-        </Button>
+        <CreateLabDialog />
       </div>
       <div className="flex justify-end px-4">
         <Filters

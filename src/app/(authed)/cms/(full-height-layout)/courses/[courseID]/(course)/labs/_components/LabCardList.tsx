@@ -1,8 +1,8 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Plus, ServerCrash, Star } from "lucide-react";
+import { ServerCrash, Star } from "lucide-react";
 import {
   closestCenter,
   DndContext,
@@ -24,11 +24,11 @@ import { AxiosError } from "axios";
 
 import RouteNavigation from "../../_components/RouteNavigation";
 import LabCard from "./LabCard";
+import CreateLabDialog from "./CreateLabDialog";
 import Loading from "~/components/commons/Loading";
 import Error from "~/components/commons/Error";
 import ErrorFallback from "~/components/commons/Error/ErrorFallback";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
-import { Button } from "~/components/commons/Button";
 import SearchInput from "~/components/commons/SearchInput";
 import { Skeleton } from "~/components/ui/skeleton";
 import useInputDebounce from "~/hooks/useInputDebounce";
@@ -43,7 +43,6 @@ import {
 
 export default function LabCardList() {
   const { courseID } = useParams<{ courseID: string }>();
-  const router = useRouter();
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
@@ -216,13 +215,7 @@ export default function LabCardList() {
             onChange={setSearch}
             placeholder="Search labs..."
           />
-          <Button
-            onClick={() => router.push(`/cms/courses/${courseID}/labs/new`)}
-            className="my-4 shrink-0 px-3 py-1.5"
-          >
-            <Plus size="1rem" />
-            New lab
-          </Button>
+          <CreateLabDialog />
         </div>
 
         <Error
