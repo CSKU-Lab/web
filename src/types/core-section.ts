@@ -8,6 +8,7 @@ export type Instructor = Pick<
 export interface Section {
   id: string;
   name: string;
+  course_name: string;
   banner: string;
   instructors: Instructor[];
   semester: { id: string; name: string; type: string };

@@ -1,32 +1,32 @@
-import { type Metadata } from "next";
-import { timeout } from "~/lib/timeout";
+"use client";
+
+import { useState } from "react";
 import LabList from "./_components/LabList";
 import SectionHeader from "./_components/SectionHeader";
+import SearchInput from "~/components/commons/SearchInput";
+import useInputDebounce from "~/hooks/useInputDebounce";
+import { IFilter } from "~/types/filter";
 
-export const generateMetadata = async (props: {
-  params: Promise<{ sectionID: string }>;
-}): Promise<Metadata> => {
-  const params = await props.params;
-  const courses = [
-    { name: "Fundamental Computing Concepts", id: "0" },
-    { name: "Fundamental Programming", id: "1" },
-  ];
+function MainCoursePage() {
+  const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState<IFilter[]>([]);
 
-  const course = courses.find((course) => course.id === params.sectionID);
-  await timeout(1000);
+  const debouncedSearch = useInputDebounce(search, 1000);
 
-  return {
-    title: `${course?.name} | CS Lab`,
-  };
-};
-
-async function MainCoursePage() {
   return (
     <div className="flex flex-col h-full overflow-x-hidden">
       <SectionHeader />
       <div className="px-4 lg:px-12 py-4 flex flex-col flex-1">
-        <h4 className="font-semibold text-2xl h-fit">Labs</h4>
-        <LabList />
+        <div className="flex justify-between items-center gap-4">
+          <h4 className="font-semibold text-2xl h-fit">Labs</h4>
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search labs..."
+            className=""
+          />
+        </div>
+        <LabList search={debouncedSearch} filters={filters} />
       </div>
     </div>
   );

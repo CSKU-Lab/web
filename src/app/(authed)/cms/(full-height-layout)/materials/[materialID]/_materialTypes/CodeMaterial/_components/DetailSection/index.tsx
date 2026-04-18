@@ -46,12 +46,12 @@ function DetailSection() {
           }
           isLoading={isLoading}
         />
-        <HeaderItem
-          label="Manual Score"
-          value={detail?.manual_score ?? 0}
-          isLoading={isLoading}
-        />
-        <HeaderItem label="Submissions" value={10000} isLoading={isLoading} />
+        {/* <HeaderItem */}
+        {/*   label="Manual Score" */}
+        {/*   value={detail?.manual_score ?? 0} */}
+        {/*   isLoading={isLoading} */}
+        {/* /> */}
+        {/* <HeaderItem label="Submissions" value={10000} isLoading={isLoading} /> */}
         <SaveStatus />
       </div>
 

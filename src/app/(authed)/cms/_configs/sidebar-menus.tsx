@@ -55,11 +55,11 @@ export const getSidebarMenus = (
           label: "Runners",
           href: "/cms/runners",
         },
-        {
-          icon: <SquareChartGantt size="1rem" />,
-          label: "Compares",
-          href: "/cms/compares",
-        },
+        // {
+        //   icon: <SquareChartGantt size="1rem" />,
+        //   label: "Compares",
+        //   href: "/cms/compares",
+        // },
       ],
     });
   }
