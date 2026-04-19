@@ -109,7 +109,7 @@ function DataTable({
                       colSpan={header.colSpan}
                       style={{ width: header.getSize() }}
                       className={cn(
-                        "sticky",
+                        "sticky relative",
                         columnBordered && "border-b border-r",
                       )}
                     >
@@ -147,6 +147,20 @@ function DataTable({
                           ),
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
+                      <div
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={cn(
+                          "absolute right-0 top-0 h-full w-1 cursor-col-resize touch-none select-none opacity-0 hover:opacity-100",
+                          header.column.getIsResizing() && "opacity-100",
+                        )}
+                        style={{
+                          background:
+                            header.column.getIsResizing()
+                              ? "var(--accent-9)"
+                              : "transparent",
+                        }}
+                      />
                     </TableHead>
                   );
                 })}

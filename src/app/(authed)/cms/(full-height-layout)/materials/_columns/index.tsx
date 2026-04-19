@@ -17,18 +17,21 @@ export const columns = [
   columnHelper.accessor("name", {
     id: "name",
     enableSorting: true,
+    size: 200,
     header: () => (
       <>
         <Hash size="1rem" /> Name
       </>
     ),
     cell: (cell) => {
+      const name = cell.getValue();
       return (
         <Link
           href={`/cms/materials/${cell.row.original.id}`}
-          className="font-semibold text-primary hover:underline"
+          className="font-semibold text-primary hover:underline truncate block"
+          title={name}
         >
-          {cell.getValue()}
+          {name}
         </Link>
       );
     },
@@ -49,11 +52,34 @@ export const columns = [
   columnHelper.accessor("tags", {
     id: "tags",
     enableSorting: true,
+    size: 300,
     header: () => (
       <>
         <Tags size="1rem" /> Tags
       </>
     ),
+    cell: (cell) => {
+      const tags = cell.getValue() as string[];
+      if (!tags || tags.length === 0) return null;
+      return (
+        <div className="flex flex-wrap gap-1">
+          {tags.slice(0, 3).map((tag) => (
+            <span
+              key={tag}
+              className="text-xs px-2 py-0.5 rounded-full bg-(--gray-3) text-(--gray-11) truncate max-w-[150px]"
+              title={tag}
+            >
+              {tag}
+            </span>
+          ))}
+          {tags.length > 3 && (
+            <span className="text-xs px-2 py-0.5 rounded-full bg-(--gray-4) text-(--gray-10)">
+              +{tags.length - 3}
+            </span>
+          )}
+        </div>
+      );
+    },
   }),
   columnHelper.accessor("created_by", {
     id: "created_by",

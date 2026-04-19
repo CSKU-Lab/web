@@ -63,6 +63,8 @@ function MaterialPage() {
     },
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
+    enableColumnResizing: true,
+    columnResizeMode: "onChange",
   });
 
   const router = useRouter();
