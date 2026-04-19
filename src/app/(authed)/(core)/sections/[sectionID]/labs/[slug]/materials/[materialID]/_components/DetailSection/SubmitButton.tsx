@@ -14,6 +14,8 @@ import {
   activeSubmissionsAtom,
 } from "../../_stores/submission.store";
 import type { CodeSubmissionPayload } from "~/types/core-code-submission";
+import useGetCoreMaterial from "../../_hooks/useGetCoreMaterial";
+import { MaterialType } from "~/types/core-material";
 
 interface SubmitButtonProps {
   sectionID: string;
@@ -22,11 +24,16 @@ interface SubmitButtonProps {
 }
 
 function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
+  const { data: material } = useGetCoreMaterial();
   const files = useAtomValue(submissionFilesAtom);
   const selectedRunner = useAtomValue(selectedRunnerAtom);
   const setSubmissionStatus = useSetAtom(submissionStatusAtom);
   const setActiveSubmissions = useSetAtom(activeSubmissionsAtom);
   const queryClient = useQueryClient();
+
+  if (material?.type === MaterialType.TYPE) {
+    return null;
+  }
 
   const submitMutation = useMutation({
     mutationFn: () => {
