@@ -1,7 +1,7 @@
-import MainPageEmptyState from "./_components/MainPageEmptyState";
+import ChatHome from "./_components/ChatHome";
 
 function CMSMainPage() {
-  return <MainPageEmptyState />;
+  return <ChatHome />;
 }
 
 export default CMSMainPage;

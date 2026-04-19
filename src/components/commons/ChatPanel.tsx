@@ -4,17 +4,23 @@ import { useChat } from "@ai-sdk/react";
 import { useEffect, useRef, useState } from "react";
 import { LucideSend } from "lucide-react";
 import { ChatMessages } from "./ChatMessages";
+import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 
 interface ChatPanelProps {
   messages: ReturnType<typeof useChat>["messages"];
   sendMessage: ReturnType<typeof useChat>["sendMessage"];
   status: ReturnType<typeof useChat>["status"];
+  className?: string;
+  showMessages?: boolean;
 }
 
 export default function ChatPanel({
   messages,
   sendMessage,
   status,
+  className,
+  showMessages = true,
 }: ChatPanelProps) {
   const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -57,12 +63,17 @@ export default function ChatPanel({
   };
 
   return (
-    <div className="flex flex-col h-full w-full ">
-      <div ref={scrollRef} className="flex-1 overflow-y-auto">
-        <ChatMessages messages={messages} status={status} />
-      </div>
+    <div className={cn("flex flex-col h-full w-full", className)}>
+      {showMessages !== false && (
+        <div ref={scrollRef} className="flex-1 overflow-y-auto min-h-0">
+          <ChatMessages messages={messages} status={status} />
+        </div>
+      )}
       <form
-        className="p-3 border-t dark:border-zinc-800 flex items-end gap-2 bg-(--gray-1) dark:bg-zinc-900"
+        className={cn(
+          "flex items-end gap-2 p-4",
+          showMessages !== false && "border-t dark:border-zinc-800"
+        )}
         onSubmit={(e) => {
           e.preventDefault();
           handleSendMessage();
@@ -71,19 +82,20 @@ export default function ChatPanel({
         <textarea
           ref={textareaRef}
           rows={1}
-          className="w-full p-2 border border-zinc-300 dark:border-zinc-700 rounded bg-(--gray-1) dark:bg-zinc-800 resize-none overflow-y-auto max-h-40 min-h-[40px]"
+          className="flex-1 p-3 border rounded-md bg-background resize-none overflow-hidden min-h-[40px] focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
           value={input}
-          placeholder="Say something..."
+          placeholder="Ask anything..."
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <button
+        <Button
           type="submit"
-          className="bg-black text-white p-2 rounded disabled:opacity-50 h-10 w-10 flex items-center justify-center shrink-0"
+          size="icon"
           disabled={status !== "ready"}
+          className="shrink-0"
         >
-          <LucideSend size="1.2rem" />
-        </button>
+          <LucideSend size="1rem" />
+        </Button>
       </form>
     </div>
   );
