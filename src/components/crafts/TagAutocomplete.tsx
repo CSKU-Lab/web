@@ -1,6 +1,8 @@
 import { X, Tag } from "lucide-react";
 import AutoComplete from "../commons/AutoComplete";
 import { cn } from "~/lib/tiptap-utils";
+import { useQuery } from "@tanstack/react-query";
+import { cmsTagService } from "~/services/cms-tag.service";
 
 type TagType = { id: string; display: string };
 interface Props {
@@ -16,14 +18,22 @@ function TagAutocomplete({
   isError,
   placeholder = "Search or create tags...",
 }: Props) {
+  const { data: tagsData } = useQuery({
+    queryKey: ["cms-tags"],
+    queryFn: () =>
+      cmsTagService.getPagination({
+        page: 1,
+        page_size: 100,
+        search: "",
+      }),
+  });
+
   const queryTags = async (query: string) => {
-    // Dummy implementation for tag fetching
-    const allTags = [
-      { id: "1", display: "JavaScript" },
-      { id: "2", display: "TypeScript" },
-      { id: "3", display: "React" },
-      { id: "4", display: "Node.js" },
-    ];
+    if (!tagsData?.data) return [];
+    const allTags = tagsData.data.map((tag) => ({
+      id: tag.id,
+      display: tag.name,
+    }));
     return allTags.filter((tag) =>
       tag.display.toLowerCase().includes(query.toLowerCase()),
     );
