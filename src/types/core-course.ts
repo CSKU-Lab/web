@@ -5,7 +5,17 @@ export interface Course {
   visibility: Visibility;
 }
 
-interface Creator {
+export interface MyCourse {
+  id: string;
+  name: string;
+  description: string | null;
+  banner: string | null;
+  visibility: Visibility;
+  total_students: number;
+  instructors: Creator[];
+}
+
+export interface Creator {
   id: string;
   display_name: string;
   username: string;

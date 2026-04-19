@@ -184,6 +184,13 @@ export const queryKeys = {
         params,
       ],
     },
+    myCourses: {
+      all: ["myCourses"],
+      allWithParams: (params: Record<string, any>) => [
+        ...queryKeys.core.myCourses.all,
+        params,
+      ],
+    },
     courses: {
       all: ["courses"],
       allWithParams: (params: Record<string, any>) => [
