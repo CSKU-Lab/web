@@ -4,10 +4,10 @@ import { headers } from "next/headers";
 import { isFromMobile } from "~/lib/isFromMobile";
 import LottieComp from "~/components/commons/Lottie";
 import floating from "~/assets/lotties/foating.json";
-import DescriptionTab from "../_components/DescriptionTab";
 import { type Metadata } from "next";
 import DetailSection from "./_components/DetailSection";
 import MaterialPageClient from "./_components/MaterialPageClient";
+import MaterialTypeRouter from "./_components/MaterialTypeRouter";
 
 export const generateMetadata = async ({
   params,
@@ -47,15 +47,17 @@ async function MaterialPage(props: {
 
   return (
     <MaterialPageClient materialID={materialID}>
-      <DetailSection
-        sectionID={sectionID}
-        labID={labID}
-        materialID={materialID}
-      />
-      <div className="flex flex-1 min-h-0">
-        <LeftSection />
-        <RightSection />
-      </div>
+      <MaterialTypeRouter>
+        <DetailSection
+          sectionID={sectionID}
+          labID={labID}
+          materialID={materialID}
+        />
+        <div className="flex flex-1 min-h-0">
+          <LeftSection />
+          <RightSection />
+        </div>
+      </MaterialTypeRouter>
     </MaterialPageClient>
   );
 }

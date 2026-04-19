@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import CodeMaterial from "./_materialTypes/CodeMaterial";
+import TypingMaterial from "./_materialTypes/TypingMaterial";
 import { getUser } from "~/lib/get-user";
 
 async function getMaterial(materialID: string) {
@@ -25,6 +26,10 @@ async function MaterialPage(props: {
 
   if (material.type === "code") {
     return <CodeMaterial isOwner={isOwner} />;
+  }
+
+  if (material.type === "typing") {
+    return <TypingMaterial isOwner={isOwner} />;
   }
 
   return (

@@ -17,11 +17,12 @@ export interface Material {
 export enum MaterialType {
   DOCUMENT = "document",
   CODE = "code",
-  TYPE = "type",
+  TYPE = "typing",
 }
 
 export interface MaterialDetail<T> {
   name: string;
+  type: MaterialType;
   status: SubmissionStatus;
   payload: T;
 }

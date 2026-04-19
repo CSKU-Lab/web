@@ -50,7 +50,7 @@ const codeMaterialPayloadSchema = z.object({
 
 const createMaterialSchema = z.object({
   name: z.string(),
-  type: z.enum(["document", "code", "type"]),
+  type: z.enum(["document", "code", "typing"]),
   tags: z.array(z.string()),
   visibility: z.enum(["public", "private"]).default("public"),
 });

@@ -2,8 +2,8 @@ import { Keyboard, NotebookText, Terminal } from "lucide-react";
 import MaterialType from "./MaterialType";
 
 interface Props {
-  value: "document" | "code" | "type" | null;
-  onChange: (value: "document" | "code" | "type") => void;
+  value: "document" | "code" | "typing" | null;
+  onChange: (value: "document" | "code" | "typing") => void;
 }
 
 function MaterialTypeSelect({ value, onChange }: Props) {
@@ -22,11 +22,10 @@ function MaterialTypeSelect({ value, onChange }: Props) {
         onSelect={() => onChange("code")}
       />
       <MaterialType
-        disabled
         icon={<Keyboard />}
-        name="Type"
-        isSelected={value === "type"}
-        onSelect={() => onChange("type")}
+        name="Typing"
+        isSelected={value === "typing"}
+        onSelect={() => onChange("typing")}
       />
     </div>
   );

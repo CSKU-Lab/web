@@ -16,5 +16,5 @@ export interface CMSMaterial {
 export enum MaterialType {
   DOCUMENT = "document",
   CODE = "code",
-  TYPE = "type",
+  TYPE = "typing",
 }

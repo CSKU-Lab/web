@@ -5,7 +5,7 @@ import type { AxiosProgressEvent } from "axios";
 
 export type CreateMaterialPayload = {
   name: string;
-  type: "document" | "code" | "type";
+  type: "document" | "code" | "typing";
   tags: string[];
   visibility: "public" | "private";
   manual_score?: number;

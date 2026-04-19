@@ -2,6 +2,10 @@ import { BaseService } from "./base.service";
 import type { MaterialDetail } from "~/types/core-material";
 import type { SubmissionResult } from "~/types/core-submission";
 import type { PaginationRequestParams } from "~/types/pagination";
+import type {
+  StartTypingSessionRequest,
+  StartTypingSessionResponse,
+} from "~/types/typing-submission";
 
 export type GetSubmissionPaginationParams<T> = PaginationRequestParams<
   SubmissionResult<T>
@@ -31,6 +35,17 @@ class CoreMaterialService extends BaseService {
   ): Promise<MaterialDetail<T>> {
     const res = await this.api.get<MaterialDetail<T>>(
       `/materials/${materialID}?section_id=${sectionID}&lab_id=${labID}`,
+    );
+    return res.data;
+  }
+
+  async startTypingSession(
+    materialID: string,
+    payload: StartTypingSessionRequest,
+  ): Promise<StartTypingSessionResponse> {
+    const res = await this.api.post<StartTypingSessionResponse>(
+      `/materials/${materialID}/typing-session`,
+      payload,
     );
     return res.data;
   }

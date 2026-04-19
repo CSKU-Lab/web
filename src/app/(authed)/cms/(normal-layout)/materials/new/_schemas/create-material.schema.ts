@@ -4,7 +4,7 @@ export const createMaterialSchema = z
   .object({
     name: z.string().min(1, "Material title is required"),
     type: z
-      .enum(["document", "code", "type"], {
+      .enum(["document", "code", "typing"], {
         errorMap: () => ({ message: "Material type is required" }),
       })
       .nullable(),
