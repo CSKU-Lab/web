@@ -18,7 +18,7 @@ async function Layout({ children }: ChildrenProps) {
   return (
     <ChatProvider>
       <CoreLayout homePath="/cms">
-        <CoreLayoutSidebar>
+        <CoreLayoutSidebar homePath="/cms">
           <h6 className="text-(--gray-11) text-xs font-light py-2">CMS</h6>
           <SidebarMenus config={sidebarMenus} />
         </CoreLayoutSidebar>
