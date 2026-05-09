@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx"],
   transpilePackages: ["next-mdx-remote"],
+  output: "standalone",
   poweredByHeader: false,
   images: {
     dangerouslyAllowLocalIP: true, // need to be disable in production
@@ -20,7 +21,7 @@ const nextConfig: NextConfig = {
         pathname: "/cs-lab/**",
       },
     ],
-  }
+  },
 };
 
 export default nextConfig;
