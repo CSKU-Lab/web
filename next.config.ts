@@ -20,15 +20,7 @@ const nextConfig: NextConfig = {
         pathname: "/cs-lab/**",
       },
     ],
-  },
-  async rewrites() {
-    return [
-      {
-        source: "/api/v1/:path*",
-        destination: `${process.env.SERVER_API_URL}/:path*`, // Proxy to Backend
-      },
-    ];
-  },
+  }
 };
 
 export default nextConfig;
