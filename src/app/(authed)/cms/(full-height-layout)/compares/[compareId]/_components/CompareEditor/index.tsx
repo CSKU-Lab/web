@@ -12,6 +12,8 @@ import FileTree from "~/components/Editor/FileTree";
 import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
 import type { IEditorSettings } from "~/components/Editor/types/editor";
 import ComparePlayground from "./ComparePlayground";
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import MarkdownRenderer from "~/components/ui/markdown-renderer";
 import { compareFilesAtom } from "../../_stores/compare-files.store";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import { compareRunNameAtom } from "../../_stores/compare-info.store";
@@ -62,6 +64,7 @@ function CompareEditor() {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings, setSettings] =
     useState<IEditorSettings>(getEditorSettings());
+  const [mdTab, setMdTab] = useState("edit");
 
   const [compareHasValue, setCompareHasValue] = useState(false);
 
@@ -170,10 +173,20 @@ function CompareEditor() {
           getDisplayName={getDisplayName}
           getNewFilePath={(name) => `files/${name}`}
         />
-        <div className="flex-1 min-h-0 overflow-auto flex flex-col min-w-40">
-          <div className="border-b p-2 flex justify-between items-center">
+        <Tabs
+          value={mdTab}
+          onValueChange={setMdTab}
+          className="flex-1 min-h-0 flex flex-col min-w-40 gap-0"
+        >
+          <div className="border-b p-2 flex justify-between items-center shrink-0">
             <div className="flex-1" />
             <div className="flex items-center gap-2">
+              {fileExtension === "md" && (
+                <TabsList className="w-fit">
+                  <TabsTrigger value="edit">Edit</TabsTrigger>
+                  <TabsTrigger value="preview">Preview</TabsTrigger>
+                </TabsList>
+              )}
               <EditorSettings
                 settings={settings}
                 onChange={handleSettingsChange}
@@ -197,24 +210,43 @@ function CompareEditor() {
               </DropdownMenu>
             </div>
           </div>
-          {isLoading || currentFile === undefined ? (
-            <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
-              <FileCode size="3rem" className="mb-3 opacity-50" />
-              <p className="text-sm">Click a file to start editing</p>
-            </div>
-          ) : (
-            <CodeMirror
-              key={currentFile.name}
-              readOnly={false}
-              className="flex-1 min-h-0"
-              extension={fileExtension}
-              fontSize={settings.fontSize}
-              vimMode={settings.vimMode}
-              value={currentFile.content}
-              onChange={handleCodeChange}
-            />
-          )}
-        </div>
+          <div className="flex-1 min-h-0 overflow-auto">
+            {isLoading || currentFile === undefined ? (
+              <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
+                <FileCode size="3rem" className="mb-3 opacity-50" />
+                <p className="text-sm">Click a file to start editing</p>
+              </div>
+            ) : fileExtension === "md" ? (
+              mdTab === "edit" ? (
+                <CodeMirror
+                  key={currentFile.name}
+                  readOnly={false}
+                  className="h-full"
+                  extension={fileExtension}
+                  fontSize={settings.fontSize}
+                  vimMode={settings.vimMode}
+                  value={currentFile.content}
+                  onChange={handleCodeChange}
+                />
+              ) : (
+                <div className="p-4">
+                  <MarkdownRenderer>{currentFile.content}</MarkdownRenderer>
+                </div>
+              )
+            ) : (
+              <CodeMirror
+                key={currentFile.name}
+                readOnly={false}
+                className="h-full"
+                extension={fileExtension}
+                fontSize={settings.fontSize}
+                vimMode={settings.vimMode}
+                value={currentFile.content}
+                onChange={handleCodeChange}
+              />
+            )}
+          </div>
+        </Tabs>
       </div>
 
       <ComparePlayground compareId={compareId} />
