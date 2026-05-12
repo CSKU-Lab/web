@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { z } from "zod";
 import InlineError from "~/components/commons/InlineError";
@@ -13,14 +12,10 @@ import { Button } from "~/components/commons/Button";
 import PageTitle from "~/components/commons/PageTitle";
 import useCreateCompare from "../_hooks/useCreateCompare";
 import { cn } from "~/lib/utils";
-import type { CreateCompareConfig } from "~/types/cms-compare";
 
 const createCompareSchema = z.object({
   name: z.string().min(1, "Compare name is required"),
   description: z.string(),
-  build_script: z.string().min(1, "Build script is required"),
-  run_script: z.string().min(1, "Run script is required"),
-  run_name: z.string().min(1, "Run name is required"),
 });
 
 type CreateCompareForm = z.infer<typeof createCompareSchema>;
@@ -31,9 +26,6 @@ function NewComparePage() {
     defaultValues: {
       name: "",
       description: "",
-      build_script: "#!/bin/bash\n# Build script for compare\necho 'Building...'",
-      run_script: "#!/bin/bash\n# Run script for compare\necho 'Running...'",
-      run_name: "run",
     },
   });
 
@@ -45,10 +37,6 @@ function NewComparePage() {
       {
         name: data.name,
         description: data.description,
-        build_script: data.build_script,
-        run_script: data.run_script,
-        run_name: data.run_name,
-        files: [],
       },
       {
         onSuccess: (res: { id: string }) => {
@@ -61,7 +49,7 @@ function NewComparePage() {
             form.setError("name", { message: errorMessage });
           }
         },
-      }
+      },
     );
   };
 
@@ -115,75 +103,39 @@ function NewComparePage() {
           <div className="space-y-1.5">
             <h5 className="text-xl font-medium">Scripts</h5>
             <p className="text-sm text-(--gray-10)">
-              Define the build and run scripts for this compare.
+              Default build and run scripts will be created. You can customize
+              them after creation.
             </p>
             <hr />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="run_name">Run Name</Label>
-            <Input
-              id="run_name"
-              placeholder="e.g., run, execute, test"
-              {...form.register("run_name")}
-            />
-            <InlineError isError={!!form.formState.errors.run_name}>
-              {form.formState.errors.run_name?.message}
-            </InlineError>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="build_script">Build Script</Label>
-            <textarea
-              id="build_script"
-              placeholder="#!/bin/bash\n# Build script"
-              rows={6}
-              className={cn(
-                "w-full rounded-md border border-(--gray-6) bg-(--gray-1) px-3 py-2 text-sm font-mono",
-                "placeholder:text-(--gray-9) text-(--gray-12)",
-                "focus:outline-none focus:ring-1 focus:ring-(--gray-8)",
-                "resize-none",
-              )}
-              {...form.register("build_script")}
-            />
-            <InlineError isError={!!form.formState.errors.build_script}>
-              {form.formState.errors.build_script?.message}
-            </InlineError>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="run_script">Run Script</Label>
-            <textarea
-              id="run_script"
-              placeholder="#!/bin/bash\n# Run script"
-              rows={6}
-              className={cn(
-                "w-full rounded-md border border-(--gray-6) bg-(--gray-1) px-3 py-2 text-sm font-mono",
-                "placeholder:text-(--gray-9) text-(--gray-12)",
-                "focus:outline-none focus:ring-1 focus:ring-(--gray-8)",
-                "resize-none",
-              )}
-              {...form.register("run_script")}
-            />
-            <InlineError isError={!!form.formState.errors.run_script}>
-              {form.formState.errors.run_script?.message}
-            </InlineError>
+          <div className="rounded-md border border-(--gray-4) bg-(--gray-2) p-4">
+            <p className="text-sm text-(--gray-11)">
+              The compare will be created with default template scripts for:
+            </p>
+            <ul className="mt-2 text-sm text-(--gray-11) list-disc list-inside space-y-1">
+              <li>
+                <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
+                  scripts/build_script.sh
+                </code>{" "}
+                - Build script
+              </li>
+              <li>
+                <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
+                  scripts/run_script.sh
+                </code>{" "}
+                - Run script
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => router.push("/cms/compares")}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="action"
-            disabled={createCompare.isPending}
-          >
-            {createCompare.isPending ? "Creating..." : "Create Compare"}
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          variant="action"
+          disabled={createCompare.isPending}
+        >
+          {createCompare.isPending ? "Creating..." : "Create Compare"}
+        </Button>
       </form>
     </div>
   );

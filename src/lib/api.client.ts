@@ -19,9 +19,6 @@ api.interceptors.response.use(
 
       return api(originalRequest);
     }
-    if (error.response?.status === 403 || error.response?.status === 404) {
-      window.location.href = "/not-found";
-    }
 
     return Promise.reject(error);
   },

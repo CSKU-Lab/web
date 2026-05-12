@@ -18,7 +18,6 @@ import {
   DialogTrigger,
 } from "~/components/commons/Dialog";
 import Input from "~/components/crafts/Input";
-import SharedInput from "~/components/commons/Input";
 import { queryKeys } from "~/queryKeys";
 import { cmsCompareService } from "~/services/cms-compare.service";
 import useCompare from "../../_hooks/useCompare";
@@ -30,13 +29,6 @@ import {
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import { cn } from "~/lib/utils";
 import { UpdateCompareConfig } from "~/types/cms-compare";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 
 const settingsSchema = z.object({
   name: z.string().min(1, "Compare name is required"),
@@ -55,9 +47,6 @@ function SettingsButton() {
   const [, setDescription] = useAtom(compareDescriptionAtom);
   const [, setRunName] = useAtom(compareRunNameAtom);
   const [, setSaveStatus] = useAtom(saveStatusAtom);
-
-  // Extract file names from compare.files array
-  const fileOptions = compare?.files.map((file) => file.name) ?? [];
 
   const form = useForm<SettingsSchema>({
     resolver: zodResolver(settingsSchema),
@@ -81,7 +70,6 @@ function SettingsButton() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.compare.getById(compareId),
       });
-      // Update atoms with new values
       setName(form.getValues("name"));
       setDescription(form.getValues("description") || "");
       setRunName(form.getValues("run_name"));
@@ -153,45 +141,16 @@ function SettingsButton() {
               {...form.register("description")}
             />
           </div>
-
-          {/* Run Name Dropdown */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Run Name</label>
-            <div className="flex gap-2">
-              <Select
-                value={form.watch("run_name")}
-                onValueChange={(value) => form.setValue("run_name", value)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a file..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {fileOptions.length > 0 ? (
-                    fileOptions.map((fileName) => (
-                      <SelectItem key={fileName} value={fileName}>
-                        {fileName}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <SelectItem value="" disabled>
-                      No files available
-                    </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-            {/* Editable fallback input */}
-            <SharedInput
-              placeholder="Or enter custom run name..."
-              {...form.register("run_name")}
-              className="mt-2"
-            />
-            {form.formState.errors.run_name && (
-              <p className="text-sm text-red-500">
-                {form.formState.errors.run_name.message}
-              </p>
-            )}
-          </div>
+          <Input
+            label="Run Name"
+            placeholder="e.g., main, solution"
+            {...form.register("run_name")}
+          />
+          {form.formState.errors.run_name && (
+            <p className="text-sm text-red-500">
+              {form.formState.errors.run_name.message}
+            </p>
+          )}
 
           <Button
             type="submit"

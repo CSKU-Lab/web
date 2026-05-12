@@ -20,11 +20,7 @@ export interface CompareConfigDetail {
 
 export interface CreateCompareConfig {
   name: string;
-  description: string;
-  build_script: string;
-  run_script: string;
-  run_name: string;
-  files?: ConfigFile[];
+  description?: string;
 }
 
 export interface UpdateCompareConfig {
