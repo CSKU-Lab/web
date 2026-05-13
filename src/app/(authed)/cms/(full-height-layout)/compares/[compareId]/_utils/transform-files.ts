@@ -12,10 +12,10 @@ export function compareToEditorFiles(compare: CompareConfigDetail): CodeFile[] {
     { name: "scripts/run_script.sh", content: compare.run_script },
   ];
 
-  // Add files with "files/" prefix
+  // Add files with "sandbox/" prefix
   compare.files.forEach((file) => {
     files.push({
-      name: `files/${file.name}`,
+      name: `sandbox/${file.name}`,
       content: file.content,
     });
   });
@@ -37,9 +37,9 @@ export function editorFilesToComparePayload(files: CodeFile[]): {
     files.find((f) => f.name === "scripts/run_script.sh")?.content ?? "";
 
   const compareFiles = files
-    .filter((f) => f.name.startsWith("files/"))
+    .filter((f) => f.name.startsWith("sandbox/") && f.name !== "sandbox/compare_result.txt")
     .map((f) => ({
-      name: f.name.replace("files/", ""),
+      name: f.name.replace("sandbox/", ""),
       content: f.content,
     }));
 
@@ -56,7 +56,8 @@ export function editorFilesToComparePayload(files: CodeFile[]): {
 export function isRequiredFile(fileName: string): boolean {
   return (
     fileName === "scripts/build_script.sh" ||
-    fileName === "scripts/run_script.sh"
+    fileName === "scripts/run_script.sh" ||
+    fileName === "sandbox/compare_result.txt"
   );
 }
 
@@ -64,7 +65,7 @@ export function isRequiredFile(fileName: string): boolean {
  * Check if a folder is required and cannot be deleted
  */
 export function isRequiredFolder(folderName: string): boolean {
-  return folderName === "scripts" || folderName === "files";
+  return folderName === "scripts" || folderName === "sandbox";
 }
 
 /**
@@ -78,7 +79,7 @@ export function isScriptFile(fileName: string): boolean {
  * Check if a file is in the files folder
  */
 export function isFilesFile(fileName: string): boolean {
-  return fileName.startsWith("files/");
+  return fileName.startsWith("sandbox/");
 }
 
 /**

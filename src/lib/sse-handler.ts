@@ -74,6 +74,7 @@ export const fetchSSE = async (url: string, options: SSEOptions) => {
       options.onClose?.();
     } else {
       options.onError?.(err);
+      options.onClose?.();
     }
   }
 };

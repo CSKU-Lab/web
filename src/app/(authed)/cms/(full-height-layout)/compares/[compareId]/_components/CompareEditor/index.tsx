@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { FileCode, MoreVertical, FileCheck } from "lucide-react";
-import { useAtom, useSetAtom } from "jotai";
+import { FileCode, MoreVertical, FileCheck, LoaderCircle } from "lucide-react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -14,7 +14,7 @@ import type { IEditorSettings } from "~/components/Editor/types/editor";
 import ComparePlayground from "./ComparePlayground";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import MarkdownRenderer from "~/components/ui/markdown-renderer";
-import { compareFilesAtom } from "../../_stores/compare-files.store";
+import { compareFilesAtom, compareTestRunningAtom } from "../../_stores/compare-files.store";
 import { saveStatusAtom } from "../../_stores/save-status.store";
 import { compareRunNameAtom } from "../../_stores/compare-info.store";
 import useCompare from "../../_hooks/useCompare";
@@ -60,6 +60,7 @@ function CompareEditor() {
 
   const [files, setFiles] = useAtom(compareFilesAtom);
   const setSaveStatus = useSetAtom(saveStatusAtom);
+  const testRunning = useAtomValue(compareTestRunningAtom);
   const [, setRunName] = useAtom(compareRunNameAtom);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings, setSettings] =
@@ -85,6 +86,7 @@ function CompareEditor() {
 
   const currentFile = files.find((f) => f.name === selectedFile);
   const fileExtension = currentFile?.name.split(".").pop();
+  const isOutputFile = currentFile?.name === "sandbox/compare_result.txt";
 
   const handleSettingsChange = (newSettings: IEditorSettings) => {
     setSettings(newSettings);
@@ -139,14 +141,14 @@ function CompareEditor() {
   const handleSaveAsRunName = () => {
     if (!currentFile) return;
 
-    // Only allow for files in the files/ folder
-    if (!currentFile.name.startsWith("files/")) {
-      toast.error("Can only set files from the files folder as run name");
+    // Only allow for files in the sandbox/ folder
+    if (!currentFile.name.startsWith("sandbox/")) {
+      toast.error("Can only set files from the sandbox folder as run name");
       return;
     }
 
-    // Extract file name without the "files/" prefix
-    const fileName = currentFile.name.replace("files/", "");
+    // Extract file name without the "sandbox/" prefix
+    const fileName = currentFile.name.replace("sandbox/", "");
 
     // Update the atom
     setRunName(fileName);
@@ -156,23 +158,33 @@ function CompareEditor() {
   };
 
   // Check if current file is in the files folder (eligible for "Save as Run Name")
-  const canSaveAsRunName = currentFile?.name.startsWith("files/") ?? false;
+  const canSaveAsRunName =
+    (currentFile?.name.startsWith("sandbox/") ?? false) &&
+    currentFile?.name !== "sandbox/compare_result.txt";
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       <div className="flex-1 flex min-h-0">
-        <FileTree
-          files={files}
-          selectedFile={selectedFile}
-          onSelectFile={handleSelectFile}
-          onChange={handleFilesChange}
-          isLoading={isLoading}
-          initialExpandedFolders={["scripts", "files"]}
-          isRequiredFile={isRequiredFile}
-          isRequiredFolder={isRequiredFolder}
-          getDisplayName={getDisplayName}
-          getNewFilePath={(name) => `files/${name}`}
-        />
+        <div className="flex flex-col min-h-0">
+          {testRunning && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border-b text-blue-600 shrink-0">
+              <LoaderCircle size="0.8rem" className="animate-spin" />
+              <span className="text-xs">Running test…</span>
+            </div>
+          )}
+          <FileTree
+            files={files}
+            selectedFile={selectedFile}
+            onSelectFile={handleSelectFile}
+            onChange={handleFilesChange}
+            isLoading={isLoading}
+            initialExpandedFolders={["scripts", "sandbox"]}
+            isRequiredFile={isRequiredFile}
+            isRequiredFolder={isRequiredFolder}
+            getDisplayName={getDisplayName}
+            getNewFilePath={(name) => `sandbox/${name}`}
+          />
+        </div>
         <Tabs
           value={mdTab}
           onValueChange={setMdTab}
@@ -220,7 +232,7 @@ function CompareEditor() {
               mdTab === "edit" ? (
                 <CodeMirror
                   key={currentFile.name}
-                  readOnly={false}
+                  readOnly={isOutputFile}
                   className="h-full"
                   extension={fileExtension}
                   fontSize={settings.fontSize}
@@ -236,7 +248,7 @@ function CompareEditor() {
             ) : (
               <CodeMirror
                 key={currentFile.name}
-                readOnly={false}
+                readOnly={isOutputFile}
                 className="h-full"
                 extension={fileExtension}
                 fontSize={settings.fontSize}
