@@ -1,0 +1,157 @@
+.math-node {
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.15s ease;
+
+  &--inline {
+    display: inline-block;
+    padding: 0 2px;
+    vertical-align: middle;
+  }
+
+  &--block {
+    display: block;
+    text-align: center;
+    padding: 1rem 0;
+    margin: 0.5rem 0;
+  }
+
+  &--selected {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    outline: 2px solid rgba(59, 130, 246, 0.6) !important;
+    outline-offset: 1px;
+  }
+
+  &--error {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px dashed rgba(239, 68, 68, 0.4);
+  }
+
+  &--editing {
+    cursor: default;
+    background-color: transparent !important;
+    outline: none !important;
+  }
+
+  &-error {
+    font-family: monospace;
+    font-size: 0.85em;
+    padding: 0.25rem 0.5rem;
+    display: inline-block;
+  }
+
+  &-editor {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+    background: var(--gray-1);
+    border: 2px solid var(--blue-9);
+    border-radius: 6px;
+    padding: 0.35rem 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 200px;
+  }
+
+  &-edit-input {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    border: none;
+    background: transparent;
+    color: var(--gray-12);
+    outline: none;
+    resize: none;
+    min-width: 120px;
+    max-width: 300px;
+    padding: 0;
+
+    &::placeholder {
+      color: var(--gray-8);
+    }
+  }
+
+  &-edit-actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    align-self: flex-end;
+  }
+
+  &-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+
+    &--cancel {
+      background: var(--gray-3);
+      color: var(--gray-10);
+
+      &:hover {
+        background: var(--gray-4);
+        color: var(--gray-12);
+      }
+    }
+
+    &--save {
+      background: var(--blue-9);
+      color: white;
+
+      &:hover:not(.disabled) {
+        background: var(--blue-10);
+      }
+
+      &.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: var(--gray-4);
+        color: var(--gray-8);
+      }
+    }
+  }
+
+  &-edit-preview {
+    padding: 0.4rem 0.5rem;
+    border-top: 1px solid var(--gray-3);
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+
+    &--error {
+      border-top-color: rgba(239, 68, 68, 0.2);
+      background: rgba(239, 68, 68, 0.04);
+      border-radius: 0 0 4px 4px;
+    }
+  }
+
+  &-edit-preview-error {
+    font-size: 0.75rem;
+    color: #ef4444;
+    font-family: monospace;
+  }
+}
+
+.ProseMirror .math-node--block {
+  clear: both;
+}
+
+.ProseMirror .math-node--block .math-node-editor {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+}
+
+.ProseMirror .math-node--block .math-node-edit-input {
+  flex: 1;
+  max-width: none;
+}

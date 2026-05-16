@@ -19,6 +19,8 @@ import javascript from "highlight.js/lib/languages/javascript";
 import cpp from "highlight.js/lib/languages/cpp";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 
+import { MathInlineNode, MathBlockNode } from "~/components/tiptap-node/math-node"
+
 export const extensions = () => {
   const lowlight = createLowlight();
 
@@ -55,6 +57,8 @@ export const extensions = () => {
     Subscript,
     Selection,
     TableKit,
+    MathInlineNode,
+    MathBlockNode,
   ];
 };
 

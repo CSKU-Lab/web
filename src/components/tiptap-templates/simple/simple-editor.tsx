@@ -49,6 +49,7 @@ import "~/components/tiptap-node/list-node/list-node.scss";
 import "~/components/tiptap-node/image-node/image-node.scss";
 import "~/components/tiptap-node/heading-node/heading-node.scss";
 import "~/components/tiptap-node/paragraph-node/paragraph-node.scss";
+import "~/components/tiptap-node/math-node/math-node.scss";
 
 // --- Tiptap UI ---
 import { HeadingDropdownMenu } from "~/components/tiptap-ui/heading-dropdown-menu";
@@ -71,6 +72,7 @@ import { TextAlignButton } from "~/components/tiptap-ui/text-align-button";
 import { UndoRedoButton } from "~/components/tiptap-ui/undo-redo-button";
 import { TablePopover } from "~/components/tiptap-ui/table-button";
 import { TableContextMenu } from "~/components/tiptap-ui/table-context-menu";
+import { MathDropdownMenu } from "~/components/tiptap-ui/math-popover";
 
 // --- Icons ---
 import { ArrowLeftIcon } from "~/components/tiptap-icons/arrow-left-icon";
@@ -81,6 +83,7 @@ import { LinkIcon } from "~/components/tiptap-icons/link-icon";
 import { useIsMobile } from "~/hooks/use-mobile";
 
 // --- Styles ---
+import "katex/dist/katex.min.css";
 import "~/components/tiptap-templates/simple/simple-editor.scss";
 
 import type { ClassNameProps } from "~/types/classname-props";
@@ -140,6 +143,7 @@ const MainToolbarContent = ({
       <ToolbarGroup>
         <MarkButton type="superscript" />
         <MarkButton type="subscript" />
+        <MathDropdownMenu />
       </ToolbarGroup>
 
       <ToolbarSeparator />
@@ -254,8 +258,10 @@ export function SimpleEditor({
   React.useEffect(() => {
     if (isSetInitialValue.current) return;
     if (initialValue && editor && editor.getJSON() !== initialValue) {
-      editor.commands.setContent(initialValue);
       isSetInitialValue.current = true;
+      queueMicrotask(() => {
+        editor.commands.setContent(initialValue);
+      });
     }
   }, [initialValue, editor]);
 
