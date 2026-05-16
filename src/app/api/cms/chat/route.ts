@@ -1,5 +1,4 @@
 import { UIMessage } from "ai";
-import { chatInstance as instructor } from "~/lib/aiChatProviders/instructor.chat";
 import { getUser } from "~/lib/get-user";
 
 export async function POST(req: Request) {
@@ -15,6 +14,9 @@ export async function POST(req: Request) {
   );
 
   if (hasToolAccess) {
+    const { chatInstance: instructor } = await import(
+      "~/lib/aiChatProviders/instructor.chat"
+    );
     return instructor.getStream({
       messages,
     });
