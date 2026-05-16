@@ -2,7 +2,7 @@
 
 import { AxiosError } from "axios";
 import { usePathname, useSearchParams } from "next/navigation";
-import { createContext, useCallback, useContext, useEffect } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef } from "react";
 import { api } from "~/lib/api.client";
 import type { ChildrenProps } from "~/types/children-props";
 import type { JWTUser } from "~/types/user";
@@ -37,8 +37,18 @@ function SessionProvider({ user, children }: Props) {
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const lastRefreshTime = useRef(0);
 
   const refreshToken = useCallback(async () => {
+    const now = Date.now();
+    const cooldownMs = 60_000; // 1 minute
+
+    if (now - lastRefreshTime.current < cooldownMs) {
+      return;
+    }
+
+    lastRefreshTime.current = now;
+
     try {
       await api.post("/auth/refresh-token");
     } catch (err) {

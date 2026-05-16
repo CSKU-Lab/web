@@ -1,7 +1,7 @@
 import type { AxiosHeaderValue } from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import type { NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { serverApi } from "~/lib/api.server";
 import { verifyJWT } from "~/lib/verify-jwt";
 
@@ -14,10 +14,17 @@ export const GET = async (req: NextRequest) => {
 
   const refreshToken = cookieJar.get("refresh_token")?.value;
 
+  let isRefreshTokenValid = false;
+
   try {
     // verify if refresh token is valid throw error if not
     verifyJWT(refreshToken);
-  } catch (err) {
+    isRefreshTokenValid = true;
+  } catch {
+    // Invalid or missing refresh token — will redirect to sign-in below
+  }
+
+  if (!isRefreshTokenValid) {
     redirect("/auth/sign-in");
   }
 
@@ -27,38 +34,19 @@ export const GET = async (req: NextRequest) => {
     const res = await serverApi.post("/auth/refresh-token");
 
     resCookies = res.headers["set-cookie"] || [];
-  } catch (err) {
+  } catch {
     redirect("/auth/sign-in");
   }
 
-  // Get Set-Cookie header from response then convert into nextjs cookies then set them
-  resCookies.map((cookie) => {
-    const name = cookie.split(";")[0].split("=")[0];
-    const value = cookie.split(";")[0].split("=")[1];
-    const properties = cookie
-      .split(";")
-      .map((el) => el.trim())
-      .slice(0, 1)
-      .map((el) => el.split("="));
+  const redirectTo = searchParams.get("redirect_to") || "/";
 
-    const props = properties.reduce(
-      (acc, [key, value]) => {
-        if (key !== "HttpOnly" && key !== "Secure") {
-          acc[key] = value;
-        } else {
-          acc[key] = true;
-        }
-        return acc;
-      },
-      {} as Record<string, string | boolean>,
-    );
+  const response = NextResponse.redirect(
+    new URL(redirectTo, req.url),
+  );
 
-    cookieJar.set(name, value, props);
+  (resCookies as string[]).forEach((cookie) => {
+    response.headers.append("Set-Cookie", cookie);
   });
 
-  const redirectTo = searchParams.get("redirect_to") || "/";
-  if (redirectTo.startsWith("/")) {
-    return redirect(redirectTo);
-  }
-  return redirect("/");
+  return response;
 };
