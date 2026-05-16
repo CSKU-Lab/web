@@ -35,7 +35,7 @@
         td,
         th {
             min-width: 1em;
-            border: 1px solid #ced4da;
+            border: 1px solid var(--border);
             padding: 8px 12px;
             vertical-align: top;
             box-sizing: border-box;
@@ -49,7 +49,7 @@
         th {
             font-weight: 600;
             text-align: left;
-            background-color: var(--gray-3);
+            background-color: var(--muted);
         }
 
         .selectedCell:after {
@@ -60,7 +60,8 @@
             right: 0;
             top: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.05);
+            background: var(--accent);
+            opacity: 0.1;
             pointer-events: none;
         }
 
@@ -70,7 +71,7 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background-color: #adb5bd;
+            background-color: var(--muted-foreground);
             pointer-events: none;
         }
     }

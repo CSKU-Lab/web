@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { type Editor } from "@tiptap/react";
+import { type Editor, useEditorState } from "@tiptap/react";
 import { Table } from "lucide-react";
 
 import { useTiptapEditor } from "~/hooks/use-tiptap-editor";
@@ -81,8 +81,13 @@ export function TablePopover({
   const { editor } = useTiptapEditor(providedEditor);
   const [isOpen, setIsOpen] = React.useState(false);
 
+  const isEditable = useEditorState({
+    editor,
+    selector: (ctx) => ctx.editor?.isEditable ?? false,
+  });
+
   const canInsertTable = React.useMemo(() => {
-    if (!editor || !editor.isEditable) return false;
+    if (!editor || !isEditable) return false;
     try {
       return editor
         .can()
@@ -90,7 +95,7 @@ export function TablePopover({
     } catch {
       return false;
     }
-  }, [editor]);
+  }, [editor, isEditable]);
 
   if (!editor) return null;
 

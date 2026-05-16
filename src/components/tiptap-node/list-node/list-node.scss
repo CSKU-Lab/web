@@ -1,25 +1,14 @@
-.tiptap.ProseMirror {
-  --tt-checklist-bg-color: var(--tt-gray-light-a-100);
-  --tt-checklist-bg-active-color: var(--tt-gray-light-a-900);
-  --tt-checklist-border-color: var(--tt-gray-light-a-200);
-  --tt-checklist-border-active-color: var(--tt-gray-light-a-900);
-  --tt-checklist-check-icon-color: var(--white);
-  --tt-checklist-text-active: var(--tt-gray-light-a-500);
-
-  .dark & {
-    --tt-checklist-bg-color: var(--tt-gray-dark-a-100);
-    --tt-checklist-bg-active-color: var(--tt-gray-dark-a-900);
-    --tt-checklist-border-color: var(--tt-gray-dark-a-200);
-    --tt-checklist-border-active-color: var(--tt-gray-dark-a-900);
-    --tt-checklist-check-icon-color: var(--black);
-    --tt-checklist-text-active: var(--tt-gray-dark-a-500);
-  }
-}
-
 /* =====================
      LISTS
      ===================== */
 .tiptap.ProseMirror {
+  --tt-checklist-bg-color: var(--muted);
+  --tt-checklist-bg-active-color: var(--foreground);
+  --tt-checklist-border-color: var(--border);
+  --tt-checklist-border-active-color: var(--foreground);
+  --tt-checklist-check-icon-color: var(--background);
+  --tt-checklist-text-active: var(--muted-foreground);
+
   // Common list styles
   ol,
   ul {
