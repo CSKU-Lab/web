@@ -3,6 +3,7 @@ import Link from "next/link";
 import SidebarWrapper from "~/components/Menus/SidebarWrapper";
 import type { ChildrenProps } from "~/types/children-props";
 import { cn } from "~/lib/utils";
+import { version } from "../../package.json";
 
 interface Props {
   children: ReactNode;
@@ -37,9 +38,12 @@ interface SidebarProps extends ChildrenProps {
 export function CoreLayoutSidebar({ children, homePath = "/" }: SidebarProps) {
   return (
     <SidebarWrapper>
-      <Link href={homePath} className="text-(--gray-12) font-medium hover:text-(--accent-9) transition-colors block mb-2">
-        CS Lab
-      </Link>
+      <div className="mb-2 leading-none">
+        <Link href={homePath} className="text-(--gray-12) font-medium hover:text-(--accent-9) transition-colors inline-block">
+          CS Lab
+        </Link>
+        <span className="text-xs text-(--gray-11) block">{version}</span>
+      </div>
       {children}
     </SidebarWrapper>
   );
