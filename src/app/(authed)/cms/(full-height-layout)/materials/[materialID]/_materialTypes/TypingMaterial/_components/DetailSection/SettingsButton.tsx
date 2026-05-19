@@ -38,15 +38,21 @@ const settingsSchema = z.object({
 
 type SettingsSchema = z.infer<typeof settingsSchema>;
 
-function DeleteSection({ materialID }: { materialID: string }) {
+function DeleteSection({
+  courseID,
+  materialID,
+}: {
+  courseID: string;
+  materialID: string;
+}) {
   const [confirming, setConfirming] = useState(false);
   const router = useRouter();
 
   const deleteMutation = useMutation({
-    mutationFn: () => cmsMaterialService.delete(materialID),
+    mutationFn: () => cmsMaterialService.delete(courseID, materialID),
     onSuccess: () => {
       toast.success("Material deleted");
-      router.push("/cms/materials");
+      router.push(`/cms/courses/${courseID}`);
     },
     onError: (err) => {
       if (err instanceof AxiosError) {
@@ -89,7 +95,10 @@ function DeleteSection({ materialID }: { materialID: string }) {
 }
 
 function SettingsButton() {
-  const { materialID } = useParams<{ materialID: string }>();
+  const { courseID, materialID } = useParams<{
+    courseID: string;
+    materialID: string;
+  }>();
   const queryClient = useQueryClient();
   const { data: material } = useGetMaterial();
   const isOwner = useAtomValue(isOwnerAtom);
@@ -125,14 +134,14 @@ function SettingsButton() {
       visibility: "public" | "private";
       manual_score: number;
     }) =>
-      cmsMaterialService.update(materialID, {
+      cmsMaterialService.update(courseID, materialID, {
         ...payload,
         payload: null,
       }),
     onSuccess: () => {
       toast.success("Material updated successfully");
       queryClient.invalidateQueries({
-        queryKey: queryKeys.material.getById(materialID),
+        queryKey: queryKeys.material.getById(courseID, materialID),
       });
     },
     onError: (err) => {
@@ -238,7 +247,7 @@ function SettingsButton() {
             {updateMaterial.isPending ? "Saving..." : "Save Changes"}
           </Button>
 
-          <DeleteSection materialID={materialID} />
+          <DeleteSection courseID={courseID} materialID={materialID} />
         </form>
       </DialogContent>
     </Dialog>

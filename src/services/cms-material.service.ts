@@ -19,39 +19,59 @@ export type GetMaterialPaginationParams = PaginationRequestParams<CMSMaterial>;
 
 class CMSMaterialService extends BaseService {
   constructor() {
-    super("/cms/materials");
+    super("/cms/courses");
   }
 
-  async create(payload: CreateMaterialPayload) {
-    const res = await this.api.post<{ id: string }>(this._baseURL, payload);
+  private materialsURL(courseID: string) {
+    return `${this._baseURL}/${courseID}/materials`;
+  }
+
+  async create(courseID: string, payload: CreateMaterialPayload) {
+    const res = await this.api.post<{ id: string }>(
+      this.materialsURL(courseID),
+      payload,
+    );
     return res.data.id;
   }
 
-  async getById(id: string): Promise<CMSMaterial> {
-    const res = await this.api.get<CMSMaterial>(`${this._baseURL}/${id}`);
+  async fork(courseID: string, sourceMaterialID: string) {
+    const res = await this.api.post<{ id: string }>(
+      `${this.materialsURL(courseID)}/fork`,
+      {
+        source_material_id: sourceMaterialID,
+      },
+    );
+    return res.data.id;
+  }
+
+  async getById(courseID: string, id: string): Promise<CMSMaterial> {
+    const res = await this.api.get<CMSMaterial>(
+      `${this.materialsURL(courseID)}/${id}`,
+    );
     return res.data;
   }
 
-  async update(id: string, payload: UpdateMaterialPayload) {
-    return this.api.patch(`${this._baseURL}/${id}`, payload);
+  async update(courseID: string, id: string, payload: UpdateMaterialPayload) {
+    return this.api.patch(`${this.materialsURL(courseID)}/${id}`, payload);
   }
 
-  async delete(id: string) {
-    return this.api.delete(`${this._baseURL}/${id}`);
+  async delete(courseID: string, id: string) {
+    return this.api.delete(`${this.materialsURL(courseID)}/${id}`);
   }
 
-  async getPagination(params: GetMaterialPaginationParams) {
-    return this._getPagination<CMSMaterial>(params);
+  async getPagination(courseID: string, params: GetMaterialPaginationParams) {
+    return this._getPagination<CMSMaterial>(params, `/${courseID}/materials`);
   }
 
   async uploadAsset(
+    courseID: string,
     id: string,
     file: File,
     onUploadProgress: (progressEvent: AxiosProgressEvent) => void,
     signal?: AbortSignal,
   ) {
     return this.api.postForm<{ url: string }>(
-      `${this._baseURL}/${id}/assets`,
+      `${this.materialsURL(courseID)}/${id}/assets`,
       {
         file,
       },

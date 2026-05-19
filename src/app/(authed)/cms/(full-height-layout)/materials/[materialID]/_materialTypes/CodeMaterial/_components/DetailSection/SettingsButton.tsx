@@ -38,7 +38,10 @@ const settingsSchema = z.object({
 type SettingsSchema = z.infer<typeof settingsSchema>;
 
 function SettingsButton() {
-  const { materialID } = useParams<{ materialID: string }>();
+  const { courseID, materialID } = useParams<{
+    courseID: string;
+    materialID: string;
+  }>();
   const queryClient = useQueryClient();
   const { data: material } = useGetMaterial();
   const isOwner = useAtomValue(isOwnerAtom);
@@ -74,14 +77,14 @@ function SettingsButton() {
       visibility: "public" | "private";
       manual_score: number;
     }) =>
-      cmsMaterialService.update(materialID, {
+      cmsMaterialService.update(courseID, materialID, {
         ...payload,
         payload: null,
       }),
     onSuccess: () => {
       toast.success("Material updated successfully");
       queryClient.invalidateQueries({
-        queryKey: queryKeys.material.getById(materialID),
+        queryKey: queryKeys.material.getById(courseID, materialID),
       });
     },
     onError: (err) => {

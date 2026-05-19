@@ -107,9 +107,9 @@ export function BreadcrumbProvider({ children }: ChildrenProps) {
     queryKey: ["breadcrumb", "material", entityIds.material],
     queryFn: () =>
       entityIds.material
-        ? cmsMaterialService.getById(entityIds.material)
+        ? cmsMaterialService.getById(entityIds.course!, entityIds.material)
         : Promise.resolve(null),
-    enabled: !!entityIds.material,
+    enabled: !!entityIds.course && !!entityIds.material,
     staleTime: 5 * 60 * 1000,
   });
 

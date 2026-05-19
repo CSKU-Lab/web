@@ -27,7 +27,7 @@ export const columns = [
       const name = cell.getValue();
       return (
         <Link
-          href={`/cms/materials/${cell.row.original.id}`}
+          href={`/cms/courses/${cell.row.original.course_id}/materials/${cell.row.original.id}`}
           className="font-semibold text-primary hover:underline truncate block"
           title={name}
         >

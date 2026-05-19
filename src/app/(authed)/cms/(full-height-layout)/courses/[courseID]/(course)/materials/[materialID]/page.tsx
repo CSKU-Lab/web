@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
-import CodeMaterial from "./_materialTypes/CodeMaterial";
-import TypingMaterial from "./_materialTypes/TypingMaterial";
+import CodeMaterial from "~/app/(authed)/cms/(full-height-layout)/materials/[materialID]/_materialTypes/CodeMaterial";
+import TypingMaterial from "~/app/(authed)/cms/(full-height-layout)/materials/[materialID]/_materialTypes/TypingMaterial";
 import { getUser } from "~/lib/get-user";
 
-async function getMaterial(materialID: string) {
+async function getMaterial(courseID: string, materialID: string) {
   try {
-    return await cmsMaterialService.getById(materialID);
+    return await cmsMaterialService.getById(courseID, materialID);
   } catch (error: any) {
     if (error) {
       notFound();
@@ -17,10 +17,10 @@ async function getMaterial(materialID: string) {
 }
 
 async function MaterialPage(props: {
-  params: Promise<{ materialID: string }>;
+  params: Promise<{ courseID: string; materialID: string }>;
 }) {
-  const { materialID } = await props.params;
-  const material = await getMaterial(materialID);
+  const { courseID, materialID } = await props.params;
+  const material = await getMaterial(courseID, materialID);
   const user = await getUser();
   const isOwner = material.created_by.id === user.sub;
 
@@ -35,8 +35,8 @@ async function MaterialPage(props: {
   return (
     <div className="flex justify-center items-center h-full">
       <h4 className="text-(--gray-11)">
-        Material type &quot;{titleFormatter(material.type)}&quot; is not
-        supported yet.
+        Material type &quot;{titleFormatter(material.type)}&quot; is not supported
+        yet.
       </h4>
     </div>
   );

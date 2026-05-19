@@ -36,7 +36,7 @@ export default function LabDetail() {
   });
 
   const handleMaterialNavigate = (id: string) => {
-    router.push(generatePath(`/cms/materials/${id}`));
+    router.push(generatePath(`/cms/courses/:courseID/materials/${id}`));
   };
 
   const bottomDivRef = useOnElementAppear({

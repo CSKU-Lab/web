@@ -31,12 +31,15 @@ function SaveButton() {
   const isOwner = useAtomValue(isOwnerAtom);
   const { data: material } = useGetMaterial();
 
-  const { materialID } = useParams<{ materialID: string }>();
+  const { courseID, materialID } = useParams<{
+    courseID: string;
+    materialID: string;
+  }>();
   const queryCleint = useQueryClient();
   const save = useMutation({
     mutationFn: () => {
       setSaveStatus("Saving");
-      return cmsMaterialService.update(materialID, {
+      return cmsMaterialService.update(courseID, materialID, {
         payload: {
           description: JSON.stringify(description),
           test_case_groups: testCaseGroups,
@@ -65,7 +68,7 @@ function SaveButton() {
     },
     onSuccess: async () => {
       await queryCleint.invalidateQueries({
-        queryKey: queryKeys.material.getById(materialID),
+        queryKey: queryKeys.material.getById(courseID, materialID),
       });
       setSaveStatus("Saved");
     },

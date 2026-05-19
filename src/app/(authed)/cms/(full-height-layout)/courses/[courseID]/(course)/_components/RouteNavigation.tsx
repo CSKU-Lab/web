@@ -10,7 +10,7 @@ function RouteNavigation({ title }: Props) {
     <>
       <PageTitle>{title}</PageTitle>
       <NavigationMenus
-        className="grid-cols-3"
+        className="grid-cols-4"
         menus={[
           {
             name: "Sections",
@@ -19,6 +19,10 @@ function RouteNavigation({ title }: Props) {
           {
             name: "Labs",
             href: "/cms/courses/:courseID/labs",
+          },
+          {
+            name: "Materials",
+            href: "/cms/courses/:courseID/materials",
           },
           {
             name: "Settings",

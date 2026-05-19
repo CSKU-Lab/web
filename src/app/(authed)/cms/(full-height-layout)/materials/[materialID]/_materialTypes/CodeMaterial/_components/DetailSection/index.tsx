@@ -6,6 +6,7 @@ import SaveStatus from "./SaveStatus";
 import SettingsButton from "./SettingsButton";
 import { Globe, Lock } from "lucide-react";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
+import ForkMaterialButton from "../../../../_components/ForkMaterialButton";
 
 function DetailSection() {
   const { data: detail, isLoading } = useGetMaterial();
@@ -56,6 +57,7 @@ function DetailSection() {
       </div>
 
       <div className="flex gap-2">
+        <ForkMaterialButton />
         <SaveButton />
         <SettingsButton />
       </div>

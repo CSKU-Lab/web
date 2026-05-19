@@ -5,10 +5,10 @@ import {
 import usePagination from "~/hooks/usePagination";
 import { queryKeys } from "~/queryKeys";
 
-const useMaterialPagination = (args: GetMaterialPaginationParams) => {
+const useMaterialPagination = (courseID: string, args: GetMaterialPaginationParams) => {
   return usePagination({
-    queryKey: queryKeys.material.allWithParams(args),
-    queryFn: () => cmsMaterialService.getPagination(args),
+    queryKey: queryKeys.material.allWithParams(courseID, args),
+    queryFn: () => cmsMaterialService.getPagination(courseID, args),
   });
 };
 

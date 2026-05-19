@@ -2,6 +2,8 @@ import type { User } from "./user";
 
 export interface CMSMaterial {
   id: string;
+  course_id: string;
+  forked_from_material_id: string | null;
   name: string;
   tags: string[];
   type: MaterialType;

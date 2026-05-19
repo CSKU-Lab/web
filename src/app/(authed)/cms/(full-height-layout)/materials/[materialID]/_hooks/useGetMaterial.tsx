@@ -4,11 +4,14 @@ import { useParams } from "next/navigation";
 import { cmsMaterialService } from "~/services/cms-material.service";
 
 function useGetMaterial() {
-  const { materialID } = useParams<{ materialID: string }>();
+  const { courseID, materialID } = useParams<{
+    courseID: string;
+    materialID: string;
+  }>();
 
   return useQuery({
-    queryKey: queryKeys.material.getById(materialID),
-    queryFn: async () => cmsMaterialService.getById(materialID),
+    queryKey: queryKeys.material.getById(courseID, materialID),
+    queryFn: async () => cmsMaterialService.getById(courseID, materialID),
     placeholderData: keepPreviousData,
   });
 }

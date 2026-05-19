@@ -49,6 +49,7 @@ const codeMaterialPayloadSchema = z.object({
 });
 
 const createMaterialSchema = z.object({
+  course_id: z.string(),
   name: z.string(),
   type: z.enum(["document", "code", "typing"]),
   tags: z.array(z.string()),
@@ -56,10 +57,12 @@ const createMaterialSchema = z.object({
 });
 
 const updateMaterialSchema = createMaterialSchema.partial().extend({
+  course_id: z.string(),
   payload: codeMaterialPayloadSchema.partial().nullable(),
 });
 
 const paginationSchema = z.object({
+  course_id: z.string(),
   page: z.number().min(1),
   limit: z.number().min(1),
   search: z.string().optional(),

@@ -7,6 +7,9 @@ export const pathNames = {
       "/[courseId]": {
         "/": "Details",
         "/settings": "Settings",
+        "/materials": {
+          "/": "Materials",
+        },
         "/sections": {
           "/": "Sections",
           "/new": "New Section",

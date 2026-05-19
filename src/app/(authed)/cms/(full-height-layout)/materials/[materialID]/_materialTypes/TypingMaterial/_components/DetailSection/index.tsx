@@ -14,6 +14,7 @@ import { queryKeys } from "~/queryKeys";
 import { isOwnerAtom } from "../../_stores/owner.store";
 import { Button } from "~/components/commons/Button";
 import SettingsButton from "./SettingsButton";
+import ForkMaterialButton from "../../../../_components/ForkMaterialButton";
 
 function SaveStatus() {
   const saveStatus = useAtomValue(saveStatusAtom);
@@ -50,20 +51,23 @@ function SaveButton() {
   const [saveStatus, setSaveStatus] = useAtom(saveStatusAtom);
   const isOwner = useAtomValue(isOwnerAtom);
   const { data: material } = useGetMaterial();
-  const { materialID } = useParams<{ materialID: string }>();
+  const { courseID, materialID } = useParams<{
+    courseID: string;
+    materialID: string;
+  }>();
   const queryClient = useQueryClient();
 
   const save = useMutation({
     mutationFn: () => {
       setSaveStatus("Saving");
-      return cmsMaterialService.update(materialID, {
+      return cmsMaterialService.update(courseID, materialID, {
         payload: { content: text },
         manual_score: material?.manual_score ?? 0,
       });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: queryKeys.material.getById(materialID),
+        queryKey: queryKeys.material.getById(courseID, materialID),
       });
       setSaveStatus("Saved");
     },
@@ -136,6 +140,7 @@ export default function TypingDetailSection() {
         <SaveStatus />
       </div>
       <div className="flex gap-2">
+        <ForkMaterialButton />
         <ViewToggle />
         <SaveButton />
         <SettingsButton />

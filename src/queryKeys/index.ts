@@ -117,11 +117,16 @@ export const queryKeys = {
   },
   material: {
     all: ["materials"],
-    allWithParams: (params: Record<string, any>) => [
+    allWithParams: (courseId: string, params: Record<string, any>) => [
       ...queryKeys.material.all,
+      courseId,
       params,
     ],
-    getById: (materialId: string) => [...queryKeys.material.all, materialId],
+    getById: (courseId: string, materialId: string) => [
+      ...queryKeys.material.all,
+      courseId,
+      materialId,
+    ],
   },
   lab: {
     all: ["labs"],

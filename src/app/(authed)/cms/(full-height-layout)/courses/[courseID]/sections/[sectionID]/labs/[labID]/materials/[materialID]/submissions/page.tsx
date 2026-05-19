@@ -39,7 +39,7 @@ function Page() {
     isLoading: isMaterialLoading,
     isError: isMaterialError,
     refetch: refetchMaterial,
-  } = useGetMaterial({ materialID });
+  } = useGetMaterial({ courseID, materialID });
 
   const isLoading = isStudentsLoading || isMaterialLoading;
   const isError = (isStudentsError && !isStudentsFetching) || isMaterialError;

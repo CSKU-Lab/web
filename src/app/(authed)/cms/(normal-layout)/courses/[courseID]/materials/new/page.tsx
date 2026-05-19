@@ -1,26 +1,28 @@
 "use client";
+
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useParams, useRouter } from "next/navigation";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
 import PageTitle from "~/components/commons/PageTitle";
-import Input from "~/components/crafts/Input";
-import MaterialTypeSelect from "./_components/MaterialTypeSelect";
 import { Button } from "~/components/commons/Button";
+import Input from "~/components/crafts/Input";
 import TagAutocomplete from "~/components/crafts/TagAutocomplete";
 import VisibilityInput from "~/components/crafts/VisibilityInput";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type CreateMaterialSchema,
   createMaterialSchema,
-} from "./_schemas/create-material.schema";
-import { useMutation } from "@tanstack/react-query";
+} from "~/app/(authed)/cms/(normal-layout)/materials/new/_schemas/create-material.schema";
+import MaterialTypeSelect from "~/app/(authed)/cms/(normal-layout)/materials/new/_components/MaterialTypeSelect";
 import {
   cmsMaterialService,
   type CreateMaterialPayload,
 } from "~/services/cms-material.service";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { AxiosError } from "axios";
 
 function NewMaterialPage() {
+  const { courseID } = useParams<{ courseID: string }>();
   const form = useForm({
     resolver: zodResolver(createMaterialSchema),
     defaultValues: {
@@ -35,10 +37,10 @@ function NewMaterialPage() {
   const router = useRouter();
   const createMaterial = useMutation({
     mutationFn: (payload: CreateMaterialPayload) =>
-      cmsMaterialService.create(payload),
+      cmsMaterialService.create(courseID, payload),
     onSuccess: (materialId) => {
       toast.success("Material created successfully");
-      router.push(`/cms/materials/${materialId}`);
+      router.push(`/cms/courses/${courseID}/materials/${materialId}`);
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

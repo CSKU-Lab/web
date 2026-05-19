@@ -11,7 +11,7 @@ const useLabMaterialInfPagination = (
   const { labID, payload } = params;
 
   return useInfinitePagination({
-    queryKey: queryKeys.material.allWithParams(params),
+    queryKey: queryKeys.lab.materials.allWithParams(labID, payload),
     queryFn: ({ pageParam }) =>
       cmsLabMaterialService.getPagination(labID, {
         ...payload,

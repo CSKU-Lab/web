@@ -20,7 +20,10 @@ function DescriptionSection() {
 
   const isLoading = useAtomValue(isLoadingAtom);
   const [description, setDescription] = useAtom(descriptionAtom);
-  const { materialID } = useParams<{ materialID: string }>();
+  const { courseID, materialID } = useParams<{
+    courseID: string;
+    materialID: string;
+  }>();
   const isOwner = useAtomValue(isOwnerAtom);
 
   const handleImageUpload = async (
@@ -40,6 +43,7 @@ function DescriptionSection() {
 
     try {
       const res = await cmsMaterialService.uploadAsset(
+        courseID,
         materialID,
         file,
         (progressEvent) => {

@@ -1,13 +1,12 @@
 "use client";
+
 import { useMemo, useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { Plus } from "lucide-react";
 import useTable from "~/hooks/useTable";
-import { columns } from "./_columns";
 import DataTable from "~/components/commons/DataTable";
 import { Button } from "~/components/commons/Button";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Plus } from "lucide-react";
-import PageTitle from "~/components/commons/PageTitle";
-import useMaterialPagination from "./_hooks/useMaterialPagination";
+import useMaterialPagination from "~/app/(authed)/cms/(full-height-layout)/materials/_hooks/useMaterialPagination";
 import useTableState from "~/hooks/useTableState";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import useTablePageSize from "~/hooks/useTablePageSize";
@@ -16,13 +15,20 @@ import type { IFilter } from "~/types/filter";
 import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
 import Filters from "~/components/commons/Filters";
 import SearchInput from "~/components/commons/SearchInput";
+import { columns } from "~/app/(authed)/cms/(full-height-layout)/materials/_columns";
 
-function MaterialPage() {
+function MaterialListPage() {
+  const { courseID } = useParams<{ courseID: string }>();
   const memoizedColumns = useMemo(() => columns, []);
 
-  const { containerRef, pageSize, hasCalculated } = useTablePageSize({ rowHeight: 36, headerHeight: 36, buffer: 20 });
+  const { containerRef, pageSize } = useTablePageSize({
+    rowHeight: 36,
+    headerHeight: 36,
+    buffer: 20,
+  });
   const initialPageSize = pageSize || 25;
-  const { sorting, setSorting, pagination, setPagination } = useTableState(initialPageSize);
+  const { sorting, setSorting, pagination, setPagination } =
+    useTableState(initialPageSize);
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
@@ -33,7 +39,6 @@ function MaterialPage() {
   ];
 
   const searchParams = useSearchParams();
-
   const [filters, setFilters] = useState<IFilter[]>(() =>
     searchParamsToFilter(searchParams, filterFields),
   );
@@ -43,7 +48,7 @@ function MaterialPage() {
     isFetching,
     isError,
     refetch,
-  } = useMaterialPagination({
+  } = useMaterialPagination(courseID, {
     page: pagination.pageIndex + 1,
     page_size: pagination.pageSize,
     search: debouncedSearch,
@@ -71,7 +76,6 @@ function MaterialPage() {
 
   return (
     <>
-      <PageTitle>Materials</PageTitle>
       <div className="flex justify-end items-center gap-2 px-4 my-4">
         <SearchInput
           placeholder="Search materials..."
@@ -80,7 +84,7 @@ function MaterialPage() {
           onChange={setSearch}
         />
         <Button
-          onClick={() => router.push("/cms/materials/new")}
+          onClick={() => router.push(`/cms/courses/${courseID}/materials/new`)}
           className="shrink-0"
         >
           <Plus size="1rem" />
@@ -108,4 +112,4 @@ function MaterialPage() {
   );
 }
 
-export default MaterialPage;
+export default MaterialListPage;

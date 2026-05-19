@@ -21,7 +21,7 @@ import useGetLabMaterial from "./_hooks/useGetLabMaterial";
 import { useSaveLabMaterials } from "./_hooks/useSaveLabMaterials";
 
 export default function NewLabMaterialPage() {
-  const { labID } = useParams<{ labID: string }>();
+  const { courseID, labID } = useParams<{ courseID: string; labID: string }>();
   const memoizedColumns = useMemo(() => columns, []);
   const { containerRef, pageSize, hasCalculated } = useTablePageSize({ rowHeight: 36, headerHeight: 36, buffer: 28 });
   const [initialized, setInitialized] = useState(false);
@@ -59,14 +59,14 @@ export default function NewLabMaterialPage() {
     isFetching,
     isError,
     refetch,
-  } = useMaterialPagination({
-    page: pagination.pageIndex + 1,
-    page_size: pagination.pageSize,
-    search: debouncedSearch,
-    sort_by: (sorting[0]?.id as keyof CMSMaterial) ?? "created_at",
-    sort_order: sorting[0]?.desc ? "desc" : "asc",
-    filters,
-  });
+  } = useMaterialPagination(courseID, {
+      page: pagination.pageIndex + 1,
+      page_size: pagination.pageSize,
+      search: debouncedSearch,
+      sort_by: (sorting[0]?.id as keyof CMSMaterial) ?? "created_at",
+      sort_order: sorting[0]?.desc ? "desc" : "asc",
+      filters,
+    });
 
   const initialSelectedRowIds = useMemo<Record<string, boolean>>(() => {
     if (!labMaterials) return {};
