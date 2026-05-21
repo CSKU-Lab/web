@@ -27,6 +27,8 @@ export function useMaterialPagination({
     queryFn: async ({ pageParam }) => {
       const response = await cmsLabMaterialService.getPagination(labID, {
         page: pageParam,
+        sort_by: "position",
+        sort_order: "asc",
         ...params,
       });
       return response;

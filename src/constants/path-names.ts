@@ -39,9 +39,6 @@ export const pathNames = {
           "/new": "New Lab",
           "/[labID]": {
             "/": "Details",
-            "/add-material": {
-              "/": "New Lab Material",
-            },
           },
         },
       },
