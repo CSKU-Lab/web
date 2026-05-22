@@ -1,3 +1,10 @@
+# [0.7.0](https://github.com/CSKU-Lab/web/compare/v0.6.1...v0.7.0) (2026-05-22)
+
+
+### Features
+
+* **material:** add a document material ([7736ad1](https://github.com/CSKU-Lab/web/commit/7736ad1a025899202be6fccf1200de377704bcd9))
+
 ## [0.6.1](https://github.com/CSKU-Lab/web/compare/v0.6.0...v0.6.1) (2026-05-22)
 
 
