@@ -12,6 +12,7 @@ interface DetailSectionProps {
   sectionID: string;
   labID: string;
   materialID: string;
+  showSubmit?: boolean;
 }
 
 function mapSubmissionStatus(status: SubmissionStatus | undefined): StatusType {
@@ -30,7 +31,7 @@ function mapSubmissionStatus(status: SubmissionStatus | undefined): StatusType {
   }
 }
 
-function DetailSection({ sectionID, labID, materialID }: DetailSectionProps) {
+function DetailSection({ sectionID, labID, materialID, showSubmit = true }: DetailSectionProps) {
   const { data: material, isLoading } = useGetCoreMaterial();
   const [submissionStatus] = useAtom(submissionStatusAtom);
 
@@ -50,11 +51,13 @@ function DetailSection({ sectionID, labID, materialID }: DetailSectionProps) {
           isLoading={isLoading}
         />
       </div>
-      <SubmitButton
-        sectionID={sectionID}
-        labID={labID}
-        materialID={materialID}
-      />
+      {showSubmit && (
+        <SubmitButton
+          sectionID={sectionID}
+          labID={labID}
+          materialID={materialID}
+        />
+      )}
     </div>
   );
 }

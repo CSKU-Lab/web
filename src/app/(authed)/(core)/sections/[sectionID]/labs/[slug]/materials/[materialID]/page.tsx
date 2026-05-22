@@ -8,6 +8,7 @@ import { type Metadata } from "next";
 import DetailSection from "./_components/DetailSection";
 import MaterialPageClient from "./_components/MaterialPageClient";
 import MaterialTypeRouter from "./_components/MaterialTypeRouter";
+import { coreMaterialService } from "~/services/core-material.service";
 
 export const generateMetadata = async ({
   params,
@@ -45,9 +46,11 @@ async function MaterialPage(props: {
     );
   }
 
+  const material = await coreMaterialService.getById(materialID, sectionID, labID);
+
   return (
     <MaterialPageClient materialID={materialID}>
-      <MaterialTypeRouter>
+      <MaterialTypeRouter initialType={material.type}>
         <DetailSection
           sectionID={sectionID}
           labID={labID}

@@ -3,6 +3,7 @@ import { cmsMaterialService } from "~/services/cms-material.service";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import CodeMaterial from "~/app/(authed)/cms/(full-height-layout)/materials/[materialID]/_materialTypes/CodeMaterial";
 import TypingMaterial from "~/app/(authed)/cms/(full-height-layout)/materials/[materialID]/_materialTypes/TypingMaterial";
+import DocumentMaterial from "~/app/(authed)/cms/(full-height-layout)/materials/[materialID]/_materialTypes/DocumentMaterial";
 import { getUser } from "~/lib/get-user";
 
 async function getMaterial(courseID: string, materialID: string) {
@@ -30,6 +31,10 @@ async function MaterialPage(props: {
 
   if (material.type === "typing") {
     return <TypingMaterial isOwner={isOwner} />;
+  }
+
+  if (material.type === "document") {
+    return <DocumentMaterial isOwner={isOwner} />;
   }
 
   return (
