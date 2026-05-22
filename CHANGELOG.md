@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/CSKU-Lab/web/compare/v0.6.0...v0.6.1) (2026-05-22)
+
+
+### Bug Fixes
+
+* improve web load ux and wrong redirect ([2a2608d](https://github.com/CSKU-Lab/web/commit/2a2608df0bbec5f31e2847fe09d2c0a59a8ed95e))
+
 # [0.6.0](https://github.com/CSKU-Lab/web/compare/v0.5.0...v0.6.0) (2026-05-21)
 
 
