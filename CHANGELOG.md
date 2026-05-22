@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/CSKU-Lab/web/compare/v0.7.0...v0.8.0) (2026-05-22)
+
+
+### Features
+
+* implement command pallete ([12a2365](https://github.com/CSKU-Lab/web/commit/12a23655e5e017eccd74b7adf40443ed132078c6))
+
 # [0.7.0](https://github.com/CSKU-Lab/web/compare/v0.6.1...v0.7.0) (2026-05-22)
 
 
