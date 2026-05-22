@@ -177,6 +177,9 @@ export const queryKeys = {
   affectedEntities: {
     get: (type: AffectedType, id: string) => ["affectedEntities", type, id],
   },
+  search: {
+    cms: (q: string) => ["cms-search", q],
+  },
   sidebar: {
     get: () => ["sidebar"],
   },
