@@ -15,8 +15,6 @@ import { searchParamsToFilter } from "~/lib/searchparams-to-filter";
 import Filters from "~/components/commons/Filters";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import useSectionsByCourseIdPagination from "./_hooks/useSectionsByCourseIdPagination";
-import RouteNavigation from "./_components/RouteNavigation";
-
 function CourseMainPage() {
   const router = useRouter();
 
@@ -55,7 +53,6 @@ function CourseMainPage() {
 
   return (
     <>
-      <RouteNavigation title="Sections" />
       <div className="@container px-4">
         <div className="flex justify-end items-center gap-2">
           <Button onClick={handleOnAddSection}>

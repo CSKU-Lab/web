@@ -22,7 +22,6 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 
-import RouteNavigation from "../../_components/RouteNavigation";
 import LabCard from "./LabCard";
 import CreateLabDialog from "./CreateLabDialog";
 import Loading from "~/components/commons/Loading";
@@ -207,7 +206,6 @@ export default function LabCardList() {
 
   return (
     <>
-      <RouteNavigation title="Labs" />
       <div className="@container flex flex-col h-full px-4">
         <div className="flex justify-end items-center gap-2">
           <SearchInput

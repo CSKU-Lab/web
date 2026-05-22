@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Anuphan, Poppins } from "next/font/google";
 import localFont from "next/font/local";
-import AppLoading from "~/components/commons/AppLoading";
 import { Suspense } from "react";
 import { ClientEnv } from "~/lib/client-env";
 import { Toaster } from "~/components/ui/sonner";
@@ -97,7 +96,6 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ReactScan />
           <Suspense>
-            <AppLoading />
             <Toaster richColors />
           </Suspense>
           {children}

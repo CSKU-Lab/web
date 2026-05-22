@@ -10,23 +10,25 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
+  const base = process.env.WEB_URL ?? req.nextUrl.origin;
+
   if (req.nextUrl.pathname.startsWith("/")) {
     try {
       verifyJWT(req.cookies.get("access_token")?.value);
     } catch (err) {
       if (err instanceof Error) {
         if (err.message === "UNAUTHORIZED") {
-          return NextResponse.redirect(new URL("/auth/sign-in", req.url));
+          return NextResponse.redirect(new URL("/auth/sign-in", base));
         }
 
         if (err.message === "NO_TOKEN" || err.message === "TOKEN_EXPIRED") {
           const redirectTo = req.nextUrl.pathname;
           return NextResponse.redirect(
-            new URL("/auth/refresh-token?redirect_to=" + redirectTo, req.url),
+            new URL("/auth/refresh-token?redirect_to=" + redirectTo, base),
           );
         }
       }
-      return NextResponse.redirect(new URL("/auth/sign-out", req.url));
+      return NextResponse.redirect(new URL("/auth/sign-out", base));
     }
   }
 

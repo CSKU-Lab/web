@@ -38,10 +38,15 @@ export const GET = async (req: NextRequest) => {
     redirect("/auth/sign-in");
   }
 
-  const redirectTo = searchParams.get("redirect_to") || "/";
+  const rawRedirectTo = searchParams.get("redirect_to") ?? "/";
+  // Accept only relative paths — reject anything with a scheme/host to prevent open redirect.
+  const redirectTo = rawRedirectTo.startsWith("/") && !rawRedirectTo.startsWith("//")
+    ? rawRedirectTo
+    : "/";
+  const base = process.env.WEB_URL ?? req.nextUrl.origin;
 
   const response = NextResponse.redirect(
-    new URL(redirectTo, req.url),
+    new URL(redirectTo, base),
   );
 
   (resCookies as string[]).forEach((cookie) => {

@@ -32,7 +32,6 @@ import {
   SettingTitle,
 } from "~/components/crafts/Settings";
 import { createCourseSchame } from "../../../_schemas/course.create";
-import RouteNavigation from "../_components/RouteNavigation";
 
 function SettingPage() {
   const { courseID } = useParams<{ courseID: string }>();
@@ -79,7 +78,6 @@ function SettingPage() {
 
   return (
     <>
-      <RouteNavigation title="Settings" />
       <SettingLayout>
         <SettingCard>
           <SettingHeader>

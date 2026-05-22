@@ -52,7 +52,7 @@ function DeleteSection({
     mutationFn: () => cmsMaterialService.delete(courseID, materialID),
     onSuccess: () => {
       toast.success("Material deleted");
-      router.push(`/cms/courses/${courseID}`);
+      router.push(`/cms/courses/${courseID}/materials`);
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

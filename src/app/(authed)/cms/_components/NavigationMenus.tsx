@@ -1,12 +1,17 @@
+"use client";
+
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import useResolvePath from "~/hooks/useResolvePath";
 import { cn } from "~/lib/utils";
 
-interface MenuButonProps {
+interface MenuButtonProps {
   href: string;
   name: React.ReactNode;
+  layoutId: string;
 }
-const MenuButton = ({ name, href }: MenuButonProps) => {
+
+const MenuButton = ({ name, href, layoutId }: MenuButtonProps) => {
   const resolve = useResolvePath();
   const currentPath = usePathname();
   const router = useRouter();
@@ -14,39 +19,47 @@ const MenuButton = ({ name, href }: MenuButonProps) => {
   const currentPathEnd = currentPath.split("/").pop() || "";
   const path = resolve(href);
   const pathEnd = path.split("/").pop() || "";
-
   const isActive = currentPathEnd === pathEnd;
 
   return (
     <button
       onClick={() => router.push(path)}
       className={cn(
-        "px-3 py-2 rounded-lg text-(--gray-11) text-xs",
+        "relative px-3 py-2 rounded-lg text-(--gray-11) text-xs max-w-[160px] truncate",
         isActive
-          ? "font-semibold text-accent-foreground bg-accent"
+          ? "font-semibold text-accent-foreground"
           : "hover:text-(--gray-12) hover:font-medium",
       )}
     >
-      {name}
+      <AnimatePresence>
+        {isActive && (
+          <motion.span
+            layoutId={layoutId}
+            className="absolute inset-0 rounded-lg bg-accent"
+            transition={{ type: "tween", ease: "easeInOut", duration: 0.2 }}
+          />
+        )}
+      </AnimatePresence>
+      <span className="relative z-10">{name}</span>
     </button>
   );
 };
 
 interface NavigationMenusProps {
-  menus: {
-    name: string;
-    href: string;
-  }[];
+  menus: { name: string; href: string }[];
   className?: string;
 }
 
 function NavigationMenus({ menus, className }: NavigationMenusProps) {
+  const layoutId = `nav-active-${menus.map((m) => m.href).join("-")}`;
   return (
-    <div className={cn("mt-4 mb-8 ml-4 transition-all grid grid-cols-4  w-1/3", className)}>
-      {menus.map((menu) => (
-        <MenuButton key={menu.name} {...menu} />
-      ))}
-    </div>
+    <LayoutGroup id={layoutId}>
+      <div className={cn("mt-4 mb-8 ml-4 flex flex-wrap gap-1 w-full", className)}>
+        {menus.map((menu) => (
+          <MenuButton key={menu.name} layoutId={layoutId} {...menu} />
+        ))}
+      </div>
+    </LayoutGroup>
   );
 }
 
