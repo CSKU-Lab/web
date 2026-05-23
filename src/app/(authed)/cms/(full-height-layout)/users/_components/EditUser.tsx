@@ -77,7 +77,7 @@ const EditUser = ({ user, onClose }: Props) => {
         await userService.editCredentialUser(
           user.id,
           username,
-          password,
+          password || undefined,
           display_name,
           roles,
           group!.id,
@@ -162,16 +162,17 @@ const EditUser = ({ user, onClose }: Props) => {
           </div>
           {isCredential && (
             <div className="space-y-3">
-              <Label isError={isError("password")}>New Password</Label>
+              <Label isError={isError("password")}>New Password (optional)</Label>
               <Input type="password" {...register("password")} />
-              <p
-                className={cn(
-                  "text-sm font-light",
-                  isError("password") && "text-red-9",
-                )}
-              >
-                password must have at least 8 characters
-              </p>
+              {isError("password") ? (
+                <p className="text-red-9 text-sm font-light">
+                  {errors.password?.message}
+                </p>
+              ) : (
+                <p className="text-sm font-light">
+                  leave blank to keep current password
+                </p>
+              )}
             </div>
           )}
           <div className="space-y-3">

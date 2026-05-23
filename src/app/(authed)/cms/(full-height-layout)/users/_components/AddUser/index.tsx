@@ -148,7 +148,7 @@ const AddUser = () => {
               </div>
             )}
             <div className="space-y-3">
-              <Label isError={isError("username")}>Username</Label>
+              <Label isError={isError("username")}>Username (Student ID)</Label>
               <Input {...register("username")} />
               {isError("username") && (
                 <p className="text-(--red-9) text-sm font-light">

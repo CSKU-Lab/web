@@ -94,6 +94,18 @@ export const editUserSchema = z
       path: ["email"],
       message: "email cannot be empty",
     },
+  )
+  .refine(
+    (data) => {
+      if (data.password && data.password.length > 0) {
+        return data.password.length >= 8;
+      }
+      return true;
+    },
+    {
+      path: ["password"],
+      message: "password must have at least 8 characters",
+    },
   );
 
 export type EditUserSchema = z.infer<typeof editUserSchema>;
