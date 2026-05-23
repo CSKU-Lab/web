@@ -27,6 +27,7 @@ import CopyButton from "./CopyButton";
 
 interface Props extends ChildrenProps {
   type: AffectedType;
+  displayName?: string;
   entitiyDetail?: ReactNode;
   confirmText: string;
   id: string;
@@ -35,6 +36,7 @@ interface Props extends ChildrenProps {
 
 function ConfirmDeleteDialog({
   type,
+  displayName,
   id,
   onConfirm,
   confirmText,
@@ -125,14 +127,20 @@ function ConfirmDeleteDialog({
   return (
     <Dialog>
       {children}
-      <DialogContent className="max-h-[500px]">
-        <DialogHeader className="p-4">
+      <DialogContent className="max-h-[500px] flex flex-col">
+        <DialogHeader className="p-4 shrink-0">
           <DialogTitle>Confirm Delete ?</DialogTitle>
         </DialogHeader>
-        <div className="space-y-1.5 p-4">
+        <div className="space-y-1.5 p-4 overflow-y-auto flex-1">
           {entitiyDetail}
           <h6 className="text-sm text-(--gray-11) font-medium mt-3">
-            This will permanently delete the {type} itself and including:
+            This will permanently delete the{" "}
+            {displayName ? (
+              <span className="font-semibold text-(--gray-12)">{displayName}</span>
+            ) : (
+              type
+            )}{" "}
+            itself and including:
           </h6>
           <Loading
             isLoading={isFetching}
@@ -146,7 +154,7 @@ function ConfirmDeleteDialog({
             {affectedEntities?.map((data) => renderAffectedEntities(data))}
           </Loading>
         </div>
-        <DialogFooter className="sm:flex-col p-4">
+        <DialogFooter className="sm:flex-col p-4 shrink-0">
           <div className="flex gap-1.5">
             <p className="text-(--gray-11) text-sm shrink-0">Please type</p>
             <CopyButton confirmText={confirmText} />

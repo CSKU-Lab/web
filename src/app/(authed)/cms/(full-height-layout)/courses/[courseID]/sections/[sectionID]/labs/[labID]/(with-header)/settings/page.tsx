@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Save, X } from "lucide-react";
+import { Save, Trash, X } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -17,7 +17,11 @@ import {
 } from "~/components/commons/Select";
 import { DateTimePicker } from "~/components/commons/DateTimePicker";
 import SettingPaper from "~/components/commons/SettingPaper";
+import { SettingSection } from "~/components/crafts/Settings";
 import { cn } from "~/lib/utils";
+import DeleteLabSectionDialog, {
+  DeleteLabSectionDialogTrigger,
+} from "./_components/DeleteLabSectionDialog";
 
 import { useGetSectionLab } from "../../_hooks/useGetSectionLab";
 import {
@@ -93,6 +97,20 @@ export default function SettingsPage() {
         <SettingPaper
           title="Lab Status Settings"
           description="Configure the lab status and scheduling."
+          dangerTitle="Danger Zone"
+          dangerDescription="Removing this lab from the section is irreversible. All associated records will be permanently removed."
+          dangerAction={
+            <SettingSection>
+              <DeleteLabSectionDialog>
+                <DeleteLabSectionDialogTrigger asChild>
+                  <Button variant="danger" className="h-9">
+                    <Trash size="1rem" />
+                    Remove Lab from Section
+                  </Button>
+                </DeleteLabSectionDialogTrigger>
+              </DeleteLabSectionDialog>
+            </SettingSection>
+          }
         >
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
