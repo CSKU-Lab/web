@@ -1,3 +1,11 @@
+# [0.11.0](https://github.com/CSKU-Lab/web/compare/v0.10.0...v0.11.0) (2026-05-23)
+
+
+### Features
+
+* **core:** add command palette ([7aefcb9](https://github.com/CSKU-Lab/web/commit/7aefcb9fc1a693f47148c53b78f2c761df80c18a))
+* **section:** add delete section lab dialog ([9a191ae](https://github.com/CSKU-Lab/web/commit/9a191ae33e8b8605c3baa6e8cc61388c4035d77e))
+
 # [0.10.0](https://github.com/CSKU-Lab/web/compare/v0.9.0...v0.10.0) (2026-05-23)
 
 
