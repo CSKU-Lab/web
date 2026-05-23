@@ -88,7 +88,7 @@ function DescriptionTab() {
                   isLoading
                 />
               </div>
-            ) : (
+            ) : hasAnyLimits ? (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {limits.cpu_time > 0 && (
                   <LimitItem
@@ -147,7 +147,7 @@ function DescriptionTab() {
                   />
                 )}
               </div>
-            )}
+            ) : null}
           </div>
 
           <div className="h-px bg-(--gray-6)" />
