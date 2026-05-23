@@ -1,3 +1,16 @@
+# [0.10.0](https://github.com/CSKU-Lab/web/compare/v0.9.0...v0.10.0) (2026-05-23)
+
+
+### Bug Fixes
+
+* improve add and edit user error ([c0b4731](https://github.com/CSKU-Lab/web/commit/c0b4731cdeedc8e36d080266035290d9549089cb))
+* update export button in section gradebook page ([b2c5055](https://github.com/CSKU-Lab/web/commit/b2c5055740d07d95764ea91cdb124c148f0d4c72))
+
+
+### Features
+
+* **core:** improve labs page ([7f199a8](https://github.com/CSKU-Lab/web/commit/7f199a87df0aee15ac56034fd1948be58161117d))
+
 # [0.9.0](https://github.com/CSKU-Lab/web/compare/v0.8.0...v0.9.0) (2026-05-23)
 
 
