@@ -13,7 +13,7 @@ function GradebookPage() {
 
   const columns = useMemo(() => {
     if (!data) return [];
-    return getGradebookColumns(data.lab_cols);
+    return getGradebookColumns(data.lab_cols ?? []);
   }, [data]);
 
   const table = useReactTable({
