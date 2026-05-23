@@ -1,3 +1,10 @@
+# [0.12.0](https://github.com/CSKU-Lab/web/compare/v0.11.0...v0.12.0) (2026-05-23)
+
+
+### Features
+
+* update badge style for course card ([28cd0c3](https://github.com/CSKU-Lab/web/commit/28cd0c341cbc1f057c3500d0c1c270757525b095))
+
 # [0.11.0](https://github.com/CSKU-Lab/web/compare/v0.10.0...v0.11.0) (2026-05-23)
 
 
