@@ -1,3 +1,16 @@
+# [0.9.0](https://github.com/CSKU-Lab/web/compare/v0.8.0...v0.9.0) (2026-05-23)
+
+
+### Bug Fixes
+
+* import user ([f0592ce](https://github.com/CSKU-Lab/web/commit/f0592ce8cf7022fff602074739aceb5c39bba3d4))
+
+
+### Features
+
+* add delete button for runner and material ([d41e2ca](https://github.com/CSKU-Lab/web/commit/d41e2ca5e40fb858e27d790b38ba87f662db44eb))
+* improve command palette ([fdd82eb](https://github.com/CSKU-Lab/web/commit/fdd82eb49803709c289d3dd92d05b1d3bc4a0f5b))
+
 # [0.8.0](https://github.com/CSKU-Lab/web/compare/v0.7.0...v0.8.0) (2026-05-22)
 
 
