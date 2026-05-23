@@ -1,6 +1,7 @@
 "use client";
 
-import { LabItem } from "./LabItem";
+import { useParams } from "next/navigation";
+import { LabItemExpanded } from "./LabItemExpanded";
 import useCoreLabInfPagination from "../_hooks/useCoreLabInfPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { LabItemSkeleton } from "./LabItemSkeleton";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function LabList({ search, filters }: Props) {
+  const { sectionID } = useParams<{ sectionID: string }>();
   const {
     data: labPagination,
     fetchNextPage,
@@ -55,23 +57,24 @@ export default function LabList({ search, filters }: Props) {
         {isNoData ? (
           <NoDataAvailable />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="flex flex-col gap-4">
             {labPagination.pages.map((page) =>
               page.data.map(
                 ({
                   id,
                   name,
-                  closed_at,
+                  readonly_at,
                   status,
                   student_status,
                   total_materials,
                   completed_materials,
                 }) => (
-                  <LabItem
+                  <LabItemExpanded
                     key={id}
                     id={id}
                     name={name}
-                    closedAt={closed_at}
+                    sectionID={sectionID}
+                    readonlyAt={readonly_at}
                     status={status}
                     studentStatus={student_status}
                     totalMaterials={total_materials}
@@ -82,7 +85,7 @@ export default function LabList({ search, filters }: Props) {
             )}
 
             {isFetching &&
-              Array.from({ length: 8 }).map((_, index) => (
+              Array.from({ length: 4 }).map((_, index) => (
                 <LabItemSkeleton key={`skeleton-${index}`} />
               ))}
 

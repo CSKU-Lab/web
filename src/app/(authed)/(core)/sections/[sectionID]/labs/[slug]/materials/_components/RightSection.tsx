@@ -4,10 +4,12 @@ import { useEffect, useMemo } from "react";
 import CodeEditor from "~/components/Editor/CodeEditor";
 import useGetCoreMaterial from "../[materialID]/_hooks/useGetCoreMaterial";
 import useSubmissionFiles from "../[materialID]/_hooks/useSubmissionFiles";
+import { useIsLabReadonly } from "~/app/(authed)/(core)/sections/[sectionID]/labs/_hooks/useIsLabReadonly";
 import type { CoreCodeMaterial } from "~/types/core-code-material";
 
 function RightSection() {
   const { data: material, isLoading } = useGetCoreMaterial<CoreCodeMaterial>();
+  const isReadonly = useIsLabReadonly();
   const { files, selectedRunner, initRunner, persistFiles, handleRunnerChange } =
     useSubmissionFiles();
 
@@ -67,10 +69,10 @@ function RightSection() {
           files={editorFiles}
           onFilesChange={handleFilesChange}
           permissions={{
-            writeFiles: true,
+            writeFiles: !isReadonly,
             modifyFiles: false,
-            codeExecution: true,
-            selectRunner: true,
+            codeExecution: !isReadonly,
+            selectRunner: !isReadonly,
           }}
           allowedRunners={allowedRunners}
           initialSelectedRunner={selectedRunner}

@@ -8,13 +8,15 @@ import type { PaginationResponse } from "~/types/pagination";
 interface Args<T> {
   queryKey: QueryKey;
   queryFn: QueryFunction<PaginationResponse<T>, readonly unknown[], number>;
+  enabled?: boolean;
 }
 
-function useInfinitePagination<T>({ queryKey, queryFn }: Args<T>) {
+function useInfinitePagination<T>({ queryKey, queryFn, enabled }: Args<T>) {
   const query = useInfiniteQuery({
     queryKey,
     queryFn,
     initialPageParam: 1,
+    enabled,
     getPreviousPageParam: (lastPage) => lastPage.pagination.page - 1,
     getNextPageParam: (lastPage) => {
       if (lastPage.pagination.page < lastPage.pagination.total_page) {

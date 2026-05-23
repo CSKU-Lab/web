@@ -8,7 +8,7 @@ export interface SectionLab {
 
   status: "open" | "readonly" | "disabled";
   student_status: "passed" | "not_passed" | "in_progress" | "not_started";
-  closed_at: Date;
+  readonly_at: Date;
 
   total_materials: number;
   completed_materials: number;

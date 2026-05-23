@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import DeleteSelectedStudents from "./_components/DeleteSelectedStudents";
 import StudentBlock from "./_components/StudentBlock";
 import ToggleSelectAllStudents from "./_components/ToggleSelectAllStudents";
@@ -8,10 +9,17 @@ import { useParams } from "next/navigation";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
 import RouteNavigation from "./_components/RouteNavigation";
+import SearchInput from "~/components/commons/SearchInput";
 
 function SectionStudentPage() {
   const { sectionID } = useParams<{ sectionID: string }>();
   const { data: students, isFetching } = useGetStudents(sectionID);
+  const [search, setSearch] = useState("");
+
+  const filteredStudents = students?.filter((s) => {
+    const q = search.toLowerCase();
+    return s.username.toLowerCase().includes(q) || s.display_name.toLowerCase().includes(q);
+  });
 
   return (
     <>
@@ -30,6 +38,11 @@ function SectionStudentPage() {
           <div className="flex-1">
             <AddOrImportStudents />
           </div>
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search students..."
+          />
           {students !== undefined && (
             <ToggleSelectAllStudents students={students} />
           )}
@@ -42,7 +55,7 @@ function SectionStudentPage() {
               <Skeleton key={index} className="w-full h-44" />
             ))}
           >
-            {students?.map((student) => (
+            {filteredStudents?.map((student) => (
               <StudentBlock key={student.id} student={student} />
             ))}
           </Loading>

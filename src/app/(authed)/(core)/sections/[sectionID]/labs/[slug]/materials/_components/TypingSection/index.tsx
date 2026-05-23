@@ -8,10 +8,12 @@ import type { TypingSubmissionPayload } from "~/types/typing-submission";
 import { coreSubmissionService } from "~/services/core-submission.service";
 import { queryKeys } from "~/queryKeys";
 import useGetCoreMaterial from "../../[materialID]/_hooks/useGetCoreMaterial";
+import { useIsLabReadonly } from "~/app/(authed)/(core)/sections/[sectionID]/labs/_hooks/useIsLabReadonly";
 import { useTypingSession } from "./_hooks/useTypingSession";
 import TypingTest from "./TypingTest";
 
 export default function TypingSection() {
+  const isReadonly = useIsLabReadonly();
   const { data: material, isLoading: isMaterialLoading } =
     useGetCoreMaterial<TypingMaterialPayload>();
   const text = material?.payload.content ?? "";
@@ -101,6 +103,15 @@ export default function TypingSection() {
         >
           Retry
         </button>
+      </div>
+    );
+  }
+
+  if (isReadonly) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center gap-2">
+        <span className="text-(--blue-11) font-medium text-sm">Readonly</span>
+        <span className="text-(--gray-10) text-xs">Submissions are closed for this lab</span>
       </div>
     );
   }

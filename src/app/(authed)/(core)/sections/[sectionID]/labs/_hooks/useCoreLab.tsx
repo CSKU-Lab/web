@@ -30,6 +30,7 @@ const useCoreLab = () => {
       queryFn: async () =>
         coreSectionService.getLabInSectionById(sectionID, labID),
       placeholderData: keepPreviousData,
+      enabled: !!labID && !!sectionID,
     });
   };
 

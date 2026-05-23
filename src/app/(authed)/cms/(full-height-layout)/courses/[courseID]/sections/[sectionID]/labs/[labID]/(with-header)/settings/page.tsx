@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Save } from "lucide-react";
+import { Save, X } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -45,7 +45,7 @@ export default function SettingsPage() {
     defaultValues: {
       status: "hidden",
       opened_at: null,
-      closed_at: null,
+      readonly_at: null,
     },
   });
 
@@ -59,7 +59,7 @@ export default function SettingsPage() {
       form.reset({
         status: lab.status,
         opened_at: lab.opened_at ? new Date(lab.opened_at) : null,
-        closed_at: lab.closed_at ? new Date(lab.closed_at) : null,
+        readonly_at: lab.readonly_at ? new Date(lab.readonly_at) : null,
       });
     }
   }, [lab, isFetching, form]);
@@ -69,9 +69,9 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (!showDateFields) {
-      console.log("clear opened_at and closed_at because status");
+      console.log("clear opened_at and readonly_at because status");
       form.setValue("opened_at", null);
-      form.setValue("closed_at", null);
+      form.setValue("readonly_at", null);
     }
   }, [showDateFields, watchedStatus, form]);
 
@@ -126,7 +126,6 @@ export default function SettingsPage() {
                                 option.value === "readonly" && "bg-(--blue-9)",
                                 option.value === "hidden" && "bg-(--gray-9)",
                                 option.value === "disabled" && "bg-(--amber-9)",
-                                option.value === "closed" && "bg-(--red-9)",
                               )}
                             />
                             {option.label}
@@ -152,15 +151,26 @@ export default function SettingsPage() {
 
                 <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Started At</Label>
+                    <Label>Opened At</Label>
                     <Controller
                       control={form.control}
                       name="opened_at"
                       render={({ field: { value, onChange } }) => (
-                        <DateTimePicker
-                          value={value ?? undefined}
-                          onChange={(date) => onChange(date ?? null)}
-                        />
+                        <div className="flex items-center gap-2">
+                          <DateTimePicker
+                            value={value ?? undefined}
+                            onChange={(date) => onChange(date ?? null)}
+                          />
+                          {value && (
+                            <button
+                              type="button"
+                              onClick={() => onChange(null)}
+                              className="text-(--gray-9) hover:text-(--gray-12) transition-colors"
+                            >
+                              <X size={16} />
+                            </button>
+                          )}
+                        </div>
                       )}
                     />
                     <p className="text-xs text-(--gray-9)">
@@ -169,15 +179,26 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Eneded At</Label>
+                    <Label>Readonly At</Label>
                     <Controller
                       control={form.control}
-                      name="closed_at"
+                      name="readonly_at"
                       render={({ field: { value, onChange } }) => (
-                        <DateTimePicker
-                          value={value ?? undefined}
-                          onChange={(date) => onChange(date ?? null)}
-                        />
+                        <div className="flex items-center gap-2">
+                          <DateTimePicker
+                            value={value ?? undefined}
+                            onChange={(date) => onChange(date ?? null)}
+                          />
+                          {value && (
+                            <button
+                              type="button"
+                              onClick={() => onChange(null)}
+                              className="text-(--gray-9) hover:text-(--gray-12) transition-colors"
+                            >
+                              <X size={16} />
+                            </button>
+                          )}
+                        </div>
                       )}
                     />
                     <p className="text-xs text-(--gray-9)">

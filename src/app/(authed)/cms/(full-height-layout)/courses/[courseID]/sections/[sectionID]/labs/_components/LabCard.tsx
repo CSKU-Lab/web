@@ -31,11 +31,6 @@ const statusConfig: Record<
     label: "Disabled",
     textColor: "text-amber-700",
   },
-  closed: {
-    gradient: "from-red-500 to-red-300",
-    label: "Closed",
-    textColor: "text-red-700",
-  },
 };
 
 interface LabCardProps {

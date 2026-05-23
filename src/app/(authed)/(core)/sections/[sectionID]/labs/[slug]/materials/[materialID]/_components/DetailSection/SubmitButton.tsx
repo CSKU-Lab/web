@@ -15,6 +15,7 @@ import {
 } from "../../_stores/submission.store";
 import type { CodeSubmissionPayload } from "~/types/core-code-submission";
 import useGetCoreMaterial from "../../_hooks/useGetCoreMaterial";
+import { useIsLabReadonly } from "~/app/(authed)/(core)/sections/[sectionID]/labs/_hooks/useIsLabReadonly";
 import { MaterialType } from "~/types/core-material";
 
 interface SubmitButtonProps {
@@ -25,13 +26,14 @@ interface SubmitButtonProps {
 
 function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   const { data: material } = useGetCoreMaterial();
+  const isReadonly = useIsLabReadonly();
   const files = useAtomValue(submissionFilesAtom);
   const selectedRunner = useAtomValue(selectedRunnerAtom);
   const setSubmissionStatus = useSetAtom(submissionStatusAtom);
   const setActiveSubmissions = useSetAtom(activeSubmissionsAtom);
   const queryClient = useQueryClient();
 
-  if (material?.type === MaterialType.TYPE) {
+  if (material?.type === MaterialType.TYPE || isReadonly) {
     return null;
   }
 

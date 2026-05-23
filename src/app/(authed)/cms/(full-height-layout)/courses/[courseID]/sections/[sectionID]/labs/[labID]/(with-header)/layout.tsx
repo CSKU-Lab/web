@@ -14,7 +14,6 @@ const statusConfig: Record<LabStatus, { text: string; colorClass: string }> = {
   readonly: { text: "Readonly", colorClass: "text-(--blue-9)" },
   hidden: { text: "Hidden", colorClass: "text-(--gray-9)" },
   disabled: { text: "Disabled", colorClass: "text-(--amber-9)" },
-  closed: { text: "Closed", colorClass: "text-(--red-9)" },
 };
 
 function LabWithHeaderLayout({ children }: PropsWithChildren) {

@@ -21,7 +21,7 @@ export function useUpdateSectionLab({
       const payload = {
         status: data.status,
         opened_at: data.opened_at ? data.opened_at.toISOString() : null,
-        closed_at: data.closed_at ? data.closed_at.toISOString() : null,
+        readonly_at: data.readonly_at ? data.readonly_at.toISOString() : null,
       };
       return cmsSectionService.updateSectionLab(sectionID, labID, payload);
     },

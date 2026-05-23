@@ -40,7 +40,7 @@ export type GetStudentSubmissionsPaginationParams<T> = PaginationRequestParams<
 export type UpdateSectionLabPayload = {
   status: LabStatus;
   opened_at: string | null;
-  closed_at: string | null;
+  readonly_at: string | null;
 };
 
 class SectionService extends BaseService {
