@@ -21,7 +21,8 @@ import CodeMirror from "~/components/Editor/CodeMirror";
 type Tab = "file" | "editor";
 
 function ImportUser() {
-  const [rawData, setRawData] = useState("");
+  const exampleCSV = `type,username,password,display_name,email,roles,group\ncredential,john_doe,password123,John Doe,,student,CS101\noauth,jane_smith,,Jane Smith,jane.smith@example.com,instructor+student,`;
+  const [rawData, setRawData] = useState(exampleCSV);
   const [selectedTab, setSelectedTab] = useState<Tab>("file");
 
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +37,7 @@ function ImportUser() {
       await queryClient.invalidateQueries({ queryKey: queryKeys.user.all });
       toast.success("Users imported successfully!");
       setIsOpen(false);
-      setRawData("");
+      setRawData(exampleCSV);
     } catch (err) {
       toast.error("Failed to import users. Please try again.");
     } finally {
@@ -102,7 +103,7 @@ function ImportUser() {
                   className="h-full"
                   value={rawData}
                   onChange={setRawData}
-                  placeholder="type,username,password,display_name,email,roles,group"
+                  placeholder=""
                 />
               </div>
             </TabsContent>

@@ -17,6 +17,10 @@ export const parseCSV = (content: string) => {
         if (value === "") return null;
       }
 
+      if (context.column === "group") {
+        if (value === "") return null;
+      }
+
       return value;
     },
   });
