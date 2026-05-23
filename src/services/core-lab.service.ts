@@ -2,7 +2,6 @@ import { BaseService } from "./base.service";
 import type { PaginationRequestParams } from "~/types/pagination";
 import type { Section } from "~/types/core-section";
 import type { SectionLab } from "~/types/core-section-lab";
-import { api } from "~/lib/api.client";
 import type { Lab } from "~/types/core-lab";
 import { LabMaterial } from "~/types/core-lab-material";
 
@@ -18,7 +17,7 @@ class LabService extends BaseService {
     super("/labs");
   }
   async getLabById(labID: string, payload: GetLabPayload) {
-    const res = await api.post<Lab>(`${this._baseURL}/${labID}`, {
+    const res = await this.api.post<Lab>(`${this._baseURL}/${labID}`, {
       section_id: payload.section_id,
     });
     return res.data;

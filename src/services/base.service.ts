@@ -8,16 +8,13 @@ import type {
 
 export class BaseService {
   _baseURL: string;
-  api: AxiosInstance;
+
+  get api(): AxiosInstance {
+    return typeof window === "undefined" ? serverApi : api;
+  }
 
   constructor(baseURL: string) {
     this._baseURL = baseURL;
-
-    if (typeof window === "undefined") {
-      this.api = serverApi;
-    } else {
-      this.api = api;
-    }
   }
 
   protected async _getPagination<

@@ -1,6 +1,5 @@
 import { BaseService } from "./base.service";
 import type { CMSDefaultLab } from "~/types/cms-default-lab";
-import { api } from "~/lib/api.client";
 import { PaginationRequestParams } from "~/types/pagination";
 
 class CMSDefaultLabService extends BaseService {
@@ -10,7 +9,7 @@ class CMSDefaultLabService extends BaseService {
 
   async create(params: CreateDefaultLabParams) {
     const { courseID, payload } = params;
-    const res = await api.post<{ id: string }>(
+    const res = await this.api.post<{ id: string }>(
       `${this._baseURL}/${courseID}/default-labs`,
       payload,
     );
@@ -19,7 +18,7 @@ class CMSDefaultLabService extends BaseService {
 
   async update(params: UpdateDefaultLabParams) {
     const { courseID, payload } = params;
-    return api.patch(`${this._baseURL}/${courseID}/default-labs`, payload);
+    return this.api.patch(`${this._baseURL}/${courseID}/default-labs`, payload);
   }
 
   async delete(courseID: string, labID: string) {

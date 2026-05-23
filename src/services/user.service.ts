@@ -1,4 +1,3 @@
-import { api } from "~/lib/api.client";
 import type { PaginationRequestParams } from "~/types/pagination";
 import type { CreateUser, User, UserRole } from "~/types/user";
 import { BaseService } from "./base.service";
@@ -15,11 +14,11 @@ class UserService extends BaseService {
   }
 
   async deleteUser(id: string) {
-    await api.delete(this._baseURL + `/${id}`);
+    await this.api.delete(this._baseURL + `/${id}`);
   }
 
   async deleteManyUsers(IDs: string[]) {
-    await api.post(this._baseURL + "/deleteMany", {
+    await this.api.post(this._baseURL + "/deleteMany", {
       ids: IDs,
     });
   }
@@ -31,7 +30,7 @@ class UserService extends BaseService {
     roles: UserRole[],
     group_id: string,
   ) {
-    return api.post(this._baseURL, {
+    return this.api.post(this._baseURL, {
       username,
       display_name,
       password,
@@ -47,7 +46,7 @@ class UserService extends BaseService {
     email: string,
     roles: UserRole[],
   ) {
-    return api.post(this._baseURL, {
+    return this.api.post(this._baseURL, {
       username,
       display_name,
       email,
@@ -64,7 +63,7 @@ class UserService extends BaseService {
     roles: UserRole[],
     group_id: string,
   ) {
-    const res = await api.patch(this._baseURL + `/${id}`, {
+    const res = await this.api.patch(this._baseURL + `/${id}`, {
       username,
       password,
       display_name,
@@ -82,7 +81,7 @@ class UserService extends BaseService {
     display_name: string,
     roles: UserRole[],
   ) {
-    const res = await api.patch(this._baseURL + `/${id}`, {
+    const res = await this.api.patch(this._baseURL + `/${id}`, {
       username,
       email,
       display_name,
@@ -93,7 +92,7 @@ class UserService extends BaseService {
   }
 
   async importUsers(users: CreateUser[]) {
-    const res = await api.post(this._baseURL + "/import", {
+    const res = await this.api.post(this._baseURL + "/import", {
       users,
     });
 

@@ -13,18 +13,12 @@ import { coreMaterialService } from "~/services/core-material.service";
 export const generateMetadata = async ({
   params,
 }: {
-  params: Promise<{ courseId: string; problemId: string }>;
+  params: Promise<{ sectionID: string; slug: string; materialID: string }>;
 }): Promise<Metadata> => {
-  // const { courseId, problemId } = params;
-
-  const labName = "Lab 1.1 Find a, b in which a*b=n and (a+b) is the lowest";
-  const isNotFit = labName.length > 32;
-  let title = labName.slice(0, 32);
-
-  if (isNotFit) title += "...";
-
+  const { sectionID, slug, materialID } = await params;
+  const material = await coreMaterialService.getById(materialID, sectionID, slug);
   return {
-    title: `${title} | CS Lab`,
+    title: `${material.name} | CS Lab`,
   };
 };
 

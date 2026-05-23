@@ -1,6 +1,5 @@
 import type { PaginationRequestParams } from "~/types/pagination";
 import type { CMSSemester } from "~/types/cms-semester";
-import { api } from "~/lib/api.client";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { BaseService } from "./base.service";
@@ -20,7 +19,7 @@ class SemesterService extends BaseService {
 
   async create(payload: WriteSemesterPayload) {
     const startedDate = dayjs(payload.started_date).utc().add(1, "day");
-    const res = await api.post(this._baseURL, {
+    const res = await this.api.post(this._baseURL, {
       ...payload,
       started_date: startedDate.toISOString(),
     });
@@ -34,7 +33,7 @@ class SemesterService extends BaseService {
   async update(id: string, payload: WriteSemesterPayload) {
     const startedDate = dayjs(payload.started_date).utc().add(1, "day");
 
-    const res = await api.patch(`${this._baseURL}/${id}`, {
+    const res = await this.api.patch(`${this._baseURL}/${id}`, {
       ...payload,
       started_date: startedDate.toISOString(),
     });
@@ -42,7 +41,7 @@ class SemesterService extends BaseService {
   }
 
   async getAffectedSections(id: string) {
-    const res = await api.get<
+    const res = await this.api.get<
       {
         course_name: string;
         sections: string[];
@@ -52,7 +51,7 @@ class SemesterService extends BaseService {
   }
 
   async delete(id: string): Promise<void> {
-    await api.delete(`${this._baseURL}/${id}`);
+    await this.api.delete(`${this._baseURL}/${id}`);
   }
 }
 

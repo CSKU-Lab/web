@@ -1,6 +1,5 @@
 import { BaseService } from "./base.service";
 import { type CMSLabMaterial } from "~/types/cms-lab-material";
-import { api } from "~/lib/api.client";
 import { PaginationRequestParams } from "~/types/pagination";
 
 class CMSLabMaterialService extends BaseService {
@@ -9,7 +8,7 @@ class CMSLabMaterialService extends BaseService {
   }
 
   async create(labID: string, payload: CreateLabMaterialPayload) {
-    const res = await api.post<{ id: string }>(
+    const res = await this.api.post<{ id: string }>(
       `${this._baseURL}/${labID}/materials`,
       {
         material_id: payload.materialID,
@@ -18,7 +17,7 @@ class CMSLabMaterialService extends BaseService {
     return res.data.id;
   }
   async getByLabId(labID: string): Promise<CMSLabMaterial[]> {
-    const res = await api.get<CMSLabMaterial[]>(
+    const res = await this.api.get<CMSLabMaterial[]>(
       `${this._baseURL}/${labID}/materials/all`,
     );
     return res.data;

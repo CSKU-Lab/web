@@ -1,4 +1,3 @@
-import { api } from "~/lib/api.client";
 import type { CMSUserGroup } from "~/types/cms-user-group";
 import type { PaginationRequestParams } from "~/types/pagination";
 import { BaseService } from "./base.service";
@@ -12,7 +11,7 @@ class UserGroupService extends BaseService {
   }
 
   async create(name: string) {
-    return api.post(this._baseURL, {
+    return this.api.post(this._baseURL, {
       name,
     });
   }
@@ -22,11 +21,11 @@ class UserGroupService extends BaseService {
   }
 
   async uppdate(id: string, name: string) {
-    return api.patch(`${this._baseURL}/${id}`, { name });
+    return this.api.patch(`${this._baseURL}/${id}`, { name });
   }
 
   async delete(id: string) {
-    return api.delete(`${this._baseURL}/${id}`);
+    return this.api.delete(`${this._baseURL}/${id}`);
   }
 }
 
