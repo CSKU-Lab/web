@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Settings, Trash2 } from "lucide-react";
+import { Settings } from "lucide-react";
 import { Button } from "~/components/commons/Button";
 import {
   Dialog,
@@ -20,7 +19,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { queryKeys } from "~/queryKeys";
 import useGetMaterial from "../../../../_hooks/useGetMaterial";
 import { useAtomValue } from "jotai";
@@ -37,62 +36,6 @@ const settingsSchema = z.object({
 });
 
 type SettingsSchema = z.infer<typeof settingsSchema>;
-
-function DeleteSection({
-  courseID,
-  materialID,
-}: {
-  courseID: string;
-  materialID: string;
-}) {
-  const [confirming, setConfirming] = useState(false);
-  const router = useRouter();
-
-  const deleteMutation = useMutation({
-    mutationFn: () => cmsMaterialService.delete(courseID, materialID),
-    onSuccess: () => {
-      toast.success("Material deleted");
-      router.push(`/cms/courses/${courseID}/materials`);
-    },
-    onError: (err) => {
-      if (err instanceof AxiosError) {
-        return toast.error("Error", {
-          description: err.response?.data.error || "Failed to delete material",
-        });
-      }
-      toast.error("Something went wrong. Please try again.");
-    },
-  });
-
-  return (
-    <div className="space-y-3 pt-4 border-t border-(--red-6)">
-      <div className="space-y-1">
-        <h5 className="text-base font-medium text-(--red-11)">Danger Zone</h5>
-        <p className="text-xs text-(--gray-10)">This action cannot be undone.</p>
-      </div>
-      {!confirming ? (
-        <Button variant="danger" onClick={() => setConfirming(true)}>
-          <Trash2 size="1rem" />
-          Delete Material
-        </Button>
-      ) : (
-        <div className="flex items-center gap-2">
-          <p className="text-sm text-(--red-11)">Are you sure?</p>
-          <Button
-            variant="danger"
-            onClick={() => deleteMutation.mutate()}
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending ? "Deleting..." : "Yes, delete"}
-          </Button>
-          <Button variant="ghost" onClick={() => setConfirming(false)}>
-            Cancel
-          </Button>
-        </div>
-      )}
-    </div>
-  );
-}
 
 function SettingsButton() {
   const { courseID, materialID } = useParams<{
@@ -247,7 +190,6 @@ function SettingsButton() {
             {updateMaterial.isPending ? "Saving..." : "Save Changes"}
           </Button>
 
-          <DeleteSection courseID={courseID} materialID={materialID} />
         </form>
       </DialogContent>
     </Dialog>

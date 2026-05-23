@@ -2,6 +2,7 @@ import HeaderItem from "~/components/crafts/DetailSection/HeaderItem";
 import SaveButton from "./SaveButton";
 import SaveStatus from "./SaveStatus";
 import SettingsButton from "./SettingsButton";
+import DeleteButton from "./DeleteButton";
 import useRunner from "../../_hooks/useRunner";
 import { useParams } from "next/navigation";
 
@@ -22,6 +23,7 @@ function DetailSection() {
       </div>
 
       <div className="flex gap-2">
+        <DeleteButton />
         <SaveButton />
         <SettingsButton />
       </div>

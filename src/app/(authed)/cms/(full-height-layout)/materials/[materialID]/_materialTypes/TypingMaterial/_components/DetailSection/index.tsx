@@ -14,6 +14,7 @@ import { queryKeys } from "~/queryKeys";
 import { isOwnerAtom } from "../../_stores/owner.store";
 import { Button } from "~/components/commons/Button";
 import SettingsButton from "./SettingsButton";
+import DeleteButton from "./DeleteButton";
 import ForkMaterialButton from "../../../../_components/ForkMaterialButton";
 
 function SaveStatus() {
@@ -144,6 +145,7 @@ export default function TypingDetailSection() {
         <ViewToggle />
         <SaveButton />
         <SettingsButton />
+        <DeleteButton />
       </div>
     </div>
   );

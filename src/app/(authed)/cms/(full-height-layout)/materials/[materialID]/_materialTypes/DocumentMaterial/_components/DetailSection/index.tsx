@@ -4,6 +4,7 @@ import HeaderItem from "~/components/crafts/DetailSection/HeaderItem";
 import SaveButton from "./SaveButton";
 import SaveStatus from "./SaveStatus";
 import SettingsButton from "./SettingsButton";
+import DeleteButton from "./DeleteButton";
 import { Globe, Lock } from "lucide-react";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
 import ForkMaterialButton from "../../../../_components/ForkMaterialButton";
@@ -53,6 +54,7 @@ function DetailSection() {
         <ForkMaterialButton />
         <SaveButton />
         <SettingsButton />
+        <DeleteButton />
       </div>
     </div>
   );
