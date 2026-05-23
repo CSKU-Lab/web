@@ -5,7 +5,9 @@ import { verifyJWT } from "./lib/verify-jwt";
 export async function proxy(req: NextRequest) {
   if (
     req.nextUrl.pathname.startsWith("/auth/") ||
-    req.nextUrl.pathname.startsWith("/api/")
+    req.nextUrl.pathname.startsWith("/api/") ||
+    req.nextUrl.pathname.endsWith("/opengraph-image") ||
+    req.nextUrl.pathname.endsWith("/twitter-image")
   ) {
     return NextResponse.next();
   }
