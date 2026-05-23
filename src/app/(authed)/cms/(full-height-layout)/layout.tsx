@@ -7,6 +7,7 @@ import type { ChildrenProps } from "~/types/children-props";
 import BreadcrumbClient from "../_components/BreadcrumbClient";
 import { BreadcrumbProvider } from "../_components/BreadcrumbProvider";
 import SidebarMenus from "../_components/SidebarMenus";
+import SearchBar from "../_components/SearchBar";
 import { getUser } from "~/lib/get-user";
 import { getSidebarMenus } from "../_configs/sidebar-menus";
 
@@ -18,6 +19,7 @@ async function Layout({ children }: ChildrenProps) {
     <CoreLayout homePath="/cms">
       <CoreLayoutSidebar homePath="/cms">
         <h6 className="text-(--gray-11) text-xs font-light py-2">CMS</h6>
+        <SearchBar />
         <SidebarMenus config={sidebarMenus} />
       </CoreLayoutSidebar>
       <CoreLayoutContent className="h-full">

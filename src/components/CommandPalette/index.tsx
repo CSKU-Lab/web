@@ -2,7 +2,7 @@
 
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -46,6 +46,11 @@ export default function CommandPalette() {
   }, [setPalette]);
 
   const close = useCallback(() => setPalette({ isOpen: false }), [setPalette]);
+
+  // Clear input whenever palette opens (covers SearchBar open path too)
+  useEffect(() => {
+    if (isOpen) setInputValue("");
+  }, [isOpen]);
 
   useHotkeys("mod+k", open, { enableOnFormTags: false, preventDefault: true });
 
@@ -93,7 +98,7 @@ export default function CommandPalette() {
               {navItems.map((item) => (
                 <CommandItem
                   key={item.id}
-                  value={item.id}
+                  value={`nav-${item.id}`}
                   keywords={item.keywords}
                   onSelect={() => handleSelect(item.href)}
                   className={ITEM_CLASS}
@@ -127,7 +132,7 @@ export default function CommandPalette() {
                     {searchData.courses.map((item) => (
                       <CommandItem
                         key={item.id}
-                        value={item.id}
+                        value={`course-${item.id}`}
                         onSelect={() => handleSelect(item.path)}
                         className={ITEM_CLASS}
                       >
@@ -143,7 +148,7 @@ export default function CommandPalette() {
                     {searchData.labs.map((item) => (
                       <CommandItem
                         key={item.id}
-                        value={item.id}
+                        value={`lab-${item.id}`}
                         onSelect={() => handleSelect(item.path)}
                         className={ITEM_CLASS}
                       >
@@ -162,7 +167,7 @@ export default function CommandPalette() {
                     {searchData.materials.map((item) => (
                       <CommandItem
                         key={item.id}
-                        value={item.id}
+                        value={`material-${item.id}`}
                         onSelect={() => handleSelect(item.path)}
                         className={ITEM_CLASS}
                       >
@@ -181,7 +186,7 @@ export default function CommandPalette() {
                     {searchData.sections.map((item) => (
                       <CommandItem
                         key={item.id}
-                        value={item.id}
+                        value={`section-${item.id}`}
                         onSelect={() => handleSelect(item.path)}
                         className={ITEM_CLASS}
                       >
@@ -200,7 +205,7 @@ export default function CommandPalette() {
                     {searchData.section_labs.map((item) => (
                       <CommandItem
                         key={item.id}
-                        value={item.id}
+                        value={`section-lab-${item.id}`}
                         onSelect={() => handleSelect(item.path)}
                         className={ITEM_CLASS}
                       >
@@ -221,7 +226,7 @@ export default function CommandPalette() {
                     {searchData.section_lab_materials.map((item) => (
                       <CommandItem
                         key={item.id}
-                        value={item.id}
+                        value={`section-lab-material-${item.id}`}
                         onSelect={() => handleSelect(item.path)}
                         className={ITEM_CLASS}
                       >
