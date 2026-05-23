@@ -98,8 +98,27 @@ const EditUser = ({ user, onClose }: Props) => {
       setIsOpen(false);
       if (!!onClose) onClose();
       toast.success("User edited successfully");
-    } catch (err) {
-      toast.error("Failed to edit user");
+    } catch (err: unknown) {
+      const emailError =
+        err &&
+        typeof err === "object" &&
+        "response" in err &&
+        err.response &&
+        typeof err.response === "object" &&
+        "data" in err.response &&
+        err.response.data &&
+        typeof err.response.data === "object" &&
+        "fields" in err.response.data &&
+        err.response.data.fields &&
+        typeof err.response.data.fields === "object" &&
+        "email" in (err.response.data.fields as object)
+          ? (err.response.data as { fields: { email: string } }).fields.email
+          : null;
+      toast.error("Error", {
+        description: emailError
+          ? `Email is invalid: ${emailError}`
+          : "Failed to edit user",
+      });
     } finally {
       setIsPending(false);
     }

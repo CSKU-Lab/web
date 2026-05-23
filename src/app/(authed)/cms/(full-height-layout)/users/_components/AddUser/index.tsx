@@ -90,7 +90,12 @@ const AddUser = () => {
       toast.success("User created successfully");
     } catch (err) {
       if (err instanceof AxiosError) {
-        toast.error("Error", { description: err.response?.data?.error });
+        const emailError = err.response?.data?.fields?.email;
+        toast.error("Error", {
+          description: emailError
+            ? `Email is invalid: ${emailError}`
+            : err.response?.data?.error,
+        });
         return;
       }
       toast.error("Error", {

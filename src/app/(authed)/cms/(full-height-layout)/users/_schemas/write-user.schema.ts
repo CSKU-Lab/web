@@ -51,7 +51,9 @@ export const addUserSchema = z
 
 export type AddUserSchema = z.infer<typeof addUserSchema>;
 
-const isEmail = z.string().email();
+const RFC5322_EMAIL =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const isEmail = z.string().regex(RFC5322_EMAIL, { message: "invalid email address" });
 
 export const editUserSchema = z
   .object({
