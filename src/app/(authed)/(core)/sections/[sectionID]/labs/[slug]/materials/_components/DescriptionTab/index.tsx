@@ -63,99 +63,98 @@ function DescriptionTab() {
 
   return (
     <div className="p-4 space-y-4">
-      <div>
-        <h4 className="text-sm font-medium mb-3">Resource Limits</h4>
-        {isLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <LimitItem
-              icon={<Cpu size="1.25rem" />}
-              label="CPU Time"
-              value="-"
-              isLoading
-            />
-            <LimitItem
-              icon={<Clock size="1.25rem" />}
-              label="Wall Time"
-              value="-"
-              isLoading
-            />
-            <LimitItem
-              icon={<MemoryStick size="1.25rem" />}
-              label="Memory"
-              value="-"
-              isLoading
-            />
+      {(isLoading || hasAnyLimits) && (
+        <>
+          <div>
+            <h4 className="text-sm font-medium mb-3">Resource Limits</h4>
+            {isLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <LimitItem
+                  icon={<Cpu size="1.25rem" />}
+                  label="CPU Time"
+                  value="-"
+                  isLoading
+                />
+                <LimitItem
+                  icon={<Clock size="1.25rem" />}
+                  label="Wall Time"
+                  value="-"
+                  isLoading
+                />
+                <LimitItem
+                  icon={<MemoryStick size="1.25rem" />}
+                  label="Memory"
+                  value="-"
+                  isLoading
+                />
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {limits.cpu_time > 0 && (
+                  <LimitItem
+                    icon={<Cpu size="1.25rem" />}
+                    label="CPU Time"
+                    value={`${limits.cpu_time} s`}
+                  />
+                )}
+                {limits.wall_time > 0 && (
+                  <LimitItem
+                    icon={<Clock size="1.25rem" />}
+                    label="Wall Time"
+                    value={`${limits.wall_time} s`}
+                  />
+                )}
+                {limits.cpu_extra_time > 0 && (
+                  <LimitItem
+                    icon={<Clock size="1.25rem" />}
+                    label="Extra Time"
+                    value={`${limits.cpu_extra_time} s`}
+                  />
+                )}
+                {limits.memory > 0 && (
+                  <LimitItem
+                    icon={<MemoryStick size="1.25rem" />}
+                    label="Memory"
+                    value={`${kiloToMegaBytes(limits.memory)} MB`}
+                  />
+                )}
+                {limits.stack > 0 && (
+                  <LimitItem
+                    icon={<HardDrive size="1.25rem" />}
+                    label="Stack"
+                    value={`${kiloToMegaBytes(limits.stack)} MB`}
+                  />
+                )}
+                {limits.max_open_files > 0 && (
+                  <LimitItem
+                    icon={<File size="1.25rem" />}
+                    label="Max Files"
+                    value={`${limits.max_open_files}`}
+                  />
+                )}
+                {limits.max_file_size > 0 && (
+                  <LimitItem
+                    icon={<HardDrive size="1.25rem" />}
+                    label="Max File Size"
+                    value={`${kiloToMegaBytes(limits.max_file_size)} MB`}
+                  />
+                )}
+                {limits.network_allow && (
+                  <LimitItem
+                    icon={<Network size="1.25rem" />}
+                    label="Network"
+                    value="Allowed"
+                  />
+                )}
+              </div>
+            )}
           </div>
-        ) : !hasAnyLimits ? (
-          <p className="text-sm text-(--gray-11)">
-            No resource limits configured
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {limits.cpu_time > 0 && (
-              <LimitItem
-                icon={<Cpu size="1.25rem" />}
-                label="CPU Time"
-                value={`${limits.cpu_time} s`}
-              />
-            )}
-            {limits.wall_time > 0 && (
-              <LimitItem
-                icon={<Clock size="1.25rem" />}
-                label="Wall Time"
-                value={`${limits.wall_time} s`}
-              />
-            )}
-            {limits.cpu_extra_time > 0 && (
-              <LimitItem
-                icon={<Clock size="1.25rem" />}
-                label="Extra Time"
-                value={`${limits.cpu_extra_time} s`}
-              />
-            )}
-            {limits.memory > 0 && (
-              <LimitItem
-                icon={<MemoryStick size="1.25rem" />}
-                label="Memory"
-                value={`${kiloToMegaBytes(limits.memory)} MB`}
-              />
-            )}
-            {limits.stack > 0 && (
-              <LimitItem
-                icon={<HardDrive size="1.25rem" />}
-                label="Stack"
-                value={`${kiloToMegaBytes(limits.stack)} MB`}
-              />
-            )}
-            {limits.max_open_files > 0 && (
-              <LimitItem
-                icon={<File size="1.25rem" />}
-                label="Max Files"
-                value={`${limits.max_open_files}`}
-              />
-            )}
-            {limits.max_file_size > 0 && (
-              <LimitItem
-                icon={<HardDrive size="1.25rem" />}
-                label="Max File Size"
-                value={`${kiloToMegaBytes(limits.max_file_size)} MB`}
-              />
-            )}
-            {limits.network_allow && (
-              <LimitItem
-                icon={<Network size="1.25rem" />}
-                label="Network"
-                value="Allowed"
-              />
-            )}
-          </div>
-        )}
-      </div>
 
-      <div className="h-px bg-(--gray-6)" />
+          <div className="h-px bg-(--gray-6)" />
+        </>
+      )}
 
       <div>
-        <h4 className="text-sm font-medium mb-3">Description</h4>
         <SimpleEditor
           readOnly
           initialValue={getDescriptionContent()}
