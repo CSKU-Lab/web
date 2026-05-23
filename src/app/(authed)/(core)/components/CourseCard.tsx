@@ -8,7 +8,7 @@ import CourseCardSkeleton from "./CourseCardSkeleton";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
 import ErrorFallback from "~/components/commons/Error/ErrorFallback";
 import Error from "~/components/commons/Error";
-import { ServerCrash } from "lucide-react";
+import { ServerCrash, Lock, Globe } from "lucide-react";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
 import { Badge } from "~/components/ui/badge";
 import type { Creator } from "~/types/core-course";
@@ -106,12 +106,17 @@ const CourseList = ({ search }: Props) => {
                             <h3 className="text-lg font-medium line-clamp-2 flex-1">
                               {name}
                             </h3>
-                            <Badge
-                              variant={visibility === "public" ? "default" : "secondary"}
-                              className="text-xs shrink-0"
-                            >
-                              {visibility}
-                            </Badge>
+                            {visibility === "public" ? (
+                              <span className="inline-flex items-center gap-1 text-xs text-(--blue-11) bg-(--blue-3) px-1.5 py-0.5 rounded shrink-0">
+                                <Globe size={10} />
+                                Public
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 text-xs text-(--gray-11) bg-(--gray-3) px-1.5 py-0.5 rounded shrink-0">
+                                <Lock size={10} />
+                                Private
+                              </span>
+                            )}
                           </div>
                           {description && (
                             <p className="text-sm text-(--gray-11) line-clamp-2 mt-1">

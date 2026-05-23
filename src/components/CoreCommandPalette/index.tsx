@@ -15,7 +15,7 @@ import {
 import * as Dialog from "@radix-ui/react-dialog";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useQuery } from "@tanstack/react-query";
-import { BookOpen, Compass, FlaskConical, FileText, Users } from "lucide-react";
+import { BookOpen, Compass, FlaskConical, FileText, Users, Lock, Globe } from "lucide-react";
 import { coreCommandPaletteAtom } from "~/globalStore/coreCommandPalette";
 import { coreSearchService } from "~/services/core-search.service";
 import { queryKeys } from "~/queryKeys";
@@ -125,8 +125,8 @@ export default function CoreCommandPalette() {
 
             {searchData && (
               <>
-                {searchData.private_courses.length > 0 && (
-                  <CommandGroup heading="My Courses" className={GROUP_CLASS}>
+                {(searchData.private_courses.length > 0 || searchData.public_courses.length > 0) && (
+                  <CommandGroup heading="Courses" className={GROUP_CLASS}>
                     {searchData.private_courses.map((item) => (
                       <CommandItem
                         key={`private-${item.id}`}
@@ -135,17 +135,18 @@ export default function CoreCommandPalette() {
                         className={ITEM_CLASS}
                       >
                         <BookOpen size="1rem" className={ICON_CLASS} />
-                        <span className="flex flex-col">
-                          <span>{item.name}</span>
-                          <span className="text-xs text-(--gray-9)">{item.section_name}</span>
+                        <span className="flex flex-1 items-center justify-between gap-2 min-w-0">
+                          <span className="flex flex-col min-w-0">
+                            <span className="truncate">{item.name}</span>
+                            <span className="text-xs text-(--gray-9)">{item.section_name}</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-xs text-(--gray-11) bg-(--gray-3) px-1.5 py-0.5 rounded shrink-0">
+                            <Lock size={10} />
+                            Private
+                          </span>
                         </span>
                       </CommandItem>
                     ))}
-                  </CommandGroup>
-                )}
-
-                {searchData.public_courses.length > 0 && (
-                  <CommandGroup heading="Public Courses" className={GROUP_CLASS}>
                     {searchData.public_courses.map((item) => (
                       <CommandItem
                         key={`public-${item.id}`}
@@ -154,7 +155,13 @@ export default function CoreCommandPalette() {
                         className={ITEM_CLASS}
                       >
                         <BookOpen size="1rem" className={ICON_CLASS} />
-                        {item.name}
+                        <span className="flex flex-1 items-center justify-between gap-2 min-w-0">
+                          <span className="truncate">{item.name}</span>
+                          <span className="inline-flex items-center gap-1 text-xs text-(--blue-11) bg-(--blue-3) px-1.5 py-0.5 rounded shrink-0">
+                            <Globe size={10} />
+                            Public
+                          </span>
+                        </span>
                       </CommandItem>
                     ))}
                   </CommandGroup>
