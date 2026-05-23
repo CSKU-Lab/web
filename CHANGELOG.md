@@ -1,3 +1,12 @@
+# [0.14.0](https://github.com/CSKU-Lab/web/compare/v0.13.1...v0.14.0) (2026-05-23)
+
+
+### Features
+
+* add og image ([f1e68c8](https://github.com/CSKU-Lab/web/commit/f1e68c8e95001ef0d980bc21aeac776ed620c58c))
+* implement page metadata ([6761a4f](https://github.com/CSKU-Lab/web/commit/6761a4fa27ea862f21a6e3c10a00b11ccc6adb7b))
+* show resource limits only when has some ([b77e343](https://github.com/CSKU-Lab/web/commit/b77e343d47d98a8475f21c948af1a205053b240a))
+
 ## [0.13.1](https://github.com/CSKU-Lab/web/compare/v0.13.0...v0.13.1) (2026-05-23)
 
 
