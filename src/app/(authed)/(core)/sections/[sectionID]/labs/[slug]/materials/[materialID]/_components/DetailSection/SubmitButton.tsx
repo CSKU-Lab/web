@@ -33,10 +33,6 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   const setActiveSubmissions = useSetAtom(activeSubmissionsAtom);
   const queryClient = useQueryClient();
 
-  if (material?.type === MaterialType.TYPE || isReadonly) {
-    return null;
-  }
-
   const submitMutation = useMutation({
     mutationFn: () => {
       return coreSubmissionService.create<CodeSubmissionPayload>({
@@ -81,6 +77,10 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
     }
     submitMutation.mutate();
   };
+
+  if (material?.type === MaterialType.TYPE || isReadonly) {
+    return null;
+  }
 
   return (
     <Button
