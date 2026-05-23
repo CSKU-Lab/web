@@ -5,6 +5,7 @@ import CoreLayout, {
 } from "~/layouts/CoreLayout";
 import type { ChildrenProps } from "~/types/children-props";
 import Sidebar from "./components/Menus/Sidebar";
+import CoreCommandPalette from "~/components/CoreCommandPalette";
 
 export const metadata: Metadata = {
   title: "My Courses | CS Lab",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 function Layout({ children }: ChildrenProps) {
   return (
     <CoreLayout>
+      <CoreCommandPalette />
       <CoreLayoutSidebar>
         <Sidebar />
       </CoreLayoutSidebar>

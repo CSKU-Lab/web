@@ -179,6 +179,7 @@ export const queryKeys = {
   },
   search: {
     cms: (q: string) => ["cms-search", q],
+    core: (q: string) => ["core-search", q],
   },
   sidebar: {
     get: () => ["sidebar"],

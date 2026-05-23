@@ -3,7 +3,6 @@ import { Provider as JotaiProvider } from "jotai";
 import SessionProvider from "~/providers/SessionProvider";
 import QueryProvider from "~/providers/QueryProvider";
 import { getUser } from "~/lib/get-user";
-import CommandPalette from "~/components/CommandPalette";
 
 interface Props {
   children: ReactNode;
@@ -16,7 +15,6 @@ export default async function Layout({ children }: Props) {
     <JotaiProvider>
       <QueryProvider>
         <SessionProvider {...{ user }}>
-          <CommandPalette />
           {children}
         </SessionProvider>
       </QueryProvider>
