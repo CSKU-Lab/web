@@ -12,6 +12,15 @@ api.interceptors.response.use(
   },
   async function onRejected(error) {
     const originalRequest = error.config;
+
+    if (error.response?.status === 429) {
+      const retryAfter = error.response.headers["retry-after"] ?? "60";
+      sessionStorage.setItem("rl_retry_after", retryAfter);
+      sessionStorage.setItem("rl_redirect_to", window.location.pathname);
+      window.location.href = "/too-many-requests";
+      return new Promise(() => {});
+    }
+
     if (error.response?.status === 401) {
       await axios.get(
         `/auth/refresh-token?redirect_to=${window.location.pathname}`,
