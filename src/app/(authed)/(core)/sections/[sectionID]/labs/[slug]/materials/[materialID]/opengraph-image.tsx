@@ -1,10 +1,6 @@
-import { ImageResponse } from "next/og";
-import { OGCard } from "~/components/og/OGCard";
-import { loadOGFonts } from "~/lib/og-fonts";
-import { coreMaterialService } from "~/services/core-material.service";
+import { ogImages } from "~/lib/og";
 
 export const dynamic = "force-dynamic";
-export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image({
@@ -12,19 +8,18 @@ export default async function Image({
 }: {
   params: Promise<{ sectionID: string; slug: string; materialID: string }>;
 }) {
-  const { sectionID, slug, materialID } = await params;
-  const fonts = await loadOGFonts();
+  const { materialID } = await params;
 
   try {
-    const material = await coreMaterialService.getById(materialID, sectionID, slug);
-    return new ImageResponse(
-      <OGCard title={material.name} tag="Lab Material" />,
-      { ...size, fonts },
-    );
+    const res = await fetch(ogImages.material(materialID), {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) throw new Error("not found");
+    return new Response(res.body, { headers: { "Content-Type": "image/png" } });
   } catch {
-    return new ImageResponse(
-      <OGCard title="CS Lab" subtitle="Programming Lab @Computer Science Kasetsart University" />,
-      { ...size, fonts },
-    );
+    const def = await fetch(ogImages.default(), {
+      signal: AbortSignal.timeout(5000),
+    });
+    return new Response(def.body, { headers: { "Content-Type": "image/png" } });
   }
 }
