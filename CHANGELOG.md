@@ -1,3 +1,10 @@
+## [0.14.4](https://github.com/CSKU-Lab/web/compare/v0.14.3...v0.14.4) (2026-05-24)
+
+
+### Bug Fixes
+
+* use og image from s3 instead ([3988c44](https://github.com/CSKU-Lab/web/commit/3988c442c14c1862954c53af5553983868fa0f58))
+
 ## [0.14.3](https://github.com/CSKU-Lab/web/compare/v0.14.2...v0.14.3) (2026-05-24)
 
 
