@@ -9,8 +9,6 @@ import DetailSection from "./_components/DetailSection";
 import MaterialPageClient from "./_components/MaterialPageClient";
 import MaterialTypeRouter from "./_components/MaterialTypeRouter";
 import { coreMaterialService } from "~/services/core-material.service";
-import { ogImages } from "~/lib/og";
-
 export const generateMetadata = async ({
   params,
 }: {
@@ -18,19 +16,8 @@ export const generateMetadata = async ({
 }): Promise<Metadata> => {
   const { sectionID, slug, materialID } = await params;
   const material = await coreMaterialService.getById(materialID, sectionID, slug);
-  const ogUrl = ogImages.material(materialID);
   return {
     title: `${material.name} | CS Lab`,
-    openGraph: {
-      images: [
-        { url: ogUrl, width: 1200, height: 630 },
-        { url: ogImages.default(), width: 1200, height: 630 },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      images: [ogUrl],
-    },
   };
 };
 

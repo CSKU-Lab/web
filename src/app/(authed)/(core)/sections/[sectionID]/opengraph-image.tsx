@@ -14,17 +14,19 @@ export default async function Image({
     const res = await fetch(ogImages.section(sectionID), {
       signal: AbortSignal.timeout(5000),
     });
-    if (!res.ok) throw new Error("not found");
-    return new Response(res.body, { headers: { "Content-Type": "image/png" } });
-  } catch {
-    try {
-      const def = await fetch(ogImages.default(), {
-        signal: AbortSignal.timeout(5000),
-      });
-      if (def.ok) {
-        return new Response(def.body, { headers: { "Content-Type": "image/png" } });
-      }
-    } catch {}
-    return new Response(null, { status: 404 });
-  }
+    if (res.ok) {
+      return new Response(res.body, { headers: { "Content-Type": "image/png" } });
+    }
+  } catch {}
+
+  try {
+    const def = await fetch(ogImages.default(), {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (def.ok) {
+      return new Response(def.body, { headers: { "Content-Type": "image/png" } });
+    }
+  } catch {}
+
+  return new Response(null, { status: 404 });
 }
