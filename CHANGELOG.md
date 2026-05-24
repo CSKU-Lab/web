@@ -1,3 +1,10 @@
+# [0.15.0](https://github.com/CSKU-Lab/web/compare/v0.14.4...v0.15.0) (2026-05-24)
+
+
+### Features
+
+* add LSP support for CodeMirror 6 via lsp-service ([ba26adf](https://github.com/CSKU-Lab/web/commit/ba26adf4359305a4715262a7ac0af5b2a1775bbe))
+
 ## [0.14.4](https://github.com/CSKU-Lab/web/compare/v0.14.3...v0.14.4) (2026-05-24)
 
 
