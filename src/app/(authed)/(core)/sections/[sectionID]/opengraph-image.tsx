@@ -17,9 +17,14 @@ export default async function Image({
     if (!res.ok) throw new Error("not found");
     return new Response(res.body, { headers: { "Content-Type": "image/png" } });
   } catch {
-    const def = await fetch(ogImages.default(), {
-      signal: AbortSignal.timeout(5000),
-    });
-    return new Response(def.body, { headers: { "Content-Type": "image/png" } });
+    try {
+      const def = await fetch(ogImages.default(), {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (def.ok) {
+        return new Response(def.body, { headers: { "Content-Type": "image/png" } });
+      }
+    } catch {}
+    return new Response(null, { status: 404 });
   }
 }
