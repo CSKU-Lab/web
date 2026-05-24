@@ -1,3 +1,10 @@
+## [0.14.2](https://github.com/CSKU-Lab/web/compare/v0.14.1...v0.14.2) (2026-05-24)
+
+
+### Bug Fixes
+
+* build failed ([d2b409a](https://github.com/CSKU-Lab/web/commit/d2b409a7f0f93109cea434020f8b97c6922f20bd))
+
 ## [0.14.1](https://github.com/CSKU-Lab/web/compare/v0.14.0...v0.14.1) (2026-05-23)
 
 
