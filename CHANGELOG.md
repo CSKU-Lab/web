@@ -1,3 +1,10 @@
+## [0.15.2](https://github.com/CSKU-Lab/web/compare/v0.15.1...v0.15.2) (2026-05-24)
+
+
+### Bug Fixes
+
+* og image fallback ([60654ce](https://github.com/CSKU-Lab/web/commit/60654ce18102b5f4153798142713646848df570d))
+
 ## [0.15.1](https://github.com/CSKU-Lab/web/compare/v0.15.0...v0.15.1) (2026-05-24)
 
 
