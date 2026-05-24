@@ -88,6 +88,7 @@ ENV HOSTNAME="0.0.0.0"
 
 # Copy production assets
 COPY --from=builder --chown=node:node /app/public ./public
+COPY --from=builder --chown=node:node /app/src/assets/fonts ./src/assets/fonts
 
 # Set the correct permission for prerender cache
 RUN mkdir .next

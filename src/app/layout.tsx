@@ -62,6 +62,7 @@ const boon = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.WEB_URL ?? "http://localhost:3000"),
   title: "CS Lab",
   description:
     "Programming Lab Web application @Computer Science Kasetsart University",
