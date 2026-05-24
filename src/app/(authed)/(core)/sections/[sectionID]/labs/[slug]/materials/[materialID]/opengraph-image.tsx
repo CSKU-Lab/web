@@ -3,6 +3,7 @@ import { OGCard } from "~/components/og/OGCard";
 import { loadOGFonts } from "~/lib/og-fonts";
 import { coreMaterialService } from "~/services/core-material.service";
 
+export const dynamic = "force-dynamic";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

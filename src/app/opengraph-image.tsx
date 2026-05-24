@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { OGCard } from "~/components/og/OGCard";
 import { loadOGFonts } from "~/lib/og-fonts";
 
+export const dynamic = "force-dynamic";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "CS Lab — Programming Lab @Computer Science Kasetsart University";
