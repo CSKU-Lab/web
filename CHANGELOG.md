@@ -1,3 +1,10 @@
+## [0.15.1](https://github.com/CSKU-Lab/web/compare/v0.15.0...v0.15.1) (2026-05-24)
+
+
+### Bug Fixes
+
+* og image fetch make web server hang ([d400893](https://github.com/CSKU-Lab/web/commit/d4008933f5205774e5f637707baee43a10ebba42))
+
 # [0.15.0](https://github.com/CSKU-Lab/web/compare/v0.14.4...v0.15.0) (2026-05-24)
 
 
