@@ -1,3 +1,10 @@
+## [0.15.3](https://github.com/CSKU-Lab/web/compare/v0.15.2...v0.15.3) (2026-05-24)
+
+
+### Bug Fixes
+
+* og image ([b4afaa3](https://github.com/CSKU-Lab/web/commit/b4afaa34761552d4307f950fab23c7b2bab263a9))
+
 ## [0.15.2](https://github.com/CSKU-Lab/web/compare/v0.15.1...v0.15.2) (2026-05-24)
 
 
