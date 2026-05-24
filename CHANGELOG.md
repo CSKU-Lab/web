@@ -1,3 +1,10 @@
+## [0.14.3](https://github.com/CSKU-Lab/web/compare/v0.14.2...v0.14.3) (2026-05-24)
+
+
+### Bug Fixes
+
+* change metadata baseurl ([d431da5](https://github.com/CSKU-Lab/web/commit/d431da578a77dbfb6c59313d7940600b14f641e7))
+
 ## [0.14.2](https://github.com/CSKU-Lab/web/compare/v0.14.1...v0.14.2) (2026-05-24)
 
 
