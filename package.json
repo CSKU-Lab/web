@@ -93,6 +93,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "codemirror": "^6.0.2",
+    "codemirror-languageserver": "^1.22.0",
     "codemirror-readonly-ranges": "0.1.0-alpha.2",
     "csv-parse": "^5.6.0",
     "date-fns": "^4.1.0",

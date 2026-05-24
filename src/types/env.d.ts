@@ -1,6 +1,7 @@
 interface Env {
   env: {
     API_URL: string;
+    LSP_URL: string;
   };
 }
 

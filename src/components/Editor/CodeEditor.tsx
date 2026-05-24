@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { FileCode } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
@@ -9,6 +9,7 @@ import type { Runner } from "./types/runner";
 import Playground from "./Playground";
 import type { CodeFile, IEditorSettings } from "./types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
+import { api } from "~/lib/api.client";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import MarkdownRenderer from "~/components/ui/markdown-renderer";
 
@@ -56,6 +57,18 @@ function CodeEditor({
     setSelectedFile(files[0].name);
     setPreviousFiles(files);
   }
+
+  const [sessionId] = useState<string>(() => crypto.randomUUID());
+  const [lspToken, setLspToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    api
+      .get<{ token: string }>("/api/v1/lsp/token")
+      .then((res) => setLspToken(res.data.token))
+      .catch(() => {
+        // LSP service unavailable — editor works without it
+      });
+  }, []);
 
   if (initialSelectedRunner && selectedRunner === null) {
     setSelectedRunner(initialSelectedRunner);
@@ -160,6 +173,8 @@ function CodeEditor({
                   vimMode={settings.vimMode}
                   value={currentFile.content}
                   onChange={handleCodeChange}
+                  sessionId={sessionId}
+                  lspToken={lspToken}
                 />
               ) : (
                 <div className="p-4">
@@ -179,6 +194,8 @@ function CodeEditor({
                 vimMode={settings.vimMode}
                 value={currentFile.content}
                 onChange={handleCodeChange}
+                sessionId={sessionId}
+                lspToken={lspToken}
               />
             )}
           </div>

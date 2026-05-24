@@ -7,6 +7,8 @@ import { basicSetup } from "codemirror";
 import { EditorState, type Extension } from "@codemirror/state";
 import { useMemo } from "react";
 import { getLangFromExtension } from "./utils/getLang";
+import { getLspLang } from "./utils/getLspLang";
+import { createLspExtension } from "./extensions/lspExtension";
 import { vim } from "@replit/codemirror-vim";
 import readOnlyRangeExtension from "codemirror-readonly-ranges";
 import { getReadOnlyRanges } from "./utils/getReadOnlyRanges";
@@ -15,6 +17,7 @@ import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { indentWithTab } from "./extensions/indentWithTab";
 import { useTheme } from "next-themes";
+import { env } from "~/lib/env";
 
 interface CodeMirrorProps {
   value?: string;
@@ -29,6 +32,8 @@ interface CodeMirrorProps {
   fontSize?: number;
   className?: string;
   style?: React.CSSProperties;
+  sessionId?: string;
+  lspToken?: string | null;
 }
 
 function CodeMirror(props: CodeMirrorProps) {
@@ -41,10 +46,14 @@ function CodeMirror(props: CodeMirrorProps) {
     initialCode = "",
     placeholder,
     fontSize = 14,
+    sessionId,
+    lspToken,
     ...others
   } = props;
 
   const langExtension = extension ? getLangFromExtension(extension) : null;
+  const lspLang = extension ? getLspLang(extension) : null;
+  const lspUrl = env("LSP_URL");
 
   const theme = useMemo(
     () =>
@@ -71,8 +80,12 @@ function CodeMirror(props: CodeMirrorProps) {
           getReadOnlyRanges(state, initialCode),
         ),
         placeholder: placeHolderExtension(placeholder || "Start typing..."),
+        lsp:
+          lspLang && sessionId && lspToken && lspUrl
+            ? createLspExtension(lspLang, sessionId, lspToken, lspUrl, extension ?? "txt")
+            : null,
       }).filter((ext) => ext !== null),
-    [langExtension, vimMode, initialCode, placeholder],
+    [langExtension, vimMode, initialCode, placeholder, lspLang, sessionId, lspToken, lspUrl, extension],
   );
 
   const customGithubDark = useMemo(
