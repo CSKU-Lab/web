@@ -1,5 +1,5 @@
-import LabCardList from "./_components/LabCardList";
+import { CourseLabsView } from "~/features/cms/courses";
 
-export default function LabPage() {
-  return <LabCardList />;
+export default function Page() {
+  return <CourseLabsView />;
 }

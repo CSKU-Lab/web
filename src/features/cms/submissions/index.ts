@@ -1,1 +1,1 @@
-// Types will be added as the feature is developed
+export { default as SubmissionsView } from "./components/SubmissionsView";

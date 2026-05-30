@@ -1,0 +1,112 @@
+"use client";
+
+import { useState } from "react";
+import Loading from "~/components/commons/Loading";
+import { Skeleton } from "~/components/ui/skeleton";
+import Error from "~/components/commons/Error";
+import ErrorFallback from "~/components/commons/Error/ErrorFallback";
+import { Plus, ServerCrash } from "lucide-react";
+import useCoursePagination from "~/features/cms/courses/hooks/useCoursePagination";
+import SearchInput from "~/components/commons/SearchInput";
+import useInputDebounce from "~/hooks/useInputDebounce";
+import NoDataAvailable from "~/components/commons/NoDataAvailable";
+import CourseVisibility from "~/features/cms/courses/components/CourseVisibility";
+import type { VisibilityKey } from "~/types/visibilities";
+import { Button } from "~/components/commons/Button";
+import { useRouter } from "next/navigation";
+import useOnElementAppear from "~/hooks/useOnElementAppear";
+import PageTitle from "~/components/commons/PageTitle";
+import CourseCard from "~/features/cms/courses/components/CourseCard";
+
+function CoursesListView() {
+  const [search, setSearch] = useState("");
+  const [visibility, setVisibility] = useState<VisibilityKey>("all");
+
+  const debouncedSearch = useInputDebounce(search, 1000);
+
+  const {
+    data: coursePagination,
+    isFetching,
+    isError,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+  } = useCoursePagination({
+    page_size: 12,
+    search: debouncedSearch,
+    sort_by: "name",
+    sort_order: "asc",
+    show: visibility,
+  });
+
+  const isNoData =
+    coursePagination.pages.every((page) => page.data.length === 0) &&
+    !isFetching;
+
+  const isSearchNoData = search.length > 0 && isNoData;
+
+  const router = useRouter();
+
+  const bottomDivRef = useOnElementAppear({
+    onAppear: () => fetchNextPage(),
+    enabled: hasNextPage,
+  });
+
+  return (
+    <>
+      <PageTitle>Courses</PageTitle>
+      <div className="@container flex flex-col h-full px-4">
+        <div className="flex justify-end items-center gap-2">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search courses..."
+            className=""
+          />
+          <CourseVisibility selected={visibility} onChange={setVisibility} />
+          <Button
+            onClick={() => router.push("/cms/courses/new")}
+            className="my-4 shrink-0 px-3 py-1.5"
+          >
+            <Plus size="1rem" />
+            New course
+          </Button>
+        </div>
+        <Error
+          isError={isError && !isFetching}
+          fallback={
+            <ErrorFallback
+              icon={<ServerCrash size="2rem" />}
+              onRetry={refetch}
+              title="Cannot get the courses"
+              message="There was an error to get the courses. Please try again later or report issue"
+            />
+          }
+        >
+          {isNoData || isSearchNoData ? (
+            <NoDataAvailable />
+          ) : (
+            <>
+              <div className="mt-4 grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @6xl:grid-cols-4 gap-4 auto-rows-max">
+                {coursePagination.pages.map((page) =>
+                  page.data.map((course) => (
+                    <CourseCard key={course.name} {...course} />
+                  )),
+                )}
+                <Loading
+                  isLoading={isFetching}
+                  fallback={Array.from({ length: 12 }).map((_, index) => (
+                    <Skeleton key={index} className="h-40" />
+                  ))}
+                />
+              </div>
+              <div ref={bottomDivRef} className="h-20" />
+            </>
+          )}
+        </Error>
+      </div>
+    </>
+  );
+}
+
+export default CoursesListView;

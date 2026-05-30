@@ -1,7 +1,5 @@
-"use client";
+import { CourseMaterialsView } from "~/features/cms/courses";
 
-import MaterialListPage from "./_components/MaterialListPage";
-
-export default function CourseMaterialsPage() {
-  return <MaterialListPage />;
+export default function Page() {
+  return <CourseMaterialsView />;
 }

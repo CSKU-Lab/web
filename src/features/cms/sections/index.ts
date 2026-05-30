@@ -1,1 +1,10 @@
+export { default as NewSectionView } from "./components/NewSectionView";
+export { default as SectionStudentView } from "./components/SectionStudentView";
+export { default as SectionGradebookView } from "./components/gradebook/SectionGradebookView";
+export { default as SectionLogsView } from "./components/logs/SectionLogsView";
+export { default as SectionSettingsView } from "./components/settings/SectionSettingsView";
+export { default as SectionLabsView } from "./components/labs/SectionLabsView";
+export { default as SectionLabDetailView } from "./components/lab-detail/SectionLabDetailView";
+export { default as SectionLabSettingsView } from "./components/lab-settings/SectionLabSettingsView";
+export { default as SectionLabStatusView } from "./components/lab-status/SectionLabStatusView";
 export * from "./types";
