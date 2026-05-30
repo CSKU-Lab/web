@@ -1,7 +1,1 @@
-import { atom } from "jotai";
-
-interface CommandPaletteStore {
-  isOpen: boolean;
-}
-
-export const commandPaletteAtom = atom<CommandPaletteStore>({ isOpen: false });
+export { commandPaletteAtom } from "~/features/shared/search/stores/commandPalette.store";

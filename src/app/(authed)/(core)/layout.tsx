@@ -4,8 +4,8 @@ import CoreLayout, {
   CoreLayoutContent,
 } from "~/layouts/CoreLayout";
 import type { ChildrenProps } from "~/types/children-props";
-import Sidebar from "./components/Menus/Sidebar";
-import CoreCommandPalette from "~/components/CoreCommandPalette";
+import Sidebar from "~/features/shared/sidebar/components/Sidebar";
+import CoreCommandPalette from "~/features/shared/search/components/CoreCommandPalette";
 
 export const metadata: Metadata = {
   title: "My Courses | CS Lab",
