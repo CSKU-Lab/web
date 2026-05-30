@@ -15,7 +15,8 @@ function Sidebar() {
   return (
     <>
       <SearchBar />
-      <div className="flex flex-col gap-4">
+      <h6 className="text-xs text-(--gray-11) font-light">My Courses</h6>
+      <div className="flex flex-col gap-4 mt-3">
         {sidebarData.map((data) => (
           <Course
             key={data.id}
