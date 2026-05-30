@@ -49,7 +49,7 @@ function SubmissionDetail() {
         onClick={() => {}}
       />
       <div className="mt-4">
-        <CodePreview files={data.payload.files} className="mb-4" />
+        <CodePreview files={data.payload.files} className="mb-4 h-80" />
       </div>
       <TestcaseTable isLoading={false} groups={data.payload.test_case_groups} />
     </>
