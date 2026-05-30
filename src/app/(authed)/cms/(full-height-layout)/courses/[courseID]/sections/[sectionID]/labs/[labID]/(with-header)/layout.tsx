@@ -1,9 +1,9 @@
 "use client";
 import { PropsWithChildren } from "react";
-import { useGetSectionLab } from "../_hooks/useGetSectionLab";
+import { useGetSectionLab } from "~/features/cms/sections/hooks/lab-detail/useGetSectionLab";
 import { useParams } from "next/navigation";
 import { LabStatus } from "~/types/cms-section-lab";
-import RouteNavigation from "../../../_components/RouteNavigation";
+import RouteNavigation from "~/features/cms/sections/components/RouteNavigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import PageTitle from "~/components/commons/PageTitle";

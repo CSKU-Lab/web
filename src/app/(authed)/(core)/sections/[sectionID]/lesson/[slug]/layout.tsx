@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import PageControl from "../_components/PageControl";
+import PageControl from "~/features/core/lessons/components/PageControl";
 import { type Metadata } from "next";
 
 interface Props {

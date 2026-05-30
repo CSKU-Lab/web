@@ -1,7 +1,7 @@
 "use client";
 
 import { useSelectedLayoutSegments } from "next/navigation";
-import RouteNavigation from "./_components/RouteNavigation";
+import RouteNavigation from "~/features/cms/courses/components/RouteNavigation";
 
 export default function CourseLayout({ children }: { children: React.ReactNode }) {
   const segments = useSelectedLayoutSegments();
