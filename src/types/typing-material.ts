@@ -1,3 +1,1 @@
-export interface TypingMaterialPayload {
-  content: string;
-}
+export * from "~/features/shared/materials/types/typing-material";

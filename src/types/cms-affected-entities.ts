@@ -1,11 +1,1 @@
-export type AffectedType = "semester" | "course" | "lab" | "section" | "lab_section";
-
-export interface AffectedEntities {
-  type: string;
-  data: EntityDetail[];
-}
-
-export interface EntityDetail {
-  name: string;
-  children: AffectedEntities[] | null;
-}
+export * from "~/features/cms/affected-entities/types/cms-affected-entities";

@@ -1,5 +1,1 @@
-export interface CMSUserGroup {
-  id: string;
-  name: string;
-  user_amount: number;
-}
+export * from "~/features/cms/users/types/cms-user-group";

@@ -1,0 +1,20 @@
+import { BaseService } from "~/services/base.service";
+import type {
+  AffectedEntities,
+  AffectedType,
+} from "~/types/cms-affected-entities";
+
+class AffectedEntitiesService extends BaseService {
+  constructor() {
+    super("/cms/affected-entities");
+  }
+  async get(type: AffectedType, id: string): Promise<AffectedEntities[]> {
+    const res = await this.api.post<AffectedEntities[]>(this._baseURL, {
+      type,
+      id,
+    });
+    return res.data;
+  }
+}
+
+export const cmsAffectedEntitiesService = new AffectedEntitiesService();

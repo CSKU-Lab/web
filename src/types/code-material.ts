@@ -1,5 +1,1 @@
-export interface CodeFile {
-  name: string;
-  content: string;
-  readonly?: boolean;
-}
+export * from "~/features/shared/materials/types/code-material";
