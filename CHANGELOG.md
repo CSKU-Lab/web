@@ -1,3 +1,14 @@
+# [0.16.0](https://github.com/CSKU-Lab/web/compare/v0.15.3...v0.16.0) (2026-05-30)
+
+
+### Features
+
+* **refactor:** extract cms/courses, sections, submissions into features ([a332311](https://github.com/CSKU-Lab/web/commit/a33231117bfe71d0ef9cea70cf19697ebb74b51d))
+* **refactor:** extract cms/materials and cms/layout into features ([3e786c5](https://github.com/CSKU-Lab/web/commit/3e786c59853fcd7eb748404b5b576e55279ae44e))
+* **refactor:** extract core/{home,courses,sections,materials} into features ([4406225](https://github.com/CSKU-Lab/web/commit/4406225578397d39ff0163e956e4100866a0e682))
+* **refactor:** extract shared sidebar and search into features ([74d9a24](https://github.com/CSKU-Lab/web/commit/74d9a24d7d1b6ec145f8425edcc8022481e92325))
+* **refactor:** move auth, lessons, and cms nav configs to features ([960092f](https://github.com/CSKU-Lab/web/commit/960092f1f96a4883f7ae9a97944d90e97345cf52))
+
 ## [0.15.3](https://github.com/CSKU-Lab/web/compare/v0.15.2...v0.15.3) (2026-05-24)
 
 
