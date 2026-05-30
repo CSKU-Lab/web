@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ChatHome from "./_components/ChatHome";
+import ChatHome from "~/features/cms/layout/components/ChatHome";
 
 export const metadata: Metadata = { title: "CMS | CS Lab" };
 

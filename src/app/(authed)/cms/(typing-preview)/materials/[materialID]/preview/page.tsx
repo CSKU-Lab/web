@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import type { TypingMaterialPayload } from "~/types/typing-material";
-import TypingPreviewClient from "./_components/TypingPreviewClient";
+import TypingPreviewClient from "~/features/cms/materials/components/preview/TypingPreviewClient";
 
 async function getTypingText(
   courseID: string,
