@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtomValue, useSetAtom } from "jotai";
-import { Loader2, Upload } from "lucide-react";
+import { CloudUpload, Loader2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
@@ -84,18 +84,19 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
 
   return (
     <Button
+      variant="outline"
+      size="sm"
       onClick={handleSubmit}
       disabled={submitMutation.isPending || !selectedRunner?.id}
-      className="bg-(--amber-9) hover:bg-(--amber-10) text-white"
     >
       {submitMutation.isPending ? (
         <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <Loader2 className="mr-2 h-3 w-3 animate-spin" />
           Submitting...
         </>
       ) : (
         <>
-          <Upload className="mr-2 h-4 w-4" />
+          <CloudUpload className="mr-2 h-3 w-3" />
           Submit
         </>
       )}

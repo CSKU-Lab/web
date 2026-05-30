@@ -9,6 +9,8 @@ import {
 import CodeMirror from "~/components/Editor/CodeMirror";
 import useDrag from "~/hooks/useDrag";
 import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
+import { isMac } from "~/lib/tiptap-utils";
 import type { CodeExecutionResult } from "~/types/code-execution-result";
 import { env } from "~/lib/env";
 import type { CodeFile } from "~/types/code-material";
@@ -46,6 +48,12 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
   const [result, setResult] = useState<CodeExecutionResult | null>(null);
   const isRunning =
     result?.status === "STATUS_RUNNING" || result?.status === "STATUS_QUEUED";
+
+  useHotkeys("ctrl+enter", () => handleRunCode(), {
+    enabled: !isRunning && !disabled,
+    preventDefault: true,
+    enableOnFormTags: true,
+  });
 
   const handleRunCode = async () => {
     if (runnerID === "") {
@@ -135,17 +143,22 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
             <span className="text-xs font-medium text-(--gray-11)">Input</span>
           </div>
           <div className="flex-1 relative">
-            <button
-              onClick={handleRunCode}
-              disabled={isRunning || disabled}
-              className="absolute bottom-2 right-2 z-10 bg-(--gray-12) hover:bg-(--gray-12)/80 text-(--gray-1) p-2 text-xs backdrop-blur-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {isRunning ? (
-                <LoaderCircle size="1rem" className="animate-spin" />
-              ) : (
-                <Play size="1rem" />
-              )}
-            </button>
+            <div className="absolute bottom-2 right-2 z-10 group">
+              <kbd className="absolute -top-7 left-1/2 -translate-x-1/2 hidden sm:inline-flex items-center rounded border border-(--gray-6) bg-(--gray-2) px-1 py-0.5 text-[10px] text-(--gray-10) font-sans whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                {isMac() ? "⌘↵" : "Ctrl+↵"}
+              </kbd>
+              <button
+                onClick={handleRunCode}
+                disabled={isRunning || disabled}
+                className="bg-(--gray-12) hover:bg-(--gray-12)/80 text-(--gray-1) p-2 text-xs backdrop-blur-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isRunning ? (
+                  <LoaderCircle size="1rem" className="animate-spin" />
+                ) : (
+                  <Play size="1rem" />
+                )}
+              </button>
+            </div>
             <CodeMirror
               onChange={(value: string) => setInput(value)}
               readOnly={disabled}

@@ -5,6 +5,7 @@ import { isFromMobile } from "~/lib/isFromMobile";
 import LottieComp from "~/components/commons/Lottie";
 import floating from "~/assets/lotties/foating.json";
 import { type Metadata } from "next";
+import { ogImages } from "~/lib/og";
 import DetailSection from "./_components/DetailSection";
 import MaterialPageClient from "./_components/MaterialPageClient";
 import MaterialTypeRouter from "./_components/MaterialTypeRouter";
@@ -15,10 +16,21 @@ export const generateMetadata = async ({
   params: Promise<{ sectionID: string; slug: string; materialID: string }>;
 }): Promise<Metadata> => {
   const { sectionID, slug, materialID } = await params;
-  const material = await coreMaterialService.getById(materialID, sectionID, slug);
-  return {
-    title: `${material.name} | CS Lab`,
-  };
+  const ogUrl = ogImages.material(materialID);
+
+  try {
+    const material = await coreMaterialService.getById(materialID, sectionID, slug);
+    return {
+      title: `${material.name} | CS Lab`,
+      openGraph: { images: [{ url: ogUrl, width: 1200, height: 630 }] },
+      twitter: { card: "summary_large_image", images: [ogUrl] },
+    };
+  } catch {
+    return {
+      openGraph: { images: [{ url: ogUrl, width: 1200, height: 630 }] },
+      twitter: { card: "summary_large_image", images: [ogUrl] },
+    };
+  }
 };
 
 async function MaterialPage(props: {
