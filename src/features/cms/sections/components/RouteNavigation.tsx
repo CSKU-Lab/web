@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import NavigationMenus from "~/app/(authed)/cms/_components/NavigationMenus";
+import NavigationMenus from "~/features/cms/layout/components/nav/NavigationMenus";
 import PageTitle from "~/components/commons/PageTitle";
 
 interface Menu {

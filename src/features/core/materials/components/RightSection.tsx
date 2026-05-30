@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import CodeEditor from "~/components/Editor/CodeEditor";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
 import useSubmissionFiles from "~/features/core/materials/hooks/useSubmissionFiles";
-import { useIsLabReadonly } from "~/app/(authed)/(core)/sections/[sectionID]/labs/_hooks/useIsLabReadonly";
+import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 import type { CoreCodeMaterial } from "~/types/core-code-material";
 
 function RightSection() {

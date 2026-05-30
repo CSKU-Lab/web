@@ -1,6 +1,6 @@
 "use client";
 
-import TypingTest from "~/app/(authed)/(core)/sections/[sectionID]/labs/[slug]/materials/_components/TypingSection/TypingTest";
+import TypingTest from "~/features/core/materials/components/TypingSection/TypingTest";
 
 interface Props {
   text: string;

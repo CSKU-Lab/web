@@ -7,7 +7,7 @@ import { typingTextAtom, saveStatusAtom, viewAtom } from "~/features/cms/materia
 import { isOwnerAtom } from "~/features/cms/materials/types/TypingMaterial/stores/owner.store";
 import TypingDetailSection from "~/features/cms/materials/types/TypingMaterial/components/DetailSection";
 import TextEditor from "~/features/cms/materials/types/TypingMaterial/components/TextEditor";
-import TypingTest from "~/app/(authed)/(core)/sections/[sectionID]/labs/[slug]/materials/_components/TypingSection/TypingTest";
+import TypingTest from "~/features/core/materials/components/TypingSection/TypingTest";
 import type { TypingMaterialPayload } from "~/types/typing-material";
 
 interface Props {

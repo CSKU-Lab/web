@@ -15,7 +15,7 @@ import {
 } from "~/features/core/materials/stores/submission.store";
 import type { CodeSubmissionPayload } from "~/types/core-code-submission";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
-import { useIsLabReadonly } from "~/app/(authed)/(core)/sections/[sectionID]/labs/_hooks/useIsLabReadonly";
+import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 import { MaterialType } from "~/types/core-material";
 
 interface SubmitButtonProps {

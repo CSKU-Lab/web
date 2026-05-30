@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import useCoreSection from "../_hooks/useCoreSectionUnenroll";
+import useCoreSection from "~/features/core/home/hooks/useCoreSectionUnenroll";
 
 interface CardOptionsProps {
   sectionID: string;

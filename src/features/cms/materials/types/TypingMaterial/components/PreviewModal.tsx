@@ -11,10 +11,10 @@ import {
 } from "~/components/ui/dialog";
 import { useAtomValue } from "jotai";
 import { typingTextAtom } from "~/features/cms/materials/types/TypingMaterial/stores/typing-text.store";
-import { useTypingTest } from "~/app/(authed)/(core)/sections/[sectionID]/labs/[slug]/materials/_components/TypingSection/useTypingTest";
-import TypingDisplay from "~/app/(authed)/(core)/sections/[sectionID]/labs/[slug]/materials/_components/TypingSection/TypingDisplay";
-import StatsBar from "~/app/(authed)/(core)/sections/[sectionID]/labs/[slug]/materials/_components/TypingSection/StatsBar";
-import ResultsOverlay from "~/app/(authed)/(core)/sections/[sectionID]/labs/[slug]/materials/_components/TypingSection/ResultsOverlay";
+import { useTypingTest } from "~/features/core/materials/components/TypingSection/useTypingTest";
+import TypingDisplay from "~/features/core/materials/components/TypingSection/TypingDisplay";
+import StatsBar from "~/features/core/materials/components/TypingSection/StatsBar";
+import ResultsOverlay from "~/features/core/materials/components/TypingSection/ResultsOverlay";
 
 function TypingPreview({ text }: { text: string }) {
   const {

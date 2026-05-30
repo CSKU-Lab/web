@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import useMyCourseInfPagination from "../_hooks/useMyCourseInfPagination";
+import useMyCourseInfPagination from "~/features/core/home/hooks/useMyCourseInfPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { Fragment } from "react/jsx-runtime";
 import CourseCardSkeleton from "./CourseCardSkeleton";

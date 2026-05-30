@@ -6,8 +6,8 @@ import { dateFormatter } from "~/lib/formatters/dateFormatter";
 import { cn } from "~/lib/utils";
 import useLabMaterials from "~/features/core/sections/hooks/useLabMaterials";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
-import { MaterialItem } from "~/app/(authed)/(core)/sections/[sectionID]/labs/_components/MaterialInfList";
-import MaterialListItemSkeleton from "~/app/(authed)/(core)/sections/[sectionID]/labs/_components/MaterialListItemSkeleton";
+import { MaterialItem } from "~/features/core/sections/components/labs/MaterialInfList";
+import MaterialListItemSkeleton from "~/features/core/sections/components/labs/MaterialListItemSkeleton";
 
 interface LabItemExpandedProps {
   id: string;

@@ -11,7 +11,7 @@ import {
 } from "~/components/crafts/Settings";
 import DeleteLabDialog, {
   DeleteLabDialogTrigger,
-} from "~/app/(authed)/cms/(full-height-layout)/courses/[courseID]/(course)/labs/[labID]/(main)/settings/_components/DeleteLabDialog";
+} from "~/features/cms/courses/components/lab-settings/DeleteLabDialog";
 
 interface SettingPaperProps {
   title: string;

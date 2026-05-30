@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useFeaturedCourses } from "../_hooks/useFeaturedCourses";
+import { useFeaturedCourses } from "~/features/core/home/hooks/useFeaturedCourses";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
 import ErrorFallback from "~/components/commons/Error/ErrorFallback";
 import Error from "~/components/commons/Error";

@@ -3,8 +3,8 @@ import type { ChildrenProps } from "~/types/children-props";
 import Loading from "~/components/commons/Loading";
 import { Skeleton } from "~/components/ui/skeleton";
 import PageTitle from "~/components/commons/PageTitle";
-import NavigationMenus from "~/app/(authed)/cms/_components/NavigationMenus";
-import { useBreadcrumbEntity } from "~/app/(authed)/cms/_components/BreadcrumbProvider";
+import NavigationMenus from "~/features/cms/layout/components/nav/NavigationMenus";
+import { useBreadcrumbEntity } from "~/features/cms/layout/components/nav/BreadcrumbProvider";
 import type { CMSLab } from "~/types/cms-lab";
 
 export default function LabLayout({ children }: ChildrenProps) {

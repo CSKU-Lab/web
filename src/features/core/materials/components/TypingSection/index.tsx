@@ -8,7 +8,7 @@ import type { TypingSubmissionPayload } from "~/types/typing-submission";
 import { coreSubmissionService } from "~/services/core-submission.service";
 import { queryKeys } from "~/queryKeys";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
-import { useIsLabReadonly } from "~/app/(authed)/(core)/sections/[sectionID]/labs/_hooks/useIsLabReadonly";
+import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 import { useTypingSession } from "~/features/core/materials/hooks/typing-section/useTypingSession";
 import TypingTest from "~/features/core/materials/components/TypingSection/TypingTest";
 
