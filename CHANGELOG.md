@@ -1,3 +1,10 @@
+## [0.16.1](https://github.com/CSKU-Lab/web/compare/v0.16.0...v0.16.1) (2026-05-30)
+
+
+### Bug Fixes
+
+* scrollbar shown on list page and playground content sizing bug ([3db4e84](https://github.com/CSKU-Lab/web/commit/3db4e84953b92cc22dedceee1c0362cd23adebdb))
+
 # [0.16.0](https://github.com/CSKU-Lab/web/compare/v0.15.3...v0.16.0) (2026-05-30)
 
 
