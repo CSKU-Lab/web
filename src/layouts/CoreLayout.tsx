@@ -23,7 +23,7 @@ interface ContentProps extends ChildrenProps {
 
 export function CoreLayoutContent({ className, children }: ContentProps) {
   return (
-    <div className="flex-1 transition-all overflow-auto min-h-0">
+    <div className="flex-1 transition-all overflow-hidden min-h-0">
       <div className={cn("max-w-[1920px] mx-auto flex flex-col", className)}>
         {children}
       </div>

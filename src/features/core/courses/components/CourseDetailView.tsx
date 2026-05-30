@@ -49,7 +49,7 @@ function CourseDetailView() {
         />
       }
     >
-      <div className="bg-(--gray-1) h-full p-8 space-y-8">
+      <div className="bg-(--gray-1) h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden">
         <Link
           href="/courses"
           className="inline-flex items-center gap-1 text-sm text-(--gray-11) hover:text-(--gray-12) transition-colors"

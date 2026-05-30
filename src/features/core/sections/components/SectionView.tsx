@@ -14,7 +14,7 @@ function SectionView() {
   const debouncedSearch = useInputDebounce(search, 1000);
 
   return (
-    <div className="flex flex-col h-full overflow-x-hidden">
+    <div className="flex flex-col h-full overflow-y-auto overflow-x-hidden">
       <SectionHeader />
       <div className="px-4 lg:px-12 pb-4 flex flex-col flex-1">
         <div className="flex justify-between items-center gap-4 mt-6">

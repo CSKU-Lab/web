@@ -64,7 +64,7 @@ function RightSection() {
 
   return (
     <div className="flex-1 border-t-0 border-l-0 border flex flex-col min-h-0 min-w-[300px] overflow-hidden">
-      <div className="flex-1 min-h-0 overflow-auto flex flex-col">
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
         <CodeEditor
           files={editorFiles}
           onFilesChange={handleFilesChange}

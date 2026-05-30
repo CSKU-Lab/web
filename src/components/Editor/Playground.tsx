@@ -143,6 +143,14 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
             <span className="text-xs font-medium text-(--gray-11)">Input</span>
           </div>
           <div className="flex-1 relative">
+            <div className="absolute inset-0">
+              <CodeMirror
+                onChange={(value: string) => setInput(value)}
+                readOnly={disabled}
+                value={input}
+                className="h-full"
+              />
+            </div>
             <div className="absolute bottom-2 right-2 z-10 group">
               <kbd className="absolute -top-7 left-1/2 -translate-x-1/2 hidden sm:inline-flex items-center rounded border border-(--gray-6) bg-(--gray-2) px-1 py-0.5 text-[10px] text-(--gray-10) font-sans whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 {isMac() ? "⌘↵" : "Ctrl+↵"}
@@ -159,12 +167,6 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
                 )}
               </button>
             </div>
-            <CodeMirror
-              onChange={(value: string) => setInput(value)}
-              readOnly={disabled}
-              value={input}
-              className="h-full"
-            />
           </div>
         </div>
 
@@ -183,11 +185,13 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
             <span className="text-xs font-medium text-(--gray-11)">Output</span>
           </div>
           <div className="flex-1 relative">
-            <CodeMirror
-              readOnly
-              value={output}
-              className="h-full"
-            />
+            <div className="absolute inset-0">
+              <CodeMirror
+                readOnly
+                value={output}
+                className="h-full"
+              />
+            </div>
           </div>
         </div>
       </div>

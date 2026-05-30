@@ -45,7 +45,7 @@ function MultipleTabsSection() {
           <TabButton>Config</TabButton>
         </div>
       </div>
-      <div className="flex-1 min-h-0 overflow-auto flex flex-col">
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
         {activeTab === "Runners" && <RunnersTab />}
         {activeTab === "Files" && <FilesTab />}
         {activeTab === "Solution" && <SolutionTab />}

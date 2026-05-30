@@ -25,7 +25,9 @@ async function Layout({ children }: ChildrenProps) {
       <CoreLayoutContent className="h-full">
         <BreadcrumbProvider>
           <BreadcrumbClient className="pl-4 mt-4" />
-          {children}
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
+            {children}
+          </div>
         </BreadcrumbProvider>
       </CoreLayoutContent>
     </CoreLayout>
