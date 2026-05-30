@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { FileCode } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
@@ -6,7 +6,9 @@ import RunnerSelect from "./RunnerSelect";
 import EditorSettings from "./EditorSettings";
 import { getEditorSettings } from "./utils/get-editor-settings";
 import type { Runner } from "./types/runner";
-import Playground from "./Playground";
+import Playground, { type PlaygroundHandle } from "./Playground";
+import { keymap } from "@codemirror/view";
+import { Prec } from "@codemirror/state";
 import type { CodeFile, IEditorSettings } from "./types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
 import { api } from "~/lib/api.client";
@@ -60,6 +62,24 @@ function CodeEditor({
 
   const [sessionId] = useState<string>(() => crypto.randomUUID());
   const [lspToken, setLspToken] = useState<string | null>(null);
+  const playgroundRef = useRef<PlaygroundHandle>(null);
+
+  const editorRunKeymap = useMemo(
+    () =>
+      Prec.highest(
+        keymap.of([
+          {
+            key: "Ctrl-Enter",
+            mac: "Cmd-Enter",
+            run: () => {
+              playgroundRef.current?.run();
+              return true;
+            },
+          },
+        ]),
+      ),
+    [],
+  );
 
   useEffect(() => {
     api
@@ -175,6 +195,7 @@ function CodeEditor({
                   onChange={handleCodeChange}
                   sessionId={sessionId}
                   lspToken={lspToken}
+                  extensions={[editorRunKeymap]}
                 />
               ) : (
                 <div className="p-4">
@@ -196,6 +217,7 @@ function CodeEditor({
                 onChange={handleCodeChange}
                 sessionId={sessionId}
                 lspToken={lspToken}
+                extensions={[editorRunKeymap]}
               />
             )}
           </div>
@@ -203,6 +225,7 @@ function CodeEditor({
       </div>
 
       <Playground
+        ref={playgroundRef}
         files={files}
         runnerID={selectedRunner?.id ?? ""}
         onError={() => setRunnerSelectError(true)}

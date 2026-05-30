@@ -48,6 +48,7 @@ function CodeMirror(props: CodeMirrorProps) {
     fontSize = 14,
     sessionId,
     lspToken,
+    extensions: extraExtensions = [],
     ...others
   } = props;
 
@@ -124,6 +125,7 @@ function CodeMirror(props: CodeMirrorProps) {
         basicSetup,
         theme,
         ...mergedExtensions,
+        ...extraExtensions,
         indentWithTab,
         EditorView.updateListener.of((update) => {
           if (update.docChanged && onChange) {

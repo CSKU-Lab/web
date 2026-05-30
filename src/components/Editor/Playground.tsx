@@ -8,13 +8,19 @@ import {
 } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import useDrag from "~/hooks/useDrag";
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { isMac } from "~/lib/tiptap-utils";
+import { keymap } from "@codemirror/view";
+import { Prec } from "@codemirror/state";
 import type { CodeExecutionResult } from "~/types/code-execution-result";
 import { env } from "~/lib/env";
 import type { CodeFile } from "~/types/code-material";
 import { kiloToMegaBytes } from "./utils/kilo-to-megabytes";
+
+export interface PlaygroundHandle {
+  run: () => void;
+}
 
 interface Props {
   runnerID: string;
@@ -23,7 +29,10 @@ interface Props {
   disabled?: boolean;
 }
 
-function Playground({ runnerID, files, onError, disabled }: Props) {
+const Playground = forwardRef<PlaygroundHandle, Props>(function Playground(
+  { runnerID, files, onError, disabled },
+  ref,
+) {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
 
@@ -48,6 +57,29 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
   const [result, setResult] = useState<CodeExecutionResult | null>(null);
   const isRunning =
     result?.status === "STATUS_RUNNING" || result?.status === "STATUS_QUEUED";
+
+  const handleRunCodeRef = useRef<() => void>(() => {});
+
+  useImperativeHandle(ref, () => ({
+    run: () => { if (!isRunning && !disabled) handleRunCodeRef.current(); },
+  }), [isRunning, disabled]);
+
+  const runKeymap = useMemo(
+    () =>
+      Prec.highest(
+        keymap.of([
+          {
+            key: "Ctrl-Enter",
+            mac: "Cmd-Enter",
+            run: () => {
+              if (!isRunning && !disabled) handleRunCodeRef.current();
+              return true;
+            },
+          },
+        ]),
+      ),
+    [isRunning, disabled],
+  );
 
   useHotkeys("ctrl+enter", () => handleRunCode(), {
     enabled: !isRunning && !disabled,
@@ -105,6 +137,7 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
       }
     }
   };
+  handleRunCodeRef.current = handleRunCode;
 
   return (
     <div
@@ -149,6 +182,7 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
                 readOnly={disabled}
                 value={input}
                 className="h-full"
+                extensions={[runKeymap]}
               />
             </div>
             <div className="absolute bottom-2 right-2 z-10 group">
@@ -197,6 +231,6 @@ function Playground({ runnerID, files, onError, disabled }: Props) {
       </div>
     </div>
   );
-}
+});
 
 export default Playground;
