@@ -1,3 +1,17 @@
+# [0.17.0](https://github.com/CSKU-Lab/web/compare/v0.16.1...v0.17.0) (2026-06-03)
+
+
+### Bug Fixes
+
+* active text color in typing material ([defdd72](https://github.com/CSKU-Lab/web/commit/defdd7281577f8a00dab492f6ee8e3bc2d1c765b))
+
+
+### Features
+
+* add keyboard shortcut to run playground ([4fd4841](https://github.com/CSKU-Lab/web/commit/4fd4841a8501b94675d65095410aef84e925df7c))
+* implement typing material renderer in material submission ([b5acfd9](https://github.com/CSKU-Lab/web/commit/b5acfd94b944ecd0714eaccc939701c8a2c7882e))
+* improve typing material ([2a59ee5](https://github.com/CSKU-Lab/web/commit/2a59ee5295c2645060429c93a117619ac5d2decc))
+
 ## [0.16.1](https://github.com/CSKU-Lab/web/compare/v0.16.0...v0.16.1) (2026-05-30)
 
 
