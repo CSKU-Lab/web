@@ -12,6 +12,7 @@ export type CreateMaterialPayload = {
 };
 
 export type UpdateMaterialPayload = Partial<CreateMaterialPayload> & {
+  auto_score?: number;
   payload?: any | null;
 };
 

@@ -49,6 +49,28 @@ class CoreMaterialService extends BaseService {
     );
     return res.data;
   }
+
+  async markTypingStarted(
+    materialID: string,
+    token: string,
+  ): Promise<StartTypingSessionResponse> {
+    const res = await this.api.post<StartTypingSessionResponse>(
+      `/materials/${materialID}/typing-session/mark-started`,
+      { token },
+    );
+    return res.data;
+  }
+
+  async getBestTypingSubmission(
+    materialID: string,
+    labID: string,
+    sectionID: string,
+  ): Promise<{ id: string | null }> {
+    const res = await this.api.get<{ id: string | null }>(
+      `/materials/${materialID}/typing-session/best?lab_id=${labID}&section_id=${sectionID}`,
+    );
+    return res.data;
+  }
 }
 
 export const coreMaterialService = new CoreMaterialService();

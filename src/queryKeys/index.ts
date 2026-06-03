@@ -220,6 +220,13 @@ export const queryKeys = {
         materialID,
         "submissions-pagination",
       ],
+      getBestTypingSubmission: (materialID: string, labID: string, sectionID: string) => [
+        ...queryKeys.core.material.all,
+        materialID,
+        labID,
+        sectionID,
+        "best-typing-submission",
+      ],
     },
     submission: {
       all: "submissions",

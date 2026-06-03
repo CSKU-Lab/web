@@ -17,8 +17,8 @@ export default function TypingDisplay({ chars, currentIndex }: Props) {
           className={cn(
             "relative",
             c.status === "pending" && "text-(--gray-8)",
-            c.status === "correct" && "text-green-400",
-            c.status === "incorrect" && "text-red-400",
+            c.status === "correct" && "text-(--grass-10)",
+            c.status === "incorrect" && "text-(--tomato-10)",
             c.status === "current" && "text-(--gray-12)",
             c.status === "current" &&
               "after:absolute after:left-0 after:-bottom-0.5 after:w-full after:h-0.5 after:bg-(--gray-12) after:animate-pulse",

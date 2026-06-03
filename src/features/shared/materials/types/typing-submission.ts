@@ -7,7 +7,12 @@ export interface StartTypingSessionResponse {
   token: string;
 }
 
+export interface Keystroke {
+  k: string;
+  t: number;
+}
+
 export interface TypingSubmissionPayload {
   token: string;
-  typed_text: string;
+  keystrokes: Keystroke[];
 }

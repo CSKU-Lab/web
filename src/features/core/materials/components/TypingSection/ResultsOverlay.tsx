@@ -23,7 +23,7 @@ function StatCard({ label, value, unit }: StatCardProps) {
     <div className="flex flex-col items-center gap-1 bg-(--gray-2) border border-(--gray-4) rounded-lg p-6 min-w-[140px]">
       <span className="text-xs uppercase tracking-widest text-(--gray-9) font-mono">{label}</span>
       <div className="flex items-end gap-1">
-        <span className="text-4xl font-bold text-white font-mono">{value}</span>
+        <span className="text-4xl font-bold text-(--gray-12) font-mono">{value}</span>
         {unit && <span className="text-sm text-(--gray-10) mb-1">{unit}</span>}
       </div>
     </div>
@@ -80,7 +80,7 @@ export default function ResultsOverlay({
 }: Props) {
   return (
     <div className="flex flex-col items-center gap-8">
-      <h2 className="text-xl font-semibold text-(--gray-11)">Results</h2>
+      <h2 className="text-xl font-semibold text-(--gray-12)">Results</h2>
       <div className="flex flex-wrap justify-center gap-4">
         <StatCard label="Raw Speed" value={results.rawWPM} unit="wpm" />
         <StatCard label="Adjusted Speed" value={results.adjWPM} unit="wpm" />
@@ -105,6 +105,9 @@ export default function ResultsOverlay({
           <RotateCcw size="1rem" />
         )}
         {isSubmitting ? "Submitting..." : "Try Again"}
+        {!isSubmitting && (
+          <span className="text-xs opacity-50 font-mono ml-1">esc</span>
+        )}
       </Button>
     </div>
   );

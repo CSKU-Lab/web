@@ -16,6 +16,14 @@ export interface TypingResults {
   duration: number;
 }
 
+// Keystroke event logged for server-side calculation and anti-spoof validation.
+// k: the key pressed ("Backspace" or a single character)
+// t: ms since the first keystroke
+export interface Keystroke {
+  k: string;
+  t: number;
+}
+
 interface UseTypingTestReturn {
   chars: CharState[];
   currentIndex: number;
@@ -24,7 +32,7 @@ interface UseTypingTestReturn {
   results: TypingResults | null;
   elapsedSeconds: number;
   liveRawWPM: number;
-  typedText: string;
+  keystrokes: Keystroke[];
   handleKeyDown: (e: KeyboardEvent) => void;
   reset: () => void;
 }
@@ -44,13 +52,14 @@ export function useTypingTest(text: string): UseTypingTestReturn {
   const [isComplete, setIsComplete] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [liveRawWPM, setLiveRawWPM] = useState(0);
-  const [typedText, setTypedText] = useState("");
 
   const startTimeRef = useRef<number | null>(null);
   const currentIndexRef = useRef(0);
   const charsRef = useRef<CharState[]>(chars);
   const isCompleteRef = useRef(false);
-  const typedTextRef = useRef("");
+  const keystrokesRef = useRef<Keystroke[]>([]);
+  // Track total errors for preview results display only
+  const previewErrorsRef = useRef(0);
 
   useEffect(() => {
     const newChars = buildChars(text);
@@ -58,7 +67,8 @@ export function useTypingTest(text: string): UseTypingTestReturn {
     currentIndexRef.current = 0;
     startTimeRef.current = null;
     isCompleteRef.current = false;
-    typedTextRef.current = "";
+    keystrokesRef.current = [];
+    previewErrorsRef.current = 0;
     setChars(newChars);
     setCurrentIndex(0);
     setStartTime(null);
@@ -66,7 +76,6 @@ export function useTypingTest(text: string): UseTypingTestReturn {
     setIsComplete(false);
     setElapsedSeconds(0);
     setLiveRawWPM(0);
-    setTypedText("");
   }, [text]);
 
   useEffect(() => {
@@ -93,6 +102,8 @@ export function useTypingTest(text: string): UseTypingTestReturn {
     if (e.key === "Backspace") {
       const idx = currentIndexRef.current;
       if (idx === 0) return;
+      const t = startTimeRef.current ? Date.now() - startTimeRef.current : 0;
+      keystrokesRef.current = [...keystrokesRef.current, { k: "Backspace", t }];
       const newIdx = idx - 1;
       const next = charsRef.current.map((c, i) => {
         if (i === newIdx) return { ...c, status: "current" as CharStatus };
@@ -101,10 +112,6 @@ export function useTypingTest(text: string): UseTypingTestReturn {
       });
       currentIndexRef.current = newIdx;
       charsRef.current = next;
-      // Remove last character from typed text
-      const newTypedText = typedTextRef.current.slice(0, -1);
-      typedTextRef.current = newTypedText;
-      setTypedText(newTypedText);
       setChars(next);
       setCurrentIndex(newIdx);
       return;
@@ -122,7 +129,11 @@ export function useTypingTest(text: string): UseTypingTestReturn {
       setStartTime(now);
     }
 
+    const t = Date.now() - startTimeRef.current!;
+    keystrokesRef.current = [...keystrokesRef.current, { k: e.key, t }];
+
     const isCorrect = e.key === current[idx].char;
+    if (!isCorrect) previewErrorsRef.current += 1;
     const newIdx = idx + 1;
 
     const next = current.map((c, i) => {
@@ -133,10 +144,6 @@ export function useTypingTest(text: string): UseTypingTestReturn {
 
     currentIndexRef.current = newIdx;
     charsRef.current = next;
-    // Add typed character to typed text
-    const newTypedText = typedTextRef.current + e.key;
-    typedTextRef.current = newTypedText;
-    setTypedText(newTypedText);
     setChars(next);
     setCurrentIndex(newIdx);
 
@@ -148,16 +155,16 @@ export function useTypingTest(text: string): UseTypingTestReturn {
     }
   }, []);
 
+  // Frontend results used only for preview (PreviewModal). Actual submissions use server-calculated stats.
   const results: TypingResults | null = (() => {
     if (!isComplete || !startTime || !endTime) return null;
     const correctCount = chars.filter((c) => c.status === "correct").length;
-    const incorrectCount = chars.filter((c) => c.status === "incorrect").length;
-    const totalTyped = correctCount + incorrectCount;
+    const totalChars = chars.length;
     const elapsedMin = (endTime - startTime) / 60000;
     return {
-      rawWPM: Math.round(totalTyped / 5 / elapsedMin),
+      rawWPM: Math.round(totalChars / 5 / elapsedMin),
       adjWPM: Math.round(correctCount / 5 / elapsedMin),
-      errorPct: totalTyped > 0 ? Math.round((incorrectCount / totalTyped) * 1000) / 10 : 0,
+      errorPct: totalChars > 0 ? Math.round((previewErrorsRef.current / totalChars) * 1000) / 10 : 0,
       duration: Math.round((endTime - startTime) / 100) / 10,
     };
   })();
@@ -168,7 +175,8 @@ export function useTypingTest(text: string): UseTypingTestReturn {
     currentIndexRef.current = 0;
     startTimeRef.current = null;
     isCompleteRef.current = false;
-    typedTextRef.current = "";
+    keystrokesRef.current = [];
+    previewErrorsRef.current = 0;
     setChars(newChars);
     setCurrentIndex(0);
     setStartTime(null);
@@ -176,7 +184,6 @@ export function useTypingTest(text: string): UseTypingTestReturn {
     setIsComplete(false);
     setElapsedSeconds(0);
     setLiveRawWPM(0);
-    setTypedText("");
   }, [text]);
 
   return {
@@ -187,7 +194,7 @@ export function useTypingTest(text: string): UseTypingTestReturn {
     results,
     elapsedSeconds,
     liveRawWPM,
-    typedText,
+    keystrokes: keystrokesRef.current,
     handleKeyDown,
     reset,
   };

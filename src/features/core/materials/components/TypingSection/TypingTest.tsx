@@ -1,27 +1,27 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useTypingTest } from "~/features/core/materials/components/TypingSection/useTypingTest";
+import { History } from "lucide-react";
+import { useTypingTest, type TypingResults, type Keystroke } from "~/features/core/materials/components/TypingSection/useTypingTest";
 import TypingDisplay from "~/features/core/materials/components/TypingSection/TypingDisplay";
 import StatsBar from "~/features/core/materials/components/TypingSection/StatsBar";
-import ResultsOverlay from "~/features/core/materials/components/TypingSection/ResultsOverlay";
 
 interface Props {
   text: string;
-  onComplete?: (typedText: string) => void;
+  onComplete?: (keystrokes: Keystroke[]) => void;
+  onResults?: (results: TypingResults) => void;
+  onStarted?: () => void;
   onRetry?: () => void;
-  isSubmitting?: boolean;
-  submitError?: Error | null;
-  isSubmitted?: boolean;
+  onViewSubmissions?: () => void;
 }
 
 export default function TypingTest({
   text,
   onComplete,
+  onResults,
+  onStarted,
   onRetry,
-  isSubmitting = false,
-  submitError = null,
-  isSubmitted = false,
+  onViewSubmissions,
 }: Props) {
   const {
     chars,
@@ -31,13 +31,14 @@ export default function TypingTest({
     results,
     elapsedSeconds,
     liveRawWPM,
-    typedText,
+    keystrokes,
     handleKeyDown,
     reset,
   } = useTypingTest(text);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const hasSubmittedRef = useRef(false);
+  const hasStartedRef = useRef(false);
 
   useEffect(() => {
     const el = inputRef.current;
@@ -46,17 +47,25 @@ export default function TypingTest({
     return () => el.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
-  // Auto-submit when typing is complete
   useEffect(() => {
-    if (isComplete && onComplete && !hasSubmittedRef.current) {
-      hasSubmittedRef.current = true;
-      onComplete(typedText);
+    if (isStarted && !hasStartedRef.current) {
+      hasStartedRef.current = true;
+      onStarted?.();
     }
-  }, [isComplete, onComplete, typedText]);
+  }, [isStarted, onStarted]);
 
-  // Reset hasSubmitted when text changes (retry)
+  // Fire results + submit when complete — parent switches view immediately
+  useEffect(() => {
+    if (isComplete && results && !hasSubmittedRef.current) {
+      hasSubmittedRef.current = true;
+      onResults?.(results);
+      onComplete?.(keystrokes);
+    }
+  }, [isComplete, results, onComplete, onResults, keystrokes]);
+
   useEffect(() => {
     hasSubmittedRef.current = false;
+    hasStartedRef.current = false;
   }, [text]);
 
   const handleRestart = () => {
@@ -64,6 +73,16 @@ export default function TypingTest({
     reset();
     onRetry?.();
   };
+
+  // ESC to restart
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleRestart();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -77,24 +96,28 @@ export default function TypingTest({
         readOnly
         aria-label="Typing test input"
       />
-      {isComplete && results ? (
-        <ResultsOverlay
-          results={results}
-          onRestart={handleRestart}
-          isSubmitting={isSubmitting}
-          submitError={submitError}
-          isSubmitted={isSubmitted}
-        />
+
+      {!isStarted && onViewSubmissions && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onViewSubmissions();
+          }}
+          className="flex items-center gap-2 px-3 py-1.5 mb-8 text-xs text-(--gray-11) hover:text-(--gray-12) bg-(--gray-2) hover:bg-(--gray-3) border border-(--gray-4) rounded-md transition-colors"
+        >
+          <History size="0.875rem" />
+          All Submissions
+        </button>
+      )}
+
+      <StatsBar elapsedSeconds={elapsedSeconds} liveRawWPM={liveRawWPM} isStarted={isStarted} />
+      <div className="w-full max-w-3xl">
+        <TypingDisplay chars={chars} currentIndex={currentIndex} />
+      </div>
+      {!isStarted ? (
+        <p className="mt-6 text-xs text-(--gray-9) font-mono">click here or start typing</p>
       ) : (
-        <>
-          <StatsBar elapsedSeconds={elapsedSeconds} liveRawWPM={liveRawWPM} isStarted={isStarted} />
-          <div className="w-full max-w-3xl">
-            <TypingDisplay chars={chars} currentIndex={currentIndex} />
-          </div>
-          {!isStarted && (
-            <p className="mt-6 text-xs text-(--gray-9) font-mono">click here or start typing</p>
-          )}
-        </>
+        <p className="mt-6 text-xs text-(--gray-9) font-mono opacity-40">esc to restart</p>
       )}
     </div>
   );
