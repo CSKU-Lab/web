@@ -39,3 +39,10 @@ export interface CodeSubmissionData {
   avg_memory: number;
   test_case_groups: TestCaseGroup[];
 }
+
+export interface TypingSubmissionData {
+  raw_wpm: number;
+  adjusted_wpm: number;
+  error_rate: number;
+  duration: number;
+}

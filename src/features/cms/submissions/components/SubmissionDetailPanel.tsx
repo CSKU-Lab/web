@@ -27,6 +27,7 @@ function SubmissionDetailPanel({ material }: SubmissionDetailPanelProps) {
     return (
       <Renderer
         key={selectedSubmission.id}
+        id={selectedSubmission.id}
         material={material}
         created_at={selectedSubmission.created_at}
         payload={selectedSubmission.payload}

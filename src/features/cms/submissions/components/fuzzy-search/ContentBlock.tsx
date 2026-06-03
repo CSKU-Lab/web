@@ -5,6 +5,7 @@ import { MaterialType } from "~/types/cms-material";
 import type {
   CMSSectionStudentLatestSubmission,
   CodeSubmissionData,
+  TypingSubmissionData,
 } from "~/types/cms-section-submission";
 import { CodeContent } from "~/features/cms/submissions/components/fuzzy-search/renderers/CodeContent";
 import { DocumentContent } from "~/features/cms/submissions/components/fuzzy-search/renderers/DocumentContent";
@@ -21,6 +22,12 @@ const isCodePayload = (payload: unknown): payload is CodeSubmissionData =>
   payload !== null &&
   "files" in payload &&
   "test_case_groups" in payload;
+
+const isTypingPayload = (payload: unknown): payload is TypingSubmissionData =>
+  typeof payload === "object" &&
+  payload !== null &&
+  "adjusted_wpm" in payload &&
+  "error_rate" in payload;
 
 export function ContentBlock({
   submission,
@@ -39,8 +46,8 @@ export function ContentBlock({
     return <DocumentContent />;
   }
 
-  if (materialType === MaterialType.TYPE) {
-    return <TypeContent />;
+  if (materialType === MaterialType.TYPE && isTypingPayload(submission.payload)) {
+    return <TypeContent payload={submission.payload} />;
   }
 
   return (
