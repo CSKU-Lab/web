@@ -1,3 +1,10 @@
+## [0.17.1](https://github.com/CSKU-Lab/web/compare/v0.17.0...v0.17.1) (2026-06-08)
+
+
+### Bug Fixes
+
+* client env settings on new nextjs version ([59bc96f](https://github.com/CSKU-Lab/web/commit/59bc96fd532edcb917c393049d46a958fb8891b7))
+
 # [0.17.0](https://github.com/CSKU-Lab/web/compare/v0.16.1...v0.17.0) (2026-06-03)
 
 
