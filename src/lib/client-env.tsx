@@ -1,4 +1,3 @@
-import Script from "next/script";
 export const ClientEnv = () => {
   const envs: Record<string, any> = {};
   Object.entries(process.env).forEach(([key, value]) => {
@@ -8,13 +7,12 @@ export const ClientEnv = () => {
   });
 
   return (
-    <Script
+    <script
       id="client-env"
-      strategy="beforeInteractive"
       dangerouslySetInnerHTML={{
         __html: `window.env = {${Object.entries(envs)
-          .map(([key, value]) => `${key}:"${value}"`)
-          .join("\n")}}`,
+          .map(([key, value]) => `${key}:${JSON.stringify(value)}`)
+          .join(",")}}`,
       }}
     />
   );
