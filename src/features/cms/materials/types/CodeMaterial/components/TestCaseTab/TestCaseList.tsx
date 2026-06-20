@@ -120,14 +120,6 @@ function TestCaseList({ groupId, test_cases, isOwner }: TestCaseListProps) {
 
   return (
     <div className="p-3 bg-gray-1 border-b rounded-b-md">
-      {isOwner && (
-        <div className="mb-3">
-          <Button variant="ghost" onClick={handleAddTestCase}>
-            <Plus size="1rem" />
-            Add Test Case
-          </Button>
-        </div>
-      )}
       <div className="space-y-3">
         {test_cases.map((testCase) => (
           <SortableTestCaseItem
@@ -139,9 +131,12 @@ function TestCaseList({ groupId, test_cases, isOwner }: TestCaseListProps) {
           />
         ))}
       </div>
-      {test_cases.length === 0 && (
-        <div className="text-center py-6 text-gray-10 text-sm">
-          No test cases in this group. Click &ldquo;Add Test Case&rdquo; to create one.
+      {isOwner && (
+        <div className="mt-3">
+          <Button variant="ghost" onClick={handleAddTestCase}>
+            <Plus size="1rem" />
+            Add Test Case
+          </Button>
         </div>
       )}
     </div>
