@@ -10,6 +10,12 @@ class CMSSubmissionService extends BaseService {
       manual_score: score,
     });
   }
+
+  async regradeAll(sectionID: string, labID: string, materialID: string) {
+    return this.api.post(
+      `/cms/sections/${sectionID}/labs/${labID}/materials/${materialID}/regrade`,
+    );
+  }
 }
 
 export const cmsSubmissionService = new CMSSubmissionService();

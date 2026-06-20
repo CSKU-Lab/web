@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { ArrowLeft, ServerCrash } from "lucide-react";
+import { ArrowLeft, RefreshCw, ServerCrash } from "lucide-react";
 import Link from "next/link";
 import PageTitle from "~/components/commons/PageTitle";
 import ResizableSplit from "~/components/commons/ResizableSplit";
@@ -14,6 +14,11 @@ import { FuzzySearchPanel } from "~/features/cms/submissions/components/fuzzy-se
 import { useAllStudentsLatestSubmissions } from "~/features/cms/submissions/hooks/useStudentSubmissions";
 import { useGetMaterial } from "~/features/cms/submissions/hooks/useGetMaterial";
 import LeftPanel from "~/features/cms/submissions/components/LeftPanel";
+import { useMutation } from "@tanstack/react-query";
+import { cmsSubmissionService } from "~/services/cms-submission.service";
+import { toast } from "sonner";
+import { Button } from "~/components/commons/Button";
+import { MaterialType } from "~/types/cms-material";
 
 interface PageParams {
   [key: string]: string;
@@ -44,15 +49,39 @@ function SubmissionsView() {
   const isLoading = isStudentsLoading || isMaterialLoading;
   const isError = (isStudentsError && !isStudentsFetching) || isMaterialError;
 
+  const regradeAll = useMutation({
+    mutationFn: () =>
+      cmsSubmissionService.regradeAll(sectionID, labID, materialID),
+    onSuccess: () => {
+      toast.success("Regrading in progress");
+    },
+    onError: () => {
+      toast.error("Failed to trigger regrade");
+    },
+  });
+
   return (
     <>
-      <Link
-        href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}`}
-        className="inline-flex items-center gap-2 text-sm text-(--gray-11) hover:text-(--gray-12) mb-2 transition-colors ml-4 my-2.5"
-      >
-        <ArrowLeft size={16} />
-        <span>Back to Materials</span>
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link
+          href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}`}
+          className="inline-flex items-center gap-2 text-sm text-(--gray-11) hover:text-(--gray-12) mb-2 transition-colors ml-4 my-2.5"
+        >
+          <ArrowLeft size={16} />
+          <span>Back to Materials</span>
+        </Link>
+        {material?.type === MaterialType.CODE && (
+          <Button
+            variant="ghost"
+            className="mr-4 h-8 text-sm"
+            disabled={regradeAll.isPending}
+            onClick={() => regradeAll.mutate()}
+          >
+            <RefreshCw size="0.875rem" />
+            Regrade All
+          </Button>
+        )}
+      </div>
       <PageTitle>
         <Loading
           isLoading={isMaterialLoading}
