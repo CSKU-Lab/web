@@ -36,7 +36,7 @@ export const addGroupAtom = atom(null, (get, set) => {
   const newGroup: TestCaseGroup = {
     id: generateId(),
     name: "Sample Tests",
-    score: 100,
+    score: 1,
     order: groups.length,
     test_cases: [],
   };
