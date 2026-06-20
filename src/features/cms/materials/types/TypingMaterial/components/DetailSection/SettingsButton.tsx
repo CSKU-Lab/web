@@ -257,7 +257,7 @@ function SettingsButton() {
               <VisibilityInput
                 value={value}
                 onChange={onChange}
-                publicText="Everyone can see this material"
+                publicText="Every Instructors can see this material"
                 privateText="Only you can see this material"
               />
             )}
