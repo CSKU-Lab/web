@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { History, RotateCcw, Loader2 } from "lucide-react";
+import { History, RotateCcw } from "lucide-react";
 import { useTypingTest, type TypingResults, type Keystroke } from "~/features/core/materials/components/TypingSection/useTypingTest";
 import TypingDisplay from "~/features/core/materials/components/TypingSection/TypingDisplay";
 import StatsBar from "~/features/core/materials/components/TypingSection/StatsBar";
@@ -14,9 +14,6 @@ interface Props {
   onStarted?: () => void;
   onRetry?: () => void;
   onViewSubmissions?: () => void;
-  isSubmitting?: boolean;
-  submitError?: Error | null;
-  isSubmitted?: boolean;
 }
 
 export default function TypingTest({
@@ -26,9 +23,6 @@ export default function TypingTest({
   onStarted,
   onRetry,
   onViewSubmissions,
-  isSubmitting = false,
-  submitError = null,
-  isSubmitted = false,
 }: Props) {
   const {
     chars,
@@ -116,24 +110,14 @@ export default function TypingTest({
           <TypingDisplay chars={chars} currentIndex={currentIndex} />
         </div>
 
-        {isSubmitting && (
-          <div className="flex items-center gap-2 text-(--amber-9) text-sm">
-            <Loader2 size="0.875rem" className="animate-spin" />
-            Submitting...
-          </div>
-        )}
-        {submitError && (
-          <p className="text-sm text-(--tomato-11)">{submitError.message || "Submission failed"}</p>
-        )}
-
         <div className="flex items-center gap-3">
-          <Button variant="action" onClick={handleRestart} disabled={isSubmitting}>
-            {isSubmitting ? <Loader2 size="1rem" className="animate-spin" /> : <RotateCcw size="1rem" />}
+          <Button variant="action" onClick={handleRestart}>
+            <RotateCcw size="1rem" />
             Try Again
-            {!isSubmitting && <span className="text-xs opacity-50 font-mono ml-1">esc</span>}
+            <span className="text-xs opacity-50 font-mono ml-1">esc</span>
           </Button>
           {onViewSubmissions && (
-            <Button variant="outline" onClick={onViewSubmissions} disabled={isSubmitting}>
+            <Button variant="outline" onClick={onViewSubmissions}>
               View Submissions
             </Button>
           )}

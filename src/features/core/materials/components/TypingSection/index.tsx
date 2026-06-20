@@ -141,9 +141,6 @@ export default function TypingSection() {
               onResults={() => {}}
               onRetry={handleRetry}
               onViewSubmissions={() => setView("submissions")}
-              isSubmitting={submitMutation.isPending}
-              submitError={submitMutation.error as Error | null}
-              isSubmitted={submitMutation.isSuccess}
             />
           </motion.div>
         ) : (
