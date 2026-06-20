@@ -1,3 +1,10 @@
+## [0.17.4](https://github.com/CSKU-Lab/web/compare/v0.17.3...v0.17.4) (2026-06-20)
+
+
+### Bug Fixes
+
+* use resolvedTheme for CodeMirror and add pending state to playground ([a260785](https://github.com/CSKU-Lab/web/commit/a260785f9ac37d7849fa8f06f46ba63996627a11))
+
 ## [0.17.3](https://github.com/CSKU-Lab/web/compare/v0.17.2...v0.17.3) (2026-06-20)
 
 
