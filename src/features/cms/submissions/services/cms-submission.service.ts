@@ -16,6 +16,10 @@ class CMSSubmissionService extends BaseService {
       `/cms/sections/${sectionID}/labs/${labID}/materials/${materialID}/regrade`,
     );
   }
+
+  async deleteSubmission(submissionID: string) {
+    return this.api.delete(`/cms/submissions/${submissionID}`);
+  }
 }
 
 export const cmsSubmissionService = new CMSSubmissionService();

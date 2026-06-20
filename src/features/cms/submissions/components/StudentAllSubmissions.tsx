@@ -10,9 +10,21 @@ import { useStudentSubmissions } from "~/features/cms/submissions/hooks/useViewA
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import useVimMotion from "~/features/cms/submissions/hooks/useVimMotion";
 import useGetUser from "~/hooks/useGetUser";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { selectedSubmissionAtom } from "~/features/cms/submissions/stores/selected-submission.store";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { cmsSubmissionService } from "~/services/cms-submission.service";
+import { toast } from "sonner";
+import { queryKeys } from "~/queryKeys";
+import { CMSSectionSubmission } from "~/types/cms-section-submission";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/commons/Dialog";
 
 function StudentAllSubmissionsSkeleton() {
   return (
@@ -60,6 +72,29 @@ function StudentAllSubmissions() {
   }>();
   const searchParams = useSearchParams();
   const studentID = searchParams.get("student_id") ?? "";
+  const [submissionToDelete, setSubmissionToDelete] =
+    useState<CMSSectionSubmission | null>(null);
+  const queryClient = useQueryClient();
+
+  const deleteSubmission = useMutation({
+    mutationFn: (submissionID: string) =>
+      cmsSubmissionService.deleteSubmission(submissionID),
+    onSuccess: () => {
+      toast.success("Submission deleted");
+      setSubmissionToDelete(null);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.section.submissionsOfStudent(
+          sectionID,
+          labID,
+          materialID,
+          studentID,
+        ),
+      });
+    },
+    onError: () => {
+      toast.error("Failed to delete submission");
+    },
+  });
 
   const {
     data: submissions,
@@ -166,6 +201,7 @@ function StudentAllSubmissions() {
                 submission={submission}
                 isSelected={currentIndex === i}
                 onClick={() => setCurrentIndex(i)}
+                onDelete={setSubmissionToDelete}
               />
             ))}
             {isLoading && hasNextPage && (
@@ -194,6 +230,40 @@ function StudentAllSubmissions() {
         )}
         <div ref={bottomDivRef}></div>
       </div>
+
+      <Dialog
+        open={submissionToDelete !== null}
+        onOpenChange={(open) => !open && setSubmissionToDelete(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Submission?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-(--gray-11) px-4">
+            Submission #{submissionToDelete?.order} will be permanently deleted.
+            The grade will revert to the previous submission, or become null if
+            this is the only submission.
+          </p>
+          <DialogFooter className="p-4 pt-0">
+            <Button
+              variant="transparent"
+              onClick={() => setSubmissionToDelete(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              disabled={deleteSubmission.isPending}
+              onClick={() =>
+                submissionToDelete &&
+                deleteSubmission.mutate(submissionToDelete.id)
+              }
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
