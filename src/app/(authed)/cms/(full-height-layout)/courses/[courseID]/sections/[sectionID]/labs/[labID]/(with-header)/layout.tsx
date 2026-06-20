@@ -34,7 +34,7 @@ function LabWithHeaderLayout({ children }: PropsWithChildren) {
       href: `/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}`,
     },
     {
-      name: "Status",
+      name: "Submission Status",
       href: `/cms/courses/${courseID}/sections/${sectionID}/labs/${labID}/status`,
     },
     {

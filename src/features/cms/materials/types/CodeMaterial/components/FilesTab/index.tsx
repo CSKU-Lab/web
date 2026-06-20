@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { FileCode, FileImage, FileText } from "lucide-react";
+import { FileCode, FileImage, FileText, ChevronDown, ChevronRight } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import EditorSettings from "~/components/Editor/EditorSettings";
 import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
@@ -45,6 +45,7 @@ function FilesTab() {
   const isLoading = useAtomValue(isLoadingAtom);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings, setSettings] = useState<IEditorSettings>(getEditorSettings());
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const handleSettingsChange = (newSettings: IEditorSettings) => {
     setSettings(newSettings);
@@ -98,43 +99,51 @@ function FilesTab() {
         allowModify={isOwner && !isLoading}
       />
       <div className="flex-1 flex flex-col min-h-0 min-w-40">
-        <div className="border-b p-1 flex justify-end">
+        <div className="border-b p-1 flex items-center justify-between">
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-1 hover:bg-(--gray-3) rounded text-(--gray-11) transition-colors"
+          >
+            {isExpanded ? <ChevronDown size="1rem" /> : <ChevronRight size="1rem" />}
+          </button>
           <EditorSettings
             settings={settings}
             onChange={handleSettingsChange}
           />
         </div>
-        {currentFile === undefined ? (
-          <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
-            <FileCode size="3rem" className="mb-3 opacity-50" />
-            <p className="text-sm">Click a file to start editing</p>
-          </div>
-        ) : !isText ? (
-          <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
-            {currentFile.name.match(/\.(png|jpg|jpeg|gif|webp|svg)$/i) ? (
-              <>
-                <FileImage size="3rem" className="mb-3 opacity-50" />
-                <p className="text-sm">Image preview not available</p>
-              </>
-            ) : (
-              <>
-                <FileText size="3rem" className="mb-3 opacity-50" />
-                <p className="text-sm">Binary file - preview not available</p>
-              </>
-            )}
-            <p className="text-xs text-(--gray-9) mt-2">{currentFile.name}</p>
-          </div>
-        ) : (
-          <CodeMirror
-            key={currentFile.name}
-            readOnly={!isOwner || isLoading}
-            className="flex-1 min-h-0"
-            extension={fileExtension}
-            fontSize={settings.fontSize}
-            vimMode={settings.vimMode}
-            value={currentFile.content}
-            onChange={handleCodeChange}
-          />
+        {isExpanded && (
+          currentFile === undefined ? (
+            <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
+              <FileCode size="3rem" className="mb-3 opacity-50" />
+              <p className="text-sm">Click a file to start editing</p>
+            </div>
+          ) : !isText ? (
+            <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
+              {currentFile.name.match(/\.(png|jpg|jpeg|gif|webp|svg)$/i) ? (
+                <>
+                  <FileImage size="3rem" className="mb-3 opacity-50" />
+                  <p className="text-sm">Image preview not available</p>
+                </>
+              ) : (
+                <>
+                  <FileText size="3rem" className="mb-3 opacity-50" />
+                  <p className="text-sm">Binary file - preview not available</p>
+                </>
+              )}
+              <p className="text-xs text-(--gray-9) mt-2">{currentFile.name}</p>
+            </div>
+          ) : (
+            <CodeMirror
+              key={currentFile.name}
+              readOnly={!isOwner || isLoading}
+              className="flex-1 min-h-0"
+              extension={fileExtension}
+              fontSize={settings.fontSize}
+              vimMode={settings.vimMode}
+              value={currentFile.content}
+              onChange={handleCodeChange}
+            />
+          )
         )}
       </div>
     </div>

@@ -2,7 +2,8 @@
 
 import { GripVertical } from "lucide-react";
 import SubmissionsTab from "~/features/core/materials/components/SubmissionsTab";
-import { useState } from "react";
+import { useAtom } from "jotai";
+import { activeLeftTabAtom } from "~/features/core/materials/stores/submission.store";
 import useDrag from "~/hooks/useDrag";
 import { cn } from "~/lib/utils";
 import DescriptionTab from "~/features/core/materials/components/DescriptionTab";
@@ -37,9 +38,7 @@ function LeftSection() {
     initialSize: 500,
     direction: "horizontal",
   });
-  const [selectedTab, setSelectedTab] = useState<
-    "description" | "submissions" | "aiAssistant"
-  >("description");
+  const [selectedTab, setSelectedTab] = useAtom(activeLeftTabAtom);
 
   const {
     materialID,

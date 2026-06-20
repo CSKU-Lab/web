@@ -12,6 +12,7 @@ import {
   selectedRunnerAtom,
   submissionStatusAtom,
   activeSubmissionsAtom,
+  activeLeftTabAtom,
 } from "~/features/core/materials/stores/submission.store";
 import type { CodeSubmissionPayload } from "~/types/core-code-submission";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
@@ -31,6 +32,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   const selectedRunner = useAtomValue(selectedRunnerAtom);
   const setSubmissionStatus = useSetAtom(submissionStatusAtom);
   const setActiveSubmissions = useSetAtom(activeSubmissionsAtom);
+  const setActiveLeftTab = useSetAtom(activeLeftTabAtom);
   const queryClient = useQueryClient();
 
   const submitMutation = useMutation({
@@ -60,7 +62,10 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
         return next;
       });
 
-      // 3. Refetch submissions to show the new submission
+      // 3. Switch to submissions tab immediately
+      setActiveLeftTab("submissions");
+
+      // 4. Refetch submissions to show the new submission
       queryClient.invalidateQueries({
         queryKey: queryKeys.core.material.getPagination(materialID),
       });

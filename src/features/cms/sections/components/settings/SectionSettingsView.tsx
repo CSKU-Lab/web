@@ -37,6 +37,8 @@ import DeleteSectionDialog, {
   DeleteSectionDialogTrigger,
 } from "~/features/cms/sections/components/settings/DeleteSectionDialog";
 import RouteNavigation from "~/features/cms/sections/components/RouteNavigation";
+import CoreSectionBanner from "~/features/core/sections/components/SectionBanner";
+import { Skeleton } from "~/components/ui/skeleton";
 
 function SectionSettingsView() {
   const { data: section, isFetching } = useGetSection();
@@ -124,6 +126,36 @@ function SectionSettingsView() {
 
   return (
     <>
+      <div className="relative">
+        <CoreSectionBanner banner={section?.banner} />
+        <div className="absolute bottom-6 left-6 z-10">
+          <div className="bg-white dark:bg-(--gray-2) rounded-lg shadow p-4">
+            {isFetching ? (
+              <div className="flex flex-col gap-1">
+                <Skeleton className="w-20 h-4" />
+                <Skeleton className="w-48 h-6" />
+                <Skeleton className="w-32 h-4 mt-1" />
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1">
+                <h6 className="text-sm text-(--gray-10)">
+                  {section?.semester
+                    ? `${section.semester.name}/${section.semester.type}`
+                    : "N/A"}
+                </h6>
+                <h4 className="font-semibold text-2xl text-(--gray-12) line-clamp-2">
+                  {section?.name ?? "N/A"}
+                </h4>
+                <h6 className="font-anuphan text-sm text-(--gray-10) truncate">
+                  {section?.instructors
+                    .map((inst) => inst.display_name)
+                    .join(", ")}
+                </h6>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
       <RouteNavigation title="Settings" />
       <SettingLayout>
         <SettingCard>
