@@ -149,7 +149,7 @@ function SectionSettingsView() {
                   name="banner"
                   render={({ field }) => (
                     <SectionBanner {...field}>
-                      <div className="absolute bottom-6 left-6 z-10">
+                      <div className="absolute bottom-2 left-2 z-10">
                         <div className="bg-white dark:bg-(--gray-2) rounded-lg shadow p-4">
                           {isFetching ? (
                             <div className="flex flex-col gap-1">
