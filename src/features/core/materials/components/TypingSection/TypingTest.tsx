@@ -114,7 +114,7 @@ export default function TypingTest({
             <span className="text-xs opacity-50 font-mono ml-1">esc</span>
           </Button>
           {onViewSubmissions && (
-            <Button variant="outline" onClick={onViewSubmissions}>
+            <Button variant="ghost" onClick={onViewSubmissions}>
               View Submissions
             </Button>
           )}

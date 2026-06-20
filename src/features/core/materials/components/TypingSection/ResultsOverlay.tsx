@@ -113,7 +113,7 @@ export default function ResultsOverlay({
           )}
         </Button>
         {onViewSubmissions && (
-          <Button variant="outline" onClick={onViewSubmissions} disabled={isSubmitting}>
+          <Button variant="ghost" onClick={onViewSubmissions} disabled={isSubmitting}>
             View Submissions
           </Button>
         )}
