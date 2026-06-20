@@ -1,3 +1,10 @@
+## [0.17.8](https://github.com/CSKU-Lab/web/compare/v0.17.7...v0.17.8) (2026-06-20)
+
+
+### Bug Fixes
+
+* use light Radix gray scale for CodeMirror light theme ([2b96583](https://github.com/CSKU-Lab/web/commit/2b96583be7fa897e848fff30f208e2d12abeac8b))
+
 ## [0.17.7](https://github.com/CSKU-Lab/web/compare/v0.17.6...v0.17.7) (2026-06-20)
 
 
