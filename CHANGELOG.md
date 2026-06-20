@@ -1,3 +1,11 @@
+## [0.17.7](https://github.com/CSKU-Lab/web/compare/v0.17.6...v0.17.7) (2026-06-20)
+
+
+### Bug Fixes
+
+* add position field to LabMaterial interface ([acce182](https://github.com/CSKU-Lab/web/commit/acce182f704921ca5af2cd2843adbd495007ce97))
+* invert CodeMirror light mode theme colors ([f51d9fa](https://github.com/CSKU-Lab/web/commit/f51d9fac911c7fbb611cb9771868e082513cdf09))
+
 ## [0.17.6](https://github.com/CSKU-Lab/web/compare/v0.17.5...v0.17.6) (2026-06-20)
 
 
