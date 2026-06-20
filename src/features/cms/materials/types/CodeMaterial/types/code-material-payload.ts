@@ -19,6 +19,6 @@ export interface CodeMaterialPayload {
   compare_script_id: string | null;
   solution: Solution | null;
   resource_files: CodeMaterialResourceFile[];
-  limit: CodeMaterialLimit | null;
+  limits: CodeMaterialLimit | null;
   hide_test_cases?: boolean;
 }

@@ -61,7 +61,7 @@ function SaveButton() {
               }
             : null,
           resource_files: resourceFiles,
-          limit,
+          limits: limit,
         } satisfies CodeMaterialPayload,
         manual_score: material?.manual_score ?? 0,
       });

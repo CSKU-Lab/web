@@ -62,7 +62,7 @@ function CodeMaterial({ isOwner }: Props) {
 
       setCompareScript(payload.compare_script);
       setLimit(
-        payload.limit ?? {
+        payload.limits ?? {
           cpu_time: 0,
           cpu_extra_time: 0,
           wall_time: 0,

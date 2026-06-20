@@ -32,6 +32,6 @@ export interface CodeMaterialResponse {
   compare_script: CodeMaterialCompareScript | null;
   solution: CodeMaterialSolution | null;
   resource_files: CodeMaterialResourceFile[];
-  limit: CodeMaterialLimit;
+  limits: CodeMaterialLimit;
   hide_test_cases?: boolean;
 }
