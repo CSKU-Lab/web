@@ -1,3 +1,16 @@
+# [0.20.0](https://github.com/CSKU-Lab/web/compare/v0.19.1...v0.20.0) (2026-06-20)
+
+
+### Bug Fixes
+
+* **cms:** move section detail overlay closer to bottom-left corner ([669874b](https://github.com/CSKU-Lab/web/commit/669874be78c8503106336f125b35cfa559234c59))
+
+
+### Features
+
+* **cms:** add Regrade All button for code material submissions ([86d7934](https://github.com/CSKU-Lab/web/commit/86d7934c3e2902928b9e1f37c2936d82c0aa0bd8))
+* **cms:** move section detail overlay inside banner upload widget ([6196a1c](https://github.com/CSKU-Lab/web/commit/6196a1c9fe79ecb36f8153ffdc8ab864bbdfee4f))
+
 ## [0.19.1](https://github.com/CSKU-Lab/web/compare/v0.19.0...v0.19.1) (2026-06-20)
 
 
