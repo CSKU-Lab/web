@@ -24,6 +24,8 @@ import { AxiosError } from "axios";
 import { useParams, useRouter } from "next/navigation";
 
 import { Button } from "~/components/commons/Button";
+import { useSession } from "~/providers/SessionProvider";
+import useGetCourse from "~/features/cms/courses/hooks/useGetCourse";
 import useResolvePath from "~/hooks/useResolvePath";
 import useGetLabMaterial from "~/features/cms/courses/hooks/lab-detail/useGetLabMaterial";
 import SortableLabMaterialRow from "~/features/cms/courses/components/lab-detail/SortableLabMaterialRow";
@@ -41,6 +43,11 @@ export default function CourseLabDetailView() {
   const generatePath = useResolvePath();
   const { courseID, labID } = useParams<{ courseID: string; labID: string }>();
   const queryClient = useQueryClient();
+  const { user } = useSession();
+  const { data: course } = useGetCourse({ courseID });
+  const isInstructor = user.roles.includes("instructor") && !user.roles.includes("admin");
+  const isCourseCreator = course?.creators?.some((c) => c.id === user.sub);
+  const isRestrictedInstructor = isInstructor && !isCourseCreator;
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [rows, setRows] = useState<CMSLabMaterial[]>([]);
   const previousRowsRef = useRef<CMSLabMaterial[]>([]);
@@ -137,9 +144,11 @@ export default function CourseLabDetailView() {
   return (
     <div className="@container px-4">
       <div className="flex justify-end items-center gap-2">
-        <Button onClick={() => setIsAddDialogOpen(true)}>
-          <Plus size="1rem" /> Add Material
-        </Button>
+        {!isRestrictedInstructor && (
+          <Button onClick={() => setIsAddDialogOpen(true)}>
+            <Plus size="1rem" /> Add Material
+          </Button>
+        )}
       </div>
 
       <div className="mt-6">
@@ -182,6 +191,8 @@ export default function CourseLabDetailView() {
                           deleteMaterial.mutate(materialID)
                         }
                         isDeleting={deleteMaterial.isPending}
+                        canDelete={!isRestrictedInstructor}
+                        canReorder={!isRestrictedInstructor}
                       />
                     ))}
                   </div>

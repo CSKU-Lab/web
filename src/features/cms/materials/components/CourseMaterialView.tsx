@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { cmsMaterialService } from "~/services/cms-material.service";
+import { cmsCourseService } from "~/services/cms-course.service";
 import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import CodeMaterial from "~/features/cms/materials/types/CodeMaterial";
 import TypingMaterial from "~/features/cms/materials/types/TypingMaterial";
@@ -24,9 +25,16 @@ export async function CourseMaterialView({
   courseID: string;
   materialID: string;
 }) {
-  const material = await getMaterial(courseID, materialID);
-  const user = await getUser();
-  const isOwner = material.created_by.id === user.sub;
+  const [material, course, user] = await Promise.all([
+    getMaterial(courseID, materialID),
+    cmsCourseService.getById(courseID),
+    getUser(),
+  ]);
+
+  const isInstructor = user.roles.includes("instructor") && !user.roles.includes("admin");
+  const isCourseCreator = course?.creators?.some((c) => c.id === user.sub);
+  const isRestrictedInstructor = isInstructor && !isCourseCreator;
+  const isOwner = !isRestrictedInstructor && material.created_by.id === user.sub;
 
   if (material.type === "code") {
     return <CodeMaterial isOwner={isOwner} />;

@@ -34,7 +34,7 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  for (const path of ["/cms/semesters", "/cms/users"]) {
+  for (const path of ["/cms/semesters", "/cms/users", "/cms/courses/new"]) {
     if (req.nextUrl.pathname.startsWith(path)) {
       return await rolesAllowlistMiddleware(req, ["admin"]);
     }

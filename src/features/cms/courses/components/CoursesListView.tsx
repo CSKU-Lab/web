@@ -7,6 +7,7 @@ import Error from "~/components/commons/Error";
 import ErrorFallback from "~/components/commons/Error/ErrorFallback";
 import { Plus, ServerCrash } from "lucide-react";
 import useCoursePagination from "~/features/cms/courses/hooks/useCoursePagination";
+import { useSession } from "~/providers/SessionProvider";
 import SearchInput from "~/components/commons/SearchInput";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
@@ -19,6 +20,8 @@ import PageTitle from "~/components/commons/PageTitle";
 import CourseCard from "~/features/cms/courses/components/CourseCard";
 
 function CoursesListView() {
+  const { user } = useSession();
+  const isInstructor = user.roles.includes("instructor") && !user.roles.includes("admin");
   const [search, setSearch] = useState("");
   const [visibility, setVisibility] = useState<VisibilityKey>("all");
 
@@ -64,13 +67,15 @@ function CoursesListView() {
             className=""
           />
           <CourseVisibility selected={visibility} onChange={setVisibility} />
-          <Button
-            onClick={() => router.push("/cms/courses/new")}
-            className="my-4 shrink-0 px-3 py-1.5"
-          >
-            <Plus size="1rem" />
-            New course
-          </Button>
+          {!isInstructor && (
+            <Button
+              onClick={() => router.push("/cms/courses/new")}
+              className="my-4 shrink-0 px-3 py-1.5"
+            >
+              <Plus size="1rem" />
+              New course
+            </Button>
+          )}
         </div>
         <Error
           isError={isError && !isFetching}

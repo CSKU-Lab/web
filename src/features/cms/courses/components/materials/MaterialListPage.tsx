@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "~/providers/SessionProvider";
+import useGetCourse from "~/features/cms/courses/hooks/useGetCourse";
 import { Globe, Lock, Plus, ServerCrash } from "lucide-react";
 import { Button } from "~/components/commons/Button";
 import SearchInput from "~/components/commons/SearchInput";
@@ -104,6 +106,11 @@ function MaterialListPage() {
   const { courseID } = useParams<{ courseID: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useSession();
+  const { data: course } = useGetCourse({ courseID });
+  const isInstructor = user.roles.includes("instructor") && !user.roles.includes("admin");
+  const isCourseCreator = course?.creators?.some((c) => c.id === user.sub);
+  const isRestrictedInstructor = isInstructor && !isCourseCreator;
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
@@ -151,13 +158,15 @@ function MaterialListPage() {
           value={search}
           onChange={setSearch}
         />
-        <Button
-          onClick={() => router.push(`/cms/courses/${courseID}/materials/new`)}
-          className="shrink-0"
-        >
-          <Plus size="1rem" />
-          New material
-        </Button>
+        {!isRestrictedInstructor && (
+          <Button
+            onClick={() => router.push(`/cms/courses/${courseID}/materials/new`)}
+            className="shrink-0"
+          >
+            <Plus size="1rem" />
+            New material
+          </Button>
+        )}
       </div>
 
       <div className="flex justify-end px-4">

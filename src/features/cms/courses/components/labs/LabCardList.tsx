@@ -39,9 +39,16 @@ import {
   cmsDefaultLabService,
   type UpdateDefaultLabParams,
 } from "~/services/cms-default-lab.service";
+import { useSession } from "~/providers/SessionProvider";
+import useGetCourse from "~/features/cms/courses/hooks/useGetCourse";
 
 export default function LabCardList() {
   const { courseID } = useParams<{ courseID: string }>();
+  const { user } = useSession();
+  const { data: course } = useGetCourse({ courseID });
+  const isInstructor = user.roles.includes("instructor") && !user.roles.includes("admin");
+  const isCourseCreator = course?.creators?.some((c) => c.id === user.sub);
+  const isRestrictedInstructor = isInstructor && !isCourseCreator;
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useInputDebounce(search, 500);
@@ -213,7 +220,7 @@ export default function LabCardList() {
             onChange={setSearch}
             placeholder="Search labs..."
           />
-          <CreateLabDialog />
+          {!isRestrictedInstructor && <CreateLabDialog />}
         </div>
 
         <Error
@@ -234,7 +241,7 @@ export default function LabCardList() {
             <NoDataAvailable />
           ) : (
             <>
-              {defaultLabRows.length > 0 && (
+              {defaultLabRows.length > 0 && !isRestrictedInstructor && (
                 <div className="mt-4">
                   <div className="flex items-center gap-2 mb-3">
                     <Star size={16} className="text-blue-600 dark:text-blue-400" />
@@ -287,6 +294,7 @@ export default function LabCardList() {
                       courseID={courseID}
                       isDefault={false}
                       isOrderable={false}
+                      showDefaultToggle={!isRestrictedInstructor}
                       onToggle={handleToggle}
                     />
                   ))}

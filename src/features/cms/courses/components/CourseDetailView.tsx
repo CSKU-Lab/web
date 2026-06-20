@@ -1,10 +1,12 @@
 "use client";
 import { Plus } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "~/components/commons/Button";
 import useResolvePath from "~/hooks/useResolvePath";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
+import { useSession } from "~/providers/SessionProvider";
+import useGetCourse from "~/features/cms/courses/hooks/useGetCourse";
 import {
   FallbackSectionCard,
   CMSSectionCard,
@@ -17,6 +19,12 @@ import { titleFormatter } from "~/lib/formatters/titleFormatter";
 import useSectionsByCourseIdPagination from "~/features/cms/courses/hooks/useSectionsByCourseIdPagination";
 function CourseDetailView() {
   const router = useRouter();
+  const { courseID } = useParams<{ courseID: string }>();
+  const { user } = useSession();
+  const { data: course } = useGetCourse({ courseID });
+  const isInstructor = user.roles.includes("instructor") && !user.roles.includes("admin");
+  const isCourseCreator = course?.creators?.some((c) => c.id === user.sub);
+  const isRestrictedInstructor = isInstructor && !isCourseCreator;
 
   const generatePath = useResolvePath();
   const handleOnAddSection = () =>
@@ -55,9 +63,11 @@ function CourseDetailView() {
     <>
       <div className="@container px-4">
         <div className="flex justify-end items-center gap-2">
-          <Button onClick={handleOnAddSection}>
-            <Plus size="1rem" /> Add Section
-          </Button>
+          {!isRestrictedInstructor && (
+            <Button onClick={handleOnAddSection}>
+              <Plus size="1rem" /> Add Section
+            </Button>
+          )}
         </div>
 
         <Filters fields={filterFields} value={filters} onChange={setFilters} />

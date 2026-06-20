@@ -23,6 +23,7 @@ interface LabCardProps {
   courseID: string;
   isDefault?: boolean;
   isOrderable?: boolean;
+  showDefaultToggle?: boolean;
   onToggle?: (labId: string, isDefault: boolean) => void;
 }
 
@@ -31,6 +32,7 @@ function LabCard({
   courseID,
   isDefault = false,
   isOrderable = false,
+  showDefaultToggle = true,
   onToggle,
 }: LabCardProps) {
   const router = useRouter();
@@ -136,25 +138,27 @@ function LabCard({
                 <span>{dayjs(created_at).fromNow()}</span>
               </div>
             </div>
-            <div onClick={(e) => e.stopPropagation()}>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span>
-                      <DefaultSwitch
-                        courseID={courseID}
-                        isDefault={isDefault}
-                        data={{ lab_id: id }}
-                        onToggle={onToggle}
-                      />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Set as default lab for students</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+            {showDefaultToggle && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span>
+                        <DefaultSwitch
+                          courseID={courseID}
+                          isDefault={isDefault}
+                          data={{ lab_id: id }}
+                          onToggle={onToggle}
+                        />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Set as default lab for students</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            )}
           </div>
         </div>
       </div>

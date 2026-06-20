@@ -14,6 +14,8 @@ interface SortableLabMaterialRowProps {
   onNavigate: (materialID: string) => void;
   onDelete: (materialID: string) => void;
   isDeleting?: boolean;
+  canDelete?: boolean;
+  canReorder?: boolean;
 }
 
 export default function SortableLabMaterialRow({
@@ -21,6 +23,8 @@ export default function SortableLabMaterialRow({
   onNavigate,
   onDelete,
   isDeleting,
+  canDelete = true,
+  canReorder = true,
 }: SortableLabMaterialRowProps) {
   const { material_data } = labMaterial;
   const { logoMap } = useMaterialDisplay();
@@ -32,7 +36,7 @@ export default function SortableLabMaterialRow({
     isDragging,
     attributes,
     listeners,
-  } = useSortable({ id: labMaterial.material_id });
+  } = useSortable({ id: labMaterial.material_id, disabled: !canReorder });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -49,24 +53,25 @@ export default function SortableLabMaterialRow({
         isDragging && "opacity-50 shadow-lg z-50",
       )}
     >
-      {/* drag handle — hidden until hover */}
-      <button
-        type="button"
-        className={cn(
-          "absolute top-1/2 -translate-y-1/2 -left-3 z-10",
-          "flex items-center justify-center w-6 h-10 rounded-md",
-          "bg-(--gray-1) border border-(--gray-4) shadow-sm",
-          "text-(--gray-8) hover:text-(--gray-12) hover:bg-(--gray-2)",
-          "cursor-grab active:cursor-grabbing touch-none",
-          "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0",
-          "transition-all duration-150 ease-out",
-        )}
-        {...attributes}
-        {...listeners}
-        aria-label="Drag to reorder"
-      >
-        <GripVertical size={14} />
-      </button>
+      {canReorder && (
+        <button
+          type="button"
+          className={cn(
+            "absolute top-1/2 -translate-y-1/2 -left-3 z-10",
+            "flex items-center justify-center w-6 h-10 rounded-md",
+            "bg-(--gray-1) border border-(--gray-4) shadow-sm",
+            "text-(--gray-8) hover:text-(--gray-12) hover:bg-(--gray-2)",
+            "cursor-grab active:cursor-grabbing touch-none",
+            "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0",
+            "transition-all duration-150 ease-out",
+          )}
+          {...attributes}
+          {...listeners}
+          aria-label="Drag to reorder"
+        >
+          <GripVertical size={14} />
+        </button>
+      )}
 
       <div className="flex items-start gap-3 px-4 py-3">
         {/* type icon */}
@@ -112,14 +117,16 @@ export default function SortableLabMaterialRow({
           ) : (
             <Lock size={14} className="text-(--gray-9)" />
           )}
-          <button
-            className="text-(--gray-7) hover:text-red-500 transition-colors disabled:opacity-40 ml-1"
-            onClick={() => onDelete(material_data.id)}
-            disabled={isDeleting}
-            aria-label="Remove material"
-          >
-            <Trash2 size={14} />
-          </button>
+          {canDelete && (
+            <button
+              className="text-(--gray-7) hover:text-red-500 transition-colors disabled:opacity-40 ml-1"
+              onClick={() => onDelete(material_data.id)}
+              disabled={isDeleting}
+              aria-label="Remove material"
+            >
+              <Trash2 size={14} />
+            </button>
+          )}
         </div>
       </div>
     </div>

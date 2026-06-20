@@ -32,6 +32,8 @@ import SearchSelect from "~/components/commons/SearchSelect";
 import { cmsSemesterService } from "~/services/cms-semester.service";
 import useGetSection from "~/features/cms/sections/hooks/useGetSection";
 import { useEffect } from "react";
+import { useSession } from "~/providers/SessionProvider";
+import useGetCourse from "~/features/cms/courses/hooks/useGetCourse";
 import { queryKeys } from "~/queryKeys";
 import DeleteSectionDialog, {
   DeleteSectionDialogTrigger,
@@ -67,6 +69,11 @@ function SectionSettingsView() {
   }, [section, isFetching, form]);
 
   const { sectionID, courseID } = useParams<{ sectionID: string; courseID: string }>();
+  const { user } = useSession();
+  const { data: course } = useGetCourse({ courseID });
+  const isInstructor = user.roles.includes("instructor") && !user.roles.includes("admin");
+  const isCourseCreator = course?.creators?.some((c) => c.id === user.sub);
+  const isRestrictedInstructor = isInstructor && !isCourseCreator;
   const queryClient = useQueryClient();
 
   const updateSection = useMutation({
@@ -250,26 +257,28 @@ function SectionSettingsView() {
             </SettingSection>
           </form>
         </SettingCard>
-        <SettingCard variant="danger">
-          <SettingHeader>
-            <SettingTitle variant="danger">Danger Zone</SettingTitle>
-            <SettingDescription variant="danger">
-              Deleting this section is irreversible. All associated data will be
-              permanently removed.
-            </SettingDescription>
-            <SettingDivider />
-          </SettingHeader>
-          <SettingSection>
-            <DeleteSectionDialog>
-              <DeleteSectionDialogTrigger asChild>
-                <Button variant="danger" className="h-9">
-                  <Trash size="1rem" />
-                  Delete Section
-                </Button>
-              </DeleteSectionDialogTrigger>
-            </DeleteSectionDialog>
-          </SettingSection>
-        </SettingCard>
+        {!isRestrictedInstructor && (
+          <SettingCard variant="danger">
+            <SettingHeader>
+              <SettingTitle variant="danger">Danger Zone</SettingTitle>
+              <SettingDescription variant="danger">
+                Deleting this section is irreversible. All associated data will be
+                permanently removed.
+              </SettingDescription>
+              <SettingDivider />
+            </SettingHeader>
+            <SettingSection>
+              <DeleteSectionDialog>
+                <DeleteSectionDialogTrigger asChild>
+                  <Button variant="danger" className="h-9">
+                    <Trash size="1rem" />
+                    Delete Section
+                  </Button>
+                </DeleteSectionDialogTrigger>
+              </DeleteSectionDialog>
+            </SettingSection>
+          </SettingCard>
+        )}
       </SettingLayout>
     </>
   );
