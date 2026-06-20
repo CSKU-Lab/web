@@ -1,3 +1,10 @@
+## [0.17.3](https://github.com/CSKU-Lab/web/compare/v0.17.2...v0.17.3) (2026-06-20)
+
+
+### Bug Fixes
+
+* filter students by role in section creation and improve dark mode switch contrast ([11418ac](https://github.com/CSKU-Lab/web/commit/11418ac6ed79c093eb1ae592a63264fdf4191625))
+
 ## [0.17.2](https://github.com/CSKU-Lab/web/compare/v0.17.1...v0.17.2) (2026-06-20)
 
 
