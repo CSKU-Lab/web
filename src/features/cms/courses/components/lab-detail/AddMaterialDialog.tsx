@@ -240,11 +240,12 @@ function AddMaterialDialog({
           )}
         </div>
 
-        <SheetFooter className="px-6 py-4 border-t">
-          <Button variant="ghost" onClick={handleClose}>
+        <SheetFooter className="px-6 py-4 border-t flex-row justify-end gap-2">
+          <Button onClick={handleClose}>
             Cancel
           </Button>
           <Button
+            variant="action"
             onClick={() => addMaterials.mutate()}
             disabled={selectedIDs.size === 0 || addMaterials.isPending}
             isLoading={addMaterials.isPending}
