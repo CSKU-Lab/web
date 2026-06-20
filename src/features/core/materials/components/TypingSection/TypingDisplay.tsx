@@ -10,7 +10,7 @@ interface Props {
 
 export default function TypingDisplay({ chars, currentIndex }: Props) {
   return (
-    <p className="font-mono text-2xl leading-relaxed tracking-wide select-none whitespace-pre-wrap break-all">
+    <p className="font-mono text-2xl leading-relaxed tracking-wide select-none whitespace-pre-wrap break-words">
       {chars.map((c, i) => (
         <span
           key={i}
