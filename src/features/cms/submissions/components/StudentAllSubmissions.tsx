@@ -3,7 +3,7 @@ import NoDataAvailable from "~/components/commons/NoDataAvailable";
 import { useAtomValue, useSetAtom } from "jotai";
 import { selectedStudentAtom } from "~/features/cms/submissions/stores/selected-student.store";
 import { Button } from "~/components/commons/Button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
 import SubmissionCard from "~/features/cms/submissions/components/SubmissionCard";
 import { useStudentSubmissions } from "~/features/cms/submissions/hooks/useViewAllSubmissions";
@@ -20,7 +20,9 @@ import { queryKeys } from "~/queryKeys";
 import { CMSSectionSubmission } from "~/types/cms-section-submission";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -236,22 +238,22 @@ function StudentAllSubmissions() {
         onOpenChange={(open) => !open && setSubmissionToDelete(null)}
       >
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Submission?</DialogTitle>
+          <DialogHeader className="p-4">
+            <DialogTitle>Confirm Delete?</DialogTitle>
+            <DialogDescription>
+              Submission #{submissionToDelete?.order} will be permanently
+              deleted. The grade will revert to the previous submission, or
+              become null if no other submissions exist.
+            </DialogDescription>
           </DialogHeader>
-          <p className="text-sm text-(--gray-11) px-4">
-            Submission #{submissionToDelete?.order} will be permanently deleted.
-            The grade will revert to the previous submission, or become null if
-            this is the only submission.
-          </p>
-          <DialogFooter className="p-4 pt-0">
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button className="w-full" variant="ghost">
+                Cancel
+              </Button>
+            </DialogClose>
             <Button
-              variant="transparent"
-              onClick={() => setSubmissionToDelete(null)}
-            >
-              Cancel
-            </Button>
-            <Button
+              className="w-full"
               variant="danger"
               disabled={deleteSubmission.isPending}
               onClick={() =>
@@ -259,6 +261,7 @@ function StudentAllSubmissions() {
                 deleteSubmission.mutate(submissionToDelete.id)
               }
             >
+              <Trash2 size="1rem" />
               Delete
             </Button>
           </DialogFooter>

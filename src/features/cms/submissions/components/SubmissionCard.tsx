@@ -18,11 +18,11 @@ function SubmissionCard({ submission, isSelected, onClick, onDelete }: Props) {
     <div
       data-submission-id={id}
       className={cn(
-        "p-2 hover:bg-(--gray-2) w-full group/card relative",
+        "flex items-center gap-1 hover:bg-(--gray-2) w-full",
         isSelected && "bg-(--gray-3) border-l-2 border-l-accent",
       )}
     >
-      <button className="w-full text-left" onClick={onClick}>
+      <button className="flex-1 min-w-0 p-2 text-left" onClick={onClick}>
         <div className="flex items-center justify-between gap-2">
           <h6 className="text-sm font-medium text-(--gray-12) truncate">
             Submission #{order}
@@ -51,7 +51,7 @@ function SubmissionCard({ submission, isSelected, onClick, onDelete }: Props) {
             e.stopPropagation();
             onDelete(submission);
           }}
-          className="absolute top-2 right-2 p-1 rounded opacity-0 group-hover/card:opacity-100 transition-opacity hover:bg-(--red-3) hover:text-(--red-9) text-(--gray-9)"
+          className="shrink-0 p-2 rounded hover:bg-(--red-3) hover:text-(--red-9) text-(--gray-9) transition-colors"
         >
           <Trash2 size={14} />
         </button>
