@@ -15,13 +15,12 @@ export default function TypingDisplay({ chars, currentIndex }: Props) {
         <span
           key={i}
           className={cn(
-            "relative inline-block",
+            "inline",
             c.status === "pending" && "text-(--gray-8)",
             c.status === "correct" && "text-(--grass-10)",
             c.status === "incorrect" && "text-(--tomato-10)",
             c.status === "current" && "text-(--gray-12)",
-            c.status === "current" &&
-              "after:absolute after:left-0 after:-bottom-0.5 after:w-full after:h-0.5 after:bg-(--gray-12) after:animate-pulse",
+            c.status === "current" && "border-b-2 border-(--gray-12) animate-pulse",
             c.char === " " && c.status === "incorrect" && "bg-(--tomato-3) rounded-sm",
           )}
         >
