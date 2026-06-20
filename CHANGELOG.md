@@ -1,3 +1,16 @@
+# [0.21.0](https://github.com/CSKU-Lab/web/compare/v0.20.0...v0.21.0) (2026-06-20)
+
+
+### Bug Fixes
+
+* **CS-199:** make trash always visible in row, match dialog style to existing patterns ([dcf3de1](https://github.com/CSKU-Lab/web/commit/dcf3de1a7c11e1f1fb3a2efe15f117dcc0cf51b6))
+* **CS-199:** move delete description out of dialog header into body ([600b94d](https://github.com/CSKU-Lab/web/commit/600b94d0dd813350c52a2e754ea3a9f26867c624))
+
+
+### Features
+
+* **CS-199:** add delete submission button with confirm dialog for instructors ([185d8e8](https://github.com/CSKU-Lab/web/commit/185d8e8e3ff34ce6df550e8b497e89490aea56da))
+
 # [0.20.0](https://github.com/CSKU-Lab/web/compare/v0.19.1...v0.20.0) (2026-06-20)
 
 
