@@ -48,7 +48,6 @@ const LoadingData = () => {
 };
 
 function TestcaseTable({ isLoading, groups }: Props) {
-  const allResults = groups?.flatMap((group) => group.results) ?? [];
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const toggleRow = (id: string) => {
@@ -59,6 +58,9 @@ function TestcaseTable({ isLoading, groups }: Props) {
       return next;
     });
   };
+
+  const hasMultipleGroups = (groups?.length ?? 0) > 1;
+  let globalIndex = 0;
 
   return (
     <>
@@ -83,72 +85,86 @@ function TestcaseTable({ isLoading, groups }: Props) {
           {isLoading ? (
             <LoadingData />
           ) : (
-            allResults.map((result, index) => {
-              const statusInfo = getStatusConfig(result.status);
-              const hasMessage =
-                result.status !== "RUN_PASSED" && !!result.message;
-              const isExpanded = expandedRows.has(result.id);
-
-              return (
-                <Fragment key={result.id}>
-                  <TableRow
-                    className={cn(hasMessage && "cursor-pointer")}
-                    onClick={
-                      hasMessage ? () => toggleRow(result.id) : undefined
-                    }
-                  >
-                    <TableCell className="font-medium">{index + 1}</TableCell>
-                    <TableCell>
-                      <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
-                        {result.input || "-"}
-                      </code>
-                    </TableCell>
-                    <TableCell>
-                      <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
-                        {result.output || "-"}
-                      </code>
-                    </TableCell>
-                    <TableCell>
-                      <span
-                        className={cn(
-                          "text-xs font-medium",
-                          statusInfo.className,
-                        )}
-                      >
-                        {statusInfo.label}
+            groups?.map((group, groupIndex) => (
+              <Fragment key={group.id}>
+                {hasMultipleGroups && (
+                  <TableRow className="bg-(--gray-3) hover:bg-(--gray-3)">
+                    <TableCell colSpan={7} className="py-1.5 px-3">
+                      <span className="text-xs font-semibold text-(--gray-11)">
+                        Group {groupIndex + 1}
                       </span>
                     </TableCell>
-                    <TableCell className="text-xs text-(--gray-11)">
-                      {result.wall_time > 0
-                        ? `${result.wall_time.toFixed(2)}ms`
-                        : "-"}
-                    </TableCell>
-                    <TableCell className="text-xs text-(--gray-11)">
-                      {result.memory > 0
-                        ? `${(result.memory / 1024).toFixed(2)}KB`
-                        : "-"}
-                    </TableCell>
-                    <TableCell className="p-0">
-                      {hasMessage &&
-                        (isExpanded ? (
-                          <ChevronDown size="0.875rem" className="text-(--gray-9)" />
-                        ) : (
-                          <ChevronRight size="0.875rem" className="text-(--gray-9)" />
-                        ))}
-                    </TableCell>
                   </TableRow>
-                  {hasMessage && isExpanded && (
-                    <TableRow>
-                      <TableCell colSpan={7} className="bg-(--gray-3) p-3">
-                        <pre className="text-xs text-(--gray-12) whitespace-pre-wrap font-mono">
-                          {result.message}
-                        </pre>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </Fragment>
-              );
-            })
+                )}
+                {group.results.map((result) => {
+                  const index = globalIndex++;
+                  const statusInfo = getStatusConfig(result.status);
+                  const hasMessage =
+                    result.status !== "RUN_PASSED" && !!result.message;
+                  const isExpanded = expandedRows.has(result.id);
+
+                  return (
+                    <Fragment key={result.id}>
+                      <TableRow
+                        className={cn(hasMessage && "cursor-pointer")}
+                        onClick={
+                          hasMessage ? () => toggleRow(result.id) : undefined
+                        }
+                      >
+                        <TableCell className="font-medium">{index + 1}</TableCell>
+                        <TableCell>
+                          <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
+                            {result.input || "-"}
+                          </code>
+                        </TableCell>
+                        <TableCell>
+                          <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
+                            {result.output || "-"}
+                          </code>
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            className={cn(
+                              "text-xs font-medium",
+                              statusInfo.className,
+                            )}
+                          >
+                            {statusInfo.label}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-xs text-(--gray-11)">
+                          {result.wall_time > 0
+                            ? `${result.wall_time.toFixed(2)}ms`
+                            : "-"}
+                        </TableCell>
+                        <TableCell className="text-xs text-(--gray-11)">
+                          {result.memory > 0
+                            ? `${(result.memory / 1024).toFixed(2)}KB`
+                            : "-"}
+                        </TableCell>
+                        <TableCell className="p-0">
+                          {hasMessage &&
+                            (isExpanded ? (
+                              <ChevronDown size="0.875rem" className="text-(--gray-9)" />
+                            ) : (
+                              <ChevronRight size="0.875rem" className="text-(--gray-9)" />
+                            ))}
+                        </TableCell>
+                      </TableRow>
+                      {hasMessage && isExpanded && (
+                        <TableRow>
+                          <TableCell colSpan={7} className="bg-(--gray-3) p-3">
+                            <pre className="text-xs text-(--gray-12) whitespace-pre-wrap font-mono">
+                              {result.message}
+                            </pre>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </Fragment>
+                  );
+                })}
+              </Fragment>
+            ))
           )}
         </TableBody>
       </Table>
