@@ -9,6 +9,13 @@ import { Button } from "~/components/commons/Button";
 import { Input } from "~/components/ui/input";
 import { Badge } from "~/components/ui/badge";
 import { Skeleton } from "~/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
 import {
   Sheet,
@@ -27,6 +34,8 @@ import { cmsLabMaterialService } from "~/services/cms-lab-material.service";
 import { queryKeys } from "~/queryKeys";
 import { useMaterialDisplay } from "~/hooks/useMaterialDisplay";
 import { cn } from "~/lib/utils";
+
+type MaterialTypeFilter = "all" | "document" | "code" | "typing";
 
 interface AddMaterialDialogProps {
   isOpen: boolean;
@@ -120,6 +129,7 @@ function AddMaterialDialog({
   labMaterials,
 }: AddMaterialDialogProps) {
   const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState<MaterialTypeFilter>("all");
   const [selectedIDs, setSelectedIDs] = useState<Set<string>>(new Set());
   const debouncedSearch = useInputDebounce(search, 500);
   const queryClient = useQueryClient();
@@ -129,6 +139,21 @@ function AddMaterialDialog({
     [labMaterials],
   );
 
+  const typeFilters = useMemo(
+    () =>
+      typeFilter !== "all"
+        ? [
+            {
+              field: { display: "Type", value: "type" },
+              operator: "is" as const,
+              value: typeFilter,
+              status: "newly-created" as const,
+            },
+          ]
+        : [],
+    [typeFilter],
+  );
+
   const {
     data: pages,
     isFetching,
@@ -136,7 +161,13 @@ function AddMaterialDialog({
     fetchNextPage,
     hasNextPage,
   } = useInfinitePagination<CMSMaterial>({
-    queryKey: [...queryKeys.material.allWithParams(courseID, { search: debouncedSearch }), "sheet"],
+    queryKey: [
+      ...queryKeys.material.allWithParams(courseID, {
+        search: debouncedSearch,
+        type: typeFilter !== "all" ? typeFilter : undefined,
+      }),
+      "sheet",
+    ],
     queryFn: ({ pageParam }) =>
       cmsMaterialService.getPagination(courseID, {
         page: pageParam,
@@ -144,13 +175,26 @@ function AddMaterialDialog({
         search: debouncedSearch,
         sort_by: "created_at",
         sort_order: "desc",
-        filters: [],
+        filters: typeFilters,
       }),
   });
 
-  const allMaterials = pages.pages
-    .flatMap((p) => p.data)
-    .filter((m) => !existingMaterialIds.has(m.id));
+  const allMaterials = useMemo(() => {
+    const trimmedSearch = debouncedSearch.trim().toLowerCase();
+    return pages.pages
+      .flatMap((p) => p.data)
+      .filter((m) => !existingMaterialIds.has(m.id))
+      .filter((m) => {
+        if (!trimmedSearch) return true;
+        // partial name match (backend already handles this, keep client-side as guard)
+        const nameMatch = m.name.toLowerCase().includes(trimmedSearch);
+        // full tag word match (case-insensitive)
+        const tagMatch = (m.tags ?? []).some(
+          (tag) => tag.toLowerCase() === trimmedSearch,
+        );
+        return nameMatch || tagMatch;
+      });
+  }, [pages, existingMaterialIds, debouncedSearch]);
 
   const bottomRef = useOnElementAppear({
     onAppear: () => fetchNextPage(),
@@ -194,6 +238,8 @@ function AddMaterialDialog({
   const handleClose = () => {
     onClose();
     setSelectedIDs(new Set());
+    setSearch("");
+    setTypeFilter("all");
   };
 
   return (
@@ -203,16 +249,30 @@ function AddMaterialDialog({
           <SheetTitle>Add Materials to Lab</SheetTitle>
         </SheetHeader>
 
-        <div className="px-6 py-3 border-b">
+        <div className="px-6 py-3 border-b flex flex-col gap-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search materials..."
+              placeholder="Search by name or tag..."
               className="pl-9"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+          <Select
+            value={typeFilter}
+            onValueChange={(val) => setTypeFilter(val as MaterialTypeFilter)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="All types" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All types</SelectItem>
+              <SelectItem value="document">Document</SelectItem>
+              <SelectItem value="code">Code</SelectItem>
+              <SelectItem value="typing">Typing</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-4">
