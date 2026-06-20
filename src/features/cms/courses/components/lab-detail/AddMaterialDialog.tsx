@@ -179,22 +179,13 @@ function AddMaterialDialog({
       }),
   });
 
-  const allMaterials = useMemo(() => {
-    const trimmedSearch = debouncedSearch.trim().toLowerCase();
-    return pages.pages
-      .flatMap((p) => p.data)
-      .filter((m) => !existingMaterialIds.has(m.id))
-      .filter((m) => {
-        if (!trimmedSearch) return true;
-        // partial name match (backend already handles this, keep client-side as guard)
-        const nameMatch = m.name.toLowerCase().includes(trimmedSearch);
-        // full tag word match (case-insensitive)
-        const tagMatch = (m.tags ?? []).some(
-          (tag) => tag.toLowerCase() === trimmedSearch,
-        );
-        return nameMatch || tagMatch;
-      });
-  }, [pages, existingMaterialIds, debouncedSearch]);
+  const allMaterials = useMemo(
+    () =>
+      pages.pages
+        .flatMap((p) => p.data)
+        .filter((m) => !existingMaterialIds.has(m.id)),
+    [pages, existingMaterialIds],
+  );
 
   const bottomRef = useOnElementAppear({
     onAppear: () => fetchNextPage(),
