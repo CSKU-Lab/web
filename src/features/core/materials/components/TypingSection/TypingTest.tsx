@@ -67,11 +67,11 @@ export default function TypingTest({
 
   const handleRestart = () => {
     hasSubmittedRef.current = false;
+    hasStartedRef.current = false;
     reset();
     onRetry?.();
   };
 
-  // ESC to restart
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") handleRestart();

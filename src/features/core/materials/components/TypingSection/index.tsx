@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
@@ -33,6 +33,7 @@ export default function TypingSection() {
   const queryClient = useQueryClient();
   const [view, setView] = useState<View>("typing");
   const [serverResults, setServerResults] = useState<TypingSubmissionOverview | null>(null);
+  const [isRestarting, setIsRestarting] = useState(false);
   const markStartedPromiseRef = useRef<Promise<string> | null>(null);
 
   const {
@@ -79,13 +80,21 @@ export default function TypingSection() {
 
   const handleRetry = () => {
     submitMutation.reset();
-    resetSession();
     setServerResults(null);
     markStartedPromiseRef.current = null;
     setView("typing");
+    setIsRestarting(true);
+    resetSession(); // triggers new token fetch; isRestarting suppresses loading UI
   };
 
-  if (isMaterialLoading || isSessionLoading) {
+  // Clear restarting flag once new session token is ready
+  useEffect(() => {
+    if (isRestarting && token) {
+      setIsRestarting(false);
+    }
+  }, [isRestarting, token]);
+
+  if (isMaterialLoading || (isSessionLoading && !isRestarting)) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <span className="text-(--gray-10) text-sm">Loading...</span>
