@@ -55,8 +55,11 @@ const Playground = forwardRef<PlaygroundHandle, Props>(function Playground(
   });
 
   const [result, setResult] = useState<CodeExecutionResult | null>(null);
+  const [isPending, setIsPending] = useState(false);
   const isRunning =
-    result?.status === "STATUS_RUNNING" || result?.status === "STATUS_QUEUED";
+    isPending ||
+    result?.status === "STATUS_RUNNING" ||
+    result?.status === "STATUS_QUEUED";
 
   const handleRunCodeRef = useRef<() => void>(() => {});
 
@@ -93,6 +96,7 @@ const Playground = forwardRef<PlaygroundHandle, Props>(function Playground(
       return;
     }
     setResult(null);
+    setIsPending(true);
     const res = await fetch(env("API_URL") + "/playground/execute", {
       method: "POST",
       headers: {
@@ -110,7 +114,7 @@ const Playground = forwardRef<PlaygroundHandle, Props>(function Playground(
     const decoder = new TextDecoder("utf-8");
     while (reader) {
       const { done, value } = await reader.read();
-      if (done) break;
+      if (done) { setIsPending(false); break; }
       const decodedData = decoder.decode(value, { stream: true });
       const messages = decodedData.split("\n\n");
       messages.pop();
@@ -126,6 +130,7 @@ const Playground = forwardRef<PlaygroundHandle, Props>(function Playground(
 
           const data = JSON.parse(dataLine.slice(5)) as CodeExecutionResult;
 
+          setIsPending(false);
           if (
             data.status !== "STATUS_QUEUED" &&
             data.status !== "STATUS_RUNNING"

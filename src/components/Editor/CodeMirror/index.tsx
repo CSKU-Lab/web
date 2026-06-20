@@ -67,7 +67,7 @@ function CodeMirror(props: CodeMirrorProps) {
     [fontSize],
   );
 
-  const { theme: currentTheme } = useTheme();
+  const { resolvedTheme: currentTheme } = useTheme();
 
   const mergedExtensions = useMemo(
     () =>
