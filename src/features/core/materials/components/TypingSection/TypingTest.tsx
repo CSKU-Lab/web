@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { History } from "lucide-react";
 import { useTypingTest, type TypingResults, type Keystroke } from "~/features/core/materials/components/TypingSection/useTypingTest";
 import TypingDisplay from "~/features/core/materials/components/TypingSection/TypingDisplay";
-import StatsBar from "~/features/core/materials/components/TypingSection/StatsBar";
 import ResultsOverlay from "~/features/core/materials/components/TypingSection/ResultsOverlay";
 
 interface Props {
@@ -36,8 +35,6 @@ export default function TypingTest({
     isStarted,
     isComplete,
     results,
-    elapsedSeconds,
-    liveRawWPM,
     keystrokes,
     handleKeyDown,
     reset,
@@ -117,7 +114,6 @@ export default function TypingTest({
         </button>
       )}
 
-      <StatsBar elapsedSeconds={elapsedSeconds} liveRawWPM={liveRawWPM} isStarted={isStarted} />
       <div className="w-full max-w-3xl">
         <TypingDisplay chars={chars} currentIndex={currentIndex} />
       </div>
