@@ -1,3 +1,26 @@
+# [0.19.0](https://github.com/CSKU-Lab/web/compare/v0.18.0...v0.19.0) (2026-06-20)
+
+
+### Bug Fixes
+
+* always show All Submissions button ([5309db6](https://github.com/CSKU-Lab/web/commit/5309db6c26369ea21a5b2bee42627ccbe26d183b))
+* move action buttons below typed text, remove section divider ([e6f169c](https://github.com/CSKU-Lab/web/commit/e6f169c56366f089b1352f80ebe556dfc10ba8aa))
+* move All Submissions button below typing text ([516757a](https://github.com/CSKU-Lab/web/commit/516757a627d532f44977f469b30bf68dc407941e))
+* prevent text shift in typing display on mistype ([8b5d514](https://github.com/CSKU-Lab/web/commit/8b5d514798af0697920df2f5fe5401c290132531))
+* remove submission status display from student typing completion view ([8b53f71](https://github.com/CSKU-Lab/web/commit/8b53f7139f11903609148dd465a5377eb988a421))
+* round accuracy to 2 decimal places ([47669c5](https://github.com/CSKU-Lab/web/commit/47669c50d7978c05f9da180adc7a28f0a59b9776))
+* sort lab materials by position ascending in expanded lab view ([38c9911](https://github.com/CSKU-Lab/web/commit/38c99113993951b5df9070ecd99980e6f0bc824b))
+* **typing:** suppress loading flash on ESC/retry by tracking isRestarting state ([908a91a](https://github.com/CSKU-Lab/web/commit/908a91ac03ed1df2f3da8cd184eeba82ee69a499))
+
+
+### Features
+
+* CS-188 stay on typing page after completion with results overlay ([3fd7701](https://github.com/CSKU-Lab/web/commit/3fd77018e4d4daf629a54f7cf8518a5e883c2b4f))
+* remove realtime stats bar during typing, show stats only on completion ([099d931](https://github.com/CSKU-Lab/web/commit/099d931bac3f79101fd1211534b345bd53afc276))
+* remove realtime WPM display during typing ([fd664a5](https://github.com/CSKU-Lab/web/commit/fd664a531fbcc563fc6df7eee9bbe292e528eb89))
+* restore StatsBar during typing, use compact stats style on completion ([0c2a0e5](https://github.com/CSKU-Lab/web/commit/0c2a0e5f25e297e67f51d3aef84d4fad89562863))
+* show stats above typed text review instead of full-screen overlay ([4983b01](https://github.com/CSKU-Lab/web/commit/4983b0136834562182cc10618f669232cc561112))
+
 # [0.18.0](https://github.com/CSKU-Lab/web/compare/v0.17.9...v0.18.0) (2026-06-20)
 
 
