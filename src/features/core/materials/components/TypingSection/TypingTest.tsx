@@ -98,7 +98,7 @@ export default function TypingTest({
           </div>
           <div className="flex flex-col items-center gap-0.5">
             <span className="text-xs uppercase tracking-widest text-(--gray-9)">acc</span>
-            <span className="text-2xl text-(--gray-12)">{100 - results.errorPct}%</span>
+            <span className="text-2xl text-(--gray-12)">{(100 - results.errorPct).toFixed(2)}%</span>
           </div>
           <div className="flex flex-col items-center gap-0.5">
             <span className="text-xs uppercase tracking-widest text-(--gray-9)">time</span>
