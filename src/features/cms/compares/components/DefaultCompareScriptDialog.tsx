@@ -14,6 +14,13 @@ import {
   DialogTrigger,
 } from "~/components/commons/Dialog";
 import { Button } from "~/components/commons/Button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { cmsCompareService } from "~/services/cms-compare.service";
 import { BaseService } from "~/services/base.service";
 
@@ -58,7 +65,7 @@ function DefaultCompareScriptDialog() {
   const [selectedCompareID, setSelectedCompareID] = useState("");
 
   useEffect(() => {
-    if (settings?.default_compare_script_id !== undefined) {
+    if (settings?.default_compare_script_id) {
       setSelectedCompareID(settings.default_compare_script_id);
     }
   }, [settings]);
@@ -98,25 +105,28 @@ function DefaultCompareScriptDialog() {
               Used as fallback when a code material has no compare script
               configured.
             </p>
-            <select
+            <Select
               disabled={isLoading}
               value={selectedCompareID}
-              onChange={(e) => setSelectedCompareID(e.target.value)}
-              className="w-full h-9 rounded-md border border-(--gray-6) bg-(--gray-1) px-3 text-sm text-(--gray-12) focus:outline-none focus:ring-2 focus:ring-(--accent-9) disabled:opacity-50"
+              onValueChange={setSelectedCompareID}
             >
-              <option value="">None</option>
-              {compares.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a compare script..." />
+              </SelectTrigger>
+              <SelectContent>
+                {compares.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </DialogBody>
         <DialogFooter>
           <Button
             variant="primary"
-            disabled={saveSettings.isPending || isLoading}
+            disabled={saveSettings.isPending || isLoading || !selectedCompareID}
             onClick={() => saveSettings.mutate()}
           >
             Save
