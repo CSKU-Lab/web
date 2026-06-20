@@ -6,8 +6,8 @@ import type { GetMaterialPaginationParams } from "~/services/core-lab.service";
 
 const BASE_PARAMS: GetMaterialPaginationParams = {
   page_size: 12,
-  sort_by: "created_at" as keyof LabMaterial,
-  sort_order: "desc",
+  sort_by: "position" as keyof LabMaterial,
+  sort_order: "asc",
   filters: [],
 };
 
