@@ -26,10 +26,10 @@ function DeleteLabSectionDialog({ children }: ChildrenProps) {
     mutationFn: () => cmsSectionService.removeLabs(sectionID, [labID]),
     onSuccess: async () => {
       toast.success("Lab removed from section successfully");
+      router.push(`/cms/courses/${courseID}/sections/${sectionID}/labs`);
       await queryClient.invalidateQueries({
         queryKey: queryKeys.section.labs.all(sectionID),
       });
-      router.push(`/cms/courses/${courseID}/sections/${sectionID}/labs`);
     },
     onError: (err) => {
       if (err instanceof AxiosError && err.response?.data?.error) {
