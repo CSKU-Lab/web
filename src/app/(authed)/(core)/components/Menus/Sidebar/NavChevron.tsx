@@ -4,7 +4,7 @@ import Link from "~/components/commons/Link";
 
 interface NavChevronProps {
   children?: React.ReactNode;
-  href: string;
+  href?: string;
   _icon?: React.ReactNode;
   name: string;
   subtitle?: string;
@@ -13,22 +13,34 @@ const NavChevron = ({ href, _icon, name, subtitle, children }: NavChevronProps) 
   const [isOpen, setIsOpen] = useState(false);
   const hasChildren = Boolean(children);
 
+  const nameContent = (
+    <>
+      {_icon && (
+        <div className="w-7 h-7 bg-(--gray-4) rounded-lg flex items-center justify-center text-xs">
+          {_icon}
+        </div>
+      )}
+      <div className="flex flex-col min-w-0">
+        <h3 className="truncate text-xs font-medium">{name}</h3>
+        {subtitle && (
+          <p className="text-[10px] text-(--gray-10) truncate">{subtitle}</p>
+        )}
+      </div>
+    </>
+  );
+
   return (
     <div className="space-y-2">
       <div className="flex gap-2 items-center group">
-        <Link href={href} className="flex gap-2 items-center flex-1 min-w-0">
-          {_icon && (
-            <div className="w-7 h-7 bg-(--gray-4) rounded-lg flex items-center justify-center text-xs">
-              {_icon}
-            </div>
-          )}
-          <div className="flex flex-col min-w-0">
-            <h3 className="truncate text-xs font-medium">{name}</h3>
-            {subtitle && (
-              <p className="text-[10px] text-(--gray-10) truncate">{subtitle}</p>
-            )}
+        {href ? (
+          <Link href={href} className="flex gap-2 items-center flex-1 min-w-0">
+            {nameContent}
+          </Link>
+        ) : (
+          <div className="flex gap-2 items-center flex-1 min-w-0">
+            {nameContent}
           </div>
-        </Link>
+        )}
 
         {hasChildren && (
           <button

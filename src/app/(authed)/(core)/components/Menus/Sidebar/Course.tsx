@@ -20,7 +20,6 @@ const Course = ({
           {labs.map((lab) => (
             <NavChevron
               key={lab.id}
-              href={`/sections/${id}/labs/${lab.id}`}
               name={lab.name}
             >
               <CourseItem
