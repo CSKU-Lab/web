@@ -39,7 +39,6 @@ import DeleteSectionDialog, {
   DeleteSectionDialogTrigger,
 } from "~/features/cms/sections/components/settings/DeleteSectionDialog";
 import RouteNavigation from "~/features/cms/sections/components/RouteNavigation";
-import { Skeleton } from "~/components/ui/skeleton";
 
 function SectionSettingsView() {
   const { data: section, isFetching } = useGetSection();
@@ -148,42 +147,14 @@ function SectionSettingsView() {
                 <Label>
                   Banner{" "}
                   <span className="text-xs text-(--gray-11)">
-                    (Max file size 10 MB, Only image allowed)
+                    (Recommended 1280×720px · 16:9 · Max 10 MB · Image only)
                   </span>
                 </Label>
                 <Controller
                   control={form.control}
                   name="banner"
                   render={({ field }) => (
-                    <SectionBanner {...field}>
-                      <div className="absolute bottom-2 left-2 z-10">
-                        <div className="bg-white dark:bg-(--gray-2) rounded-lg shadow p-4">
-                          {isFetching ? (
-                            <div className="flex flex-col gap-1">
-                              <Skeleton className="w-20 h-4" />
-                              <Skeleton className="w-48 h-6" />
-                              <Skeleton className="w-32 h-4 mt-1" />
-                            </div>
-                          ) : (
-                            <div className="flex flex-col gap-1">
-                              <h6 className="text-sm text-(--gray-10)">
-                                {section?.semester
-                                  ? `${section.semester.name}/${section.semester.type}`
-                                  : "N/A"}
-                              </h6>
-                              <h4 className="font-semibold text-2xl text-(--gray-12) line-clamp-2">
-                                {section?.name ?? "N/A"}
-                              </h4>
-                              <h6 className="font-anuphan text-sm text-(--gray-10) truncate">
-                                {section?.instructors
-                                  .map((inst) => inst.display_name)
-                                  .join(", ")}
-                              </h6>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </SectionBanner>
+                    <SectionBanner {...field} />
                   )}
                 />
               </div>

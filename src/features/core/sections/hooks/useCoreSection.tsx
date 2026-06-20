@@ -9,7 +9,7 @@ const useCoreSection = () => {
   }>();
   const useGetCourseSectionDetail = () => {
     return useQuery({
-      queryKey: queryKeys.section.getById(sectionID),
+      queryKey: queryKeys.core.section.getById(sectionID),
       queryFn: async () => coreSectionService.getCourseSectionById(sectionID),
       placeholderData: keepPreviousData,
     });

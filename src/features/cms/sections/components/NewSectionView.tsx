@@ -172,7 +172,7 @@ function NewSectionView() {
           </div>
           <h3 className="font-medium">Section Detail</h3>
         </div>
-        <div className="mt-2 ml-12 flex gap-4">
+        <div className="mt-2 ml-12 flex flex-col xl:flex-row gap-4">
           <div className="space-y-4 flex-1">
             <div className="space-y-1.5">
               <Label className="gap-0" isError={!!form.formState.errors.name}>
@@ -258,7 +258,7 @@ function NewSectionView() {
             <div className="space-y-1.5">
               <Label>
                 Banner
-                <span className="text-(--gray-10) text-sm">(optional)</span>
+                <span className="text-(--gray-10) text-sm">(optional · Recommended 1280×720px · 16:9)</span>
               </Label>
               <Controller
                 control={form.control}
@@ -274,7 +274,7 @@ function NewSectionView() {
               />
             </div>
           </div>
-          <div className="w-120 self-stretch flex flex-col gap-2">
+          <div className="w-full xl:w-96 flex flex-col gap-2">
             <Label>Preview</Label>
             <PreviewCMSSectionCard
               name={getName()}

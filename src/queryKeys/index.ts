@@ -242,5 +242,8 @@ export const queryKeys = {
         "submissions-pagination",
       ],
     },
+    section: {
+      getById: (sectionId: string) => ["core", "sections", sectionId],
+    },
   },
 } as const;

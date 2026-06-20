@@ -46,7 +46,7 @@ function SectionBanner({ value, onChange, children }: Props) {
   return (
     <div
       {...getRootProps()}
-      className="w-full h-56 rounded-lg bg-(--gray-6) overflow-hidden cursor-pointer group relative"
+      className="w-full aspect-video rounded-lg bg-(--gray-6) overflow-hidden cursor-pointer group relative"
     >
       {isDragActive && (
         <div className="absolute inset-0 flex items-center justify-center bg-(--gray-9)/80 text-(--gray-2)">

@@ -29,19 +29,19 @@ export default function SectionHeader() {
 
   return (
     <div className="relative">
-      <SectionBanner banner={data?.section.banner} />
+      <SectionBanner banner={data?.section?.banner} />
       <div className="absolute bottom-6 left-6 z-10">
         <div className="bg-white dark:bg-(--gray-2) rounded-lg shadow p-4">
           <div className="flex flex-col gap-1">
             <h6 className="text-sm text-(--gray-10)">
-              {data?.section.name ?? "N/A"}
+              {data?.section?.name ?? "N/A"}
             </h6>
             <h4 className="font-semibold text-2xl text-(--gray-12) line-clamp-2">
-              {data?.course.name ?? "N/A"}
+              {data?.course?.name ?? "N/A"}
             </h4>
             <h6 className="font-anuphan text-sm text-(--gray-10) truncate">
-              {data?.section.instructors
-                .map((inst: Instructor) => inst.display_name)
+              {data?.section?.instructors
+                ?.map((inst: Instructor) => inst.display_name)
                 .join(", ")}
             </h6>
           </div>

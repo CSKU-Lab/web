@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import useMyCourseInfPagination from "~/features/core/home/hooks/useMyCourseInfPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { Fragment } from "react/jsx-runtime";
@@ -42,10 +43,10 @@ const CourseList = ({ search }: Props) => {
   const renderCreators = (creators: Creator[]) => {
     const MAX_SHOW = 3;
     return (
-      <div className="flex items-center gap-1 mt-2">
+      <div className="flex items-center gap-1">
         {creators.slice(0, MAX_SHOW).map((creator) => (
           <UserProfileImage
-            className="ring-2 ring-white rounded"
+            className="ring-2 ring-white/60 rounded-full"
             key={creator.id}
             username={creator.display_name}
             src={creator.profile_image ?? undefined}
@@ -64,7 +65,7 @@ const CourseList = ({ search }: Props) => {
 
   if (isFetching) {
     return (
-      <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4">
         {Array.from({ length: 8 }).map((_, i) => (
           <CourseCardSkeleton key={i} />
         ))}
@@ -88,54 +89,45 @@ const CourseList = ({ search }: Props) => {
         <NoDataAvailable />
       ) : (
         <>
-          <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 gap-4 auto-rows-max">
+          <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max">
             {coursePagination.pages.map((page, pageIndex) => (
               <Fragment key={pageIndex}>
                 {page.data.map((course) => {
-                  const { id, name, description, visibility, total_students, instructors } = course;
+                  const { id, name, banner, visibility, instructors } = course;
                   return (
                     <Link
                       key={id}
                       href={visibility === "public" ? `/courses/${id}` : `/sections/${id}`}
-                      className="block rounded-md overflow-hidden bg-(--gray-1) border border-(--gray-4) hover:bg-(--gray-2)"
+                      className="relative rounded-xl overflow-hidden aspect-video border border-(--gray-4) block group"
                     >
-                      <div className="bg-linear-to-bl from-accent to-accent/40 h-5"></div>
-                      <div className="p-4 space-y-2 flex-1">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-lg font-medium line-clamp-2 flex-1">
-                              {name}
-                            </h3>
-                            {visibility === "public" ? (
-                              <span className="inline-flex items-center gap-1 text-xs text-(--blue-11) bg-(--blue-3) px-1.5 py-0.5 rounded shrink-0">
-                                <Globe size={10} />
-                                Public
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 text-xs text-(--gray-11) bg-(--gray-3) px-1.5 py-0.5 rounded shrink-0">
-                                <Lock size={10} />
-                                Private
-                              </span>
-                            )}
-                          </div>
-                          {description && (
-                            <p className="text-sm text-(--gray-11) line-clamp-2 mt-1">
-                              {description}
-                            </p>
+                      <div className="absolute inset-0 bg-linear-to-br from-(--gray-3) to-(--gray-4)">
+                        {banner !== null && (
+                          <Image
+                            src={banner}
+                            alt={`${name} banner`}
+                            fill
+                            className="group-hover:scale-105 transition-transform object-cover"
+                          />
+                        )}
+                      </div>
+                      <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="font-semibold text-white line-clamp-2 flex-1">
+                            {name}
+                          </h3>
+                          {visibility === "public" ? (
+                            <span className="inline-flex items-center gap-1 text-xs text-white bg-white/20 px-1.5 py-0.5 rounded shrink-0">
+                              <Globe size={10} />
+                              Public
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-xs text-white/80 bg-white/10 px-1.5 py-0.5 rounded shrink-0">
+                              <Lock size={10} />
+                              Private
+                            </span>
                           )}
                         </div>
-                        <div>
-                          <h6 className="text-xs leading-tight text-(--gray-11)">
-                            Students
-                          </h6>
-                          <p className="text-sm">{total_students}</p>
-                        </div>
-                        <div>
-                          <h6 className="text-xs leading-tight text-(--gray-11)">
-                            Instructors
-                          </h6>
-                          {renderCreators(instructors)}
-                        </div>
+                        {renderCreators(instructors)}
                       </div>
                     </Link>
                   );
