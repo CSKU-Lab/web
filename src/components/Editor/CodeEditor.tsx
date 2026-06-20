@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { generateId } from "~/utils/generate-id";
 import { FileCode } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
@@ -60,7 +61,7 @@ function CodeEditor({
     setPreviousFiles(files);
   }
 
-  const [sessionId] = useState<string>(() => crypto.randomUUID());
+  const [sessionId] = useState<string>(() => generateId());
   const [lspToken, setLspToken] = useState<string | null>(null);
   const playgroundRef = useRef<PlaygroundHandle>(null);
 

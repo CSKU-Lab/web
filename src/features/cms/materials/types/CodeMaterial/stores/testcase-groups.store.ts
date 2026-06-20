@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { generateId } from "~/utils/generate-id";
 import type { TestCase, TestCaseGroup } from "~/features/cms/materials/types/CodeMaterial/types/testcase-group";
 import { saveStatusAtom } from "~/features/cms/materials/types/CodeMaterial/stores/save-status.store";
 import { isOwnerAtom } from "~/features/cms/materials/types/CodeMaterial/stores/owner.store";
@@ -33,7 +34,7 @@ const triggerUnSaved = (get: any, set: any) => {
 export const addGroupAtom = atom(null, (get, set) => {
   const groups = get(testCaseGroupsAtom);
   const newGroup: TestCaseGroup = {
-    id: crypto.randomUUID(),
+    id: generateId(),
     name: "Sample Tests",
     score: 100,
     order: groups.length,
@@ -93,12 +94,12 @@ export const duplicateGroupAtom = atom(null, (get, set, groupId: string) => {
   const originalGroup = groups[groupIndex];
   const duplicatedGroup: TestCaseGroup = {
     ...originalGroup,
-    id: crypto.randomUUID(),
+    id: generateId(),
     name: `${originalGroup.name} (Copy)`,
     order: groups.length,
     test_cases: originalGroup.test_cases.map((tc) => ({
       ...tc,
-      id: crypto.randomUUID(),
+      id: generateId(),
     })),
   };
 
@@ -153,7 +154,7 @@ export const addTestCaseToGroupAtom = atom(
 
     const group = groups[groupIndex];
     const newTestCase: TestCase = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       order: group.test_cases.length + 1,
       input: "",
       output: "",
@@ -240,7 +241,7 @@ export const duplicateTestCaseAtom = atom(
     const originalTestCase = group.test_cases[testCaseIndex];
     const duplicatedTestCase: TestCase = {
       ...originalTestCase,
-      id: crypto.randomUUID(),
+      id: generateId(),
       order: group.test_cases.length + 1,
     };
 
@@ -267,7 +268,7 @@ export const duplicateSelectedTestCasesAtom = atom(null, (get, set) => {
     );
     const duplicatedTestCases: TestCase[] = test_casesToDuplicate.map((tc) => ({
       ...tc,
-      id: crypto.randomUUID(),
+      id: generateId(),
       order: group.test_cases.length + 1,
     }));
 

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { generateId } from "~/utils/generate-id"
 import type { NodeViewProps } from "@tiptap/react"
 import { NodeViewWrapper } from "@tiptap/react"
 import { Button } from "~/components/tiptap-ui-primitive/button"
@@ -95,10 +96,7 @@ function useFileUpload(options: UploadOptions) {
     }
 
     const abortController = new AbortController()
-    const fileId =
-      typeof crypto.randomUUID === "function"
-        ? crypto.randomUUID()
-        : Math.random().toString(36).slice(2) + Date.now().toString(36)
+    const fileId = generateId()
 
     const newFileItem: FileItem = {
       id: fileId,
