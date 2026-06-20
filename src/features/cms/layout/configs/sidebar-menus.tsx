@@ -1,7 +1,6 @@
 import {
   Book,
   CalendarDays,
-  Settings,
   SquareChartGantt,
   Terminal,
   UserRound,
@@ -54,11 +53,6 @@ export const getSidebarMenus = (
           icon: <SquareChartGantt size="1rem" />,
           label: "Compares",
           href: "/cms/compares",
-        },
-        {
-          icon: <Settings size="1rem" />,
-          label: "Settings",
-          href: "/cms/settings",
         },
       ],
     });

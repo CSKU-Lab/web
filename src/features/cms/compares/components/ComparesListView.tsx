@@ -15,6 +15,7 @@ import useOnElementAppear from "~/hooks/useOnElementAppear";
 import PageTitle from "~/components/commons/PageTitle";
 import CompareCard from "./CompareCard";
 import useComparesPagination from "../hooks/useComparesPagination";
+import DefaultCompareScriptDialog from "./DefaultCompareScriptDialog";
 
 function ComparesListView() {
   const [search, setSearch] = useState("");
@@ -57,6 +58,7 @@ function ComparesListView() {
             onChange={setSearch}
             placeholder="Search compares..."
           />
+          <DefaultCompareScriptDialog />
           <Button
             onClick={() => router.push("/cms/compares/new")}
             className="my-4 shrink-0 px-3 py-1.5"
