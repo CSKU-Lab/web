@@ -1,3 +1,10 @@
+## [0.17.9](https://github.com/CSKU-Lab/web/compare/v0.17.8...v0.17.9) (2026-06-20)
+
+
+### Bug Fixes
+
+* remove link from lab name in core content sidebar ([897be89](https://github.com/CSKU-Lab/web/commit/897be8973be7867f0fa9511787b44cd3dd832ac1))
+
 ## [0.17.8](https://github.com/CSKU-Lab/web/compare/v0.17.7...v0.17.8) (2026-06-20)
 
 
