@@ -106,11 +106,11 @@ function CodeMirror(props: CodeMirrorProps) {
     () =>
       githubLightInit({
         settings: {
-          background: "var(--gray-1)",
-          caret: "var(--gray-11)",
-          gutterBackground: "var(--gray-2)",
-          selection: "var(--gray-5)",
-          lineHighlight: "var(--gray-3)",
+          background: "var(--gray-12)",
+          caret: "var(--gray-2)",
+          gutterBackground: "var(--gray-11)",
+          selection: "var(--gray-9)",
+          lineHighlight: "var(--gray-10)",
         },
       }),
     [],
