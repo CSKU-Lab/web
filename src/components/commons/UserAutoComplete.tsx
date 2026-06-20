@@ -28,7 +28,7 @@ function UserAutoComplete({ value, onChange, isError, placeHolder, role }: Props
       ...(role && {
         filters: [
           {
-            field: { display: "Role", value: "role" },
+            field: { display: "Role", value: "roles" },
             operator: "is" as const,
             value: role,
             status: "newly-created" as const,
