@@ -1,3 +1,10 @@
+# [0.18.0](https://github.com/CSKU-Lab/web/compare/v0.17.9...v0.18.0) (2026-06-20)
+
+
+### Features
+
+* implement feature request tasks CS-190, CS-194, CS-195, CS-200 ([d04f0f7](https://github.com/CSKU-Lab/web/commit/d04f0f77a0658c18c0180bf84de5e9da04a42a33))
+
 ## [0.17.9](https://github.com/CSKU-Lab/web/compare/v0.17.8...v0.17.9) (2026-06-20)
 
 
