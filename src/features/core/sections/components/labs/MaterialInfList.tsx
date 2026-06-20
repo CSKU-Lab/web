@@ -57,8 +57,8 @@ function MaterialInfList() {
     refetch,
   } = useGetInfMaterial({
     page_size: 12,
-    sort_by: "created_at",
-    sort_order: "desc",
+    sort_by: "position",
+    sort_order: "asc",
     filters: [],
     search: debouncedSearch,
   });
