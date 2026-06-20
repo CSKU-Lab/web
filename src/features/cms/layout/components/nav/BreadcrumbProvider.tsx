@@ -49,7 +49,7 @@ function parseUrlEntities(pathname: string) {
 
   // Match section ID: /cms/courses/:courseId/sections/:sectionId
   const sectionMatch = pathname.match(/\/sections\/([^/]+)/);
-  if (sectionMatch) {
+  if (sectionMatch && sectionMatch[1] !== "new") {
     entities.section = sectionMatch[1];
   }
 
