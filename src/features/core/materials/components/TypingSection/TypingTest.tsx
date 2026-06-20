@@ -144,7 +144,7 @@ export default function TypingTest({
       ) : (
         <p className="mt-6 text-xs text-(--gray-9) font-mono opacity-40">esc to restart</p>
       )}
-      {!isStarted && onViewSubmissions && (
+      {onViewSubmissions && (
         <button
           onClick={(e) => {
             e.stopPropagation();
