@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { History } from "lucide-react";
+import { History, RotateCcw, Loader2 } from "lucide-react";
 import { useTypingTest, type TypingResults, type Keystroke } from "~/features/core/materials/components/TypingSection/useTypingTest";
 import TypingDisplay from "~/features/core/materials/components/TypingSection/TypingDisplay";
-import ResultsOverlay from "~/features/core/materials/components/TypingSection/ResultsOverlay";
+import StatsBar from "~/features/core/materials/components/TypingSection/StatsBar";
+import { Button } from "~/components/commons/Button";
 
 interface Props {
   text: string;
@@ -35,6 +36,8 @@ export default function TypingTest({
     isStarted,
     isComplete,
     results,
+    elapsedSeconds,
+    liveRawWPM,
     keystrokes,
     handleKeyDown,
     reset,
@@ -58,7 +61,6 @@ export default function TypingTest({
     }
   }, [isStarted, onStarted]);
 
-  // Fire results + submit when complete — parent switches view immediately
   useEffect(() => {
     if (isComplete && results && !hasSubmittedRef.current) {
       hasSubmittedRef.current = true;
@@ -91,16 +93,50 @@ export default function TypingTest({
   if (isComplete && results) {
     return (
       <div className="flex-1 flex flex-col bg-(--gray-1) overflow-y-auto">
-        <div className="px-8 py-6 border-b border-(--gray-4)">
-          <ResultsOverlay
-            results={results}
-            onRestart={handleRestart}
-            onViewSubmissions={onViewSubmissions}
-            isSubmitting={isSubmitting}
-            submitError={submitError}
-            isSubmitted={isSubmitted}
-          />
+        <div className="flex flex-col items-center px-8 py-8 gap-6 border-b border-(--gray-4)">
+          <div className="flex gap-8 text-(--gray-11) text-sm font-mono">
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-xs uppercase tracking-widest text-(--gray-9)">wpm</span>
+              <span className="text-2xl text-(--gray-12)">{results.adjWPM}</span>
+            </div>
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-xs uppercase tracking-widest text-(--gray-9)">raw</span>
+              <span className="text-2xl text-(--gray-12)">{results.rawWPM}</span>
+            </div>
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-xs uppercase tracking-widest text-(--gray-9)">acc</span>
+              <span className="text-2xl text-(--gray-12)">{100 - results.errorPct}%</span>
+            </div>
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-xs uppercase tracking-widest text-(--gray-9)">time</span>
+              <span className="text-2xl text-(--gray-12)">{results.duration}s</span>
+            </div>
+          </div>
+
+          {isSubmitting && (
+            <div className="flex items-center gap-2 text-(--amber-9) text-sm">
+              <Loader2 size="0.875rem" className="animate-spin" />
+              Submitting...
+            </div>
+          )}
+          {submitError && (
+            <p className="text-sm text-(--tomato-11)">{submitError.message || "Submission failed"}</p>
+          )}
+
+          <div className="flex items-center gap-3">
+            <Button variant="action" onClick={handleRestart} disabled={isSubmitting}>
+              {isSubmitting ? <Loader2 size="1rem" className="animate-spin" /> : <RotateCcw size="1rem" />}
+              Try Again
+              {!isSubmitting && <span className="text-xs opacity-50 font-mono ml-1">esc</span>}
+            </Button>
+            {onViewSubmissions && (
+              <Button variant="outline" onClick={onViewSubmissions} disabled={isSubmitting}>
+                View Submissions
+              </Button>
+            )}
+          </div>
         </div>
+
         <div className="px-8 py-8 flex justify-center">
           <div className="w-full max-w-3xl">
             <TypingDisplay chars={chars} currentIndex={currentIndex} />
@@ -136,6 +172,7 @@ export default function TypingTest({
         </button>
       )}
 
+      <StatsBar elapsedSeconds={elapsedSeconds} liveRawWPM={liveRawWPM} isStarted={isStarted} />
       <div className="w-full max-w-3xl">
         <TypingDisplay chars={chars} currentIndex={currentIndex} />
       </div>
