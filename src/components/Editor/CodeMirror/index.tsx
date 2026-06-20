@@ -67,6 +67,17 @@ function CodeMirror(props: CodeMirrorProps) {
     [fontSize],
   );
 
+  const lightSelectionTheme = useMemo(
+    () =>
+      EditorView.theme({
+        ".cm-selectionBackground": { background: "#b3d4ff !important" },
+        "&.cm-focused .cm-selectionBackground": { background: "#b3d4ff !important" },
+        "::selection": { background: "#b3d4ff" },
+        ".cm-activeLine": { backgroundColor: "rgba(0, 0, 0, 0.04) !important" },
+      }),
+    [],
+  );
+
   const { resolvedTheme: currentTheme } = useTheme();
 
   const mergedExtensions = useMemo(
@@ -109,8 +120,8 @@ function CodeMirror(props: CodeMirrorProps) {
           background: "var(--gray-1)",
           caret: "var(--gray-12)",
           gutterBackground: "var(--gray-2)",
-          selection: "var(--gray-4)",
-          lineHighlight: "var(--gray-3)",
+          selection: "#b3d4ff",
+          lineHighlight: "rgba(0, 0, 0, 0.04)",
         },
       }),
     [],
@@ -124,6 +135,7 @@ function CodeMirror(props: CodeMirrorProps) {
       extensions={[
         basicSetup,
         theme,
+        ...(currentTheme === "light" ? [lightSelectionTheme] : []),
         ...mergedExtensions,
         ...extraExtensions,
         indentWithTab,
