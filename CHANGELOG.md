@@ -1,3 +1,11 @@
+## [0.17.6](https://github.com/CSKU-Lab/web/compare/v0.17.5...v0.17.6) (2026-06-20)
+
+
+### Bug Fixes
+
+* default test case group score to 1 ([ebf7d5b](https://github.com/CSKU-Lab/web/commit/ebf7d5b6fa9e6fb425420cf018e65fb638f62d02))
+* sort core lab materials by position to match CMS ordering ([b8fc964](https://github.com/CSKU-Lab/web/commit/b8fc964111fe5b30193a3980430475662b75b397))
+
 ## [0.17.5](https://github.com/CSKU-Lab/web/compare/v0.17.4...v0.17.5) (2026-06-20)
 
 
