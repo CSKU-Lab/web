@@ -10,21 +10,22 @@ interface Props {
 
 export default function TypingDisplay({ chars, currentIndex }: Props) {
   return (
-    <p className="font-mono text-2xl leading-relaxed tracking-wide select-none">
+    <p className="font-mono text-2xl leading-relaxed tracking-wide select-none whitespace-pre-wrap break-all">
       {chars.map((c, i) => (
         <span
           key={i}
           className={cn(
-            "relative",
+            "relative inline-block",
             c.status === "pending" && "text-(--gray-8)",
             c.status === "correct" && "text-(--grass-10)",
             c.status === "incorrect" && "text-(--tomato-10)",
             c.status === "current" && "text-(--gray-12)",
             c.status === "current" &&
               "after:absolute after:left-0 after:-bottom-0.5 after:w-full after:h-0.5 after:bg-(--gray-12) after:animate-pulse",
+            c.char === " " && c.status === "incorrect" && "bg-(--tomato-3) rounded-sm",
           )}
         >
-          {c.char === " " && c.status === "incorrect" ? "\u00B7" : c.char}
+          {c.char}
         </span>
       ))}
     </p>
