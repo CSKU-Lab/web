@@ -136,19 +136,6 @@ export default function TypingTest({
         aria-label="Typing test input"
       />
 
-      {!isStarted && onViewSubmissions && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onViewSubmissions();
-          }}
-          className="flex items-center gap-2 px-3 py-1.5 mb-8 text-xs text-(--gray-11) hover:text-(--gray-12) bg-(--gray-2) hover:bg-(--gray-3) border border-(--gray-4) rounded-md transition-colors"
-        >
-          <History size="0.875rem" />
-          All Submissions
-        </button>
-      )}
-
       <div className="w-full max-w-3xl">
         <TypingDisplay chars={chars} currentIndex={currentIndex} />
       </div>
@@ -156,6 +143,18 @@ export default function TypingTest({
         <p className="mt-6 text-xs text-(--gray-9) font-mono">click here or start typing</p>
       ) : (
         <p className="mt-6 text-xs text-(--gray-9) font-mono opacity-40">esc to restart</p>
+      )}
+      {!isStarted && onViewSubmissions && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onViewSubmissions();
+          }}
+          className="flex items-center gap-2 px-3 py-1.5 mt-4 text-xs text-(--gray-11) hover:text-(--gray-12) bg-(--gray-2) hover:bg-(--gray-3) border border-(--gray-4) rounded-md transition-colors"
+        >
+          <History size="0.875rem" />
+          All Submissions
+        </button>
       )}
     </div>
   );
