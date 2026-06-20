@@ -1,3 +1,10 @@
+## [0.19.1](https://github.com/CSKU-Lab/web/compare/v0.19.0...v0.19.1) (2026-06-20)
+
+
+### Bug Fixes
+
+* replace invalid Button variant "outline" with "ghost" ([e84f076](https://github.com/CSKU-Lab/web/commit/e84f0762748657cb38025fde2fbaa1c20c5503a4))
+
 # [0.19.0](https://github.com/CSKU-Lab/web/compare/v0.18.0...v0.19.0) (2026-06-20)
 
 
