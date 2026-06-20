@@ -1,3 +1,10 @@
+## [0.17.2](https://github.com/CSKU-Lab/web/compare/v0.17.1...v0.17.2) (2026-06-20)
+
+
+### Bug Fixes
+
+* clarify material visibility public text to say Every Instructors ([876502c](https://github.com/CSKU-Lab/web/commit/876502c6c837322485289fa95b0c8f15a2700cb0))
+
 ## [0.17.1](https://github.com/CSKU-Lab/web/compare/v0.17.0...v0.17.1) (2026-06-08)
 
 
