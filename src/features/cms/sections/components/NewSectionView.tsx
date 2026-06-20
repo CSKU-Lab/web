@@ -302,6 +302,7 @@ function NewSectionView() {
                 value={value!}
                 onChange={onChange}
                 placeHolder="Type student name"
+                role="student"
               />
             )}
           />

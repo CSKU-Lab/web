@@ -1,4 +1,4 @@
-import type { User } from "~/types/user";
+import type { User, UserRole } from "~/types/user";
 import AutoComplete from "./AutoComplete";
 import UserProfileImage from "../Menus/UserProfileImage";
 import { useCallback } from "react";
@@ -17,13 +17,24 @@ interface Props {
   onChange: (users: UserData[]) => void;
   isError?: boolean;
   placeHolder?: string;
+  role?: UserRole;
 }
 
-function UserAutoComplete({ value, onChange, isError, placeHolder }: Props) {
+function UserAutoComplete({ value, onChange, isError, placeHolder, role }: Props) {
   const queryUsers = useCallback(async (query: string) => {
     const res = await userService.getPagination({
       search: query,
       sort_by: "display_name",
+      ...(role && {
+        filters: [
+          {
+            field: { display: "Role", value: "role" },
+            operator: "is" as const,
+            value: role,
+            status: "newly-created" as const,
+          },
+        ],
+      }),
     });
 
     return res.data.map((user) => ({
