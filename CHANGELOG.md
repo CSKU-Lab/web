@@ -1,3 +1,11 @@
+## [0.17.5](https://github.com/CSKU-Lab/web/compare/v0.17.4...v0.17.5) (2026-06-20)
+
+
+### Bug Fixes
+
+* all code which require crypto ([9f75e41](https://github.com/CSKU-Lab/web/commit/9f75e416ae5b4ce327423e0fb704cc50943c5885))
+* crypto only available in https ([2e73912](https://github.com/CSKU-Lab/web/commit/2e73912afe43d0392e12ced3f23b0b97d52a2f90))
+
 ## [0.17.4](https://github.com/CSKU-Lab/web/compare/v0.17.3...v0.17.4) (2026-06-20)
 
 
