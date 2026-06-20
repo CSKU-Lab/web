@@ -1,3 +1,10 @@
+# [0.22.0](https://github.com/CSKU-Lab/web/compare/v0.21.0...v0.22.0) (2026-06-20)
+
+
+### Features
+
+* **CS-197:** add admin settings page with default compare script selector ([8a5ce33](https://github.com/CSKU-Lab/web/commit/8a5ce3384adb8cc4911286e8d6f836f0e2afc1bd))
+
 # [0.21.0](https://github.com/CSKU-Lab/web/compare/v0.20.0...v0.21.0) (2026-06-20)
 
 
