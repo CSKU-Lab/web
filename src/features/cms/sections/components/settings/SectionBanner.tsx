@@ -7,9 +7,10 @@ import { toast } from "sonner";
 interface Props {
   value: string | File | null;
   onChange: (value: File) => void;
+  children?: React.ReactNode;
 }
 
-function SectionBanner({ value, onChange }: Props) {
+function SectionBanner({ value, onChange, children }: Props) {
   const [previewImage, setPreviewImage] = useState<string | Blob | null>(value);
 
   useEffect(() => {
@@ -64,6 +65,7 @@ function SectionBanner({ value, onChange }: Props) {
           alt="section banner"
         />
       )}
+      {children}
     </div>
   );
 }
