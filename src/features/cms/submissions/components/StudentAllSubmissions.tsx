@@ -240,12 +240,14 @@ function StudentAllSubmissions() {
         <DialogContent>
           <DialogHeader className="p-4">
             <DialogTitle>Confirm Delete?</DialogTitle>
+          </DialogHeader>
+          <div className="p-4">
             <DialogDescription>
               Submission #{submissionToDelete?.order} will be permanently
               deleted. The grade will revert to the previous submission, or
               become null if no other submissions exist.
             </DialogDescription>
-          </DialogHeader>
+          </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button className="w-full" variant="ghost">
