@@ -7,6 +7,7 @@ import type { TypingResults } from "~/features/core/materials/components/TypingS
 interface Props {
   results: TypingResults;
   onRestart: () => void;
+  onViewSubmissions?: () => void;
   isSubmitting?: boolean;
   submitError?: Error | null;
   isSubmitted?: boolean;
@@ -74,6 +75,7 @@ function SubmissionStatus({
 export default function ResultsOverlay({
   results,
   onRestart,
+  onViewSubmissions,
   isSubmitting = false,
   submitError = null,
   isSubmitted = false,
@@ -94,21 +96,28 @@ export default function ResultsOverlay({
         isSubmitted={isSubmitted}
       />
 
-      <Button
-        variant="action"
-        onClick={onRestart}
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? (
-          <Loader2 size="1rem" className="animate-spin" />
-        ) : (
-          <RotateCcw size="1rem" />
+      <div className="flex items-center gap-3">
+        <Button
+          variant="action"
+          onClick={onRestart}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <Loader2 size="1rem" className="animate-spin" />
+          ) : (
+            <RotateCcw size="1rem" />
+          )}
+          {isSubmitting ? "Submitting..." : "Try Again"}
+          {!isSubmitting && (
+            <span className="text-xs opacity-50 font-mono ml-1">esc</span>
+          )}
+        </Button>
+        {onViewSubmissions && (
+          <Button variant="outline" onClick={onViewSubmissions} disabled={isSubmitting}>
+            View Submissions
+          </Button>
         )}
-        {isSubmitting ? "Submitting..." : "Try Again"}
-        {!isSubmitting && (
-          <span className="text-xs opacity-50 font-mono ml-1">esc</span>
-        )}
-      </Button>
+      </div>
     </div>
   );
 }

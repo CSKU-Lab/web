@@ -138,9 +138,12 @@ export default function TypingSection() {
                 }
               }}
               onComplete={(keystrokes) => submitMutation.mutate(keystrokes)}
-              onResults={() => setView("submissions")}
+              onResults={() => {}}
               onRetry={handleRetry}
               onViewSubmissions={() => setView("submissions")}
+              isSubmitting={submitMutation.isPending}
+              submitError={submitMutation.error as Error | null}
+              isSubmitted={submitMutation.isSuccess}
             />
           </motion.div>
         ) : (

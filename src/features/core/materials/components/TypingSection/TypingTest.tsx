@@ -5,6 +5,7 @@ import { History } from "lucide-react";
 import { useTypingTest, type TypingResults, type Keystroke } from "~/features/core/materials/components/TypingSection/useTypingTest";
 import TypingDisplay from "~/features/core/materials/components/TypingSection/TypingDisplay";
 import StatsBar from "~/features/core/materials/components/TypingSection/StatsBar";
+import ResultsOverlay from "~/features/core/materials/components/TypingSection/ResultsOverlay";
 
 interface Props {
   text: string;
@@ -13,6 +14,9 @@ interface Props {
   onStarted?: () => void;
   onRetry?: () => void;
   onViewSubmissions?: () => void;
+  isSubmitting?: boolean;
+  submitError?: Error | null;
+  isSubmitted?: boolean;
 }
 
 export default function TypingTest({
@@ -22,6 +26,9 @@ export default function TypingTest({
   onStarted,
   onRetry,
   onViewSubmissions,
+  isSubmitting = false,
+  submitError = null,
+  isSubmitted = false,
 }: Props) {
   const {
     chars,
@@ -86,7 +93,7 @@ export default function TypingTest({
 
   return (
     <div
-      className="flex-1 flex flex-col items-center justify-center bg-(--gray-1) px-8 py-12 cursor-text"
+      className="flex-1 flex flex-col items-center justify-center bg-(--gray-1) px-8 py-12 cursor-text relative"
       onClick={() => inputRef.current?.focus()}
     >
       <input
@@ -118,6 +125,19 @@ export default function TypingTest({
         <p className="mt-6 text-xs text-(--gray-9) font-mono">click here or start typing</p>
       ) : (
         <p className="mt-6 text-xs text-(--gray-9) font-mono opacity-40">esc to restart</p>
+      )}
+
+      {isComplete && results && (
+        <div className="absolute inset-0 bg-(--gray-1)/85 backdrop-blur-sm flex items-center justify-center z-10">
+          <ResultsOverlay
+            results={results}
+            onRestart={handleRestart}
+            onViewSubmissions={onViewSubmissions}
+            isSubmitting={isSubmitting}
+            submitError={submitError}
+            isSubmitted={isSubmitted}
+          />
+        </div>
       )}
     </div>
   );
