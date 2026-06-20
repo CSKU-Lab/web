@@ -88,9 +88,31 @@ export default function TypingTest({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (isComplete && results) {
+    return (
+      <div className="flex-1 flex flex-col bg-(--gray-1) overflow-y-auto">
+        <div className="px-8 py-6 border-b border-(--gray-4)">
+          <ResultsOverlay
+            results={results}
+            onRestart={handleRestart}
+            onViewSubmissions={onViewSubmissions}
+            isSubmitting={isSubmitting}
+            submitError={submitError}
+            isSubmitted={isSubmitted}
+          />
+        </div>
+        <div className="px-8 py-8 flex justify-center">
+          <div className="w-full max-w-3xl">
+            <TypingDisplay chars={chars} currentIndex={currentIndex} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
-      className="flex-1 flex flex-col items-center justify-center bg-(--gray-1) px-8 py-12 cursor-text relative"
+      className="flex-1 flex flex-col items-center justify-center bg-(--gray-1) px-8 py-12 cursor-text"
       onClick={() => inputRef.current?.focus()}
     >
       <input
@@ -121,19 +143,6 @@ export default function TypingTest({
         <p className="mt-6 text-xs text-(--gray-9) font-mono">click here or start typing</p>
       ) : (
         <p className="mt-6 text-xs text-(--gray-9) font-mono opacity-40">esc to restart</p>
-      )}
-
-      {isComplete && results && (
-        <div className="absolute inset-0 bg-(--gray-1)/85 backdrop-blur-sm flex items-center justify-center z-10">
-          <ResultsOverlay
-            results={results}
-            onRestart={handleRestart}
-            onViewSubmissions={onViewSubmissions}
-            isSubmitting={isSubmitting}
-            submitError={submitError}
-            isSubmitted={isSubmitted}
-          />
-        </div>
       )}
     </div>
   );
