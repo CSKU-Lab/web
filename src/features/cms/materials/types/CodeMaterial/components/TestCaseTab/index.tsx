@@ -306,7 +306,7 @@ function TestCaseTab() {
   };
 
   return (
-    <div className="p-2">
+    <div className="p-2 h-full overflow-y-auto">
       {!isMounted ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
