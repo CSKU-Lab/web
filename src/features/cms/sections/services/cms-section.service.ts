@@ -192,6 +192,14 @@ class SectionService extends BaseService {
     );
     return res.data;
   }
+
+  async exportTypingSubmissions(sectionID: string): Promise<Blob> {
+    const res = await this.api.get(
+      `${this._baseURL}/${sectionID}/typing-submissions/export`,
+      { responseType: "blob" },
+    );
+    return res.data;
+  }
 }
 
 export const cmsSectionService = new SectionService();
