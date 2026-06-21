@@ -169,8 +169,8 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
   const maxScore = material?.auto_score ?? 0;
 
   return (
-    <div className="border rounded-lg overflow-hidden my-4">
-      <div className="flex items-center justify-between px-4 py-2.5 bg-(--gray-2) border-b">
+    <div className="border rounded-lg my-4 flex flex-col">
+      <div className="flex items-center justify-between px-4 py-2.5 bg-(--gray-2) border-b shrink-0">
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-(--gray-12)">
             {material?.name ?? "Code Problem"}
@@ -202,14 +202,14 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
           )}
         </Button>
       </div>
-      <div className="h-80">
+      <div className="h-[520px]">
         <CodeEditor
           files={editorFiles}
           onFilesChange={handleFilesChange}
           permissions={{
             writeFiles: true,
             modifyFiles: false,
-            codeExecution: true,
+            codeExecution: false,
             selectRunner: true,
           }}
           allowedRunners={allowedRunners}
