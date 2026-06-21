@@ -202,7 +202,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
           )}
         </Button>
       </div>
-      <div className="h-[520px]">
+      <div className="h-[520px] flex flex-col">
         <CodeEditor
           files={editorFiles}
           onFilesChange={handleFilesChange}
