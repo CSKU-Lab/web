@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import { CMSMaterial, MaterialType } from "~/types/cms-material";
 import CodeSubmissionDetail from "~/features/cms/submissions/components/renderers/CodeSubmissionDetail";
 import TypingSubmissionDetail from "~/features/cms/submissions/components/renderers/TypingSubmissionDetail";
+import DocumentSubmissionDetail from "~/features/cms/submissions/components/renderers/DocumentSubmissionDetail";
 import ComingSoon from "~/features/cms/submissions/components/renderers/ComingSoon";
 import type {
   CodeSubmissionData,
@@ -29,9 +30,7 @@ const submissionRenderers: Record<
   [MaterialType.CODE]: CodeSubmissionDetail as ComponentType<
     SubmissionRendererProps<CodeSubmissionData>
   >,
-  [MaterialType.DOCUMENT]: ({ payload }: SubmissionRendererProps) => (
-    <ComingSoon type="document" />
-  ),
+  [MaterialType.DOCUMENT]: DocumentSubmissionDetail,
   [MaterialType.TYPE]: TypingSubmissionDetail as ComponentType<
     SubmissionRendererProps<TypingSubmissionData>
   >,

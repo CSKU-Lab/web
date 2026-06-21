@@ -73,6 +73,7 @@ import { UndoRedoButton } from "~/components/tiptap-ui/undo-redo-button";
 import { TablePopover } from "~/components/tiptap-ui/table-button";
 import { TableContextMenu } from "~/components/tiptap-ui/table-context-menu";
 import { MathDropdownMenu } from "~/components/tiptap-ui/math-popover";
+import { EmbedCodeMaterialButton } from "~/components/tiptap-node/code-material-embed-node/EmbedCodeMaterialButton";
 
 // --- Icons ---
 import { ArrowLeftIcon } from "~/components/tiptap-icons/arrow-left-icon";
@@ -95,10 +96,12 @@ const MainToolbarContent = ({
   onHighlighterClick,
   onLinkClick,
   isMobile,
+  courseID,
 }: {
   onHighlighterClick: () => void;
   onLinkClick: () => void;
   isMobile: boolean;
+  courseID?: string;
 }) => {
   return (
     <>
@@ -159,6 +162,7 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <ImageUploadButton text="Add" />
+        {courseID && <EmbedCodeMaterialButton courseID={courseID} />}
       </ToolbarGroup>
 
       <Spacer />
@@ -204,6 +208,7 @@ interface Props extends ClassNameProps {
   maxFileUploadSize?: number;
   isLoading?: boolean;
   readOnly?: boolean;
+  courseID?: string;
 }
 
 export function SimpleEditor({
@@ -214,6 +219,7 @@ export function SimpleEditor({
   maxFileUploadSize = -1,
   isLoading = false,
   readOnly = false,
+  courseID,
 }: Props) {
   const isMobile = useIsMobile();
   const [mobileView, setMobileView] = React.useState<
@@ -283,6 +289,7 @@ export function SimpleEditor({
               onHighlighterClick={() => setMobileView("highlighter")}
               onLinkClick={() => setMobileView("link")}
               isMobile={isMobile}
+              courseID={courseID}
             />
           ) : (
             <MobileToolbarContent

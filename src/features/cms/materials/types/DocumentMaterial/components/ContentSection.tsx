@@ -63,6 +63,7 @@ function ContentSection() {
         onUploadImage={handleImageUpload}
         maxFileUploadSize={MAX_FILE_SIZE}
         className="p-4 max-w-4xl mx-auto"
+        courseID={isOwner ? courseID : undefined}
       />
     </div>
   );
