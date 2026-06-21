@@ -1,3 +1,10 @@
+# [0.24.0](https://github.com/CSKU-Lab/web/compare/v0.23.1...v0.24.0) (2026-06-21)
+
+
+### Features
+
+* redesign user management UI for multi-provider auth ([3a6dfa1](https://github.com/CSKU-Lab/web/commit/3a6dfa1a61ddfd3d3a6dc5778d76085e6b527938))
+
 ## [0.23.1](https://github.com/CSKU-Lab/web/compare/v0.23.0...v0.23.1) (2026-06-21)
 
 
