@@ -33,6 +33,7 @@ export default function TypingSection() {
   const queryClient = useQueryClient();
   const [view, setView] = useState<View>("typing");
   const [serverResults, setServerResults] = useState<TypingSubmissionOverview | null>(null);
+  const [serverAutoScore, setServerAutoScore] = useState<number | null>(null);
   const [isRestarting, setIsRestarting] = useState(false);
   const markStartedPromiseRef = useRef<Promise<string> | null>(null);
 
@@ -69,6 +70,7 @@ export default function TypingSection() {
     },
     onSuccess: (submission) => {
       setServerResults(submission.payload as TypingSubmissionOverview);
+      setServerAutoScore(submission.auto_score);
       queryClient.invalidateQueries({
         queryKey: queryKeys.core.material.getPagination(materialID),
       });
@@ -81,6 +83,7 @@ export default function TypingSection() {
   const handleRetry = () => {
     submitMutation.reset();
     setServerResults(null);
+    setServerAutoScore(null);
     markStartedPromiseRef.current = null;
     setView("typing");
     setIsRestarting(true);
@@ -167,7 +170,8 @@ export default function TypingSection() {
               isSubmitting={submitMutation.isPending}
               submitError={submitMutation.error as Error | null}
               onRetry={handleRetry}
-              materialAutoScore={material?.auto_score ?? 0}
+              isExam={material?.payload.typing_type === "exam"}
+              latestAutoScore={serverAutoScore}
             />
           </motion.div>
         )}

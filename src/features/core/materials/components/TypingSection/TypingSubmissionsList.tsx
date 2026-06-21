@@ -35,7 +35,8 @@ interface Props {
   results?: TypingSubmissionOverview | null;
   isSubmitting?: boolean;
   submitError?: Error | null;
-  materialAutoScore?: number;
+  isExam?: boolean;
+  latestAutoScore?: number | null;
 }
 
 function ResultsSkeleton() {
@@ -121,11 +122,15 @@ function ResultsSummary({
   isSubmitting = false,
   submitError = null,
   onRetry,
+  isExam = false,
+  autoScore = null,
 }: {
   results: TypingSubmissionOverview;
   isSubmitting?: boolean;
   submitError?: Error | null;
   onRetry?: () => void;
+  isExam?: boolean;
+  autoScore?: number | null;
 }) {
   const stats = [
     { label: "Raw WPM", value: Math.round(results.raw_wpm) },
@@ -133,6 +138,7 @@ function ResultsSummary({
     { label: "Accuracy", value: `${Math.round(100 - results.error_rate)}%` },
     { label: "Error Rate", value: `${results.error_rate.toFixed(1)}%` },
     { label: "Duration", value: `${Math.round(results.duration)}s` },
+    ...(isExam && autoScore !== null ? [{ label: "Score", value: `${autoScore}` }] : []),
   ];
 
   return (
@@ -151,7 +157,7 @@ function ResultsSummary({
         )}
       </div>
 
-      <div className="grid grid-cols-5 gap-3 mb-4">
+      <div className="grid grid-cols-5 gap-3 mb-4" style={{ gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))` }}>
         {stats.map(({ label, value }) => (
           <div key={label} className="flex flex-col gap-0.5 bg-(--gray-2) rounded-lg px-4 py-3">
             <span className="text-xs text-(--gray-9) uppercase tracking-wider font-mono">{label}</span>
@@ -171,7 +177,8 @@ export default function TypingSubmissionsList({
   results = null,
   isSubmitting = false,
   submitError = null,
-  materialAutoScore = 0,
+  isExam = false,
+  latestAutoScore = null,
 }: Props) {
   const { materialID, slug: labID, sectionID } = useParams<{
     materialID: string;
@@ -241,6 +248,8 @@ export default function TypingSubmissionsList({
             isSubmitting={isSubmitting}
             submitError={submitError}
             onRetry={onRetry}
+            isExam={isExam}
+            autoScore={latestAutoScore}
           />
         ) : null}
 
@@ -305,8 +314,8 @@ export default function TypingSubmissionsList({
                   <th className="px-3 py-2 text-right font-medium">Adj WPM</th>
                   <th className="px-3 py-2 text-right font-medium">Accuracy</th>
                   <th className="px-3 py-2 text-right font-medium">Error Rate</th>
-                  <th className={`px-3 py-2 text-right font-medium ${materialAutoScore === 0 ? "rounded-r-md" : ""}`}>Duration</th>
-                  {materialAutoScore > 0 && (
+                  <th className={`px-3 py-2 text-right font-medium ${!isExam ? "rounded-r-md" : ""}`}>Duration</th>
+                  {isExam && (
                     <th className="px-3 py-2 text-right font-medium rounded-r-md">Score</th>
                   )}
                 </tr>
@@ -351,7 +360,7 @@ export default function TypingSubmissionsList({
                         <td className="px-3 py-2.5 text-right text-(--gray-9) font-mono text-xs">
                           {p ? `${Math.round(p.duration)}s` : "—"}
                         </td>
-                        {materialAutoScore > 0 && (
+                        {isExam && (
                           <td className="px-3 py-2.5 text-right font-mono text-xs">
                             {submission.auto_score > 0 ? (
                               <span className="text-(--grass-11) font-medium">{submission.auto_score}</span>
