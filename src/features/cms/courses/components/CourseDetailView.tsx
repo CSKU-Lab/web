@@ -81,7 +81,7 @@ function CourseDetailView() {
                   {data.semester.name} ({titleFormatter(data.semester.type)})
                 </h4>
                 <hr className="my-2" />
-                <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max mt-4">
+                <div className="grid grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4 gap-4 auto-rows-max mt-4">
                   {data.sections.map((section) => (
                     <CMSSectionCard
                       key={section.id}
@@ -105,7 +105,7 @@ function CourseDetailView() {
                 <h6 className="text-xs text-(--gray-10)">Semester</h6>
                 <Skeleton className="w-20 h-6 mt-2" />
                 <hr className="my-2" />
-                <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max mt-4">
+                <div className="grid grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4 gap-4 auto-rows-max mt-4">
                   {Array.from({ length: 7 }).map((_, index) => (
                     <FallbackSectionCard key={index} />
                   ))}

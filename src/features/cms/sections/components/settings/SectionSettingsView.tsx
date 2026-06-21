@@ -142,13 +142,11 @@ function SectionSettingsView() {
             <SettingDivider />
           </SettingHeader>
           <form onSubmit={form.handleSubmit(handleOnSubmit)}>
-            <SettingSection>
+            <div className="grid grid-cols-1 sm:grid-cols-[280px_1fr] gap-6">
               <div className="space-y-2">
                 <Label>
                   Banner{" "}
-                  <span className="text-xs text-(--gray-11)">
-                    (Recommended 1280×720px · 16:9 · Max 10 MB · Image only)
-                  </span>
+                  <span className="text-xs text-(--gray-11)">(16:9 · Max 10 MB)</span>
                 </Label>
                 <Controller
                   control={form.control}
@@ -158,74 +156,76 @@ function SectionSettingsView() {
                   )}
                 />
               </div>
-              <div className="space-y-2">
-                <Input label="Name" {...form.register("name")} />
-                <InlineError isError={!!form.formState.errors.name}>
-                  {form.formState.errors.name?.message}
-                </InlineError>
-              </div>
-              <div className="space-y-2">
-                <Label isError={false} htmlFor="creators">
-                  Instructors
-                </Label>
-                <Controller
-                  control={form.control}
-                  name="instructors"
-                  render={({ field }) => <UserAutoComplete {...field} />}
-                />
-                <InlineError isError={!!form.formState.errors.instructors}>
-                  {form.formState.errors.instructors?.message}
-                </InlineError>
-              </div>
-              <div className="space-y-1.5">
-                <Label isError={!!form.formState.errors.semester}>
-                  Semester
-                </Label>
-                <Controller
-                  control={form.control}
-                  name="semester"
-                  render={({ field: { value, onChange } }) => (
-                    <div>
-                      <SearchSelect
-                        isError={!!form.formState.errors.semester}
-                        value={value}
-                        queryFn={querySemesters}
-                        className="w-full"
-                        customValueRender={(sem) =>
-                          sem.id === "" && sem.name === ""
-                            ? ""
-                            : `${sem.name}/${sem.type}`
-                        }
-                      >
-                        {(options) =>
-                          options.map((option) => (
-                            <button
-                              key={option.id}
-                              onClick={() => onChange(option)}
-                              className="block text-sm mb-2 px-2 py-1 hover:bg-(--gray-3) rounded-md w-full text-left"
-                            >
-                              {`${option.name}/${option.type}`}
-                            </button>
-                          ))
-                        }
-                      </SearchSelect>
-                      <p className="text-xs mt-1 text-(--red-9)">
-                        {form.formState.errors.semester?.message}
-                      </p>
-                    </div>
-                  )}
-                />
-              </div>
-              <Button
-                disabled={disableSaveButton}
-                type="submit"
-                variant="action"
-                className="w-full h-9"
-              >
-                <Save size="1rem" />
-                Save Changes
-              </Button>
-            </SettingSection>
+              <SettingSection>
+                <div className="space-y-2">
+                  <Input label="Name" {...form.register("name")} />
+                  <InlineError isError={!!form.formState.errors.name}>
+                    {form.formState.errors.name?.message}
+                  </InlineError>
+                </div>
+                <div className="space-y-2">
+                  <Label isError={false} htmlFor="creators">
+                    Instructors
+                  </Label>
+                  <Controller
+                    control={form.control}
+                    name="instructors"
+                    render={({ field }) => <UserAutoComplete {...field} />}
+                  />
+                  <InlineError isError={!!form.formState.errors.instructors}>
+                    {form.formState.errors.instructors?.message}
+                  </InlineError>
+                </div>
+                <div className="space-y-1.5">
+                  <Label isError={!!form.formState.errors.semester}>
+                    Semester
+                  </Label>
+                  <Controller
+                    control={form.control}
+                    name="semester"
+                    render={({ field: { value, onChange } }) => (
+                      <div>
+                        <SearchSelect
+                          isError={!!form.formState.errors.semester}
+                          value={value}
+                          queryFn={querySemesters}
+                          className="w-full"
+                          customValueRender={(sem) =>
+                            sem.id === "" && sem.name === ""
+                              ? ""
+                              : `${sem.name}/${sem.type}`
+                          }
+                        >
+                          {(options) =>
+                            options.map((option) => (
+                              <button
+                                key={option.id}
+                                onClick={() => onChange(option)}
+                                className="block text-sm mb-2 px-2 py-1 hover:bg-(--gray-3) rounded-md w-full text-left"
+                              >
+                                {`${option.name}/${option.type}`}
+                              </button>
+                            ))
+                          }
+                        </SearchSelect>
+                        <p className="text-xs mt-1 text-(--red-9)">
+                          {form.formState.errors.semester?.message}
+                        </p>
+                      </div>
+                    )}
+                  />
+                </div>
+                <Button
+                  disabled={disableSaveButton}
+                  type="submit"
+                  variant="action"
+                  className="w-full h-9"
+                >
+                  <Save size="1rem" />
+                  Save Changes
+                </Button>
+              </SettingSection>
+            </div>
           </form>
         </SettingCard>
         {!isRestrictedInstructor && (
