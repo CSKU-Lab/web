@@ -1,3 +1,5 @@
+"use client";
+
 import { UserRoundPen } from "lucide-react";
 import { Button } from "~/components/commons/Button";
 import {
@@ -14,20 +16,19 @@ import {
   type EditUserSchema,
   editUserSchema,
 } from "../schemas/write-user.schema";
-import { cn } from "~/lib/utils";
 import { userService } from "~/services/user.service";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import UserRole from "./AddUser/UserRole";
-import UserType from "./AddUser/UserType";
-import type { User } from "~/types/user";
+import type { AuthProvider, User } from "~/types/user";
 import { queryKeys } from "~/queryKeys";
 import UserGroup from "./AddUser/UserGroup";
+import AuthProviderButtons from "./AddAuthProviderButton";
 
 type EditUser = Pick<
   User,
-  "id" | "username" | "display_name" | "email" | "type" | "roles" | "group"
+  "id" | "username" | "display_name" | "email" | "roles" | "group" | "auth_providers"
 >;
 
 interface Props {
@@ -41,6 +42,7 @@ const EditUser = ({ user, onClose }: Props) => {
     handleSubmit,
     control,
     watch,
+    setError,
     formState: { errors },
     reset,
   } = useForm({
@@ -53,17 +55,32 @@ const EditUser = ({ user, onClose }: Props) => {
     },
   });
 
-  const isOauth = watch("type") === "oauth";
-  const isCredential = watch("type") === "credential";
+  const watchedEmail = watch("email");
 
-  const isError = (field: keyof EditUserSchema) => !!errors[field];
+  const originalProviders = user.auth_providers ?? [];
+  const [localProviders, setLocalProviders] = useState<AuthProvider[]>(originalProviders);
+
+  const hasCredential = localProviders.includes("credential");
+  const hasGoogle = localProviders.includes("google");
+  const isNewCredential = hasCredential && !originalProviders.includes("credential");
+  const isLast = localProviders.length <= 1;
+
+  const toggleProvider = (provider: AuthProvider) => {
+    if (localProviders.includes(provider)) {
+      if (isLast) return;
+      setLocalProviders((prev) => prev.filter((p) => p !== provider));
+    } else {
+      setLocalProviders((prev) => [...prev, provider]);
+    }
+  };
 
   const [isOpen, setIsOpen] = useState(true);
   const [isPending, setIsPending] = useState(false);
   const queryClient = useQueryClient();
 
+  const isError = (field: keyof EditUserSchema) => !!errors[field];
+
   const handleEditUser: SubmitHandler<EditUserSchema> = async ({
-    type,
     username,
     password,
     display_name,
@@ -71,32 +88,48 @@ const EditUser = ({ user, onClose }: Props) => {
     roles,
     group,
   }) => {
+    // Validate provider-specific requirements before any API calls
+    if (isNewCredential && (!password || password.length < 8)) {
+      setError("password", {
+        message: "Password is required when enabling credential login (min. 8 characters)",
+      });
+      return;
+    }
+    if (localProviders.includes("google") && !email) {
+      setError("email", { message: "Email is required for Google login" });
+      return;
+    }
+
     try {
       setIsPending(true);
-      if (type === "credential") {
-        await userService.editCredentialUser(
+
+      const toAdd = localProviders.filter((p) => !originalProviders.includes(p));
+      const toRemove = originalProviders.filter((p) => !localProviders.includes(p));
+
+      await userService.editUser(user.id, {
+        username,
+        display_name,
+        roles,
+        email: email || undefined,
+        password: password || undefined,
+        group_id: group?.id || undefined,
+      });
+
+      for (const provider of toAdd) {
+        await userService.addAuthProvider(
           user.id,
-          username,
-          password || undefined,
-          display_name,
-          roles,
-          group!.id,
+          provider,
+          provider === "credential" ? password : undefined,
         );
+      }
+      for (const provider of toRemove) {
+        await userService.removeAuthProvider(user.id, provider);
       }
 
-      if (type === "oauth") {
-        await userService.editOauthUser(
-          user.id,
-          username,
-          email!,
-          display_name,
-          roles,
-        );
-      }
       await queryClient.invalidateQueries({ queryKey: queryKeys.user.all });
       reset();
       setIsOpen(false);
-      if (!!onClose) onClose();
+      if (onClose) onClose();
       toast.success("User edited successfully");
     } catch (err: unknown) {
       const emailError =
@@ -126,9 +159,7 @@ const EditUser = ({ user, onClose }: Props) => {
 
   const handleOnOpenChange = (open: boolean) => {
     setIsOpen(open);
-    if (!!onClose) {
-      onClose();
-    }
+    if (onClose) onClose();
   };
 
   return (
@@ -138,98 +169,97 @@ const EditUser = ({ user, onClose }: Props) => {
           <DialogTitle>Edit User</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleEditUser)} className="space-y-4">
-          <div className="space-y-3">
-            <Label isError={isError("type")}>User Type</Label>
-            <Controller
-              name="type"
-              {...{ control }}
-              render={({ field: { onChange, value } }) => (
-                <UserType value={value} onSelect={onChange} disabled />
+          {/* Account — shared */}
+          <section className="space-y-3">
+            <p className="text-sm font-medium text-(--gray-11)">Account</p>
+            <div className="space-y-1">
+              <Label isError={isError("username")}>Username</Label>
+              <Input {...register("username")} />
+              {isError("username") && (
+                <p className="text-red-9 text-sm font-light">{errors.username?.message}</p>
               )}
-            />
-            {isError("type") && (
-              <p className="text-red-9 text-sm font-light">
-                {errors.type?.message}
-              </p>
-            )}
-          </div>
-          {isCredential && (
-            <div className="space-y-3">
-              <Label isError={isError("roles")}>Group</Label>
+            </div>
+            <div className="space-y-1">
+              <Label isError={isError("display_name")}>Display Name</Label>
+              <Input {...register("display_name")} />
+              {isError("display_name") && (
+                <p className="text-red-9 text-sm font-light">{errors.display_name?.message}</p>
+              )}
+            </div>
+            <div className="space-y-1">
+              <Label isError={isError("roles")}>Roles</Label>
               <Controller
-                name="group"
+                name="roles"
                 {...{ control }}
                 render={({ field: { onChange, value } }) => (
-                  <UserGroup value={value!} onChange={onChange} />
+                  <UserRole value={value} onSelect={onChange} />
                 )}
               />
-              {isError("group") && (
-                <p className="text-(--red-9) text-sm font-light">
-                  {errors.group?.message}
-                </p>
+              {isError("roles") && (
+                <p className="text-red-9 text-sm font-light">{errors.roles?.message}</p>
               )}
             </div>
-          )}
-          <div className="space-y-3">
-            <Label isError={isError("username")}>Username</Label>
-            <Input {...register("username")} />
-            {isError("username") && (
-              <p className="text-red-9 text-sm font-light">
-                {errors.username?.message}
-              </p>
-            )}
-          </div>
-          {isCredential && (
-            <div className="space-y-3">
-              <Label isError={isError("password")}>New Password (optional)</Label>
-              <Input type="password" {...register("password")} />
-              {isError("password") ? (
-                <p className="text-red-9 text-sm font-light">
-                  {errors.password?.message}
-                </p>
-              ) : (
-                <p className="text-sm font-light">
-                  leave blank to keep current password
-                </p>
-              )}
-            </div>
-          )}
-          <div className="space-y-3">
-            <Label isError={isError("display_name")}>Display Name</Label>
-            <Input {...register("display_name")} />
-            {isError("display_name") && (
-              <p className="text-red-9 text-sm font-light">
-                {errors.display_name?.message}
-              </p>
-            )}
-          </div>
+          </section>
 
-          {isOauth && (
-            <div className="space-y-3">
-              <Label isError={isError("email")}>Email</Label>
-              <Input {...register("email")} />
-              {isError("email") && (
-                <p className="text-red-9 text-sm font-light">
-                  {errors.email?.message}
-                </p>
-              )}
-            </div>
-          )}
-          <div className="space-y-3">
-            <Label isError={isError("roles")}>Roles</Label>
-            <Controller
-              name="roles"
-              {...{ control }}
-              render={({ field: { onChange, value } }) => (
-                <UserRole value={value} onSelect={onChange} />
-              )}
+          {/* Provider */}
+          <section className="space-y-3">
+            <Label>Provider</Label>
+            <AuthProviderButtons
+              providers={localProviders}
+              pending={null}
+              isLast={isLast}
+              googleDisabled={false}
+              onEnableRequest={toggleProvider}
+              onDisable={toggleProvider}
             />
-            {isError("roles") && (
-              <p className="text-red-9 text-sm font-light">
-                {errors.roles?.message}
-              </p>
-            )}
-          </div>
+          </section>
+
+          {/* Credential-specific */}
+          {hasCredential && (
+            <section className="space-y-3">
+              <p className="text-sm font-medium text-(--gray-11)">Credential</p>
+              <div className="space-y-1">
+                <Label isError={isError("password")}>
+                  Password{isNewCredential ? "" : " (optional)"}
+                </Label>
+                <Input
+                  type="password"
+                  placeholder={isNewCredential ? "Min. 8 characters" : "Leave blank to keep current"}
+                  {...register("password")}
+                />
+                {isError("password") && (
+                  <p className="text-red-9 text-sm font-light">{errors.password?.message}</p>
+                )}
+              </div>
+              <div className="space-y-1">
+                <Label isError={isError("group")}>Group</Label>
+                <Controller
+                  name="group"
+                  {...{ control }}
+                  render={({ field: { onChange, value } }) => (
+                    <UserGroup value={value!} onChange={onChange} />
+                  )}
+                />
+                {isError("group") && (
+                  <p className="text-(--red-9) text-sm font-light">{errors.group?.message}</p>
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* Google-specific */}
+          {hasGoogle && (
+            <section className="space-y-3">
+              <p className="text-sm font-medium text-(--gray-11)">Google</p>
+              <div className="space-y-1">
+                <Label isError={isError("email")}>Email</Label>
+                <Input {...register("email")} />
+                {isError("email") && (
+                  <p className="text-red-9 text-sm font-light">{errors.email?.message}</p>
+                )}
+              </div>
+            </section>
+          )}
 
           <Button
             type="submit"
@@ -238,7 +268,7 @@ const EditUser = ({ user, onClose }: Props) => {
             className="bg-(--gray-12) text-(--gray-1) hover:bg-(--gray-11) hover:text-(--gray-2) py-2 w-full"
           >
             <UserRoundPen size="1rem" />
-            Edit
+            Save Changes
           </Button>
         </form>
       </DialogContent>

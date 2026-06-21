@@ -65,33 +65,36 @@ export const columns = [
       </div>
     ),
   }),
-  columnHelper.accessor("type", {
+  columnHelper.accessor("auth_providers", {
     id: "type",
     size: 10,
-    enableSorting: true,
+    enableSorting: false,
     header: () => (
       <>
-        <Shield size="1rem" /> Type
+        <Shield size="1rem" /> Provider
       </>
     ),
     cell: ({ cell }) => {
-      if (cell.getValue() === "credential")
-        return (
-          <Tooltip>
-            <TooltipTrigger>
-              <Lock size="1rem" />
-            </TooltipTrigger>
-            <TooltipContent side="bottom">Credential</TooltipContent>
-          </Tooltip>
-        );
-
+      const providers = cell.getValue() ?? [];
       return (
-        <Tooltip>
-          <TooltipTrigger>
-            <GoogleIcon className="w-4 h-4" />
-          </TooltipTrigger>
-          <TooltipContent side="bottom">Oauth</TooltipContent>
-        </Tooltip>
+        <div className="flex items-center gap-1.5">
+          {providers.includes("credential") && (
+            <Tooltip>
+              <TooltipTrigger>
+                <Lock size="1rem" />
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Credential</TooltipContent>
+            </Tooltip>
+          )}
+          {providers.includes("google") && (
+            <Tooltip>
+              <TooltipTrigger>
+                <GoogleIcon className="w-4 h-4" />
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Google</TooltipContent>
+            </Tooltip>
+          )}
+        </div>
       );
     },
   }),

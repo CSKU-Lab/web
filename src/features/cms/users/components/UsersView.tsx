@@ -76,7 +76,8 @@ function UsersView() {
     filters,
   });
 
-  const [editUser, setEditUser] = useState<User | null>(null);
+  const [editUserId, setEditUserId] = useState<string | null>(null);
+  const editUser = editUserId ? (userPagination.data.find((u) => u.id === editUserId) ?? null) : null;
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
 
   const userAmount = userPagination?.pagination.total_rows ?? 0;
@@ -101,10 +102,7 @@ function UsersView() {
     meta: {
       addUser: {
         editUser: (id: string) => {
-          const user = userPagination.data.find((user) => user.id === id);
-          if (user) {
-            setEditUser(user);
-          }
+          setEditUserId(id);
         },
         deleteUser: (id: string) => {
           const user = userPagination.data.find((user) => user.id === id);
@@ -145,7 +143,7 @@ function UsersView() {
       <PageTitle>Users Management</PageTitle>
       <div className="flex-1 flex flex-col">
         {!!editUser && (
-          <EditUser user={editUser} onClose={() => setEditUser(null)} />
+          <EditUser user={editUser} onClose={() => setEditUserId(null)} />
         )}
 
         {!!deleteUser && (

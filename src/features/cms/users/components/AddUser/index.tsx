@@ -16,7 +16,6 @@ import {
   type AddUserSchema,
   addUserSchema,
 } from "../../schemas/write-user.schema";
-import { cn } from "~/lib/utils";
 import { userService } from "~/services/user.service";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -40,7 +39,7 @@ const AddUser = () => {
     defaultValues: {
       username: "",
       display_name: "",
-      type: "credential",
+      type: "credential" as const,
       group: { id: "", name: "" },
       roles: [],
     },
@@ -77,12 +76,7 @@ const AddUser = () => {
       }
 
       if (type === "oauth") {
-        await userService.createOauthUser(
-          username,
-          display_name,
-          email!,
-          roles,
-        );
+        await userService.createOauthUser(username, display_name, email!, roles);
       }
       await queryClient.invalidateQueries({ queryKey: queryKeys.user.all });
       reset();
@@ -120,8 +114,47 @@ const AddUser = () => {
         </DialogHeader>
         <form onSubmit={handleSubmit(handleCreateUser)}>
           <div className="p-4 space-y-4">
-            <div className="space-y-3">
-              <Label isError={isError("type")}>User Type</Label>
+            {/* Account — shared */}
+            <section className="space-y-3">
+              <p className="text-sm font-medium text-(--gray-11)">Account</p>
+              <div className="space-y-1">
+                <Label isError={isError("username")}>Username</Label>
+                <Input {...register("username")} />
+                {isError("username") && (
+                  <p className="text-(--red-9) text-sm font-light">
+                    {errors.username?.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-1">
+                <Label isError={isError("display_name")}>Display Name</Label>
+                <Input {...register("display_name")} />
+                {isError("display_name") && (
+                  <p className="text-(--red-9) text-sm font-light">
+                    {errors.display_name?.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-1">
+                <Label isError={isError("roles")}>Roles</Label>
+                <Controller
+                  name="roles"
+                  {...{ control }}
+                  render={({ field: { onChange, value } }) => (
+                    <UserRole value={value} onSelect={onChange} />
+                  )}
+                />
+                {isError("roles") && (
+                  <p className="text-(--red-9) text-sm font-light">
+                    {errors.roles?.message}
+                  </p>
+                )}
+              </div>
+            </section>
+
+            {/* Provider */}
+            <section className="space-y-3">
+              <Label isError={isError("type")}>Provider</Label>
               <Controller
                 name="type"
                 {...{ control }}
@@ -134,84 +167,54 @@ const AddUser = () => {
                   {errors.type?.message}
                 </p>
               )}
-            </div>
-            {isCredential && (
-              <div className="space-y-3">
-                <Label isError={isError("roles")}>Group</Label>
-                <Controller
-                  name="group"
-                  {...{ control }}
-                  render={({ field: { onChange, value } }) => (
-                    <UserGroup value={value} onChange={onChange} />
-                  )}
-                />
-                {isError("group") && (
-                  <p className="text-(--red-9) text-sm font-light">
-                    {errors.group?.message}
-                  </p>
-                )}
-              </div>
-            )}
-            <div className="space-y-3">
-              <Label isError={isError("username")}>Username (Student ID)</Label>
-              <Input {...register("username")} />
-              {isError("username") && (
-                <p className="text-(--red-9) text-sm font-light">
-                  {errors.username?.message}
-                </p>
-              )}
-            </div>
-            {isCredential && (
-              <div className="space-y-3">
-                <Label isError={isError("password")}>Password</Label>
-                <Input type="password" {...register("password")} />
-                <p
-                  className={cn(
-                    "text-sm font-light",
-                    isError("password") && "text-(--red-9)",
-                  )}
-                >
-                  password must have at least 8 characters
-                </p>
-              </div>
-            )}
-            <div className="space-y-3">
-              <Label isError={isError("display_name")}>Display Name</Label>
-              <Input {...register("display_name")} />
-              {isError("display_name") && (
-                <p className="text-(--red-9) text-sm font-light">
-                  {errors.display_name?.message}
-                </p>
-              )}
-            </div>
+            </section>
 
-            {isOauth && (
-              <div className="space-y-3">
-                <Label isError={isError("email")}>Email</Label>
-                <Input {...register("email")} />
-                {isError("email") && (
-                  <p className="text-(--red-9) text-sm font-light">
-                    {errors.email?.message}
-                  </p>
-                )}
-              </div>
+            {/* Credential-specific */}
+            {isCredential && (
+              <section className="space-y-3">
+                <p className="text-sm font-medium text-(--gray-11)">Credential</p>
+                <div className="space-y-1">
+                  <Label isError={isError("password")}>Password</Label>
+                  <Input type="password" {...register("password")} />
+                  {isError("password") && (
+                    <p className="text-(--red-9) text-sm font-light">{errors.password?.message}</p>
+                  )}
+                </div>
+                <div className="space-y-1">
+                  <Label isError={isError("group")}>Group</Label>
+                  <Controller
+                    name="group"
+                    {...{ control }}
+                    render={({ field: { onChange, value } }) => (
+                      <UserGroup value={value} onChange={onChange} />
+                    )}
+                  />
+                  {isError("group") && (
+                    <p className="text-(--red-9) text-sm font-light">
+                      {errors.group?.message}
+                    </p>
+                  )}
+                </div>
+              </section>
             )}
-            <div className="space-y-3">
-              <Label isError={isError("roles")}>Roles</Label>
-              <Controller
-                name="roles"
-                {...{ control }}
-                render={({ field: { onChange, value } }) => (
-                  <UserRole value={value} onSelect={onChange} />
-                )}
-              />
-              {isError("roles") && (
-                <p className="text-(--red-9) text-sm font-light">
-                  {errors.roles?.message}
-                </p>
-              )}
-            </div>
+
+            {/* Google-specific */}
+            {isOauth && (
+              <section className="space-y-3">
+                <p className="text-sm font-medium text-(--gray-11)">Google</p>
+                <div className="space-y-1">
+                  <Label isError={isError("email")}>Email</Label>
+                  <Input {...register("email")} />
+                  {isError("email") && (
+                    <p className="text-(--red-9) text-sm font-light">
+                      {errors.email?.message}
+                    </p>
+                  )}
+                </div>
+              </section>
+            )}
           </div>
+
           <DialogFooter>
             <Button
               type="submit"

@@ -1,3 +1,5 @@
+export type AuthProvider = "credential" | "google";
+
 export interface User {
   id: string;
   email?: string;
@@ -7,6 +9,7 @@ export interface User {
   roles: UserRole[];
   type: UserType;
   group: UserGroup | null;
+  auth_providers?: AuthProvider[];
   created_at?: Date;
   updated_at?: Date;
 }

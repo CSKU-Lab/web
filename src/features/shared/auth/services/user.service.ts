@@ -1,5 +1,5 @@
 import type { PaginationRequestParams } from "~/types/pagination";
-import type { CreateUser, User, UserRole } from "~/types/user";
+import type { AuthProvider, CreateUser, User, UserRole } from "~/types/user";
 import { BaseService } from "~/services/base.service";
 
 export type GetUserPaginationParams = PaginationRequestParams<User>;
@@ -91,12 +91,38 @@ class UserService extends BaseService {
     return res.data;
   }
 
+  async editUser(
+    id: string,
+    fields: {
+      username?: string;
+      display_name?: string;
+      roles?: UserRole[];
+      email?: string;
+      password?: string;
+      group_id?: string;
+    },
+  ) {
+    const res = await this.api.patch(this._baseURL + `/${id}`, fields);
+    return res.data;
+  }
+
   async importUsers(users: CreateUser[]) {
     const res = await this.api.post(this._baseURL + "/import", {
       users,
     });
 
     return res.data;
+  }
+
+  async addAuthProvider(userID: string, provider: AuthProvider, password?: string) {
+    await this.api.post(this._baseURL + `/${userID}/auth-providers`, {
+      provider,
+      ...(password ? { password } : {}),
+    });
+  }
+
+  async removeAuthProvider(userID: string, provider: AuthProvider) {
+    await this.api.delete(this._baseURL + `/${userID}/auth-providers/${provider}`);
   }
 }
 
