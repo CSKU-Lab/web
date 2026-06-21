@@ -209,7 +209,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
           permissions={{
             writeFiles: true,
             modifyFiles: false,
-            codeExecution: false,
+            codeExecution: true,
             selectRunner: true,
           }}
           allowedRunners={allowedRunners}
