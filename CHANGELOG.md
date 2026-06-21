@@ -1,3 +1,32 @@
+# [0.23.0](https://github.com/CSKU-Lab/web/compare/v0.22.0...v0.23.0) (2026-06-21)
+
+
+### Bug Fixes
+
+* correct role filter field from "role" to "roles" in UserAutoComplete ([274f221](https://github.com/CSKU-Lab/web/commit/274f2214d6505829cbc750225f8713a31dec5fee))
+* **CS-205:** rename limit to limits to match server JSON field name ([f4e838b](https://github.com/CSKU-Lab/web/commit/f4e838bb40d277eda540f274f8c208ae11dee6db))
+* **CS-206:** move name/tag search to backend, remove client-side filter ([a3f9fb8](https://github.com/CSKU-Lab/web/commit/a3f9fb8768866902782b4e115c704b2c7934cfda))
+* **CS-207:** break typing material text at word boundaries ([8d35acc](https://github.com/CSKU-Lab/web/commit/8d35acc1a995a7101e04294337fce8b2a449d5de))
+* **CS-207:** skip breadcrumb fetch when section segment is "new" ([d89b553](https://github.com/CSKU-Lab/web/commit/d89b5538c4bec86b0392abb13c00125f0f189940))
+* fix Checkbox checkmark invisible in dark mode ([11d5b1d](https://github.com/CSKU-Lab/web/commit/11d5b1d13eaadefd07726c341776cf7e10f04278)), closes [#eeeeee](https://github.com/CSKU-Lab/web/issues/eeeeee) [#111111](https://github.com/CSKU-Lab/web/issues/111111)
+* prevent last character wrapping to new line in typing display ([b3df495](https://github.com/CSKU-Lab/web/commit/b3df495fe769ca4813e202e172e280c815adaa23))
+* redirect to labs list before query invalidation on lab removal ([c4d20ac](https://github.com/CSKU-Lab/web/commit/c4d20aca0e075d47aee83daf977de9befc01a051))
+* restore checkmark visibility in Checkbox component ([c52d6f1](https://github.com/CSKU-Lab/web/commit/c52d6f159134cdb936fcf8a03d4d5ea9b75425a0))
+
+
+### Features
+
+* add tag search and material type filter in Add Materials panel ([5b572b5](https://github.com/CSKU-Lab/web/commit/5b572b5966d23fd599a42b024385c6d596849d7f))
+* add test case group indicators to submission detail testcase table ([db8cb1c](https://github.com/CSKU-Lab/web/commit/db8cb1c1ffd75b03e2c06f87184b30d9dffda1fc))
+* **CS-208:** restrict instructor role from course/lab write operations ([48194ec](https://github.com/CSKU-Lab/web/commit/48194ec0f66068c3f22d31037b214d34c63aa06a))
+* improve add material drawer button contrast and layout ([4e9ebb6](https://github.com/CSKU-Lab/web/commit/4e9ebb6e5998967985b06f380492235ac0f676c8))
+* increase section card size and redesign section settings banner layout ([2ee7082](https://github.com/CSKU-Lab/web/commit/2ee7082396edea17b0f7a1bbf8300ec194b7abbf))
+* move "Add Test Case" button to end of each test case group ([7d5ba65](https://github.com/CSKU-Lab/web/commit/7d5ba65b84114a71958c68bf9e19002ec5d97e15))
+* move default compare script settings to compares page as dialog ([9613c10](https://github.com/CSKU-Lab/web/commit/9613c107247efbce0dc63e6bd7dec5a9d9b42593))
+* redesign section/course cards with aspect-video banner overlay layout ([b2c053f](https://github.com/CSKU-Lab/web/commit/b2c053fd66aade5be4ec4104ed77d955b6bd107f))
+* replace static select with searchable combobox in DefaultCompareScriptDialog ([b1327f5](https://github.com/CSKU-Lab/web/commit/b1327f53d89c06eb5b8cc6b75974e3ff523b126b))
+* show test case count badge on Test Cases tab button ([409426c](https://github.com/CSKU-Lab/web/commit/409426c95f81f36ef25cbcdaa4a8cef82c072112))
+
 # [0.22.0](https://github.com/CSKU-Lab/web/compare/v0.21.0...v0.22.0) (2026-06-20)
 
 
