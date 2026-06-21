@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { CircleDashed, ChevronDown, ChevronRight, Check, X } from "lucide-react";
+import { CircleDashed, ChevronDown, ChevronRight } from "lucide-react";
 import { useParams } from "next/navigation";
 import { Label } from "~/components/ui/label";
-import { cn } from "~/lib/utils";
 import type { TypingSubmissionData } from "~/types/cms-section-submission";
 import { CMSMaterial } from "~/types/cms-material";
 import ManualScoreInput from "~/features/cms/submissions/components/renderers/ManualScoreInput";
@@ -14,25 +13,6 @@ interface TypingSubmissionDetailProps {
   payload: TypingSubmissionData | null;
   auto_score: number;
   manual_score: number;
-}
-
-interface ThresholdBadgeProps {
-  label: string;
-  passed: boolean;
-}
-
-function ThresholdBadge({ label, passed }: ThresholdBadgeProps) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 text-xs font-medium",
-        passed ? "text-(--grass-11)" : "text-(--tomato-11)",
-      )}
-    >
-      {passed ? <Check size="0.75rem" /> : <X size="0.75rem" />}
-      {label}
-    </span>
-  );
 }
 
 function TypingSubmissionDetail({
@@ -60,13 +40,8 @@ function TypingSubmissionDetail({
   }
 
   const accuracy = 100 - payload.error_rate;
-
-  // Material thresholds for auto-scoring. A threshold of 0 means "no minimum".
-  const minAdjWpm = (material.payload.min_adj_wpm as number | undefined) ?? 0;
-  const minAccuracy = (material.payload.min_accuracy as number | undefined) ?? 0;
-  const passedWpm = payload.adjusted_wpm >= minAdjWpm;
-  const passedAccuracy = accuracy >= minAccuracy;
-  const hasThresholds = minAdjWpm > 0 || minAccuracy > 0;
+  const typingType = (material.payload.typing_type as string | undefined) ?? "practice";
+  const isExam = typingType === "exam";
 
   const targetText = (material.payload.content as string | undefined) ?? "";
 
@@ -106,27 +81,16 @@ function TypingSubmissionDetail({
 
       {/* Scores */}
       <div className="flex items-center gap-6 p-3 bg-(--gray-3) rounded-lg flex-wrap">
-        <div className="flex items-center gap-2">
-          <Label className="text-xs font-medium text-(--gray-11)">
-            Auto Score:
-          </Label>
-          <span className="text-sm font-semibold text-(--gray-12)">
-            {auto_score} / {material.auto_score}
-          </span>
-          {hasThresholds && (
-            <span className="flex items-center gap-3 ml-1">
-              {minAdjWpm > 0 && (
-                <ThresholdBadge label={`≥${minAdjWpm} wpm`} passed={passedWpm} />
-              )}
-              {minAccuracy > 0 && (
-                <ThresholdBadge
-                  label={`≥${minAccuracy}%`}
-                  passed={passedAccuracy}
-                />
-              )}
+        {isExam && (
+          <div className="flex items-center gap-2">
+            <Label className="text-xs font-medium text-(--gray-11)">
+              Auto Score:
+            </Label>
+            <span className="text-sm font-semibold text-(--gray-12)">
+              {auto_score} / {material.auto_score}
             </span>
-          )}
-        </div>
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <Label
             htmlFor="manual-score"
