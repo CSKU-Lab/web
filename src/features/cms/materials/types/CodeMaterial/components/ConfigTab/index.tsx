@@ -26,7 +26,7 @@ function ConfigTab() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 overflow-y-auto h-full">
       <h5 className="my-2 font-medium">General</h5>
       <h6 className="my-2 text-sm">Compare Script</h6>
       <CompareScript
