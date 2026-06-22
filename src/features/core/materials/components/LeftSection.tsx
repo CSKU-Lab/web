@@ -103,11 +103,6 @@ function LeftSection() {
             isActive={selectedTab === "submissions"}
             onClick={() => setSelectedTab("submissions")}
           />
-          <TabButton
-            value="AI Assistant"
-            isActive={selectedTab === "aiAssistant"}
-            onClick={() => setSelectedTab("aiAssistant")}
-          />
         </div>
         <div className="flex-1 min-h-0 overflow-auto">{renderContent()}</div>
       </div>
