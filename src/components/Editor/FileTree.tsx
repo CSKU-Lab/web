@@ -14,6 +14,7 @@ import {
   ChevronDown,
   UnfoldHorizontal,
   UnfoldVertical,
+  PanelLeftClose,
 } from "lucide-react";
 import {
   Dialog,
@@ -55,6 +56,7 @@ interface FileTreeProps {
   isRequiredFolder?: (name: string) => boolean;
   getDisplayName?: (name: string) => string;
   getNewFilePath?: (name: string) => string;
+  onCollapse?: () => void;
 }
 
 type TreeNode =
@@ -126,6 +128,7 @@ function FileTree({
   isRequiredFolder,
   getDisplayName,
   getNewFilePath,
+  onCollapse,
 }: FileTreeProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
@@ -418,7 +421,18 @@ function FileTree({
       className="relative border-r h-full"
     >
       <div className="flex justify-between items-center mb-3 border-b p-2 gap-2">
-        <h6 className="text-xs">Files</h6>
+        <div className="flex items-center gap-1">
+          {onCollapse && (
+            <button
+              onClick={onCollapse}
+              className="p-0.5 hover:bg-(--gray-3) rounded text-(--gray-9) hover:text-(--gray-11) transition-colors"
+              title="Collapse file tree"
+            >
+              <PanelLeftClose size="0.875rem" />
+            </button>
+          )}
+          <h6 className="text-xs">Files</h6>
+        </div>
         <div className="flex items-center gap-1">
           {isLoading ? (
             <Skeleton className="h-5 w-16" />

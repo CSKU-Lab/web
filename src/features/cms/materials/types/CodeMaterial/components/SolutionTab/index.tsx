@@ -86,7 +86,7 @@ function EditorSection() {
       onFilesChange={handleFilesChange}
       permissions={{
         writeFiles: isOwner,
-        modifyFiles: isOwner,
+        modifyFiles: false,
         codeExecution: isOwner,
         selectRunner: isOwner,
       }}

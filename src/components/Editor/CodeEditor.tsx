@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { generateId } from "~/utils/generate-id";
-import { FileCode } from "lucide-react";
+import { FileCode, PanelLeftOpen } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
 import RunnerSelect from "./RunnerSelect";
@@ -86,6 +86,7 @@ function CodeEditor({
   const [runnerSelectError, setRunnerSelectError] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [mdTab, setMdTab] = useState("edit");
+  const [isFileTreeCollapsed, setIsFileTreeCollapsed] = useState(false);
 
   const [previousFiles, setPreviousFiles] = useState<CodeFile[]>([]);
   if (previousFiles.length === 0 && files.length > 0) {
@@ -210,15 +211,26 @@ function CodeEditor({
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       <div className="flex-1 flex min-h-0">
-        <FileTree
-          allowModify={permissions?.modifyFiles ?? false}
-          files={files}
-          selectedFile={selectedFile}
-          onSelectFile={handleSelectFile}
-          onChange={onFilesChange}
-          isReadonlyFile={isReadonlyFile}
-          isRequiredFile={isRequiredFile}
-        />
+        {isFileTreeCollapsed ? (
+          <button
+            onClick={() => setIsFileTreeCollapsed(false)}
+            className="border-r flex flex-col items-center pt-2 px-1.5 hover:bg-(--gray-2) transition-colors text-(--gray-9) hover:text-(--gray-11)"
+            title="Expand file tree"
+          >
+            <PanelLeftOpen size="1rem" />
+          </button>
+        ) : (
+          <FileTree
+            allowModify={permissions?.modifyFiles ?? false}
+            files={files}
+            selectedFile={selectedFile}
+            onSelectFile={handleSelectFile}
+            onChange={onFilesChange}
+            isReadonlyFile={isReadonlyFile}
+            isRequiredFile={isRequiredFile}
+            onCollapse={() => setIsFileTreeCollapsed(true)}
+          />
+        )}
         <Tabs
           value={mdTab}
           onValueChange={setMdTab}
