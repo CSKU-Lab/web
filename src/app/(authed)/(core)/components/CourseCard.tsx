@@ -11,7 +11,6 @@ import ErrorFallback from "~/components/commons/Error/ErrorFallback";
 import Error from "~/components/commons/Error";
 import { ServerCrash, Lock, Globe } from "lucide-react";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
-import { Badge } from "~/components/ui/badge";
 import type { Creator } from "~/types/core-course";
 
 interface Props {
@@ -46,18 +45,18 @@ const CourseList = ({ search }: Props) => {
       <div className="flex items-center gap-1">
         {creators.slice(0, MAX_SHOW).map((creator) => (
           <UserProfileImage
-            className="ring-2 ring-white/60 rounded-full"
+            className="ring-2 ring-(--gray-1) rounded-full"
             key={creator.id}
             username={creator.display_name}
             src={creator.profile_image ?? undefined}
             textSize="10px"
-            size="1.75rem"
+            size="1.5rem"
           />
         ))}
         {creators.length > MAX_SHOW && (
-          <Badge variant="secondary" className="ml-1 text-xs">
-            +{creators.length - MAX_SHOW} more
-          </Badge>
+          <span className="text-xs text-(--gray-11) ml-1">
+            +{creators.length - MAX_SHOW}
+          </span>
         )}
       </div>
     );
@@ -65,7 +64,7 @@ const CourseList = ({ search }: Props) => {
 
   if (isFetching) {
     return (
-      <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5 gap-4">
         {Array.from({ length: 8 }).map((_, i) => (
           <CourseCardSkeleton key={i} />
         ))}
@@ -89,7 +88,7 @@ const CourseList = ({ search }: Props) => {
         <NoDataAvailable />
       ) : (
         <>
-          <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max">
+          <div className="grid grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5 gap-4 auto-rows-max">
             {coursePagination.pages.map((page, pageIndex) => (
               <Fragment key={pageIndex}>
                 {page.data.map((course) => {
@@ -98,30 +97,30 @@ const CourseList = ({ search }: Props) => {
                     <Link
                       key={id}
                       href={visibility === "public" ? `/courses/${id}` : `/sections/${id}`}
-                      className="relative rounded-xl overflow-hidden aspect-video border border-(--gray-4) block group"
+                      className="rounded-xl overflow-hidden border border-(--gray-4) bg-(--gray-1) hover:bg-(--gray-2) transition-colors block group"
                     >
-                      <div className="absolute inset-0 bg-linear-to-br from-(--gray-3) to-(--gray-4)">
+                      <div className="relative aspect-video w-full bg-linear-to-br from-(--gray-3) to-(--gray-4) overflow-hidden">
                         {banner !== null && (
                           <Image
                             src={banner}
                             alt={`${name} banner`}
                             fill
-                            className="group-hover:scale-105 transition-transform object-cover"
+                            className="object-cover group-hover:scale-105 transition-transform"
                           />
                         )}
                       </div>
-                      <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                      <div className="p-3 space-y-2">
                         <div className="flex items-start justify-between gap-2">
-                          <h3 className="font-semibold text-white line-clamp-2 flex-1">
+                          <h3 className="font-semibold text-sm line-clamp-2 flex-1">
                             {name}
                           </h3>
                           {visibility === "public" ? (
-                            <span className="inline-flex items-center gap-1 text-xs text-white bg-white/20 px-1.5 py-0.5 rounded shrink-0">
+                            <span className="inline-flex items-center gap-1 text-xs text-(--gray-11) shrink-0 mt-0.5">
                               <Globe size={10} />
                               Public
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-xs text-white/80 bg-white/10 px-1.5 py-0.5 rounded shrink-0">
+                            <span className="inline-flex items-center gap-1 text-xs text-(--gray-11) shrink-0 mt-0.5">
                               <Lock size={10} />
                               Private
                             </span>
