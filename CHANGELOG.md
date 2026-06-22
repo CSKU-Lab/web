@@ -1,3 +1,12 @@
+# [0.26.0](https://github.com/CSKU-Lab/web/compare/v0.25.0...v0.26.0) (2026-06-22)
+
+
+### Features
+
+* **CS-195:** collapsible file tree in CodeEditor, hide add file in SolutionTab ([f7d1d87](https://github.com/CSKU-Lab/web/commit/f7d1d873577f8e37dac3788f18036b3ffa1d3387))
+* **CS-195:** collapsible FileTree in CodePreview, replace-code button in submission detail ([9e0b6f8](https://github.com/CSKU-Lab/web/commit/9e0b6f890ece9b7559d737526121b7b5730a2d9e))
+* hide AI Assistant tab in core content code material ([248a25c](https://github.com/CSKU-Lab/web/commit/248a25c035fe897ebc183cecbfe8fd39dd017db4))
+
 # [0.25.0](https://github.com/CSKU-Lab/web/compare/v0.24.0...v0.25.0) (2026-06-22)
 
 
