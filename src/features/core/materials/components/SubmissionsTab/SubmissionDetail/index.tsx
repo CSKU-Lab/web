@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useParams } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import TestcaseTable from "~/features/core/materials/components/SubmissionsTab/SubmissionDetail/TestcaseTable";
@@ -8,12 +8,19 @@ import Loading from "~/features/core/materials/components/SubmissionsTab/Submiss
 import CodePreview from "~/components/Editor/CodePreview";
 import { submissionAtom } from "~/globalStore/submissions";
 import useSubmissionDetail from "~/features/core/materials/hooks/submission-detail/useSubmissionDetail";
+import { submissionFilesAtom } from "~/features/core/materials/stores/submission.store";
+import type { CodeFile } from "~/components/Editor/types/editor";
 
 function SubmissionDetail() {
   const { materialID } = useParams<{ materialID: string }>();
   const [{ selectedSubmissionId }] = useAtom(submissionAtom);
   const { data, isLoading, isError, refetch } =
     useSubmissionDetail(selectedSubmissionId);
+  const setSubmissionFiles = useSetAtom(submissionFilesAtom);
+
+  const handleReplace = (files: CodeFile[]) => {
+    setSubmissionFiles(files);
+  };
 
   if (isLoading) return <Loading />;
 
@@ -49,7 +56,7 @@ function SubmissionDetail() {
         onClick={() => {}}
       />
       <div className="mt-4">
-        <CodePreview files={data.payload.files} className="mb-4 h-80" />
+        <CodePreview files={data.payload.files} className="mb-4 h-80" onReplace={handleReplace} />
       </div>
       <TestcaseTable isLoading={false} groups={data.payload.test_case_groups} />
     </>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Check, Copy, FileCode } from "lucide-react";
+import { Check, Copy, FileCode, PanelLeftOpen, CornerUpLeft } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "~/components/Editor/FileTree";
 import { Button } from "~/components/ui/button";
@@ -11,11 +11,13 @@ interface CodePreviewProps {
   files: CodeFile[];
   runner?: { id: string; name: string };
   className?: string;
+  onReplace?: (files: CodeFile[]) => void;
 }
 
-function CodePreview({ files, runner, className }: CodePreviewProps) {
+function CodePreview({ files, runner, className, onReplace }: CodePreviewProps) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
+  const [isFileTreeCollapsed, setIsFileTreeCollapsed] = useState(false);
 
   if (files.length > 0 && selectedFile === null) {
     setSelectedFile(files[0].name);
@@ -45,36 +47,59 @@ function CodePreview({ files, runner, className }: CodePreviewProps) {
             <span className="text-xs text-(--gray-9)">| {runner.name}</span>
           )}
         </div>
-        <Button
-          onClick={handleCopy}
-          variant="secondary"
-          size="sm"
-          className="text-(--gray-11) space-x-2"
-        >
-          {isCopied ? (
-            <Check className="text-(--grass-10)" size="0.95rem" />
-          ) : (
-            <Copy size="0.75rem" />
-          )}
-          <span
-            className={cn(
-              "text-xs font-medium",
-              isCopied && "text-(--grass-10)",
-            )}
+        {onReplace ? (
+          <Button
+            onClick={() => onReplace(files)}
+            variant="secondary"
+            size="sm"
+            className="text-(--gray-11) space-x-2"
           >
-            {isCopied ? "Copied!" : "Copy"}
-          </span>
-        </Button>
+            <CornerUpLeft size="0.875rem" />
+            <span className="text-xs font-medium">Use This Code</span>
+          </Button>
+        ) : (
+          <Button
+            onClick={handleCopy}
+            variant="secondary"
+            size="sm"
+            className="text-(--gray-11) space-x-2"
+          >
+            {isCopied ? (
+              <Check className="text-(--grass-10)" size="0.95rem" />
+            ) : (
+              <Copy size="0.75rem" />
+            )}
+            <span
+              className={cn(
+                "text-xs font-medium",
+                isCopied && "text-(--grass-10)",
+              )}
+            >
+              {isCopied ? "Copied!" : "Copy"}
+            </span>
+          </Button>
+        )}
       </div>
 
       <div className="flex-1 flex min-h-0 border rounded-lg overflow-hidden">
-        <FileTree
-          files={files}
-          selectedFile={selectedFile}
-          onSelectFile={setSelectedFile}
-          allowModify={false}
-          onChange={() => {}}
-        />
+        {isFileTreeCollapsed ? (
+          <button
+            onClick={() => setIsFileTreeCollapsed(false)}
+            className="border-r flex flex-col items-center pt-2 px-1.5 hover:bg-(--gray-2) transition-colors text-(--gray-9) hover:text-(--gray-11)"
+            title="Expand file tree"
+          >
+            <PanelLeftOpen size="1rem" />
+          </button>
+        ) : (
+          <FileTree
+            files={files}
+            selectedFile={selectedFile}
+            onSelectFile={setSelectedFile}
+            allowModify={false}
+            onChange={() => {}}
+            onCollapse={() => setIsFileTreeCollapsed(true)}
+          />
+        )}
         <div className="flex-1 min-h-0 overflow-auto">
           {currentFile ? (
             <CodeMirror
