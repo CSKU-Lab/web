@@ -12,8 +12,6 @@ import {
   Pencil,
   ChevronRight,
   ChevronDown,
-  UnfoldHorizontal,
-  UnfoldVertical,
   PanelLeftClose,
 } from "lucide-react";
 import {
@@ -162,25 +160,7 @@ function FileTree({
     });
   };
 
-  const expandAll = () => {
-    const allFolders = new Set<string>();
-    const collectFolders = (nodes: TreeNode[]) => {
-      nodes.forEach((node) => {
-        if (node.type === "folder") {
-          allFolders.add(node.path);
-          collectFolders(node.children);
-        }
-      });
-    };
-    collectFolders(tree);
-    setExpandedFolders(allFolders);
-  };
-
-  const collapseAll = () => {
-    setExpandedFolders(new Set());
-  };
-
-  const isDuplicateName = files.some((f) => {
+const isDuplicateName = files.some((f) => {
     const targetPath = folderForNewFile
       ? `${folderForNewFile}/${newFileName.toLowerCase()}`
       : newFileName.toLowerCase();
@@ -502,32 +482,6 @@ function FileTree({
               </DialogContent>
             </Dialog>
           ) : null}
-          {!isLoading && files.length > 0 && (
-            <>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className="text-(--gray-11) hover:text-(--gray-12) p-1"
-                    onClick={expandAll}
-                  >
-                    <UnfoldVertical size="1rem" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Expand All</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className="text-(--gray-11) hover:text-(--gray-12) p-1"
-                    onClick={collapseAll}
-                  >
-                    <UnfoldHorizontal size="1rem" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Collapse All</TooltipContent>
-              </Tooltip>
-            </>
-          )}
         </div>
       </div>
       <div className="space-y-1.5 px-1 overflow-auto max-h-[calc(100%-3rem)]">
