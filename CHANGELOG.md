@@ -1,3 +1,26 @@
+# [0.25.0](https://github.com/CSKU-Lab/web/compare/v0.24.0...v0.25.0) (2026-06-22)
+
+
+### Bug Fixes
+
+* **CS-189:** show score for exam typing submissions ([1f02900](https://github.com/CSKU-Lab/web/commit/1f02900a610173627a127633b36ad79aca0e4132))
+* **CS-210:** increase inline code editor height and disable playground ([1da2801](https://github.com/CSKU-Lab/web/commit/1da2801edcaff6809a407dcda38ede5e8730500d))
+* **CS-210:** make CodeEditor flex parent so flex-1 fills h-[520px] container ([b185c29](https://github.com/CSKU-Lab/web/commit/b185c29a88a3ae14d4fd5b6ec422cfe95dff51af))
+* **CS-211:** track editable segment positions via rangesField, drop indexOf extraction ([6a62c2b](https://github.com/CSKU-Lab/web/commit/6a62c2ba604a73021951cb08db7269e326a503a3))
+* make config tab scrollable on overflow ([75513e1](https://github.com/CSKU-Lab/web/commit/75513e162b926383ee811805dbf6cfbda00ab5ad))
+
+
+### Features
+
+* **CS-189:** replace auto score section with practice/exam typing type selector ([9ffe16e](https://github.com/CSKU-Lab/web/commit/9ffe16efd2658d52308f940a126c903c067e246d))
+* **CS-191:** add Export Typing button to gradebook page ([ccfcf31](https://github.com/CSKU-Lab/web/commit/ccfcf315bf10046f6a85225997fae09de35fe62a))
+* **CS-210:** embed code material in document material ([51b48bc](https://github.com/CSKU-Lab/web/commit/51b48bc9bdb78e34d5b7075ad22d67b81f8ec968))
+* **CS-210:** enable playground for embedded code problems in student view ([11744c9](https://github.com/CSKU-Lab/web/commit/11744c94c359395053bc98453830e402739d894e))
+* **CS-211:** redesign SegmentedFileEditor with tabs and interactive preview ([2932d84](https://github.com/CSKU-Lab/web/commit/2932d8457fe4742d5ac22ecf7555d7e46f8e94c5))
+* **CS-211:** segment-aware code editor for CMS and student view ([d5556c3](https://github.com/CSKU-Lab/web/commit/d5556c3e052f333fcc0e35704b694d7d16b1476d))
+* redesign enrolled course card with section/semester detail ([adc1104](https://github.com/CSKU-Lab/web/commit/adc1104f6949e216741d5a2178d4cfcd8569c331))
+* redesign enrolled course list with image-on-top card layout ([a87b263](https://github.com/CSKU-Lab/web/commit/a87b263bcd2d952e1b5b39c3d0093ce43bfa243c))
+
 # [0.24.0](https://github.com/CSKU-Lab/web/compare/v0.23.1...v0.24.0) (2026-06-21)
 
 
