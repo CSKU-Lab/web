@@ -22,8 +22,8 @@ const segmentTheme = EditorView.baseTheme({
     background: "rgba(0, 112, 210, 0.07)",
   },
   ".cm-segment-hidden": {
-    background: "var(--gray-4)",
-    opacity: "0.6",
+    background: "rgba(109, 40, 217, 0.08)",
+    borderLeft: "3px solid var(--violet-9)",
   },
   ".cm-segment-exclude": {
     borderLeft: "3px solid var(--orange-9)",

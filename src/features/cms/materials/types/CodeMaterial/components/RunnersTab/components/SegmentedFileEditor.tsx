@@ -18,7 +18,15 @@ import {
 } from "~/components/Editor/CodeMirror/extensions/segmentMarks";
 import type { FileSegment, SegmentType, TemplateFile } from "~/components/Editor/types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
-import CodeMirror from "~/components/Editor/CodeMirror";
+import { createStudentReadOnlyExtension } from "~/components/Editor/CodeMirror/extensions/studentReadOnly";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "~/components/ui/tooltip";
+import { X } from "lucide-react";
 
 interface Props {
   file: TemplateFile;
@@ -28,18 +36,44 @@ interface Props {
   disabled?: boolean;
 }
 
-const TOOLBAR_TYPES: { type: SegmentType; label: string; color: string }[] = [
-  { type: "readonly", label: "Readonly", color: "text-blue-600 border-blue-400 hover:bg-blue-50" },
-  { type: "hidden", label: "Hidden", color: "text-gray-600 border-gray-400 hover:bg-gray-100" },
-  { type: "exclude", label: "Exclude", color: "text-orange-600 border-orange-400 hover:bg-orange-50" },
+const SEGMENT_TYPES: {
+  type: SegmentType;
+  label: string;
+  description: string;
+  dot: string;
+  text: string;
+  hover: string;
+}[] = [
+  {
+    type: "readonly",
+    label: "Readonly",
+    description: "Student can see but not edit",
+    dot: "#3b82f6",
+    text: "text-blue-600 dark:text-blue-400",
+    hover: "hover:bg-blue-50 dark:hover:bg-blue-950/40",
+  },
+  {
+    type: "hidden",
+    label: "Hidden",
+    description: "Not shown to student at all",
+    dot: "#7c3aed",
+    text: "text-violet-600 dark:text-violet-400",
+    hover: "hover:bg-violet-50 dark:hover:bg-violet-950/40",
+  },
+  {
+    type: "exclude",
+    label: "Exclude",
+    description: "Visible but not sent to grader",
+    dot: "#f97316",
+    text: "text-orange-600 dark:text-orange-400",
+    hover: "hover:bg-orange-50 dark:hover:bg-orange-950/40",
+  },
 ];
 
-/** Derive full text content from segments (for initialization). */
 function segmentsToContent(segments: FileSegment[]): string {
   return segments.map((s) => s.content).join("");
 }
 
-/** Build FileSegment[] from current editor content + decoration ranges. */
 function buildSegmentsFromDecors(content: string, ranges: SegmentRange[]): FileSegment[] {
   if (ranges.length === 0) return [{ type: "editable", content }];
 
@@ -62,7 +96,6 @@ function buildSegmentsFromDecors(content: string, ranges: SegmentRange[]): FileS
   return segments.filter((s) => s.content.length > 0);
 }
 
-/** Initialize decoration ranges from FileSegment[]. */
 function segmentsToRanges(segments: FileSegment[]): SegmentRange[] {
   const ranges: SegmentRange[] = [];
   let pos = 0;
@@ -76,7 +109,6 @@ function segmentsToRanges(segments: FileSegment[]): SegmentRange[] {
   return ranges;
 }
 
-/** Compute student-visible content from segments. */
 function studentContent(segments: FileSegment[]): string {
   return segments
     .filter((s) => s.type !== "hidden")
@@ -87,6 +119,7 @@ function studentContent(segments: FileSegment[]): string {
 function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disabled = false }: Props) {
   const editorRef = useRef<ReactCodeMirrorRef>(null);
   const [hasSelection, setHasSelection] = useState(false);
+  const [tab, setTab] = useState("edit");
   const { resolvedTheme } = useTheme();
 
   const initialContent = useMemo(() => segmentsToContent(file.segments), []);
@@ -95,8 +128,7 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
     onChange(newFile);
   }, 150);
 
-  const getView = (): EditorView | null =>
-    editorRef.current?.view ?? null;
+  const getView = (): EditorView | null => editorRef.current?.view ?? null;
 
   const handleChange = useCallback(
     (value: string) => {
@@ -110,7 +142,6 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
     [file.name, debouncedOnChange],
   );
 
-  // Called by ReactCodeMirror when the editor view is definitively created.
   const handleCreateEditor = useCallback(
     (view: EditorView) => {
       const initialRanges = segmentsToRanges(file.segments);
@@ -121,7 +152,6 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
         ),
       });
     },
-    // file.segments is stable at mount (keyed by file name); no dep needed.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
@@ -138,7 +168,6 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
       view.dispatch({ effects: applySegmentEffect.of({ from, to, type }) });
     }
 
-    // Trigger onChange
     const value = view.state.doc.toString();
     const decorations = view.state.field(segmentMarksField);
     const ranges = getSegmentRanges(decorations);
@@ -180,6 +209,7 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
       }),
     [],
   );
+
   const darkTheme = useMemo(
     () =>
       githubDarkInit({
@@ -196,71 +226,128 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
 
   const previewContent = useMemo(() => studentContent(file.segments), [file.segments]);
 
+  // Key that changes when segment structure changes — resets the preview editor.
+  const previewKey = useMemo(
+    () => file.segments.map((s) => `${s.type}:${s.content.length}`).join(","),
+    [file.segments],
+  );
+
+  // Student readonly extension for preview — enforces marks without making
+  // the whole editor readonly so the creator can test editing the editable parts.
+  const previewReadOnlyExtension = useMemo(
+    () => createStudentReadOnlyExtension(file.segments).extension,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [previewKey],
+  );
+
+  const previewExtensions = useMemo(
+    () => [
+      basicSetup,
+      customTheme,
+      ...(langExtension ? [langExtension] : []),
+      previewReadOnlyExtension,
+      indentWithTab,
+    ],
+    [customTheme, langExtension, previewReadOnlyExtension],
+  );
+
   return (
-    <div className="flex h-full">
-      {/* Left panel: segment editor */}
-      <div className="flex-1 flex flex-col min-w-0 border-r">
-        {/* Toolbar */}
-        <div className="flex items-center gap-1 px-2 py-1 border-b bg-(--gray-2) shrink-0">
-          {TOOLBAR_TYPES.map(({ type, label, color }) => (
-            <button
-              key={type}
-              disabled={disabled || !hasSelection}
-              onClick={() => applyType(type)}
-              className={`px-2 py-0.5 text-xs border rounded font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${color}`}
-            >
-              {label}
-            </button>
-          ))}
-          <button
-            disabled={disabled || !hasSelection}
-            onClick={() => applyType(null)}
-            className="px-2 py-0.5 text-xs border rounded font-medium text-(--gray-11) border-(--gray-6) hover:bg-(--gray-3) transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            Clear
-          </button>
-          <span className="ml-2 text-xs text-(--gray-10)">Select text then click to mark region</span>
-        </div>
+    <Tabs
+      value={tab}
+      onValueChange={setTab}
+      className="flex flex-col h-full gap-0"
+    >
+      {/* Single header row: tabs left, mark controls right */}
+      <div className="flex items-center gap-3 border-b px-2 h-10 shrink-0">
+        <TabsList className="h-7">
+          <TabsTrigger value="edit" className="h-6 px-3 text-xs">
+            Edit
+          </TabsTrigger>
+          <TabsTrigger value="preview" className="h-6 px-3 text-xs">
+            Preview
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Editor */}
-        <div className="flex-1 min-h-0 overflow-auto">
-          <ReactCodeMirror
-            ref={editorRef}
-            value={initialContent}
-            onChange={handleChange}
-            onCreateEditor={handleCreateEditor}
-            readOnly={disabled}
-            extensions={[
-              basicSetup,
-              customTheme,
-              ...(langExtension ? [langExtension] : []),
-              segmentMarksExtension,
-              selectionChangeExtension,
-              indentWithTab,
-            ]}
-            theme={resolvedTheme === "light" ? lightTheme : darkTheme}
-            style={{ height: "100%" }}
-          />
-        </div>
+        {tab === "edit" && (
+          <TooltipProvider delayDuration={300}>
+            <div className="flex items-center gap-0.5 ml-auto">
+              {SEGMENT_TYPES.map(({ type, label, description, dot, text, hover }) => (
+                <Tooltip key={type}>
+                  <TooltipTrigger asChild>
+                    <button
+                      disabled={disabled || !hasSelection}
+                      onClick={() => applyType(type)}
+                      className={`inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${text} ${hover}`}
+                    >
+                      <span
+                        className="w-1.5 h-1.5 rounded-full shrink-0"
+                        style={{ backgroundColor: dot }}
+                      />
+                      {label}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <p className="font-medium">{label}</p>
+                    <p className="text-muted-foreground">{description}</p>
+                    {!hasSelection && (
+                      <p className="mt-0.5 opacity-60">Select text first</p>
+                    )}
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+
+              <div className="w-px h-4 bg-border mx-1.5" />
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    disabled={disabled || !hasSelection}
+                    onClick={() => applyType(null)}
+                    className="inline-flex items-center gap-1 h-6 px-2 rounded-full text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <X className="w-3 h-3" />
+                    Clear
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Remove mark from selection</TooltipContent>
+              </Tooltip>
+            </div>
+          </TooltipProvider>
+        )}
       </div>
 
-      {/* Right panel: student preview */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <div className="px-2 py-1 border-b bg-(--gray-2) shrink-0">
-          <span className="text-xs font-medium text-(--gray-11)">Student Preview</span>
-        </div>
-        <div className="flex-1 min-h-0">
-          <CodeMirror
-            key={previewContent}
-            value={previewContent}
-            readOnly
-            className="h-full"
-            extension={extension}
-            fontSize={fontSize}
-          />
-        </div>
-      </div>
-    </div>
+      {/* Editor */}
+      <TabsContent value="edit" className="flex-1 min-h-0 mt-0 overflow-hidden">
+        <ReactCodeMirror
+          ref={editorRef}
+          value={initialContent}
+          onChange={handleChange}
+          onCreateEditor={handleCreateEditor}
+          readOnly={disabled}
+          extensions={[
+            basicSetup,
+            customTheme,
+            ...(langExtension ? [langExtension] : []),
+            segmentMarksExtension,
+            selectionChangeExtension,
+            indentWithTab,
+          ]}
+          theme={resolvedTheme === "light" ? lightTheme : darkTheme}
+          style={{ height: "100%" }}
+        />
+      </TabsContent>
+
+      {/* Student preview — interactive, same behaviour as the student editor */}
+      <TabsContent value="preview" className="flex-1 min-h-0 mt-0 overflow-hidden">
+        <ReactCodeMirror
+          key={previewKey}
+          value={previewContent}
+          extensions={previewExtensions}
+          theme={resolvedTheme === "light" ? lightTheme : darkTheme}
+          style={{ height: "100%" }}
+        />
+      </TabsContent>
+    </Tabs>
   );
 }
 
