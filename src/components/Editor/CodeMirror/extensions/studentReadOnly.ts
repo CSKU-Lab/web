@@ -6,6 +6,17 @@ interface Range {
   to: number;
 }
 
+export interface StudentReadOnlyResult {
+  extension: Extension;
+  /**
+   * The StateField tracking current readonly range positions.
+   * Positions auto-adjust via mapPos as the user edits allowed regions.
+   * Expose this so callers (e.g. CodeEditor) can read current positions
+   * to extract editable segment contents without fragile indexOf searches.
+   */
+  rangesField: StateField<Range[]>;
+}
+
 /**
  * Creates a CodeMirror extension that enforces readonly ranges for non-editable
  * segments in the student editor.
@@ -15,7 +26,7 @@ interface Range {
  * Does NOT use the readOnlyRangeExtension package — avoids duplicate StateField
  * conflict with the one already installed in CodeMirror/index.tsx.
  */
-export function createStudentReadOnlyExtension(segments: FileSegment[]): Extension {
+export function createStudentReadOnlyExtension(segments: FileSegment[]): StudentReadOnlyResult {
   const initialRanges: Range[] = [];
   let pos = 0;
   for (const seg of segments) {
@@ -26,8 +37,6 @@ export function createStudentReadOnlyExtension(segments: FileSegment[]): Extensi
     }
     pos = end;
   }
-
-  if (initialRanges.length === 0) return [];
 
   const rangesField = StateField.define<Range[]>({
     create() {
@@ -42,7 +51,7 @@ export function createStudentReadOnlyExtension(segments: FileSegment[]): Extensi
     },
   });
 
-  // Block any transaction whose change set touches a readonly range.
+  // Block any transaction whose change set overlaps a readonly range.
   const readonlyFilter = EditorState.transactionFilter.of((tr) => {
     if (!tr.docChanged) return tr;
     const ranges = tr.startState.field(rangesField, false);
@@ -57,5 +66,11 @@ export function createStudentReadOnlyExtension(segments: FileSegment[]): Extensi
     return blocked ? [] : tr;
   });
 
-  return [rangesField, readonlyFilter];
+  if (initialRanges.length === 0) {
+    // No non-editable segments — still return rangesField so callers can read
+    // an empty array without needing a null check.
+    return { extension: [rangesField], rangesField };
+  }
+
+  return { extension: [rangesField, readonlyFilter], rangesField };
 }

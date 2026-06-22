@@ -8,9 +8,10 @@ import EditorSettings from "./EditorSettings";
 import { getEditorSettings } from "./utils/get-editor-settings";
 import type { Runner } from "./types/runner";
 import Playground, { type PlaygroundHandle } from "./Playground";
+import { EditorView } from "@codemirror/view";
 import { keymap } from "@codemirror/view";
 import { Prec } from "@codemirror/state";
-import type { CodeFile, IEditorSettings } from "./types/editor";
+import type { CodeFile, FileSegment, IEditorSettings } from "./types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
 import { createStudentReadOnlyExtension } from "./CodeMirror/extensions/studentReadOnly";
 import { api } from "~/lib/api.client";
@@ -35,6 +36,36 @@ interface Props {
   queryFn?: (query: string) => Promise<Runner[]>;
   isReadonlyFile?: (name: string) => boolean;
   isRequiredFile?: (name: string) => boolean;
+}
+
+/**
+ * Given current flat content, readonly range positions (from rangesField),
+ * and the original segments array, return segments with editable contents
+ * updated to what the student has currently typed.
+ */
+function syncEditableSegments(
+  content: string,
+  readonlyRanges: { from: number; to: number }[],
+  originalSegments: FileSegment[],
+): FileSegment[] {
+  // Build editable regions as gaps between sorted readonly ranges.
+  const sorted = [...readonlyRanges].sort((a, b) => a.from - b.from);
+  const editableRegions: { from: number; to: number }[] = [];
+  let pos = 0;
+  for (const r of sorted) {
+    if (r.from > pos) editableRegions.push({ from: pos, to: r.from });
+    pos = r.to;
+  }
+  if (pos < content.length) editableRegions.push({ from: pos, to: content.length });
+
+  // Walk original segments (including hidden), assign editable content by slot.
+  let slot = 0;
+  return originalSegments.map((seg) => {
+    if (seg.type !== "editable") return seg;
+    const region = editableRegions[slot++];
+    if (!region) return seg;
+    return { ...seg, content: content.slice(region.from, region.to) };
+  });
 }
 
 function CodeEditor({
@@ -65,6 +96,11 @@ function CodeEditor({
   const [sessionId] = useState<string>(() => generateId());
   const [lspToken, setLspToken] = useState<string | null>(null);
   const playgroundRef = useRef<PlaygroundHandle>(null);
+
+  // Stable refs so closures inside memoized extensions always see latest values.
+  const currentFileRef = useRef<CodeFile | undefined>(undefined);
+  const filesRef = useRef<CodeFile[]>(files);
+  filesRef.current = files;
 
   const editorRunKeymap = useMemo(
     () =>
@@ -101,6 +137,8 @@ function CodeEditor({
   };
 
   const currentFile = files.find((f) => f.name === selectedFile);
+  currentFileRef.current = currentFile;
+
   const fileExtension = currentFile?.name.split(".").pop();
 
   const handleSettingsChange = (newSettings: IEditorSettings) => {
@@ -114,7 +152,6 @@ function CodeEditor({
     setRunnerSelectError(false);
   };
 
-  // Debounced callback to notify parent of changes
   const debouncedOnFilesChange = useDebouncedCallback(
     (newFiles: CodeFile[]) => {
       onFilesChange(newFiles);
@@ -122,18 +159,53 @@ function CodeEditor({
     100,
   );
 
+  // For plain files (no segments): update content from onChange.
   const handleCodeChange = useCallback(
     (value: string) => {
-      if (!currentFile) return;
-
-      // Debounce the parent update - typing stays responsive
-      const newFiles = files.map((f) =>
-        f.name === currentFile.name ? { ...f, content: value } : f,
+      const cf = currentFileRef.current;
+      if (!cf || cf.segments) return; // segmented files handled by updateListener
+      const newFiles = filesRef.current.map((f) =>
+        f.name === cf.name ? { ...f, content: value } : f,
       );
       debouncedOnFilesChange(newFiles);
     },
-    [currentFile, files, debouncedOnFilesChange],
+    [debouncedOnFilesChange],
   );
+
+  // Per-file readonly extension — recreated only when filename changes (segments are stable).
+  const readOnlyResult = useMemo(
+    () =>
+      currentFile?.segments
+        ? createStudentReadOnlyExtension(currentFile.segments)
+        : null,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentFile?.name],
+  );
+
+  // Update listener: when doc changes, recompute editable segment contents using
+  // actual range positions (no indexOf) and propagate up via onFilesChange.
+  const segmentUpdateListener = useMemo(() => {
+    if (!readOnlyResult) return [];
+    const { rangesField } = readOnlyResult;
+    return [
+      EditorView.updateListener.of((update) => {
+        if (!update.docChanged) return;
+        const cf = currentFileRef.current;
+        if (!cf?.segments) return;
+
+        const content = update.state.doc.toString();
+        const ranges = update.state.field(rangesField, false) ?? [];
+        const updatedSegments = syncEditableSegments(content, ranges, cf.segments);
+        const updatedFile: CodeFile = { ...cf, content, segments: updatedSegments };
+        const newFiles = filesRef.current.map((f) =>
+          f.name === cf.name ? updatedFile : f,
+        );
+        debouncedOnFilesChange(newFiles);
+      }),
+    ];
+  }, [readOnlyResult, debouncedOnFilesChange]);
+
+  const readOnlyExtensions = readOnlyResult ? [readOnlyResult.extension] : [];
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
@@ -199,9 +271,8 @@ function CodeEditor({
                   lspToken={lspToken}
                   extensions={[
                     editorRunKeymap,
-                    ...(currentFile.segments
-                      ? [createStudentReadOnlyExtension(currentFile.segments)]
-                      : []),
+                    ...readOnlyExtensions,
+                    ...segmentUpdateListener,
                   ]}
                 />
               ) : (
@@ -226,9 +297,8 @@ function CodeEditor({
                 lspToken={lspToken}
                 extensions={[
                   editorRunKeymap,
-                  ...(currentFile.segments
-                    ? [createStudentReadOnlyExtension(currentFile.segments)]
-                    : []),
+                  ...readOnlyExtensions,
+                  ...segmentUpdateListener,
                 ]}
               />
             )}

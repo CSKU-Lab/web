@@ -1,10 +1,11 @@
-import type { CodeFile, FileSegment, TemplateFile } from "~/components/Editor/types/editor";
-import type { SubmittedFile, SubmittedFileSegment } from "~/features/core/submissions/types/core-code-submission";
+import type { CodeFile, TemplateFile } from "~/components/Editor/types/editor";
+import type { SubmittedFile } from "~/features/core/submissions/types/core-code-submission";
 
 /**
  * Convert a TemplateFile to a CodeFile for display in the student editor.
  * Visible content = editable + readonly + exclude (not hidden).
- * Carries segments so CodeEditor can enforce readonly ranges by position.
+ * Carries segments so CodeEditor can enforce readonly ranges by position
+ * and keep editable segment contents in sync as the student types.
  */
 export function templateFileToCodeFile(tf: TemplateFile): CodeFile {
   let content = "";
@@ -24,55 +25,13 @@ export function templateFileToCodeFile(tf: TemplateFile): CodeFile {
 }
 
 /**
- * Given the current flat editor content and the original segments,
- * extract the contents of editable segments.
- * Non-editable segments are assumed to remain unchanged (readonly lock).
- */
-function extractEditableContents(
-  currentContent: string,
-  segments: FileSegment[],
-): { index: number; content: string }[] {
-  const result: SubmittedFileSegment[] = [];
-  let pos = 0;
-
-  for (let i = 0; i < segments.length; i++) {
-    const seg = segments[i];
-    if (seg.type === "hidden") continue;
-
-    if (seg.type === "editable") {
-      // Find the next non-editable visible segment to bound this one.
-      const nextFixed = segments
-        .slice(i + 1)
-        .find((s) => s.type !== "hidden" && s.type !== "editable");
-
-      let editableContent: string;
-      if (nextFixed) {
-        const fixedPos = currentContent.indexOf(nextFixed.content, pos);
-        if (fixedPos !== -1) {
-          editableContent = currentContent.slice(pos, fixedPos);
-          pos = fixedPos;
-        } else {
-          editableContent = currentContent.slice(pos);
-          pos = currentContent.length;
-        }
-      } else {
-        editableContent = currentContent.slice(pos);
-        pos = currentContent.length;
-      }
-
-      result.push({ index: i, content: editableContent });
-    } else {
-      // readonly or exclude: advance position by their fixed content length.
-      pos += seg.content.length;
-    }
-  }
-
-  return result;
-}
-
-/**
- * Build SubmittedFile[] from the original TemplateFile[] and the current
- * CodeFile[] (flat editor content). Used to compose the submission payload.
+ * Build SubmittedFile[] for the submission payload.
+ *
+ * When a file has segments, CodeEditor keeps the editable segment contents
+ * current in submissionFilesAtom (via syncEditableSegments + rangesField).
+ * We just read them directly — no indexOf needed.
+ *
+ * Files without segments (backward compat) use the full flat content.
  */
 export function buildSubmittedFiles(
   templateFiles: TemplateFile[],
@@ -80,17 +39,21 @@ export function buildSubmittedFiles(
 ): SubmittedFile[] {
   return templateFiles.map((tf) => {
     const currentFile = currentFiles.find((f) => f.name === tf.name);
-    const currentContent = currentFile?.content ?? "";
 
-    if (tf.segments.length === 0) {
+    if (!currentFile?.segments || tf.segments.length === 0) {
       // Backward compat: no segments — send full content as index 0.
       return {
         name: tf.name,
-        editable_segments: [{ index: 0, content: currentContent }],
+        editable_segments: [{ index: 0, content: currentFile?.content ?? "" }],
       };
     }
 
-    const editableSegments = extractEditableContents(currentContent, tf.segments);
+    // Editable segment contents are kept up-to-date in the atom by CodeEditor.
+    const editableSegments = currentFile.segments
+      .map((s, i) => ({ s, i }))
+      .filter(({ s }) => s.type === "editable")
+      .map(({ s, i }) => ({ index: i, content: s.content }));
+
     return { name: tf.name, editable_segments: editableSegments };
   });
 }
