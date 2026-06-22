@@ -13,13 +13,18 @@ function RightSection() {
   const { files, selectedRunner, initRunner, persistFiles, handleRunnerChange } =
     useSubmissionFiles();
 
-  // Build the Runner[] list with real initial_files from the API.
+  // Build the Runner[] list with initial_files as TemplateFile[].
   const allowedRunners = useMemo(
     () =>
       material?.payload.allowed_runners.map((runner) => ({
         id: runner.id,
         name: runner.name,
-        initial_files: runner.files,
+        initial_files: runner.files.map((f) => ({
+          name: f.name,
+          segments: f.segments && f.segments.length > 0
+            ? f.segments.map((s) => ({ content: s.content, type: s.type as import("~/components/Editor/types/editor").SegmentType }))
+            : [{ content: f.content, type: "editable" as const }],
+        })),
       })) ?? [],
     [material],
   );

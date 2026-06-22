@@ -6,6 +6,7 @@ import type { CodeFile } from "~/types/code-material";
 import { saveStatusAtom } from "~/features/cms/materials/types/CodeMaterial/stores/save-status.store";
 import { useCallback, useMemo } from "react";
 import type { Runner } from "~/components/Editor/types/runner";
+import { templateFileToCodeFile } from "~/components/Editor/utils/segments";
 import { runnerTemplatesAtom } from "~/features/cms/materials/types/CodeMaterial/components/RunnersTab/stores/runner-templates.store";
 import { resourceFilesAtom } from "~/features/cms/materials/types/CodeMaterial/stores/resource-files.store";
 
@@ -72,7 +73,7 @@ function EditorSection() {
     (runner: Runner) => {
       const files = solution?.runner.id === runner.id
         ? (solution?.files ?? [])
-        : runner.initial_files;
+        : runner.initial_files.map(templateFileToCodeFile);
       setSolution({ runner: { id: runner.id, name: runner.name }, files });
       if (isOwner) setSaveStatus("UnSaved");
     },

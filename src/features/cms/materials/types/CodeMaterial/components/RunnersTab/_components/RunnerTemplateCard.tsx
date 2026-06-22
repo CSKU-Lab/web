@@ -15,7 +15,7 @@ import { Button } from "~/components/commons/Button";
 import { cn } from "~/lib/utils";
 import { removeRunnerTemplateAtom, updateRunnerTemplateAtom } from "~/features/cms/materials/types/CodeMaterial/components/RunnersTab/stores/runner-templates.store";
 import type { RunnerTemplate } from "~/features/cms/materials/types/CodeMaterial/components/RunnersTab/types/runner-template";
-import type { CodeFile } from "~/components/Editor/types/editor";
+import type { TemplateFile } from "~/components/Editor/types/editor";
 import RunnerEditor from "~/features/cms/materials/types/CodeMaterial/components/RunnersTab/components/RunnerEditor";
 
 interface RunnerTemplateCardProps {
@@ -29,7 +29,7 @@ function RunnerTemplateCard({ runnerTemplate, disabled }: RunnerTemplateCardProp
   const removeRunnerTemplate = useSetAtom(removeRunnerTemplateAtom);
   const updateRunnerTemplate = useSetAtom(updateRunnerTemplateAtom);
 
-  const handleInitialFilesChange = (files: CodeFile[]) => {
+  const handleInitialFilesChange = (files: TemplateFile[]) => {
     updateRunnerTemplate({
       id: runnerTemplate.id,
       updates: { initialFiles: files },

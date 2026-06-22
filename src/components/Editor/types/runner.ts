@@ -1,7 +1,7 @@
-import { CodeFile } from "./editor";
+import type { TemplateFile } from "./editor";
 
 export interface Runner {
   id: string;
   name: string;
-  initial_files: CodeFile[];
+  initial_files: TemplateFile[];
 }

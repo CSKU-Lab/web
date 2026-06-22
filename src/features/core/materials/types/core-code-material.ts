@@ -5,10 +5,15 @@ export interface CoreCodeMaterial {
   limits: CodeMaterialLimits;
 }
 
+export interface RunnerFileSegment {
+  content: string;
+  type: string;
+}
+
 export interface AllowedRunner {
   id: string;
   name: string;
-  files: { name: string; content: string }[];
+  files: { name: string; content: string; segments?: RunnerFileSegment[] }[];
 }
 
 export interface CoreCodeResourceFile {

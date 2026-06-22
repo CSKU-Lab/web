@@ -47,7 +47,8 @@ function SaveButton() {
             runner_id: rt.id,
             files: rt.initialFiles.map((f) => ({
               name: f.name,
-              content: f.content,
+              content: f.segments.map((s) => s.content).join(""),
+              segments: f.segments,
             })),
           })),
           compare_script_id: compareScript?.id ?? null,

@@ -5,16 +5,15 @@ import { FileCode } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import EditorSettings from "~/components/Editor/EditorSettings";
 import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
-import type { IEditorSettings } from "~/components/Editor/types/editor";
+import type { IEditorSettings, TemplateFile, CodeFile } from "~/components/Editor/types/editor";
 import FileTree from "~/components/Editor/FileTree";
-import type { CodeFile } from "~/components/Editor/types/editor";
-import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
+import SegmentedFileEditor from "./SegmentedFileEditor";
 
 interface RunnerEditorProps {
   buildScript: string;
   runScript: string;
-  initialFiles: CodeFile[];
-  onInitialFilesChange: (files: CodeFile[]) => void;
+  initialFiles: TemplateFile[];
+  onInitialFilesChange: (files: TemplateFile[]) => void;
   disabled?: boolean;
 }
 
@@ -26,17 +25,20 @@ function RunnerEditor({
   disabled = false,
 }: RunnerEditorProps) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [settings, setSettings] =
-    useState<IEditorSettings>(getEditorSettings());
+  const [settings, setSettings] = useState<IEditorSettings>(getEditorSettings());
 
+  // FileTree needs CodeFile[]; derive flat content from segments.
   const allFiles = useMemo<CodeFile[]>(() => {
     const files: CodeFile[] = [
       { name: "scripts/build_script.sh", content: buildScript },
       { name: "scripts/run_script.sh", content: runScript },
     ];
-    initialFiles.forEach((f) => {
-      files.push({ ...f, name: `initial/${f.name}` });
-    });
+    for (const f of initialFiles) {
+      files.push({
+        name: `initial/${f.name}`,
+        content: f.segments.map((s) => s.content).join(""),
+      });
+    }
     return files;
   }, [buildScript, runScript, initialFiles]);
 
@@ -45,46 +47,28 @@ function RunnerEditor({
     localStorage.setItem("editor-settings", JSON.stringify(newSettings));
   };
 
-  const handleInitialFilesChange = useCallback(
-    (newFiles: CodeFile[]) => {
-      const filesWithoutScripts = newFiles.filter(
-        (f) => !f.name.startsWith("scripts/"),
-      );
-      onInitialFilesChange(
-        filesWithoutScripts.map((f) => ({
-          ...f,
-          name: f.name.replace(/^initial\//, ""),
-        })),
-      );
-    },
-    [onInitialFilesChange],
-  );
+  const isReadonlyFile = (name: string) => name.startsWith("scripts/");
+  const getDisplayName = (name: string) => name.replace(/^(scripts|initial)\//, "");
+  const isInitialFile = (name: string) => name.startsWith("initial/");
 
   const currentFile = allFiles.find((f) => f.name === selectedFile);
   const fileExtension = currentFile?.name.split(".").pop();
 
-  const isReadonlyFile = (name: string): boolean => {
-    return name.startsWith("scripts/");
-  };
+  // Find matching TemplateFile for current initial/ file.
+  const currentTemplateFile = useMemo(() => {
+    if (!currentFile || !isInitialFile(currentFile.name)) return null;
+    const rawName = currentFile.name.replace("initial/", "");
+    return initialFiles.find((f) => f.name === rawName) ?? null;
+  }, [currentFile, initialFiles]);
 
-  const getDisplayName = (name: string): string => {
-    return name.replace(/^(scripts|initial)\//, "");
-  };
-
-  const isEditable = (name: string): boolean => {
-    return name.startsWith("initial/");
-  };
-
-  const handleCodeChange = useDebouncedCallback((value: string) => {
-    if (!currentFile || !isEditable(currentFile.name)) return;
-
-    const newInitialFiles = initialFiles.map((f) =>
-      f.name === currentFile.name.replace("initial/", "")
-        ? { ...f, content: value }
-        : f,
-    );
-    onInitialFilesChange(newInitialFiles);
-  }, 100);
+  const handleTemplateFileChange = useCallback(
+    (updated: TemplateFile) => {
+      onInitialFilesChange(
+        initialFiles.map((f) => (f.name === updated.name ? updated : f)),
+      );
+    },
+    [initialFiles, onInitialFilesChange],
+  );
 
   return (
     <div className="flex-1 flex h-full">
@@ -92,7 +76,7 @@ function RunnerEditor({
         files={allFiles}
         selectedFile={selectedFile}
         onSelectFile={setSelectedFile}
-        onChange={handleInitialFilesChange}
+        onChange={() => {}}
         allowModify={false}
         initialExpandedFolders={["scripts", "initial"]}
         isReadonlyFile={isReadonlyFile}
@@ -107,16 +91,24 @@ function RunnerEditor({
             <FileCode size="3rem" className="mb-3 opacity-50" />
             <p className="text-sm">Click a file to start editing</p>
           </div>
+        ) : currentTemplateFile !== null ? (
+          <SegmentedFileEditor
+            key={currentTemplateFile.name}
+            file={currentTemplateFile}
+            onChange={handleTemplateFileChange}
+            extension={fileExtension}
+            fontSize={settings.fontSize}
+            disabled={disabled}
+          />
         ) : (
           <CodeMirror
             key={currentFile.name}
-            readOnly={disabled || !isEditable(currentFile.name)}
+            readOnly
             className="flex-1 min-h-0"
             extension={fileExtension}
             fontSize={settings.fontSize}
             vimMode={settings.vimMode}
             value={currentFile.content}
-            onChange={handleCodeChange}
           />
         )}
       </div>

@@ -7,7 +7,7 @@ interface CodeMaterialAllowedRunner {
   name: string;
   build_script: string;
   run_script: string;
-  files: { name: string; content: string }[];
+  files: { name: string; content: string; segments?: { content: string; type: string }[] }[];
 }
 
 interface CodeMaterialCompareScript {

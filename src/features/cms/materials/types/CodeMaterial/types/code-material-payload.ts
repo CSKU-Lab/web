@@ -4,7 +4,7 @@ import type { TestCaseGroup } from "~/features/cms/materials/types/CodeMaterial/
 
 interface AllowedRunner {
   runner_id: string;
-  files: { name: string; content: string }[];
+  files: { name: string; content: string; segments?: { content: string; type: string }[] }[];
 }
 
 interface Solution {

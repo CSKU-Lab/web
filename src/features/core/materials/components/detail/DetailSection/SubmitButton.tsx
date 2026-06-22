@@ -9,12 +9,14 @@ import { coreSubmissionService } from "~/services/core-submission.service";
 import { queryKeys } from "~/queryKeys";
 import {
   submissionFilesAtom,
+  submissionTemplateFilesAtom,
   selectedRunnerAtom,
   submissionStatusAtom,
   activeSubmissionsAtom,
   activeLeftTabAtom,
 } from "~/features/core/materials/stores/submission.store";
 import type { CodeSubmissionPayload } from "~/types/core-code-submission";
+import { buildSubmittedFiles } from "~/components/Editor/utils/segments";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
 import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 import { MaterialType } from "~/types/core-material";
@@ -29,6 +31,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   const { data: material } = useGetCoreMaterial();
   const isReadonly = useIsLabReadonly();
   const files = useAtomValue(submissionFilesAtom);
+  const templateFiles = useAtomValue(submissionTemplateFilesAtom);
   const selectedRunner = useAtomValue(selectedRunnerAtom);
   const setSubmissionStatus = useSetAtom(submissionStatusAtom);
   const setActiveSubmissions = useSetAtom(activeSubmissionsAtom);
@@ -42,7 +45,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
         lab_id: labID,
         section_id: sectionID,
         payload: {
-          files,
+          files: buildSubmittedFiles(templateFiles, files),
           runner_id: selectedRunner?.id ?? "",
         },
       });

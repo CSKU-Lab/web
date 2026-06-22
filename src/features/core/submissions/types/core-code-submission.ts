@@ -1,7 +1,17 @@
 import type { CodeFile } from "~/types/code-material";
 
+export interface SubmittedFileSegment {
+  index: number;
+  content: string;
+}
+
+export interface SubmittedFile {
+  name: string;
+  editable_segments: SubmittedFileSegment[];
+}
+
 export interface CodeSubmissionPayload {
-  files: CodeFile[];
+  files: SubmittedFile[];
   runner_id: string;
 }
 

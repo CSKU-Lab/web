@@ -80,7 +80,12 @@ function CodeMaterial({ isOwner }: Props) {
           name: r.name,
           buildScript: r.build_script,
           runScript: r.run_script,
-          initialFiles: r.files,
+          initialFiles: r.files.map((f) => ({
+            name: f.name,
+            segments: f.segments && f.segments.length > 0
+              ? f.segments.map((s) => ({ content: s.content, type: s.type as import("~/components/Editor/types/editor").SegmentType }))
+              : [{ content: f.content, type: "editable" as const }],
+          })),
         })),
       );
     }

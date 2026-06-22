@@ -10,8 +10,9 @@ import { coreMaterialService } from "~/services/core-material.service";
 import { coreSubmissionService } from "~/services/core-submission.service";
 import type { CoreCodeMaterial } from "~/types/core-code-material";
 import type { Runner } from "~/components/Editor/types/runner";
-import type { CodeFile } from "~/components/Editor/types/editor";
+import type { CodeFile, SegmentType, TemplateFile } from "~/components/Editor/types/editor";
 import type { CodeSubmissionPayload } from "~/types/core-code-submission";
+import { templateFileToCodeFile, buildSubmittedFiles } from "~/components/Editor/utils/segments";
 import type { MaterialDetail } from "~/types/core-material";
 
 interface Props {
@@ -25,6 +26,7 @@ type SubmissionStatus = "idle" | "grading" | "passed" | "failed";
 export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
   const queryClient = useQueryClient();
   const [files, setFiles] = useState<CodeFile[]>([]);
+  const [templateFiles, setTemplateFiles] = useState<TemplateFile[]>([]);
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [score, setScore] = useState<number | null>(null);
@@ -40,7 +42,12 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
       material?.payload.allowed_runners.map((r) => ({
         id: r.id,
         name: r.name,
-        initial_files: r.files,
+        initial_files: r.files.map((f): TemplateFile => ({
+          name: f.name,
+          segments: f.segments && f.segments.length > 0
+            ? f.segments.map((s) => ({ content: s.content, type: s.type as SegmentType }))
+            : [{ content: f.content, type: "editable" as const }],
+        })),
       })) ?? [],
     [material],
   );
@@ -61,12 +68,14 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
     if (!material || selectedRunner !== null || allowedRunners.length === 0) return;
     const first = allowedRunners[0];
     setSelectedRunner(first);
-    setFiles(first.initial_files);
+    setTemplateFiles(first.initial_files);
+    setFiles(first.initial_files.map(templateFileToCodeFile));
   }, [material, selectedRunner, allowedRunners]);
 
   const handleRunnerChange = useCallback((runner: Runner) => {
     setSelectedRunner(runner);
-    setFiles(runner.initial_files);
+    setTemplateFiles(runner.initial_files);
+    setFiles(runner.initial_files.map(templateFileToCodeFile));
   }, []);
 
   const handleFilesChange = useCallback(
@@ -115,7 +124,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
         section_id: sectionID,
         lab_id: labID,
         payload: {
-          files,
+          files: buildSubmittedFiles(templateFiles, files),
           runner_id: selectedRunner?.id ?? "",
         },
       }),

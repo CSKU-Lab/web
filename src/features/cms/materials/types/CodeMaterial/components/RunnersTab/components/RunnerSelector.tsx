@@ -19,7 +19,7 @@ import { cmsRunnerService } from "~/services/cms-runner.service";
 import { RunnerConfigDetail } from "~/types/cms-runner";
 import { addRunnerTemplateAtom, runnerTemplatesAtom } from "~/features/cms/materials/types/CodeMaterial/components/RunnersTab/stores/runner-templates.store";
 import type { RunnerTemplate } from "~/features/cms/materials/types/CodeMaterial/components/RunnersTab/types/runner-template";
-import type { CodeFile } from "~/components/Editor/types/editor";
+import type { TemplateFile } from "~/components/Editor/types/editor";
 import useInputDebounce from "~/hooks/useInputDebounce";
 
 interface RunnerSelectorProps {
@@ -73,9 +73,9 @@ function RunnerSelector({ disabled }: RunnerSelectorProps) {
       description: selectedRunner.description,
       buildScript: selectedRunner.build_script,
       runScript: selectedRunner.run_script,
-      initialFiles: selectedRunner.initial_files.map((f): CodeFile => ({
+      initialFiles: selectedRunner.initial_files.map((f): TemplateFile => ({
         name: f.name,
-        content: f.content,
+        segments: [{ type: "editable", content: f.content }],
       })),
     };
     addRunnerTemplate(runnerTemplate);

@@ -12,6 +12,7 @@ import { keymap } from "@codemirror/view";
 import { Prec } from "@codemirror/state";
 import type { CodeFile, IEditorSettings } from "./types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
+import { createStudentReadOnlyExtension } from "./CodeMirror/extensions/studentReadOnly";
 import { api } from "~/lib/api.client";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import MarkdownRenderer from "~/components/ui/markdown-renderer";
@@ -196,7 +197,12 @@ function CodeEditor({
                   onChange={handleCodeChange}
                   sessionId={sessionId}
                   lspToken={lspToken}
-                  extensions={[editorRunKeymap]}
+                  extensions={[
+                    editorRunKeymap,
+                    ...(currentFile.segments
+                      ? [createStudentReadOnlyExtension(currentFile.segments)]
+                      : []),
+                  ]}
                 />
               ) : (
                 <div className="p-4">
@@ -218,7 +224,12 @@ function CodeEditor({
                 onChange={handleCodeChange}
                 sessionId={sessionId}
                 lspToken={lspToken}
-                extensions={[editorRunKeymap]}
+                extensions={[
+                  editorRunKeymap,
+                  ...(currentFile.segments
+                    ? [createStudentReadOnlyExtension(currentFile.segments)]
+                    : []),
+                ]}
               />
             )}
           </div>
