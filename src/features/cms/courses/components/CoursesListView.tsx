@@ -92,7 +92,7 @@ function CoursesListView() {
             <NoDataAvailable />
           ) : (
             <>
-              <div className="mt-4 grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 @6xl:grid-cols-4 gap-4 auto-rows-max">
+              <div className="mt-4 grid grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3 gap-4 auto-rows-max">
                 {coursePagination.pages.map((page) =>
                   page.data.map((course) => (
                     <CourseCard key={course.name} {...course} />

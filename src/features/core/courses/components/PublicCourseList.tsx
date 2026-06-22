@@ -45,7 +45,7 @@ const PublicCourseList = ({ search }: Props) => {
 
   if (isFetching) {
     return (
-      <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3 gap-4">
         {Array.from({ length: 12 }).map((_, i) => (
           <div key={i} className="space-y-3">
             <div className="h-32 rounded-md bg-(--gray-3)" />
@@ -73,7 +73,7 @@ const PublicCourseList = ({ search }: Props) => {
         <NoDataAvailable />
       ) : (
         <>
-          <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 gap-4 auto-rows-max">
+          <div className="grid grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3 gap-4 auto-rows-max">
             {coursePagination.pages.map((page, pageIndex) => (
               <Fragment key={pageIndex}>
                 {page.data.map((course) => (

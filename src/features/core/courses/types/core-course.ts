@@ -5,6 +5,11 @@ export interface Course {
   visibility: Visibility;
 }
 
+export interface MyCourseSemester {
+  name: string;
+  type: string;
+}
+
 export interface MyCourse {
   id: string;
   name: string;
@@ -13,6 +18,8 @@ export interface MyCourse {
   visibility: Visibility;
   total_students: number;
   instructors: Creator[];
+  section_name?: string;
+  semester?: MyCourseSemester;
 }
 
 export interface Creator {
