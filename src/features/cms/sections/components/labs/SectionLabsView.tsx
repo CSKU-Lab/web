@@ -234,14 +234,15 @@ function SectionLabsView() {
             placeholder="Search labs..."
           />
           {!isEditMode ? (
+            <Button
+              onClick={() => setIsEditMode(true)}
+              className="my-4 shrink-0 px-3 py-1.5"
+            >
+              <Pencil size="1rem" />
+              Edit
+            </Button>
+          ) : (
             <>
-              <Button
-                onClick={() => setIsEditMode(true)}
-                className="my-4 shrink-0 px-3 py-1.5"
-              >
-                <Pencil size="1rem" />
-                Edit
-              </Button>
               <Button
                 onClick={() => setIsAddDialogOpen(true)}
                 className="my-4 shrink-0 px-3 py-1.5"
@@ -249,15 +250,14 @@ function SectionLabsView() {
                 <Plus size="1rem" />
                 Add lab to section
               </Button>
+              <Button
+                onClick={handleExitEditMode}
+                className="my-4 shrink-0 px-3 py-1.5"
+              >
+                <Eye size="1rem" />
+                View
+              </Button>
             </>
-          ) : (
-            <Button
-              onClick={handleExitEditMode}
-              className="my-4 shrink-0 px-3 py-1.5"
-            >
-              <Eye size="1rem" />
-              View
-            </Button>
           )}
         </div>
 

@@ -99,7 +99,6 @@ function LabCard({
       style={style}
       className={cn("relative", isDragging && "z-50 opacity-80")}
     >
-      {/* Drag handle - always visible in edit mode, hover-reveal in view mode */}
       {isEditMode && (
         <button
           type="button"
