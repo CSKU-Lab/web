@@ -39,11 +39,19 @@ type Props<T extends { id: string | number }> = {
     handleOnAdd,
     highlightedIndex,
     getItemId,
+    showCreateOption,
+    createOptionIndex,
+    createSearchTerm,
+    handleCreateNew,
   }: {
     options: T[];
     handleOnAdd: (option: T) => void;
     highlightedIndex: number;
     getItemId: (index: number) => string;
+    showCreateOption: boolean;
+    createOptionIndex: number;
+    createSearchTerm: string;
+    handleCreateNew: () => void;
   }) => React.ReactNode;
   loadingFallback?: React.ReactNode;
   className?: string;
@@ -95,6 +103,15 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
   const isOptionEmpty =
     memoizedOptions.length === 0 && debouncedInput.length > 0 && !isLoading;
 
+  const showCreateOption = useMemo(() => {
+    if (!allowAdditionalOptions || debouncedInput.trim().length === 0) return false;
+    return !memoizedOptions.some(
+      (o) => o.display?.toLowerCase() === debouncedInput.trim().toLowerCase(),
+    );
+  }, [allowAdditionalOptions, debouncedInput, memoizedOptions]);
+
+  const createOptionIndex = memoizedOptions.length;
+
   const getItemId = useCallback(
     (index: number) => `${id}-option-${index}`,
     [id],
@@ -103,6 +120,14 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
   const handleOnAdd = (option: T) => {
     const newValue = [...value, option];
     setValue(newValue);
+  };
+
+  const handleCreateNew = () => {
+    const newOption = {
+      id: `additional-${Date.now()}`,
+      display: debouncedInput.trim(),
+    } as T;
+    handleOnAdd(newOption);
   };
 
   const handleOnRemove = (option: T) => {
@@ -167,21 +192,23 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
     }
   };
 
+  const totalNavigableOptions = memoizedOptions.length + (showCreateOption ? 1 : 0);
+
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
-        if (memoizedOptions.length > 0) {
+        if (totalNavigableOptions > 0) {
           setHighlightedIndex((prev) =>
-            prev < memoizedOptions.length - 1 ? prev + 1 : 0,
+            prev < totalNavigableOptions - 1 ? prev + 1 : 0,
           );
         }
         break;
       case "ArrowUp":
         e.preventDefault();
-        if (memoizedOptions.length > 0) {
+        if (totalNavigableOptions > 0) {
           setHighlightedIndex((prev) =>
-            prev > 0 ? prev - 1 : memoizedOptions.length - 1,
+            prev > 0 ? prev - 1 : totalNavigableOptions - 1,
           );
         }
         break;
@@ -192,11 +219,13 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
         ) {
           e.preventDefault();
           handleOnAdd(memoizedOptions[highlightedIndex]);
+        } else if (showCreateOption && highlightedIndex === createOptionIndex) {
+          e.preventDefault();
+          handleCreateNew();
         } else if (allowAdditionalOptions && inputValue.trim().length > 0) {
           e.preventDefault();
-          const currentTime = Date.now();
           const newOption = {
-            id: `additional-${currentTime}`,
+            id: `additional-${Date.now()}`,
             display: inputValue.trim(),
           } as T;
           const newValue = [...value, newOption];
@@ -220,7 +249,7 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
   };
 
   return (
-    <Popover open={isOpen && (isOptionEmpty || memoizedOptions.length > 0)}>
+    <Popover open={isOpen && (isOptionEmpty || memoizedOptions.length > 0 || showCreateOption)}>
       <PopoverAnchor className="w-full">
         <div
           onClick={handleDivClick}
@@ -286,16 +315,32 @@ function AutoComplete<T extends { id: string | number; display?: string }>({
                     handleOnAdd,
                     highlightedIndex,
                     getItemId,
+                    showCreateOption,
+                    createOptionIndex,
+                    createSearchTerm: debouncedInput.trim(),
+                    handleCreateNew,
                   })
-                : memoizedOptions.map((option, index) => (
-                    <DefaultOption
-                      key={option.id}
-                      id={getItemId(index)}
-                      option={option}
-                      handleOnAdd={handleOnAdd}
-                      isHighlighted={highlightedIndex === index}
-                    />
-                  ))}
+                : (
+                  <>
+                    {memoizedOptions.map((option, index) => (
+                      <DefaultOption
+                        key={option.id}
+                        id={getItemId(index)}
+                        option={option}
+                        handleOnAdd={handleOnAdd}
+                        isHighlighted={highlightedIndex === index}
+                      />
+                    ))}
+                    {showCreateOption && (
+                      <InlineCreateOption
+                        id={getItemId(createOptionIndex)}
+                        searchTerm={debouncedInput.trim()}
+                        isHighlighted={highlightedIndex === createOptionIndex}
+                        onCreateNew={handleCreateNew}
+                      />
+                    )}
+                  </>
+                )}
             </>
           )}
         </Loading>
@@ -348,6 +393,28 @@ const DefaultOption = <T extends { id: string | number; display?: string }>({
     }`}
   >
     {option.display || String(option.id)}
+  </div>
+);
+
+const InlineCreateOption = ({
+  id,
+  searchTerm,
+  isHighlighted,
+  onCreateNew,
+}: {
+  id: string;
+  searchTerm: string;
+  isHighlighted: boolean;
+  onCreateNew: () => void;
+}) => (
+  <div
+    id={id}
+    onClick={onCreateNew}
+    className={`p-2 cursor-pointer rounded text-sm ${
+      isHighlighted ? "bg-gray-100" : "hover:bg-gray-100"
+    } text-gray-700`}
+  >
+    + Create &ldquo;{searchTerm}&rdquo;
   </div>
 );
 

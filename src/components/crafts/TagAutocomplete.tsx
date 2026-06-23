@@ -1,4 +1,4 @@
-import { X, Tag } from "lucide-react";
+import { X, Tag, Plus } from "lucide-react";
 import AutoComplete from "../commons/AutoComplete";
 import { cn } from "~/lib/tiptap-utils";
 import { useQuery } from "@tanstack/react-query";
@@ -68,32 +68,57 @@ function TagAutocomplete({
       allowAdditionalOptions
       popoverContentClasses="bg-(--gray-1) border border-(--gray-5) shadow-xl shadow-black/5 rounded-lg"
     >
-      {({ options, handleOnAdd, highlightedIndex, getItemId }) =>
-        options.map((tag, index) => (
-          <button
-            key={getItemId(index)}
-            id={getItemId(index)}
-            onClick={() => handleOnAdd(tag)}
-            className={cn(
-              "w-full text-left px-3 py-2 text-sm rounded-md flex items-center gap-3 transition-all duration-150",
-              index === highlightedIndex
-                ? "bg-(--accent-color)/10 text-(--accent-color)"
-                : "text-(--gray-11) hover:bg-(--gray-2) hover:text-(--gray-12)",
-            )}
-          >
-            <Tag
-              size="14"
+      {({ options, handleOnAdd, highlightedIndex, getItemId, showCreateOption, createOptionIndex, createSearchTerm, handleCreateNew }) => (
+        <>
+          {options.map((tag, index) => (
+            <button
+              key={getItemId(index)}
+              id={getItemId(index)}
+              onClick={() => handleOnAdd(tag)}
               className={cn(
-                "transition-colors duration-150",
+                "w-full text-left px-3 py-2 text-sm rounded-md flex items-center gap-3 transition-all duration-150",
                 index === highlightedIndex
-                  ? "text-(--accent-color)"
-                  : "text-(--gray-8)",
+                  ? "bg-(--accent-color)/10 text-(--accent-color)"
+                  : "text-(--gray-11) hover:bg-(--gray-2) hover:text-(--gray-12)",
               )}
-            />
-            <span className="font-medium">{tag.display}</span>
-          </button>
-        ))
-      }
+            >
+              <Tag
+                size="14"
+                className={cn(
+                  "transition-colors duration-150",
+                  index === highlightedIndex
+                    ? "text-(--accent-color)"
+                    : "text-(--gray-8)",
+                )}
+              />
+              <span className="font-medium">{tag.display}</span>
+            </button>
+          ))}
+          {showCreateOption && (
+            <button
+              id={getItemId(createOptionIndex)}
+              onClick={handleCreateNew}
+              className={cn(
+                "w-full text-left px-3 py-2 text-sm rounded-md flex items-center gap-3 transition-all duration-150",
+                createOptionIndex === highlightedIndex
+                  ? "bg-(--accent-color)/10 text-(--accent-color)"
+                  : "text-(--gray-11) hover:bg-(--gray-2) hover:text-(--gray-12)",
+              )}
+            >
+              <Plus
+                size="14"
+                className={cn(
+                  "transition-colors duration-150",
+                  createOptionIndex === highlightedIndex
+                    ? "text-(--accent-color)"
+                    : "text-(--gray-8)",
+                )}
+              />
+              <span className="font-medium">Create &ldquo;{createSearchTerm}&rdquo;</span>
+            </button>
+          )}
+        </>
+      )}
     </AutoComplete>
   );
 }
