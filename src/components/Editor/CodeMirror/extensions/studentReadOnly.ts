@@ -38,6 +38,11 @@ export function createStudentReadOnlyExtension(segments: FileSegment[]): Student
     pos = end;
   }
 
+  // If the last visible segment is non-editable, block insertions at end-of-doc.
+  // Without this, students could append new lines after the last readonly line.
+  const lastVisibleSegment = [...segments].reverse().find((s) => s.type !== "hidden");
+  const blockAppendAtEnd = lastVisibleSegment !== undefined && lastVisibleSegment.type !== "editable";
+
   const rangesField = StateField.define<Range[]>({
     create() {
       return initialRanges;
@@ -57,9 +62,13 @@ export function createStudentReadOnlyExtension(segments: FileSegment[]): Student
     const ranges = tr.startState.field(rangesField, false);
     if (!ranges || ranges.length === 0) return tr;
 
+    const docLength = tr.startState.doc.length;
     let blocked = false;
     tr.changes.iterChangedRanges((fromA, toA) => {
       if (ranges.some((r) => fromA < r.to && toA > r.from)) {
+        blocked = true;
+      }
+      if (blockAppendAtEnd && fromA >= docLength) {
         blocked = true;
       }
     });

@@ -10,7 +10,7 @@ import { useTheme } from "next-themes";
 import { indentWithTab } from "~/components/Editor/CodeMirror/extensions/indentWithTab";
 import {
   segmentMarksExtension,
-  segmentMarksField,
+  segmentRangesField,
   applySegmentEffect,
   clearSegmentEffect,
   getSegmentRanges,
@@ -134,8 +134,7 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
     (value: string) => {
       const view = getView();
       if (!view) return;
-      const decorations = view.state.field(segmentMarksField);
-      const ranges = getSegmentRanges(decorations);
+      const ranges = getSegmentRanges(view.state);
       const segments = buildSegmentsFromDecors(value, ranges);
       debouncedOnChange({ name: file.name, segments });
     },
@@ -169,8 +168,7 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
     }
 
     const value = view.state.doc.toString();
-    const decorations = view.state.field(segmentMarksField);
-    const ranges = getSegmentRanges(decorations);
+    const ranges = getSegmentRanges(view.state);
     const segments = buildSegmentsFromDecors(value, ranges);
     onChange({ name: file.name, segments });
   };
