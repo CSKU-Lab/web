@@ -97,7 +97,7 @@ function LabCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={cn("group relative", isDragging && "z-50 opacity-80")}
+      className={cn("relative", isDragging && "z-50 opacity-80")}
     >
       {/* Drag handle - always visible in edit mode, hover-reveal in view mode */}
       {isEditMode && (
@@ -134,34 +134,12 @@ function LabCard({
           {cardContent}
         </button>
       ) : (
-        <>
-          <button
-            type="button"
-            className={cn(
-              "absolute top-1/2 -translate-y-1/2 -left-3 z-10",
-              "flex items-center justify-center w-6 h-10 rounded-md",
-              "bg-(--gray-1) border border-(--gray-4) shadow-sm",
-              "text-(--gray-8) hover:text-(--gray-12) hover:bg-(--gray-2)",
-              "cursor-grab active:cursor-grabbing touch-none",
-              "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0",
-              "transition-all duration-150 ease-out",
-              "focus:outline-none focus:opacity-100 focus:translate-x-0",
-            )}
-            {...attributes}
-            {...listeners}
-          >
-            <GripVertical size={14} />
-          </button>
-          <Link
-            href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${lab_id}`}
-            className={cn(
-              "block rounded-md overflow-hidden bg-(--gray-1) border border-(--gray-4) hover:bg-(--gray-2)",
-              isDragging && "shadow-lg",
-            )}
-          >
-            {cardContent}
-          </Link>
-        </>
+        <Link
+          href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${lab_id}`}
+          className="block rounded-md overflow-hidden bg-(--gray-1) border border-(--gray-4) hover:bg-(--gray-2)"
+        >
+          {cardContent}
+        </Link>
       )}
     </div>
   );

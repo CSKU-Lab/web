@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
-import { Pencil, Plus, ServerCrash, X } from "lucide-react";
+import { Eye, Pencil, Plus, ServerCrash } from "lucide-react";
 import {
   closestCenter,
   DndContext,
@@ -247,7 +247,7 @@ function SectionLabsView() {
                 className="my-4 shrink-0 px-3 py-1.5"
               >
                 <Plus size="1rem" />
-                New lab
+                Add lab to section
               </Button>
             </>
           ) : (
@@ -255,8 +255,8 @@ function SectionLabsView() {
               onClick={handleExitEditMode}
               className="my-4 shrink-0 px-3 py-1.5"
             >
-              <X size="1rem" />
-              Done
+              <Eye size="1rem" />
+              View
             </Button>
           )}
         </div>
@@ -266,8 +266,20 @@ function SectionLabsView() {
             <button
               type="button"
               onClick={handleSelectAll}
-              className="text-sm text-(--gray-11) hover:text-(--gray-12) transition-colors"
+              className="flex items-center gap-2 text-sm text-(--gray-11) hover:text-(--gray-12) transition-colors"
             >
+              <input
+                type="checkbox"
+                readOnly
+                checked={allSelected}
+                ref={(el) => {
+                  if (el) {
+                    el.indeterminate =
+                      selectedLabIds.size > 0 && !allSelected;
+                  }
+                }}
+                className="pointer-events-none h-3.5 w-3.5 accent-(--gray-12)"
+              />
               {allSelected ? "Deselect all" : "Select all"}
             </button>
             <span className="text-sm text-(--gray-9)">
