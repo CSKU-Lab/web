@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
-import { Plus, ServerCrash } from "lucide-react";
+import { Pencil, Plus, ServerCrash, X } from "lucide-react";
 import {
   closestCenter,
   DndContext,
@@ -29,6 +29,13 @@ import useLabInfinitePagination from "~/features/cms/sections/hooks/labs/useLabI
 
 import { Button } from "~/components/commons/Button";
 import SearchInput from "~/components/commons/SearchInput";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/commons/Select";
 import Loading from "~/components/commons/Loading";
 import Error from "~/components/commons/Error";
 import ErrorFallback from "~/components/commons/Error/ErrorFallback";
@@ -37,7 +44,14 @@ import { Skeleton } from "~/components/ui/skeleton";
 import useInputDebounce from "~/hooks/useInputDebounce";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { cmsSectionService } from "~/services/cms-section.service";
-import type { CMSSectionLab } from "~/types/cms-section-lab";
+import type { CMSSectionLab, LabStatus } from "~/types/cms-section-lab";
+
+const LAB_STATUSES: { value: LabStatus; label: string }[] = [
+  { value: "open", label: "Open" },
+  { value: "readonly", label: "Readonly" },
+  { value: "hidden", label: "Hidden" },
+  { value: "disabled", label: "Disabled" },
+];
 
 function SectionLabsView() {
   const { courseID, sectionID } = useParams<{
@@ -50,6 +64,10 @@ function SectionLabsView() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [rows, setRows] = useState<CMSSectionLab[]>([]);
   const previousRowsRef = useRef<CMSSectionLab[]>([]);
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedLabIds, setSelectedLabIds] = useState<Set<string>>(new Set());
+  const [bulkStatus, setBulkStatus] = useState<LabStatus | "">("");
 
   const {
     data: labPagination,
@@ -111,6 +129,37 @@ function SectionLabsView() {
     },
   });
 
+  const bulkUpdateStatus = useMutation({
+    mutationFn: async (status: LabStatus) => {
+      const now = new Date().toISOString();
+      const payload = {
+        status,
+        opened_at: status === "open" ? now : null,
+        readonly_at: status === "readonly" ? now : null,
+      };
+      await Promise.all(
+        Array.from(selectedLabIds).map((labID) =>
+          cmsSectionService.updateSectionLab(sectionID, labID, payload),
+        ),
+      );
+    },
+    onSuccess: async () => {
+      toast.success("Status updated");
+      setSelectedLabIds(new Set());
+      setBulkStatus("");
+      await refetch();
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        toast.error("Error", {
+          description: err.response?.data?.error || "Failed to update status",
+        });
+        return;
+      }
+      toast.error("Something went wrong. Please try again.");
+    },
+  });
+
   const handleDragEnd = (event: DragEndEvent) => {
     if (updateSectionLabPosition.isPending) return;
     const { active, over } = event;
@@ -136,10 +185,43 @@ function SectionLabsView() {
     });
   };
 
+  const handleToggleSelect = useCallback((labId: string) => {
+    setSelectedLabIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(labId)) {
+        next.delete(labId);
+      } else {
+        next.add(labId);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleSelectAll = () => {
+    if (selectedLabIds.size === rows.length) {
+      setSelectedLabIds(new Set());
+    } else {
+      setSelectedLabIds(new Set(rows.map((r) => r.lab_id)));
+    }
+  };
+
+  const handleExitEditMode = () => {
+    setIsEditMode(false);
+    setSelectedLabIds(new Set());
+    setBulkStatus("");
+  };
+
+  const handleApplyBulkStatus = () => {
+    if (!bulkStatus || selectedLabIds.size === 0) return;
+    bulkUpdateStatus.mutate(bulkStatus);
+  };
+
   const bottomDivRef = useOnElementAppear({
     onAppear: () => fetchNextPage(),
     enabled: hasNextPage,
   });
+
+  const allSelected = rows.length > 0 && selectedLabIds.size === rows.length;
 
   return (
     <>
@@ -151,14 +233,76 @@ function SectionLabsView() {
             onChange={setSearch}
             placeholder="Search labs..."
           />
-          <Button
-            onClick={() => setIsAddDialogOpen(true)}
-            className="my-4 shrink-0 px-3 py-1.5"
-          >
-            <Plus size="1rem" />
-            New lab
-          </Button>
+          {!isEditMode ? (
+            <>
+              <Button
+                onClick={() => setIsEditMode(true)}
+                className="my-4 shrink-0 px-3 py-1.5"
+              >
+                <Pencil size="1rem" />
+                Edit
+              </Button>
+              <Button
+                onClick={() => setIsAddDialogOpen(true)}
+                className="my-4 shrink-0 px-3 py-1.5"
+              >
+                <Plus size="1rem" />
+                New lab
+              </Button>
+            </>
+          ) : (
+            <Button
+              onClick={handleExitEditMode}
+              className="my-4 shrink-0 px-3 py-1.5"
+            >
+              <X size="1rem" />
+              Done
+            </Button>
+          )}
         </div>
+
+        {isEditMode && (
+          <div className="flex items-center gap-3 mb-3 py-2 px-3 rounded-md bg-(--gray-2) border border-(--gray-4)">
+            <button
+              type="button"
+              onClick={handleSelectAll}
+              className="text-sm text-(--gray-11) hover:text-(--gray-12) transition-colors"
+            >
+              {allSelected ? "Deselect all" : "Select all"}
+            </button>
+            <span className="text-sm text-(--gray-9)">
+              {selectedLabIds.size} selected
+            </span>
+            <div className="ml-auto flex items-center gap-2">
+              <Select
+                value={bulkStatus}
+                onValueChange={(v) => setBulkStatus(v as LabStatus)}
+              >
+                <SelectTrigger className="h-8 w-32 text-xs">
+                  <SelectValue placeholder="Set status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {LAB_STATUSES.map((s) => (
+                    <SelectItem key={s.value} value={s.value}>
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                className="h-8 px-3 py-1 text-xs"
+                disabled={
+                  !bulkStatus ||
+                  selectedLabIds.size === 0 ||
+                  bulkUpdateStatus.isPending
+                }
+                onClick={handleApplyBulkStatus}
+              >
+                Apply
+              </Button>
+            </div>
+          </div>
+        )}
 
         <AddLabDialog
           isOpen={isAddDialogOpen}
@@ -186,7 +330,7 @@ function SectionLabsView() {
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
+                onDragEnd={isEditMode ? handleDragEnd : undefined}
               >
                 <SortableContext
                   items={sortableIds}
@@ -199,6 +343,9 @@ function SectionLabsView() {
                         lab={lab}
                         courseID={courseID}
                         sectionID={sectionID}
+                        isEditMode={isEditMode}
+                        isSelected={selectedLabIds.has(lab.lab_id)}
+                        onToggleSelect={handleToggleSelect}
                       />
                     ))}
                     <Loading

@@ -37,9 +37,19 @@ interface LabCardProps {
   lab: CMSSectionLab;
   courseID: string;
   sectionID: string;
+  isEditMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (labId: string) => void;
 }
 
-function LabCard({ lab, courseID, sectionID }: LabCardProps) {
+function LabCard({
+  lab,
+  courseID,
+  sectionID,
+  isEditMode = false,
+  isSelected = false,
+  onToggleSelect,
+}: LabCardProps) {
   const { lab_id, lab_name, position, status } = lab;
 
   const {
@@ -58,61 +68,101 @@ function LabCard({ lab, courseID, sectionID }: LabCardProps) {
 
   const config = statusConfig[status];
 
+  const cardContent = (
+    <>
+      <div className={cn("h-5 bg-linear-to-bl", config.gradient)} />
+      <div className="p-4 space-y-3 flex-1">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <h6 className="text-xs text-(--gray-9) leading-tight">Name</h6>
+            <h3 className="text-lg font-medium line-clamp-2 mt-1">
+              {lab_name}
+            </h3>
+          </div>
+          <span className="text-xs font-medium text-(--gray-9) bg-(--gray-3) rounded-full px-2 py-0.5 shrink-0">
+            #{position}
+          </span>
+        </div>
+        <div>
+          <h6 className="text-xs text-(--gray-9) leading-tight">Status</h6>
+          <span className={cn("text-sm font-medium mt-1", config.textColor)}>
+            {config.label}
+          </span>
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       className={cn("group relative", isDragging && "z-50 opacity-80")}
     >
-      {/* Drag handle - slides out from the left on hover */}
-      <button
-        type="button"
-        className={cn(
-          "absolute top-1/2 -translate-y-1/2 -left-3 z-10",
-          "flex items-center justify-center w-6 h-10 rounded-md",
-          "bg-(--gray-1) border border-(--gray-4) shadow-sm",
-          "text-(--gray-8) hover:text-(--gray-12) hover:bg-(--gray-2)",
-          "cursor-grab active:cursor-grabbing touch-none",
-          "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0",
-          "transition-all duration-150 ease-out",
-          "focus:outline-none focus:opacity-100 focus:translate-x-0",
-        )}
-        {...attributes}
-        {...listeners}
-      >
-        <GripVertical size={14} />
-      </button>
+      {/* Drag handle - always visible in edit mode, hover-reveal in view mode */}
+      {isEditMode && (
+        <button
+          type="button"
+          className={cn(
+            "absolute top-1/2 -translate-y-1/2 -left-3 z-10",
+            "flex items-center justify-center w-6 h-10 rounded-md",
+            "bg-(--gray-1) border border-(--gray-4) shadow-sm",
+            "text-(--gray-8) hover:text-(--gray-12) hover:bg-(--gray-2)",
+            "cursor-grab active:cursor-grabbing touch-none",
+            "transition-all duration-150 ease-out",
+            "focus:outline-none",
+          )}
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical size={14} />
+        </button>
+      )}
 
-      <Link
-        href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${lab_id}`}
-        className={cn(
-          "block rounded-md overflow-hidden bg-(--gray-1) border border-(--gray-4) hover:bg-(--gray-2)",
-          isDragging && "shadow-lg",
-        )}
-      >
-        <div className={cn("h-5 bg-linear-to-bl", config.gradient)} />
-        <div className="p-4 space-y-3 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <h6 className="text-xs text-(--gray-9) leading-tight">Name</h6>
-              <h3 className="text-lg font-medium line-clamp-2 mt-1">
-                {lab_name}
-              </h3>
-            </div>
-            <span className="text-xs font-medium text-(--gray-9) bg-(--gray-3) rounded-full px-2 py-0.5 shrink-0">
-              #{position}
-            </span>
-          </div>
-          <div>
-            <h6 className="text-xs text-(--gray-9) leading-tight">Status</h6>
-            <span
-              className={cn("text-sm font-medium mt-1", config.textColor)}
-            >
-              {config.label}
-            </span>
-          </div>
-        </div>
-      </Link>
+      {isEditMode ? (
+        <button
+          type="button"
+          onClick={() => onToggleSelect?.(lab_id)}
+          className={cn(
+            "w-full text-left rounded-md overflow-hidden bg-(--gray-1) border transition-colors",
+            isSelected
+              ? "border-blue-500 ring-2 ring-blue-200"
+              : "border-(--gray-4) hover:bg-(--gray-2)",
+            isDragging && "shadow-lg",
+          )}
+        >
+          {cardContent}
+        </button>
+      ) : (
+        <>
+          <button
+            type="button"
+            className={cn(
+              "absolute top-1/2 -translate-y-1/2 -left-3 z-10",
+              "flex items-center justify-center w-6 h-10 rounded-md",
+              "bg-(--gray-1) border border-(--gray-4) shadow-sm",
+              "text-(--gray-8) hover:text-(--gray-12) hover:bg-(--gray-2)",
+              "cursor-grab active:cursor-grabbing touch-none",
+              "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0",
+              "transition-all duration-150 ease-out",
+              "focus:outline-none focus:opacity-100 focus:translate-x-0",
+            )}
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical size={14} />
+          </button>
+          <Link
+            href={`/cms/courses/${courseID}/sections/${sectionID}/labs/${lab_id}`}
+            className={cn(
+              "block rounded-md overflow-hidden bg-(--gray-1) border border-(--gray-4) hover:bg-(--gray-2)",
+              isDragging && "shadow-lg",
+            )}
+          >
+            {cardContent}
+          </Link>
+        </>
+      )}
     </div>
   );
 }
