@@ -1,3 +1,15 @@
+# [0.28.0](https://github.com/CSKU-Lab/web/compare/v0.27.1...v0.28.0) (2026-06-23)
+
+
+### Features
+
+* **CS-187:** add edit mode to section labs page ([4d0b18e](https://github.com/CSKU-Lab/web/commit/4d0b18ede8acea3c3259bdf1e35f6ba57e5daebc))
+* **CS-187:** refine edit mode UX ([c070435](https://github.com/CSKU-Lab/web/commit/c0704351a97f5e0e63d9f9a344bfe129607ad6b5))
+* **CS-187:** simplify edit mode — keep reorder, multi-select, bulk status, and dialog for adding labs ([ee8880c](https://github.com/CSKU-Lab/web/commit/ee8880c73510489aad3cefa4cde8da0ad8759c2f))
+* **CS-217:** add limit field descriptions and default values for new code material ([c6ed167](https://github.com/CSKU-Lab/web/commit/c6ed16766de07703161704773e1f7a1f7dad07ff))
+* **CS-219:** visible readonly/hidden/exclude segment indicators in editor ([91cb611](https://github.com/CSKU-Lab/web/commit/91cb611ba87fd4bb297ca6e6e972b21f87befffe))
+* show create option in tag autocomplete when input is substring of existing tags ([0a1952d](https://github.com/CSKU-Lab/web/commit/0a1952d65ebf410cf0c132bc49747719c88bd790))
+
 ## [0.27.1](https://github.com/CSKU-Lab/web/compare/v0.27.0...v0.27.1) (2026-06-23)
 
 
