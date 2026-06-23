@@ -40,7 +40,7 @@ export async function CourseMaterialView({
     return <CodeMaterial isOwner={isOwner} />;
   }
 
-  if (material.type === "typing" || material.type === "type") {
+  if (material.type === "typing" || (material.type as string) === "type") {
     return <TypingMaterial isOwner={isOwner} />;
   }
 

@@ -23,7 +23,7 @@ export default function MaterialTypeRouter({ children, initialType }: Props) {
 
   const type = material?.type ?? initialType;
 
-  if (type === MaterialType.TYPE || type === "type") {
+  if (type === MaterialType.TYPE || (type as string) === "type") {
     return (
       <div className="flex flex-col h-full">
         <DetailSection sectionID={sectionID} labID={labID} materialID={materialID} />
