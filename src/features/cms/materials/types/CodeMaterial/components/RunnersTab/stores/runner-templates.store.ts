@@ -5,10 +5,18 @@ import { saveStatusAtom } from "~/features/cms/materials/types/CodeMaterial/stor
 
 const internalRunnerTemplatesAtom = atom<RunnerTemplate[]>([]);
 
+/**
+ * Tracks whether runner templates have been modified since they were last
+ * loaded from the server. Used by the Solution tab to show a reload banner.
+ */
+export const runnerChangedSinceLoadAtom = atom<boolean>(false);
+
 export const initialRunnerTemplatesAtom = atom(
   null,
   (_get, set, runnerTemplates: RunnerTemplate[]) => {
     set(internalRunnerTemplatesAtom, runnerTemplates);
+    // Reset the changed flag whenever templates are loaded from server
+    set(runnerChangedSinceLoadAtom, false);
   },
 );
 
@@ -24,6 +32,7 @@ export const runnerTemplatesAtom = atom(
     }
 
     set(internalRunnerTemplatesAtom, newRunnerTemplates);
+    set(runnerChangedSinceLoadAtom, true);
     const isOwner = get(isOwnerAtom);
     if (isOwner) {
       set(saveStatusAtom, "UnSaved");
@@ -36,6 +45,7 @@ export const addRunnerTemplateAtom = atom(
   (get, set, runnerTemplate: RunnerTemplate) => {
     const currentRunnerTemplates = get(internalRunnerTemplatesAtom);
     set(internalRunnerTemplatesAtom, [...currentRunnerTemplates, runnerTemplate]);
+    set(runnerChangedSinceLoadAtom, true);
     const isOwner = get(isOwnerAtom);
     if (isOwner) {
       set(saveStatusAtom, "UnSaved");
@@ -51,6 +61,7 @@ export const removeRunnerTemplateAtom = atom(
       internalRunnerTemplatesAtom,
       currentRunnerTemplates.filter((rt) => rt.id !== runnerTemplateId),
     );
+    set(runnerChangedSinceLoadAtom, true);
     const isOwner = get(isOwnerAtom);
     if (isOwner) {
       set(saveStatusAtom, "UnSaved");
@@ -68,6 +79,7 @@ export const updateRunnerTemplateAtom = atom(
         rt.id === id ? { ...rt, ...updates } : rt,
       ),
     );
+    set(runnerChangedSinceLoadAtom, true);
     const isOwner = get(isOwnerAtom);
     if (isOwner) {
       set(saveStatusAtom, "UnSaved");
