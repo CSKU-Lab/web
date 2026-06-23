@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo, type ReactNode } from "react";
 import { generateId } from "~/utils/generate-id";
 import { FileCode, PanelLeftOpen } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
@@ -36,6 +36,8 @@ interface Props {
   queryFn?: (query: string) => Promise<Runner[]>;
   isReadonlyFile?: (name: string) => boolean;
   isRequiredFile?: (name: string) => boolean;
+  /** Optional element rendered immediately after the RunnerSelect dropdown */
+  runnerSelectAddon?: ReactNode;
 }
 
 /**
@@ -79,6 +81,7 @@ function CodeEditor({
   queryFn,
   isReadonlyFile,
   isRequiredFile,
+  runnerSelectAddon,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings, setSettings] =
@@ -237,15 +240,18 @@ function CodeEditor({
           className="flex-1 min-h-0 flex flex-col min-w-40 gap-0"
         >
           <div className="border-b p-1 flex justify-between items-center shrink-0">
-            <RunnerSelect
-              runners={allowedRunners}
-              selectedRunner={selectedRunner}
-              onSelect={handleSelectRunner}
-              isError={runnerSelectError}
-              isLoading={isLoading}
-              disabled={!permissions?.selectRunner}
-              queryFn={queryFn}
-            />
+            <div className="flex items-center gap-2">
+              <RunnerSelect
+                runners={allowedRunners}
+                selectedRunner={selectedRunner}
+                onSelect={handleSelectRunner}
+                isError={runnerSelectError}
+                isLoading={isLoading}
+                disabled={!permissions?.selectRunner}
+                queryFn={queryFn}
+              />
+              {runnerSelectAddon}
+            </div>
             <div className="flex items-center gap-2">
               {fileExtension === "md" && (
                 <TabsList className="w-fit">
