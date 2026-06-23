@@ -37,12 +37,14 @@ const submissionRenderers: Record<
 };
 
 export function getSubmissionRenderer(
-  materialType: MaterialType,
+  materialType: MaterialType | string,
 ): ComponentType<SubmissionRendererProps<any>> {
+  // Normalise legacy "type" value to "typing"
+  const normalised = materialType === "type" ? MaterialType.TYPE : (materialType as MaterialType);
   return (
-    submissionRenderers[materialType] ??
+    submissionRenderers[normalised] ??
     (({ payload }: SubmissionRendererProps) => (
-      <ComingSoon type={materialType} />
+      <ComingSoon type={materialType as MaterialType} />
     ))
   );
 }
