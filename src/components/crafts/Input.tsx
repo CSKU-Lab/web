@@ -4,6 +4,7 @@ import SharedInput from "../commons/Input";
 
 interface Props {
   label: string;
+  description?: string;
   placeholder?: string;
   isError?: boolean;
   errorMessage?: string;
@@ -14,6 +15,7 @@ interface Props {
 
 function Input({
   label,
+  description,
   placeholder,
   isError,
   errorMessage,
@@ -29,6 +31,9 @@ function Input({
         disabled={disabled}
         {...formProps}
       />
+      {description && (
+        <p className="text-xs text-(--gray-11)">{description}</p>
+      )}
       <InlineError isError={isError}>{errorMessage}</InlineError>
     </div>
   );

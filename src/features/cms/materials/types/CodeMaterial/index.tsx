@@ -63,13 +63,13 @@ function CodeMaterial({ isOwner }: Props) {
       setCompareScript(payload.compare_script);
       setLimit(
         payload.limits ?? {
-          cpu_time: 0,
-          cpu_extra_time: 0,
-          wall_time: 0,
-          memory: 0,
-          stack: 0,
-          max_open_files: 0,
-          max_file_size: 0,
+          cpu_time: 3,
+          cpu_extra_time: 2,
+          wall_time: 5,
+          memory: 262144,
+          stack: 65536,
+          max_open_files: 5,
+          max_file_size: 1024,
           network_allow: false,
         },
       );
