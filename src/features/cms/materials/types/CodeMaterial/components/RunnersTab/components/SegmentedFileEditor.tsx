@@ -316,8 +316,9 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
         )}
       </div>
 
-      {/* Editor */}
-      <TabsContent value="edit" className="flex-1 min-h-0 mt-0 overflow-hidden">
+      {/* Editor — forceMount keeps the CodeMirror instance alive while on preview
+          tab so segment decorations (hidden/readonly/exclude marks) are not lost. */}
+      <TabsContent forceMount value="edit" className="flex-1 min-h-0 mt-0 overflow-hidden data-[state=inactive]:hidden">
         <ReactCodeMirror
           ref={editorRef}
           value={initialContent}
