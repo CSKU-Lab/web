@@ -1,3 +1,18 @@
+# [0.27.0](https://github.com/CSKU-Lab/web/compare/v0.26.0...v0.27.0) (2026-06-23)
+
+
+### Bug Fixes
+
+* **CS-214:** handle legacy "type" value for typing material type in frontend ([ae27d0b](https://github.com/CSKU-Lab/web/commit/ae27d0bd6f64e1a5573daba86485dcfb4591b9cd))
+* **CS-216:** reset submission and runner state when switching materials ([38a89f2](https://github.com/CSKU-Lab/web/commit/38a89f2e8509873ffe5a903e3a93159617e910fb))
+* **CS-218:** preserve code segment decorations across preview/edit mode switch ([f983b74](https://github.com/CSKU-Lab/web/commit/f983b743be2316bde628eda92527e404470eeb4b))
+* **CS-220:** fix first-line indentation inconsistency in code blocks ([812c551](https://github.com/CSKU-Lab/web/commit/812c55173bb142d9c4b112577f438b3734bf78f4))
+
+
+### Features
+
+* **CS-222:** add runner change detection and reload banner in Solution tab ([81aad76](https://github.com/CSKU-Lab/web/commit/81aad76cf02c906c6a46ec3e8312a2f31a288dfc))
+
 # [0.26.0](https://github.com/CSKU-Lab/web/compare/v0.25.0...v0.26.0) (2026-06-22)
 
 
