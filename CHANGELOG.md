@@ -1,3 +1,10 @@
+## [0.27.1](https://github.com/CSKU-Lab/web/compare/v0.27.0...v0.27.1) (2026-06-23)
+
+
+### Bug Fixes
+
+* **CS-214:** cast to string for legacy "type" enum comparison ([a39df28](https://github.com/CSKU-Lab/web/commit/a39df28760986a002aa920ffcc1c224e99cc3a7c))
+
 # [0.27.0](https://github.com/CSKU-Lab/web/compare/v0.26.0...v0.27.0) (2026-06-23)
 
 
