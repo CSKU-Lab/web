@@ -1,3 +1,10 @@
+# [0.29.0](https://github.com/CSKU-Lab/web/compare/v0.28.1...v0.29.0) (2026-06-24)
+
+
+### Features
+
+* remove text labels from segment marks, use color only ([41470d4](https://github.com/CSKU-Lab/web/commit/41470d4fe71f7a932610fe4d376d0cd97757af88))
+
 ## [0.28.1](https://github.com/CSKU-Lab/web/compare/v0.28.0...v0.28.1) (2026-06-24)
 
 
