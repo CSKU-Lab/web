@@ -11,7 +11,6 @@ import {
   type DecorationSet,
   EditorView,
   ViewPlugin,
-  WidgetType,
   type ViewUpdate,
 } from "@codemirror/view";
 import type { SegmentType } from "~/components/Editor/types/editor";
@@ -57,13 +56,6 @@ export const segmentRangesField = StateField.define<SegmentRange[]>({
   },
 });
 
-const SEGMENT_META: Record<SegmentType, { label: string; color: string; underlineStyle: string }> = {
-  editable: { label: "editable", color: "transparent", underlineStyle: "solid" },
-  readonly: { label: "readonly", color: "var(--blue-9,  #1d6fa4)", underlineStyle: "solid" },
-  hidden:   { label: "hidden",   color: "var(--violet-9, #6e3fbd)", underlineStyle: "wavy" },
-  exclude:  { label: "exclude",  color: "var(--orange-9, #c4611a)", underlineStyle: "dashed" },
-};
-
 const segmentTheme = EditorView.baseTheme({
   // Underline mark (exact sub-line range).
   ".cm-segment-bg-readonly": {
@@ -82,64 +74,14 @@ const segmentTheme = EditorView.baseTheme({
   ".cm-line.cm-segment-line-readonly": { borderLeft: "3px solid var(--blue-9,  #1d6fa4)" },
   ".cm-line.cm-segment-line-hidden":   { borderLeft: "3px solid var(--violet-9, #6e3fbd)" },
   ".cm-line.cm-segment-line-exclude":  { borderLeft: "3px solid var(--orange-9, #c4611a)" },
-  // Inline badge label.
-  ".cm-segment-label": {
-    fontSize: "0.68em",
-    fontWeight: "700",
-    fontFamily: "sans-serif",
-    borderRadius: "3px",
-    padding: "0 4px",
-    verticalAlign: "middle",
-    userSelect: "none",
-    marginRight: "4px",
-    lineHeight: "1.6",
-  },
-  ".cm-segment-label-readonly": {
-    background: "var(--blue-3,  #cce4f6)",
-    color: "var(--blue-11,  #0b4674)",
-    outline: "1px solid var(--blue-6, #7bbfea)",
-  },
-  ".cm-segment-label-hidden": {
-    background: "var(--violet-3,  #e4d9f8)",
-    color: "var(--violet-11,  #3b1a7a)",
-    outline: "1px solid var(--violet-6, #9f7de1)",
-  },
-  ".cm-segment-label-exclude": {
-    background: "var(--orange-3,  #fde8cc)",
-    color: "var(--orange-11,  #7a2e00)",
-    outline: "1px solid var(--orange-6, #f0a050)",
-  },
 });
-
-class SegmentLabelWidget extends WidgetType {
-  constructor(readonly segType: SegmentType) {
-    super();
-  }
-  toDOM(): HTMLElement {
-    const span = document.createElement("span");
-    span.className = `cm-segment-label cm-segment-label-${this.segType}`;
-    span.textContent = SEGMENT_META[this.segType].label;
-    return span;
-  }
-  eq(other: SegmentLabelWidget): boolean {
-    return other.segType === this.segType;
-  }
-  ignoreEvent(): boolean {
-    return true;
-  }
-}
 
 function buildMarkDecorations(state: EditorState): DecorationSet {
   const ranges = state.field(segmentRangesField, false) ?? [];
   const decos: Range<Decoration>[] = [];
   for (const r of ranges) {
     if (r.from >= r.to) continue;
-    // Underline across the exact character range.
     decos.push(Decoration.mark({ class: `cm-segment-bg-${r.type}` }).range(r.from, r.to));
-    // Badge label widget at the start of the range (side: -1 = before the char).
-    decos.push(
-      Decoration.widget({ widget: new SegmentLabelWidget(r.type), side: -1 }).range(r.from),
-    );
   }
   return decos.length > 0
     ? Decoration.set(decos.sort((a, b) => a.from - b.from || a.to - b.to))
