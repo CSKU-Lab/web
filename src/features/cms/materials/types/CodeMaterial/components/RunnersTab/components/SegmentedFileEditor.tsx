@@ -17,7 +17,6 @@ import {
   type SegmentRange,
 } from "~/components/Editor/CodeMirror/extensions/segmentMarks";
 import type { FileSegment, SegmentType, TemplateFile } from "~/components/Editor/types/editor";
-import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
 import { createStudentReadOnlyExtension } from "~/components/Editor/CodeMirror/extensions/studentReadOnly";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import {
@@ -124,9 +123,16 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
 
   const initialContent = useMemo(() => segmentsToContent(file.segments), []);
 
-  const debouncedOnChange = useDebouncedCallback((newFile: TemplateFile) => {
-    onChange(newFile);
-  }, 150);
+  // Keep a stable ref to the latest onChange so debouncedOnChange never recreates.
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debouncedOnChange = useCallback((newFile: TemplateFile) => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      onChangeRef.current(newFile);
+    }, 150);
+  }, []);
 
   const getView = (): EditorView | null => editorRef.current?.view ?? null;
 
@@ -220,6 +226,18 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
         },
       }),
     [],
+  );
+
+  const editExtensions = useMemo(
+    () => [
+      basicSetup,
+      customTheme,
+      ...(langExtension ? [langExtension] : []),
+      segmentMarksExtension,
+      selectionChangeExtension,
+      indentWithTab,
+    ],
+    [customTheme, langExtension, selectionChangeExtension],
   );
 
   const previewContent = useMemo(() => studentContent(file.segments), [file.segments]);
@@ -323,14 +341,7 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
           onChange={handleChange}
           onCreateEditor={handleCreateEditor}
           readOnly={disabled}
-          extensions={[
-            basicSetup,
-            customTheme,
-            ...(langExtension ? [langExtension] : []),
-            segmentMarksExtension,
-            selectionChangeExtension,
-            indentWithTab,
-          ]}
+          extensions={editExtensions}
           theme={resolvedTheme === "light" ? lightTheme : darkTheme}
           style={{ height: "100%" }}
         />
