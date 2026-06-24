@@ -332,10 +332,11 @@ export default function TypingSubmissionsList({
                       : dateObj.format("DD MMM YYYY HH:mm");
 
                     const isBest = submission.id === bestSubmissionId;
+                    const isDangerous = p ? p.error_rate > 3 && p.adjusted_wpm < 30 : false;
                     return (
                       <tr
                         key={submission.id}
-                        className="border-b border-(--gray-3) hover:bg-(--gray-2) transition-colors"
+                        className={`border-b border-(--gray-3) transition-colors ${isDangerous ? "bg-(--tomato-2) hover:bg-(--tomato-3)" : "hover:bg-(--gray-2)"}`}
                       >
                         <td className="px-3 py-2.5 font-mono text-xs">
                           {isBest ? (
@@ -348,13 +349,13 @@ export default function TypingSubmissionsList({
                         <td className="px-3 py-2.5 text-right text-(--gray-11) font-mono">
                           {p ? p.raw_wpm.toFixed(2) : "—"}
                         </td>
-                        <td className="px-3 py-2.5 text-right text-(--grass-11) font-mono font-medium">
+                        <td className={`px-3 py-2.5 text-right font-mono font-medium ${isDangerous ? "text-(--tomato-11)" : "text-(--grass-11)"}`}>
                           {p ? p.adjusted_wpm.toFixed(2) : "—"}
                         </td>
                         <td className="px-3 py-2.5 text-right text-(--gray-11) font-mono">
                           {accuracy !== null ? `${accuracy}%` : "—"}
                         </td>
-                        <td className="px-3 py-2.5 text-right text-(--tomato-11) font-mono">
+                        <td className={`px-3 py-2.5 text-right font-mono ${isDangerous ? "text-(--tomato-11)" : "text-(--gray-11)"}`}>
                           {p ? `${p.error_rate.toFixed(2)}%` : "—"}
                         </td>
                         <td className="px-3 py-2.5 text-right text-(--gray-9) font-mono text-xs">
