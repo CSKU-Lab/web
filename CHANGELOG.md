@@ -1,3 +1,10 @@
+# [0.31.0](https://github.com/CSKU-Lab/web/compare/v0.30.0...v0.31.0) (2026-06-24)
+
+
+### Features
+
+* restyle typing material editor to match preview layout ([74bcbdb](https://github.com/CSKU-Lab/web/commit/74bcbdb7d3d553826435cc03fc5c0ab279c7cb05))
+
 # [0.30.0](https://github.com/CSKU-Lab/web/compare/v0.29.0...v0.30.0) (2026-06-24)
 
 
