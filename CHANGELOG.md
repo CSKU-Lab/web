@@ -1,3 +1,10 @@
+## [0.28.1](https://github.com/CSKU-Lab/web/compare/v0.28.0...v0.28.1) (2026-06-24)
+
+
+### Bug Fixes
+
+* prevent code duplication in SegmentedFileEditor preview tab ([52ceed9](https://github.com/CSKU-Lab/web/commit/52ceed918fd1c8fca82e73342e66a3d89b1397dd))
+
 # [0.28.0](https://github.com/CSKU-Lab/web/compare/v0.27.1...v0.28.0) (2026-06-23)
 
 
