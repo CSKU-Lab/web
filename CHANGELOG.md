@@ -1,3 +1,10 @@
+# [0.30.0](https://github.com/CSKU-Lab/web/compare/v0.29.0...v0.30.0) (2026-06-24)
+
+
+### Features
+
+* display typing stats with 2 decimal places ([16d741b](https://github.com/CSKU-Lab/web/commit/16d741b4c639df086c25186686afab0f2c6a2ad4))
+
 # [0.29.0](https://github.com/CSKU-Lab/web/compare/v0.28.1...v0.29.0) (2026-06-24)
 
 
