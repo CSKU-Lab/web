@@ -77,6 +77,9 @@ export default function TypingSection() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.core.material.getBestTypingSubmission(materialID, labID, sectionID),
       });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.core.material.getById(materialID),
+      });
     },
   });
 
