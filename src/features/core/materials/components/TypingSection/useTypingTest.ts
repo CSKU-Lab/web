@@ -162,9 +162,9 @@ export function useTypingTest(text: string): UseTypingTestReturn {
     const totalChars = chars.length;
     const elapsedMin = (endTime - startTime) / 60000;
     return {
-      rawWPM: Math.round(totalChars / 5 / elapsedMin),
-      adjWPM: Math.round(correctCount / 5 / elapsedMin),
-      errorPct: totalChars > 0 ? Math.round((previewErrorsRef.current / totalChars) * 1000) / 10 : 0,
+      rawWPM: totalChars / 5 / elapsedMin,
+      adjWPM: correctCount / 5 / elapsedMin,
+      errorPct: totalChars > 0 ? (previewErrorsRef.current / totalChars) * 100 : 0,
       duration: Math.round((endTime - startTime) / 100) / 10,
     };
   })();

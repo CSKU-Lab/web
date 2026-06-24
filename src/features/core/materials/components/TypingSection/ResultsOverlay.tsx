@@ -80,13 +80,15 @@ export default function ResultsOverlay({
   submitError = null,
   isSubmitted = false,
 }: Props) {
+  const accuracy = (100 - results.errorPct).toFixed(2);
   return (
     <div className="flex flex-col items-center gap-8">
       <h2 className="text-xl font-semibold text-(--gray-12)">Results</h2>
       <div className="flex flex-wrap justify-center gap-4">
-        <StatCard label="Raw Speed" value={results.rawWPM} unit="wpm" />
-        <StatCard label="Adjusted Speed" value={results.adjWPM} unit="wpm" />
-        <StatCard label="Accuracy" value={`${100 - results.errorPct}`} unit="%" />
+        <StatCard label="Raw Speed" value={results.rawWPM.toFixed(2)} unit="wpm" />
+        <StatCard label="Adjusted Speed" value={results.adjWPM.toFixed(2)} unit="wpm" />
+        <StatCard label="Accuracy" value={`${accuracy}`} unit="%" />
+        <StatCard label="Error Rate" value={results.errorPct.toFixed(2)} unit="%" />
         <StatCard label="Duration" value={results.duration} unit="s" />
       </div>
 

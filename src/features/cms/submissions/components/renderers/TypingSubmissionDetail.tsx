@@ -46,10 +46,10 @@ function TypingSubmissionDetail({
   const targetText = (material.payload.content as string | undefined) ?? "";
 
   const stats = [
-    { label: "Raw WPM", value: Math.round(payload.raw_wpm) },
-    { label: "Adj WPM", value: Math.round(payload.adjusted_wpm) },
-    { label: "Accuracy", value: `${Math.round(accuracy)}%` },
-    { label: "Error Rate", value: `${payload.error_rate.toFixed(1)}%` },
+    { label: "Raw WPM", value: payload.raw_wpm.toFixed(2) },
+    { label: "Adj WPM", value: payload.adjusted_wpm.toFixed(2) },
+    { label: "Accuracy", value: `${accuracy.toFixed(2)}%` },
+    { label: "Error Rate", value: `${payload.error_rate.toFixed(2)}%` },
     { label: "Duration", value: `${Math.round(payload.duration)}s` },
   ];
 

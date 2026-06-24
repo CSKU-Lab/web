@@ -8,13 +8,13 @@ interface TypeContentProps {
 }
 
 export function TypeContent({ payload }: TypeContentProps) {
-  const accuracy = Math.round(100 - payload.error_rate);
+  const accuracy = (100 - payload.error_rate).toFixed(2);
 
   return (
     <div className="flex items-center gap-3 text-sm text-(--gray-11)">
       <Type size={18} className="text-(--gray-9) shrink-0" />
       <span className="font-mono">
-        {Math.round(payload.adjusted_wpm)} WPM · {accuracy}% acc
+        {payload.adjusted_wpm.toFixed(2)} WPM · {accuracy}% acc
       </span>
     </div>
   );

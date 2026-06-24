@@ -133,10 +133,10 @@ function ResultsSummary({
   autoScore?: number | null;
 }) {
   const stats = [
-    { label: "Raw WPM", value: Math.round(results.raw_wpm) },
-    { label: "Adj WPM", value: Math.round(results.adjusted_wpm) },
-    { label: "Accuracy", value: `${Math.round(100 - results.error_rate)}%` },
-    { label: "Error Rate", value: `${results.error_rate.toFixed(1)}%` },
+    { label: "Raw WPM", value: results.raw_wpm.toFixed(2) },
+    { label: "Adj WPM", value: results.adjusted_wpm.toFixed(2) },
+    { label: "Accuracy", value: `${(100 - results.error_rate).toFixed(2)}%` },
+    { label: "Error Rate", value: `${results.error_rate.toFixed(2)}%` },
     { label: "Duration", value: `${Math.round(results.duration)}s` },
     ...(isExam && autoScore !== null ? [{ label: "Score", value: `${autoScore}` }] : []),
   ];
@@ -221,8 +221,8 @@ export default function TypingSubmissionsList({
       const p = s.payload as TypingSubmissionOverview | undefined;
       return {
         index: i + 1,
-        adj_wpm: p ? Math.round(p.adjusted_wpm) : 0,
-        raw_wpm: p ? Math.round(p.raw_wpm) : 0,
+        adj_wpm: p ? p.adjusted_wpm : 0,
+        raw_wpm: p ? p.raw_wpm : 0,
       };
     });
 
@@ -325,7 +325,7 @@ export default function TypingSubmissionsList({
                   page.data.map((submission, index) => {
                     const p = submission.payload as TypingSubmissionOverview | undefined;
                     const order = totalRows - pageIndex * SUBMISSION_PAGE_SIZE - index;
-                    const accuracy = p ? Math.round(100 - p.error_rate) : null;
+                    const accuracy = p ? (100 - p.error_rate).toFixed(2) : null;
                     const dateObj = dayjs(submission.created_at);
                     const date = Math.abs(dateObj.diff(dayjs(), "day")) <= 2
                       ? dateObj.fromNow()
@@ -346,16 +346,16 @@ export default function TypingSubmissionsList({
                         </td>
                         <td className="px-3 py-2.5 text-(--gray-9) text-xs">{date}</td>
                         <td className="px-3 py-2.5 text-right text-(--gray-11) font-mono">
-                          {p ? Math.round(p.raw_wpm) : "—"}
+                          {p ? p.raw_wpm.toFixed(2) : "—"}
                         </td>
                         <td className="px-3 py-2.5 text-right text-(--grass-11) font-mono font-medium">
-                          {p ? Math.round(p.adjusted_wpm) : "—"}
+                          {p ? p.adjusted_wpm.toFixed(2) : "—"}
                         </td>
                         <td className="px-3 py-2.5 text-right text-(--gray-11) font-mono">
                           {accuracy !== null ? `${accuracy}%` : "—"}
                         </td>
                         <td className="px-3 py-2.5 text-right text-(--tomato-11) font-mono">
-                          {p ? `${p.error_rate.toFixed(1)}%` : "—"}
+                          {p ? `${p.error_rate.toFixed(2)}%` : "—"}
                         </td>
                         <td className="px-3 py-2.5 text-right text-(--gray-9) font-mono text-xs">
                           {p ? `${Math.round(p.duration)}s` : "—"}

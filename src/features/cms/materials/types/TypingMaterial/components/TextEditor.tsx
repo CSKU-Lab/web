@@ -18,25 +18,29 @@ export default function TextEditor() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-(--gray-1)">
       <div className="flex items-center justify-between px-4 py-2 border-b border-(--gray-4) text-xs text-(--gray-10)">
         <span>Source Text</span>
         <span>
           {wordCount} words · {charCount} chars
         </span>
       </div>
-      <textarea
-        className="flex-1 w-full resize-none bg-(--gray-1) text-(--gray-12) p-4 font-mono text-sm focus:outline-none placeholder:text-(--gray-9)"
-        placeholder={
-          isOwner
-            ? "Enter the text that students will type..."
-            : "No text set for this material."
-        }
-        value={text}
-        onChange={handleChange}
-        readOnly={!isOwner}
-        spellCheck={false}
-      />
+      <div className="flex-1 flex flex-col items-center justify-center px-8 py-12 overflow-y-auto">
+        <textarea
+          className="w-full max-w-3xl resize-none bg-transparent text-(--gray-12) font-mono text-2xl leading-relaxed tracking-wide focus:outline-none placeholder:text-(--gray-8)"
+          placeholder={
+            isOwner
+              ? "Start typing here..."
+              : "No text set for this material."
+          }
+          value={text}
+          onChange={handleChange}
+          readOnly={!isOwner}
+          spellCheck={false}
+          autoCorrect="off"
+          autoCapitalize="off"
+        />
+      </div>
     </div>
   );
 }

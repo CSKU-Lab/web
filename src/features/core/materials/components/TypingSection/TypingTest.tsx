@@ -87,11 +87,11 @@ export default function TypingTest({
         <div className="flex gap-8 text-(--gray-11) text-sm font-mono">
           <div className="flex flex-col items-center gap-0.5">
             <span className="text-xs uppercase tracking-widest text-(--gray-9)">wpm</span>
-            <span className="text-2xl text-(--gray-12)">{results.adjWPM}</span>
+            <span className="text-2xl text-(--gray-12)">{results.adjWPM.toFixed(2)}</span>
           </div>
           <div className="flex flex-col items-center gap-0.5">
             <span className="text-xs uppercase tracking-widest text-(--gray-9)">raw</span>
-            <span className="text-2xl text-(--gray-12)">{results.rawWPM}</span>
+            <span className="text-2xl text-(--gray-12)">{results.rawWPM.toFixed(2)}</span>
           </div>
           <div className="flex flex-col items-center gap-0.5">
             <span className="text-xs uppercase tracking-widest text-(--gray-9)">acc</span>
