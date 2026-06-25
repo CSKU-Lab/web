@@ -96,7 +96,7 @@ function CodeEditor({
   const [runnerSelectError, setRunnerSelectError] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [mdTab, setMdTab] = useState("edit");
-  const [isFileTreeCollapsed, setIsFileTreeCollapsed] = useState(false);
+  const [isFileTreeCollapsed, setIsFileTreeCollapsed] = useState(true);
 
   const [previousFiles, setPreviousFiles] = useState<CodeFile[]>([]);
   if (previousFiles.length === 0 && files.length > 0) {
