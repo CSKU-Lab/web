@@ -57,7 +57,18 @@ function SaveButton() {
                 runner_id: solution.runner.id,
                 files: solution.files.map((f) => ({
                   name: f.name,
-                  content: f.content,
+                  // Send the runnable content the grader executes: assemble all
+                  // segments except exclude (so the hidden input-reading lines are
+                  // included). templateFileToCodeFile drops hidden from f.content,
+                  // so f.content alone is not runnable for segmented files.
+                  content:
+                    f.segments && f.segments.length > 0
+                      ? f.segments
+                          .filter((s) => s.type !== "exclude")
+                          .map((s) => s.content)
+                          .join("")
+                      : f.content,
+                  segments: f.segments,
                 })),
               }
             : null,

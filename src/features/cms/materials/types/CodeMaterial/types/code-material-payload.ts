@@ -9,7 +9,7 @@ interface AllowedRunner {
 
 interface Solution {
   runner_id: string;
-  files: { name: string; content: string }[];
+  files: { name: string; content: string; segments?: { content: string; type: string }[] }[];
 }
 
 export interface CodeMaterialPayload {
