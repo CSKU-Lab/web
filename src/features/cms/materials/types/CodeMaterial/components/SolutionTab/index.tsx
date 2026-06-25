@@ -208,6 +208,7 @@ function EditorSection() {
         onChangeSelectedRunner={handleOnChangeSelectedRunner}
         isReadonlyFile={isReadonlyFile}
         isRequiredFile={isRequiredFile}
+        canDeleteFile={(name) => isOwner && name.endsWith(".bak")}
         runnerSelectAddon={
           showBanner ? (
             <button

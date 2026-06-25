@@ -36,6 +36,8 @@ interface Props {
   queryFn?: (query: string) => Promise<Runner[]>;
   isReadonlyFile?: (name: string) => boolean;
   isRequiredFile?: (name: string) => boolean;
+  /** Allow deleting a specific file even when file modification is disabled */
+  canDeleteFile?: (name: string) => boolean;
   /** Optional element rendered immediately after the RunnerSelect dropdown */
   runnerSelectAddon?: ReactNode;
 }
@@ -81,6 +83,7 @@ function CodeEditor({
   queryFn,
   isReadonlyFile,
   isRequiredFile,
+  canDeleteFile,
   runnerSelectAddon,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
@@ -231,6 +234,7 @@ function CodeEditor({
             onChange={onFilesChange}
             isReadonlyFile={isReadonlyFile}
             isRequiredFile={isRequiredFile}
+            canDeleteFile={canDeleteFile}
             onCollapse={() => setIsFileTreeCollapsed(true)}
           />
         )}

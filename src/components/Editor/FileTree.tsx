@@ -51,6 +51,7 @@ interface FileTreeProps {
   initialExpandedFolders?: string[];
   isReadonlyFile?: (name: string) => boolean;
   isRequiredFile?: (name: string) => boolean;
+  canDeleteFile?: (name: string) => boolean;
   isRequiredFolder?: (name: string) => boolean;
   getDisplayName?: (name: string) => string;
   getNewFilePath?: (name: string) => string;
@@ -123,6 +124,7 @@ function FileTree({
   initialExpandedFolders = [],
   isReadonlyFile,
   isRequiredFile,
+  canDeleteFile,
   isRequiredFolder,
   getDisplayName,
   getNewFilePath,
@@ -203,7 +205,8 @@ const isDuplicateName = files.some((f) => {
   };
 
   const handleDeleteClick = (fileName: string) => {
-    if (isReadonlyFile?.(fileName) || isRequiredFile?.(fileName)) return;
+    const forced = canDeleteFile?.(fileName);
+    if (!forced && (isReadonlyFile?.(fileName) || isRequiredFile?.(fileName))) return;
     setFileToDelete(fileName);
     setIsFolderToDelete(false);
     setDeleteDialogOpen(true);
@@ -334,6 +337,7 @@ const isDuplicateName = files.some((f) => {
     const isReadonly = isReadonlyFile?.(node.path);
     const isRequired = isRequiredFile?.(node.path);
     const canModify = allowModify && !isReadonly && !isRequired;
+    const canDeleteOnly = !canModify && (canDeleteFile?.(node.path) ?? false);
 
     return (
       <div
@@ -389,6 +393,22 @@ const isDuplicateName = files.some((f) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        )}
+        {canDeleteOnly && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                className="absolute right-1 p-1 opacity-0 group-hover:opacity-100 hover:bg-(--gray-6) rounded transition-opacity text-(--red-11)"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteClick(node.path);
+                }}
+              >
+                <Trash2 size="1rem" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Delete</TooltipContent>
+          </Tooltip>
         )}
       </div>
     );
