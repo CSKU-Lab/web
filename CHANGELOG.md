@@ -1,3 +1,10 @@
+# [0.38.0](https://github.com/CSKU-Lab/web/compare/v0.37.1...v0.38.0) (2026-06-25)
+
+
+### Features
+
+* **typing-material:** support tab key in source text editor ([4451655](https://github.com/CSKU-Lab/web/commit/4451655ba5b59d1721afa7138e96bade28c66d84))
+
 ## [0.37.1](https://github.com/CSKU-Lab/web/compare/v0.37.0...v0.37.1) (2026-06-25)
 
 
