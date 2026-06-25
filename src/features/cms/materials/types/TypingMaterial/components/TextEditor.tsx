@@ -26,6 +26,23 @@ export default function TextEditor() {
     setSaveStatus("UnSaved");
   }
 
+  // Insert a real tab character instead of moving focus, so indented material
+  // (e.g. code) can be authored.
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key !== "Tab" || !isOwner) return;
+    e.preventDefault();
+    const el = e.currentTarget;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const next = text.slice(0, start) + "\t" + text.slice(end);
+    setText(next);
+    setSaveStatus("UnSaved");
+    // Restore caret after the inserted tab on the next frame.
+    requestAnimationFrame(() => {
+      el.selectionStart = el.selectionEnd = start + 1;
+    });
+  }
+
   return (
     <div className="flex flex-col h-full bg-(--gray-1)">
       <div className="flex items-center justify-between px-4 py-2 border-b border-(--gray-4) text-xs text-(--gray-10)">
@@ -45,6 +62,7 @@ export default function TextEditor() {
           }
           value={text}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
           readOnly={!isOwner}
           spellCheck={false}
           autoCorrect="off"
