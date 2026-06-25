@@ -1,3 +1,11 @@
+## [0.37.1](https://github.com/CSKU-Lab/web/compare/v0.37.0...v0.37.1) (2026-06-25)
+
+
+### Bug Fixes
+
+* **cms:** hidden segment marks absorb trailing newline ([463aeaa](https://github.com/CSKU-Lab/web/commit/463aeaa1b4f39137dc315d9afbf01da10990e48f))
+* **lab-material:** send full order on reorder, invalidate cache ([052cf2f](https://github.com/CSKU-Lab/web/commit/052cf2f94a9a4168bb723bc88d4e3074b58ba09e))
+
 # [0.37.0](https://github.com/CSKU-Lab/web/compare/v0.36.0...v0.37.0) (2026-06-25)
 
 
