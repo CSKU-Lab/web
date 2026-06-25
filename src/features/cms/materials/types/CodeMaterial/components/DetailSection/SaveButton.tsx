@@ -57,14 +57,16 @@ function SaveButton() {
                 runner_id: solution.runner.id,
                 files: solution.files.map((f) => ({
                   name: f.name,
-                  // Send the runnable content the grader executes: assemble all
-                  // segments except exclude (so the hidden input-reading lines are
-                  // included). templateFileToCodeFile drops hidden from f.content,
-                  // so f.content alone is not runnable for segmented files.
+                  // content is the editor DISPLAY text (hidden stripped) — it must
+                  // round-trip cleanly back into the editor. Do NOT bake hidden
+                  // segments in here: that leaks hidden code into the visible
+                  // content, which then gets re-absorbed as editable and appended
+                  // again on every save. The grader builds the runnable content
+                  // (incl. hidden, dropping exclude) from `segments` server-side.
                   content:
                     f.segments && f.segments.length > 0
                       ? f.segments
-                          .filter((s) => s.type !== "exclude")
+                          .filter((s) => s.type !== "hidden")
                           .map((s) => s.content)
                           .join("")
                       : f.content,
