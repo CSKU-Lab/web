@@ -1,3 +1,10 @@
+# [0.35.0](https://github.com/CSKU-Lab/web/compare/v0.34.0...v0.35.0) (2026-06-25)
+
+
+### Features
+
+* **cms:** show segment marks in solution tab ([4535f9a](https://github.com/CSKU-Lab/web/commit/4535f9aae7662b5f740df27551f5d6c04be37105))
+
 # [0.34.0](https://github.com/CSKU-Lab/web/compare/v0.33.0...v0.34.0) (2026-06-25)
 
 
