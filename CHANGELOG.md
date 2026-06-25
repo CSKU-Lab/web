@@ -1,3 +1,10 @@
+## [0.38.1](https://github.com/CSKU-Lab/web/compare/v0.38.0...v0.38.1) (2026-06-25)
+
+
+### Bug Fixes
+
+* **cms:** collapse hidden lines via segment normalization ([7f06566](https://github.com/CSKU-Lab/web/commit/7f06566603474d7bcca598ccd95c7d0b7a898f83))
+
 # [0.38.0](https://github.com/CSKU-Lab/web/compare/v0.37.1...v0.38.0) (2026-06-25)
 
 
