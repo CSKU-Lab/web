@@ -1,3 +1,10 @@
+# [0.37.0](https://github.com/CSKU-Lab/web/compare/v0.36.0...v0.37.0) (2026-06-25)
+
+
+### Features
+
+* **tiptap:** show code block language selector only in CMS ([198fe95](https://github.com/CSKU-Lab/web/commit/198fe95dc1c5fd091b3978a16fea8ee9de4b729a))
+
 # [0.36.0](https://github.com/CSKU-Lab/web/compare/v0.35.0...v0.36.0) (2026-06-25)
 
 
