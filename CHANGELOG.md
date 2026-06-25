@@ -1,3 +1,10 @@
+# [0.33.0](https://github.com/CSKU-Lab/web/compare/v0.32.0...v0.33.0) (2026-06-25)
+
+
+### Features
+
+* add language selector to tiptap code block ([3acd619](https://github.com/CSKU-Lab/web/commit/3acd6198b4b74b80eb5822a1dd6bb8e9306d36ad))
+
 # [0.32.0](https://github.com/CSKU-Lab/web/compare/v0.31.0...v0.32.0) (2026-06-25)
 
 
