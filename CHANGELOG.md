@@ -1,3 +1,16 @@
+# [0.32.0](https://github.com/CSKU-Lab/web/compare/v0.31.0...v0.32.0) (2026-06-25)
+
+
+### Bug Fixes
+
+* invalidate material query after typing submission to refresh header status ([e8906e4](https://github.com/CSKU-Lab/web/commit/e8906e43da350584c2b501fc7d8757532842fcec))
+
+
+### Features
+
+* **editor:** allow deleting .bak backup files in solution editor ([793e85e](https://github.com/CSKU-Lab/web/commit/793e85e2d2039a02fad1cb265e4aec906c8e662c))
+* highlight typing submission rows red only when error rate > 3% and adj WPM < 30 ([465b24d](https://github.com/CSKU-Lab/web/commit/465b24d4ecb8371484d4ccce725da1d172ff9cc1))
+
 # [0.31.0](https://github.com/CSKU-Lab/web/compare/v0.30.0...v0.31.0) (2026-06-24)
 
 
