@@ -9,7 +9,7 @@ import { Superscript } from "@tiptap/extension-superscript";
 import { Selection } from "@tiptap/extensions";
 import { TableKit } from "@tiptap/extension-table";
 
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { CodeBlock } from "~/components/tiptap-node/code-block-node/code-block-node-extension";
 
 import { createLowlight } from "lowlight";
 import go from "highlight.js/lib/languages/go";
@@ -42,7 +42,7 @@ export const extensions = () => {
       },
     }),
 
-    CodeBlockLowlight.configure({
+    CodeBlock.configure({
       languageClassPrefix: "language-",
       enableTabIndentation: true,
       lowlight,
