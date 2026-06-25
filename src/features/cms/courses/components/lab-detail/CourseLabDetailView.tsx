@@ -74,14 +74,14 @@ export default function CourseLabDetailView() {
     }),
   );
 
-  const updatePosition = useMutation({
-    mutationFn: async ({
-      materialID,
-      position,
-    }: {
-      materialID: string;
-      position: number;
-    }) => cmsLabMaterialService.updatePosition(labID, materialID, position),
+  const reorderMaterials = useMutation({
+    mutationFn: async (materialIDs: string[]) =>
+      cmsLabMaterialService.reorder(labID, materialIDs),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.labMaterial.getByLabId(labID),
+      });
+    },
     onError: (err) => {
       setRows(previousRowsRef.current);
       if (err instanceof AxiosError) {
@@ -115,7 +115,7 @@ export default function CourseLabDetailView() {
   });
 
   const handleDragEnd = (event: DragEndEvent) => {
-    if (updatePosition.isPending) return;
+    if (reorderMaterials.isPending) return;
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -129,10 +129,7 @@ export default function CourseLabDetailView() {
     const updated = reordered.map((row, i) => ({ ...row, position: i + 1 }));
     setRows(updated);
 
-    updatePosition.mutate({
-      materialID: active.id as string,
-      position: newIndex + 1,
-    });
+    reorderMaterials.mutate(updated.map((row) => row.material_id));
   };
 
   const handleNavigate = (materialID: string) => {
