@@ -164,8 +164,22 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
   const applyType = (type: SegmentType | null) => {
     const view = getView();
     if (!view) return;
-    const { from, to } = view.state.selection.main;
+    let { to } = view.state.selection.main;
+    const { from } = view.state.selection.main;
     if (from === to) return;
+
+    // For hidden segments, absorb the trailing newline when the selection ends
+    // exactly at end-of-line. The hidden line is stripped entirely from the
+    // student view; if its newline is left as a separate editable segment it
+    // surfaces as a blank editable line that reveals where hidden code sits.
+    // Owning the newline makes the hidden line vanish cleanly (next segment
+    // moves up), so the student gets no hint that hidden code exists.
+    if (type === "hidden") {
+      const line = view.state.doc.lineAt(to);
+      if (to === line.to && line.to < view.state.doc.length) {
+        to = to + 1; // include the line break
+      }
+    }
 
     if (type === null) {
       view.dispatch({ effects: clearSegmentEffect.of({ from, to }) });
