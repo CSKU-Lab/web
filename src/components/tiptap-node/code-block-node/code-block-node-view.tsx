@@ -25,25 +25,26 @@ export function CodeBlockNodeView({
 
   return (
     <NodeViewWrapper className="code-block-node">
-      <div className="code-block-node__toolbar" contentEditable={false}>
-        <select
-          className="code-block-node__language"
-          value={language}
-          disabled={!editor.isEditable}
-          onChange={(event) =>
-            updateAttributes({ language: event.target.value })
-          }
-          // Keep ProseMirror from hijacking pointer/selection on the control.
-          onMouseDown={(event) => event.stopPropagation()}
-          contentEditable={false}
-        >
-          {CODE_BLOCK_LANGUAGES.map((lang) => (
-            <option key={lang.value} value={lang.value}>
-              {lang.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      {editor.isEditable && (
+        <div className="code-block-node__toolbar" contentEditable={false}>
+          <select
+            className="code-block-node__language"
+            value={language}
+            onChange={(event) =>
+              updateAttributes({ language: event.target.value })
+            }
+            // Keep ProseMirror from hijacking pointer/selection on the control.
+            onMouseDown={(event) => event.stopPropagation()}
+            contentEditable={false}
+          >
+            {CODE_BLOCK_LANGUAGES.map((lang) => (
+              <option key={lang.value} value={lang.value}>
+                {lang.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       <pre>
         <NodeViewContent<"code"> as="code" className={`language-${language}`} />
       </pre>
