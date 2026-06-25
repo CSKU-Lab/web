@@ -1,3 +1,15 @@
+# [0.36.0](https://github.com/CSKU-Lab/web/compare/v0.35.0...v0.36.0) (2026-06-25)
+
+
+### Bug Fixes
+
+* **cms:** store hidden-stripped content for solution files ([9a209d0](https://github.com/CSKU-Lab/web/commit/9a209d09af2680dfe4a32ec898d4d059eb244611))
+
+
+### Features
+
+* **editor:** collapse file tree by default ([88b36fe](https://github.com/CSKU-Lab/web/commit/88b36fe6ca5d63f0e088a03e2e3d09432f5b3d4a))
+
 # [0.35.0](https://github.com/CSKU-Lab/web/compare/v0.34.0...v0.35.0) (2026-06-25)
 
 
