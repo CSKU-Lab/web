@@ -94,10 +94,6 @@ export function useTypingTest(text: string): UseTypingTestReturn {
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (isCompleteRef.current) return;
     if (e.ctrlKey || e.altKey || e.metaKey) return;
-    if (e.key === "Tab") {
-      e.preventDefault();
-      return;
-    }
 
     if (e.key === "Backspace") {
       const idx = currentIndexRef.current;
@@ -117,7 +113,18 @@ export function useTypingTest(text: string): UseTypingTestReturn {
       return;
     }
 
-    if (e.key.length !== 1) return;
+    // Map Tab/Enter to their character equivalents so indented, multi-line
+    // material (e.g. code) can be typed. Otherwise Tab moves focus and Enter
+    // is ignored, leaving whitespace chars impossible to enter.
+    let key = e.key;
+    if (e.key === "Tab") {
+      e.preventDefault();
+      key = "\t";
+    } else if (e.key === "Enter") {
+      key = "\n";
+    } else if (e.key.length !== 1) {
+      return;
+    }
 
     const idx = currentIndexRef.current;
     const current = charsRef.current;
@@ -130,9 +137,9 @@ export function useTypingTest(text: string): UseTypingTestReturn {
     }
 
     const t = Date.now() - startTimeRef.current!;
-    keystrokesRef.current = [...keystrokesRef.current, { k: e.key, t }];
+    keystrokesRef.current = [...keystrokesRef.current, { k: key, t }];
 
-    const isCorrect = e.key === current[idx].char;
+    const isCorrect = key === current[idx].char;
     if (!isCorrect) previewErrorsRef.current += 1;
     const newIdx = idx + 1;
 
