@@ -17,6 +17,7 @@ import {
   type SegmentRange,
 } from "~/components/Editor/CodeMirror/extensions/segmentMarks";
 import type { FileSegment, SegmentType, TemplateFile } from "~/components/Editor/types/editor";
+import { normalizeHiddenSegments } from "~/components/Editor/utils/segments";
 import { createStudentReadOnlyExtension } from "~/components/Editor/CodeMirror/extensions/studentReadOnly";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import {
@@ -92,7 +93,9 @@ function buildSegmentsFromDecors(content: string, ranges: SegmentRange[]): FileS
     segments.push({ type: "editable", content: content.slice(pos) });
   }
 
-  return segments.filter((s) => s.content.length > 0);
+  // Fold each hidden line's trailing newline into its hidden segment so the
+  // student view collapses the line instead of leaving an orphan blank line.
+  return normalizeHiddenSegments(segments.filter((s) => s.content.length > 0));
 }
 
 function segmentsToRanges(segments: FileSegment[]): SegmentRange[] {
@@ -164,23 +167,12 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
   const applyType = (type: SegmentType | null) => {
     const view = getView();
     if (!view) return;
-    let { to } = view.state.selection.main;
-    const { from } = view.state.selection.main;
+    const { from, to } = view.state.selection.main;
     if (from === to) return;
 
-    // For hidden segments, absorb the trailing newline when the selection ends
-    // exactly at end-of-line. The hidden line is stripped entirely from the
-    // student view; if its newline is left as a separate editable segment it
-    // surfaces as a blank editable line that reveals where hidden code sits.
-    // Owning the newline makes the hidden line vanish cleanly (next segment
-    // moves up), so the student gets no hint that hidden code exists.
-    if (type === "hidden") {
-      const line = view.state.doc.lineAt(to);
-      if (to === line.to && line.to < view.state.doc.length) {
-        to = to + 1; // include the line break
-      }
-    }
-
+    // Note: hidden lines have their trailing newline folded in by
+    // normalizeHiddenSegments (in buildSegmentsFromDecors), regardless of how
+    // the selection ends — so no selection-dependent newline handling here.
     if (type === null) {
       view.dispatch({ effects: clearSegmentEffect.of({ from, to }) });
     } else {

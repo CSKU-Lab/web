@@ -18,6 +18,38 @@ import type { SubmittedFile } from "~/features/core/submissions/types/core-code-
  * template changed since the solution was saved) so callers can fall back to
  * plain content rather than render misaligned marks.
  */
+/**
+ * Fold each hidden segment's line-terminating newline into the hidden segment.
+ *
+ * When an author marks a whole line hidden without selecting its trailing
+ * newline, the "\n" is left in the following editable segment. Stripping the
+ * hidden content for the student view then leaves that orphan "\n" as a blank
+ * line — which reveals where hidden code sits and fails to pull the next line
+ * up. Moving the "\n" into the hidden segment makes the hidden line vanish
+ * cleanly. Total flat content is unchanged, so grader assembly is unaffected.
+ */
+export function normalizeHiddenSegments(segments: FileSegment[]): FileSegment[] {
+  const result: FileSegment[] = [];
+  for (let i = 0; i < segments.length; i++) {
+    const seg = segments[i];
+    const next = segments[i + 1];
+    if (
+      seg.type === "hidden" &&
+      !seg.content.endsWith("\n") &&
+      next?.type === "editable" &&
+      next.content.startsWith("\n")
+    ) {
+      result.push({ ...seg, content: seg.content + "\n" });
+      const rest = next.content.slice(1);
+      if (rest.length > 0) result.push({ ...next, content: rest });
+      i++; // consumed `next`
+      continue;
+    }
+    result.push(seg);
+  }
+  return result;
+}
+
 export function reconstructSolutionSegments(
   templateSegments: FileSegment[],
   content: string,
@@ -102,19 +134,21 @@ export function attachSolutionSegments(
  * and keep editable segment contents in sync as the student types.
  */
 export function templateFileToCodeFile(tf: TemplateFile): CodeFile {
+  const segments = normalizeHiddenSegments(tf.segments);
+
   let content = "";
-  for (const seg of tf.segments) {
+  for (const seg of segments) {
     if (seg.type !== "hidden") content += seg.content;
   }
 
-  const hasNonEditable = tf.segments.some(
+  const hasNonEditable = segments.some(
     (s) => s.type !== "editable" && s.type !== "hidden",
   );
 
   return {
     name: tf.name,
     content,
-    segments: hasNonEditable ? tf.segments : undefined,
+    segments: hasNonEditable ? segments : undefined,
   };
 }
 
