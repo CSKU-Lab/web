@@ -1,3 +1,16 @@
+# [0.34.0](https://github.com/CSKU-Lab/web/compare/v0.33.0...v0.34.0) (2026-06-25)
+
+
+### Bug Fixes
+
+* send solution segments and runnable content to grader ([d80b6b3](https://github.com/CSKU-Lab/web/commit/d80b6b3a2b14716ff5269c6efd99a7cfbd142ba7))
+* stop highlighting plain text code blocks as code ([0721d45](https://github.com/CSKU-Lab/web/commit/0721d45085a715ca41479b363c14705f5ade1502))
+
+
+### Features
+
+* **typing:** support tab/enter keys and show whitespace glyphs ([49d0f4a](https://github.com/CSKU-Lab/web/commit/49d0f4a55228da9b863385e65408a4b9366b70ed))
+
 # [0.33.0](https://github.com/CSKU-Lab/web/compare/v0.32.0...v0.33.0) (2026-06-25)
 
 
