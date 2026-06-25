@@ -18,6 +18,7 @@ import { isLoadingAtom } from "~/features/cms/materials/types/CodeMaterial/store
 import { isOwnerAtom } from "~/features/cms/materials/types/CodeMaterial/stores/owner.store";
 import { initialResourceFilesAtom } from "~/features/cms/materials/types/CodeMaterial/stores/resource-files.store";
 import { initialRunnerTemplatesAtom } from "~/features/cms/materials/types/CodeMaterial/components/RunnersTab/stores/runner-templates.store";
+import { attachSolutionSegments } from "~/components/Editor/utils/segments";
 
 interface Props {
   isOwner: boolean;
@@ -49,10 +50,35 @@ function CodeMaterial({ isOwner }: Props) {
       }
       setTestCaseGroups(payload.test_case_groups);
 
+      const runnerTemplates = payload.allowed_runners.map((r) => ({
+        id: r.id,
+        name: r.name,
+        buildScript: r.build_script,
+        runScript: r.run_script,
+        initialFiles: r.files.map((f) => ({
+          name: f.name,
+          segments:
+            f.segments && f.segments.length > 0
+              ? f.segments.map((s) => ({
+                  content: s.content,
+                  type: s.type as import("~/components/Editor/types/editor").SegmentType,
+                }))
+              : [{ content: f.content, type: "editable" as const }],
+        })),
+      }));
+
       if (payload.solution) {
+        // Saved solutions store only flat content. Recover the runner's segment
+        // structure so the Solution tab can render readonly/exclude marks on load.
+        const runnerTemplate = runnerTemplates.find(
+          (t) => t.id === payload.solution!.runner.id,
+        );
+        const files = payload.solution.files ?? [];
         setSolution({
           runner: { id: payload.solution.runner.id, name: payload.solution.runner.name },
-          files: payload.solution.files ?? [],
+          files: runnerTemplate
+            ? attachSolutionSegments(files, runnerTemplate.initialFiles)
+            : files,
         });
       }
 
@@ -74,20 +100,7 @@ function CodeMaterial({ isOwner }: Props) {
         },
       );
 
-      setRunnerTemplates(
-        payload.allowed_runners.map((r) => ({
-          id: r.id,
-          name: r.name,
-          buildScript: r.build_script,
-          runScript: r.run_script,
-          initialFiles: r.files.map((f) => ({
-            name: f.name,
-            segments: f.segments && f.segments.length > 0
-              ? f.segments.map((s) => ({ content: s.content, type: s.type as import("~/components/Editor/types/editor").SegmentType }))
-              : [{ content: f.content, type: "editable" as const }],
-          })),
-        })),
-      );
+      setRunnerTemplates(runnerTemplates);
     }
   }, [
     data,

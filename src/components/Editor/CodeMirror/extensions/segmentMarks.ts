@@ -13,7 +13,7 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
-import type { SegmentType } from "~/components/Editor/types/editor";
+import type { FileSegment, SegmentType } from "~/components/Editor/types/editor";
 
 export interface SegmentRange {
   from: number;
@@ -76,8 +76,11 @@ const segmentTheme = EditorView.baseTheme({
   ".cm-line.cm-segment-line-exclude":  { borderLeft: "3px solid var(--orange-9, #c4611a)" },
 });
 
-function buildMarkDecorations(state: EditorState): DecorationSet {
-  const ranges = state.field(segmentRangesField, false) ?? [];
+function buildMarkDecorations(
+  field: StateField<SegmentRange[]>,
+  state: EditorState,
+): DecorationSet {
+  const ranges = state.field(field, false) ?? [];
   const decos: Range<Decoration>[] = [];
   for (const r of ranges) {
     if (r.from >= r.to) continue;
@@ -88,8 +91,11 @@ function buildMarkDecorations(state: EditorState): DecorationSet {
     : Decoration.none;
 }
 
-function buildLineDecorations(state: EditorState): DecorationSet {
-  const ranges = state.field(segmentRangesField, false) ?? [];
+function buildLineDecorations(
+  field: StateField<SegmentRange[]>,
+  state: EditorState,
+): DecorationSet {
+  const ranges = state.field(field, false) ?? [];
   // Deduplicate: one decoration per line position (first type wins).
   const lineTypeMap = new Map<number, SegmentType>();
   for (const r of ranges) {
@@ -111,19 +117,22 @@ function buildLineDecorations(state: EditorState): DecorationSet {
   return decos.length > 0 ? Decoration.set(decos) : Decoration.none;
 }
 
-function makeSegmentPlugin(build: (state: EditorState) => DecorationSet) {
+function makeSegmentPlugin(
+  field: StateField<SegmentRange[]>,
+  build: (field: StateField<SegmentRange[]>, state: EditorState) => DecorationSet,
+) {
   return ViewPlugin.fromClass(
     class {
       decorations: DecorationSet;
       constructor(view: EditorView) {
-        this.decorations = build(view.state);
+        this.decorations = build(field, view.state);
       }
       update(update: ViewUpdate) {
         if (
           update.docChanged ||
-          update.startState.field(segmentRangesField) !== update.state.field(segmentRangesField)
+          update.startState.field(field) !== update.state.field(field)
         ) {
-          this.decorations = build(update.state);
+          this.decorations = build(field, update.state);
         }
       }
     },
@@ -131,8 +140,8 @@ function makeSegmentPlugin(build: (state: EditorState) => DecorationSet) {
   );
 }
 
-const segmentBgDecorator = makeSegmentPlugin(buildMarkDecorations);
-const segmentBorderDecorator = makeSegmentPlugin(buildLineDecorations);
+const segmentBgDecorator = makeSegmentPlugin(segmentRangesField, buildMarkDecorations);
+const segmentBorderDecorator = makeSegmentPlugin(segmentRangesField, buildLineDecorations);
 
 /** Read current segment ranges, sorted by position. */
 export function getSegmentRanges(state: EditorState): SegmentRange[] {
@@ -147,3 +156,43 @@ export const segmentMarksExtension: Extension = [
   segmentBorderDecorator,
   segmentTheme,
 ];
+
+/**
+ * Read-only visual segment marks seeded directly from a file's segments —
+ * same colored decorations as {@link segmentMarksExtension} but without the
+ * effect-driven editing API. Positions are derived in visible-content
+ * coordinates (hidden segments are absent from the rendered content) and
+ * auto-map as the doc is edited. Use this to surface readonly/exclude regions
+ * in editors that consume flattened files (e.g. the CMS Solution tab).
+ */
+export function createSegmentMarksExtension(segments: FileSegment[]): Extension {
+  const initial: SegmentRange[] = [];
+  let pos = 0;
+  for (const seg of segments) {
+    if (seg.type === "hidden") continue; // not present in visible content
+    const end = pos + seg.content.length;
+    if (seg.type !== "editable") initial.push({ from: pos, to: end, type: seg.type });
+    pos = end;
+  }
+
+  const field = StateField.define<SegmentRange[]>({
+    create() {
+      return initial;
+    },
+    update(ranges, tr) {
+      if (!tr.docChanged) return ranges;
+      return ranges.map((r) => ({
+        ...r,
+        from: tr.changes.mapPos(r.from, 1),
+        to: tr.changes.mapPos(r.to, -1),
+      }));
+    },
+  });
+
+  return [
+    field,
+    makeSegmentPlugin(field, buildMarkDecorations),
+    makeSegmentPlugin(field, buildLineDecorations),
+    segmentTheme,
+  ];
+}

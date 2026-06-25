@@ -1,5 +1,99 @@
-import type { CodeFile, TemplateFile } from "~/components/Editor/types/editor";
+import type { CodeFile, FileSegment, TemplateFile } from "~/components/Editor/types/editor";
 import type { SubmittedFile } from "~/features/core/submissions/types/core-code-submission";
+
+/**
+ * Reconstruct a solution file's segment structure from its runner template.
+ *
+ * A saved solution stores only flat `content` (no segments). The segment
+ * structure (which ranges are readonly/exclude/hidden) lives on the runner
+ * template. The solution's flat content equals the template's visible content
+ * (editable + readonly + exclude; hidden stripped) with the editable regions
+ * filled in by the author. Fixed (readonly/exclude) and hidden segments keep
+ * the template's content verbatim; editable segments take the author's content.
+ *
+ * Fixed segment contents act as anchors: we walk the template segments and
+ * slice the solution content between anchors to recover each editable region.
+ *
+ * Returns null if the content can't be aligned to the template (e.g. the
+ * template changed since the solution was saved) so callers can fall back to
+ * plain content rather than render misaligned marks.
+ */
+export function reconstructSolutionSegments(
+  templateSegments: FileSegment[],
+  content: string,
+): FileSegment[] | null {
+  const result: FileSegment[] = [];
+  let pos = 0;
+
+  for (let i = 0; i < templateSegments.length; i++) {
+    const seg = templateSegments[i];
+
+    if (seg.type === "hidden") {
+      // Hidden content is absent from the solution's flat content — keep as-is.
+      result.push(seg);
+      continue;
+    }
+
+    if (seg.type !== "editable") {
+      // Fixed anchor — must appear verbatim at the current position.
+      if (content.slice(pos, pos + seg.content.length) !== seg.content) {
+        return null;
+      }
+      result.push(seg);
+      pos += seg.content.length;
+      continue;
+    }
+
+    // Editable region runs until the next fixed anchor (hidden segments skipped).
+    let anchor: string | null = null;
+    for (let j = i + 1; j < templateSegments.length; j++) {
+      const t = templateSegments[j].type;
+      if (t === "hidden") continue;
+      if (t === "editable") return null; // adjacent editables are unexpected
+      anchor = templateSegments[j].content;
+      break;
+    }
+
+    if (anchor === null) {
+      result.push({ type: "editable", content: content.slice(pos) });
+      pos = content.length;
+    } else {
+      const idx = content.indexOf(anchor, pos);
+      if (idx === -1) return null;
+      result.push({ type: "editable", content: content.slice(pos, idx) });
+      pos = idx;
+    }
+  }
+
+  if (pos !== content.length) return null; // unexplained trailing content
+  return result;
+}
+
+/**
+ * Attach reconstructed segments to solution files using the matching runner
+ * template, so the Solution tab can render readonly/exclude marks (and enforce
+ * readonly ranges) on initial load. Files that can't be aligned, or have no
+ * non-editable segments, keep their plain content unchanged.
+ */
+export function attachSolutionSegments(
+  solutionFiles: CodeFile[],
+  runnerTemplateFiles: TemplateFile[],
+): CodeFile[] {
+  return solutionFiles.map((file) => {
+    const template = runnerTemplateFiles.find((t) => t.name === file.name);
+    if (!template) return file;
+
+    const hasNonEditable = template.segments.some(
+      (s) => s.type !== "editable" && s.type !== "hidden",
+    );
+    if (!hasNonEditable) return file;
+
+    const segments = reconstructSolutionSegments(template.segments, file.content);
+    if (!segments) return file;
+
+    return { ...file, segments };
+  });
+}
 
 /**
  * Convert a TemplateFile to a CodeFile for display in the student editor.

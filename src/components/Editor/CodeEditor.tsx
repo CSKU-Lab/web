@@ -14,6 +14,7 @@ import { Prec } from "@codemirror/state";
 import type { CodeFile, FileSegment, IEditorSettings } from "./types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
 import { createStudentReadOnlyExtension } from "./CodeMirror/extensions/studentReadOnly";
+import { createSegmentMarksExtension } from "./CodeMirror/extensions/segmentMarks";
 import { api } from "~/lib/api.client";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import MarkdownRenderer from "~/components/ui/markdown-renderer";
@@ -40,6 +41,8 @@ interface Props {
   canDeleteFile?: (name: string) => boolean;
   /** Optional element rendered immediately after the RunnerSelect dropdown */
   runnerSelectAddon?: ReactNode;
+  /** Paint readonly/exclude segment highlights (as in the Runners tab). Off by default. */
+  showSegmentMarks?: boolean;
 }
 
 /**
@@ -85,6 +88,7 @@ function CodeEditor({
   isRequiredFile,
   canDeleteFile,
   runnerSelectAddon,
+  showSegmentMarks = false,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings, setSettings] =
@@ -214,6 +218,17 @@ function CodeEditor({
 
   const readOnlyExtensions = readOnlyResult ? [readOnlyResult.extension] : [];
 
+  // Visual segment marks (readonly/exclude highlights) mirroring the Runners tab,
+  // so authors can see segment regions in editors fed flattened files (e.g. Solution tab).
+  const segmentMarksExtensions = useMemo(
+    () =>
+      showSegmentMarks && currentFile?.segments
+        ? [createSegmentMarksExtension(currentFile.segments)]
+        : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentFile?.name, showSegmentMarks],
+  );
+
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       <div className="flex-1 flex min-h-0">
@@ -294,6 +309,7 @@ function CodeEditor({
                   extensions={[
                     editorRunKeymap,
                     ...readOnlyExtensions,
+                    ...segmentMarksExtensions,
                     ...segmentUpdateListener,
                   ]}
                 />
@@ -320,6 +336,7 @@ function CodeEditor({
                 extensions={[
                   editorRunKeymap,
                   ...readOnlyExtensions,
+                  ...segmentMarksExtensions,
                   ...segmentUpdateListener,
                 ]}
               />

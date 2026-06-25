@@ -197,6 +197,7 @@ function EditorSection() {
       <CodeEditor
         files={combinedFiles}
         onFilesChange={handleFilesChange}
+        showSegmentMarks
         permissions={{
           writeFiles: isOwner,
           modifyFiles: false,
