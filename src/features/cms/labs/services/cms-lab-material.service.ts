@@ -34,9 +34,6 @@ class CMSLabMaterialService extends BaseService {
   async getPagination(labID: string, params: GetLabMaterialPaginationParams) {
     return this._getPagination<CMSLabMaterial>(params, `/${labID}/materials`);
   }
-  async updatePosition(labID: string, materialID: string, position: number) {
-    await this.api.patch(`${this._baseURL}/${labID}/materials/${materialID}/position`, { position });
-  }
   async reorder(labID: string, materialIDs: string[]) {
     await this.api.patch(`${this._baseURL}/${labID}/materials/positions`, {
       material_ids: materialIDs,
