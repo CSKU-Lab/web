@@ -17,6 +17,7 @@ import c from "highlight.js/lib/languages/c";
 import python from "highlight.js/lib/languages/python";
 import javascript from "highlight.js/lib/languages/javascript";
 import cpp from "highlight.js/lib/languages/cpp";
+import plaintext from "highlight.js/lib/languages/plaintext";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 
 import { MathInlineNode, MathBlockNode } from "~/components/tiptap-node/math-node"
@@ -32,6 +33,9 @@ export const extensions = () => {
   lowlight.register("js", javascript);
   lowlight.register("cpp", cpp);
   lowlight.register("c++", cpp);
+  // Register plaintext so the "Plain text" option highlights nothing instead
+  // of falling back to lowlight.highlightAuto (which colors it like code).
+  lowlight.register("plaintext", plaintext);
   return [
     StarterKit.configure({
       codeBlock: false,
@@ -45,6 +49,7 @@ export const extensions = () => {
     CodeBlock.configure({
       languageClassPrefix: "language-",
       enableTabIndentation: true,
+      defaultLanguage: "plaintext",
       lowlight,
     }),
     HorizontalRule,
