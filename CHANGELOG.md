@@ -1,3 +1,16 @@
+# [0.39.0](https://github.com/CSKU-Lab/web/compare/v0.38.2...v0.39.0) (2026-06-26)
+
+
+### Bug Fixes
+
+* **code-material-embed:** persist submission state on reopen ([2f39619](https://github.com/CSKU-Lab/web/commit/2f3961929b0d86a069c6880a26439b0b86054df0))
+
+
+### Features
+
+* **core-material:** make resource limits section collapsible ([02094fc](https://github.com/CSKU-Lab/web/commit/02094fca8e1eff0a29bf78e4df034ee234431d2e))
+* **material:** add clone button for same-course duplication ([3def4c7](https://github.com/CSKU-Lab/web/commit/3def4c7e7e103067f4502303c7280311c7f866d2))
+
 ## [0.38.2](https://github.com/CSKU-Lab/web/compare/v0.38.1...v0.38.2) (2026-06-26)
 
 
