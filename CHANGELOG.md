@@ -1,3 +1,10 @@
+## [0.38.2](https://github.com/CSKU-Lab/web/compare/v0.38.1...v0.38.2) (2026-06-26)
+
+
+### Bug Fixes
+
+* **CS-229:** rebind typing keydown listener on retry ([36dad8a](https://github.com/CSKU-Lab/web/commit/36dad8a60ab0d0a07b933bc05e241042d062da01))
+
 ## [0.38.1](https://github.com/CSKU-Lab/web/compare/v0.38.0...v0.38.1) (2026-06-25)
 
 
