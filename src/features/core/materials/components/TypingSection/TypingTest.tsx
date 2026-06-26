@@ -38,12 +38,14 @@ export default function TypingTest({
   const hasSubmittedRef = useRef(false);
   const hasStartedRef = useRef(false);
 
+  // Re-attach on isComplete change: the input unmounts on the results screen
+  // and remounts on retry, so the listener must rebind to the new element.
   useEffect(() => {
     const el = inputRef.current;
     if (!el) return;
     el.addEventListener("keydown", handleKeyDown);
     return () => el.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+  }, [handleKeyDown, isComplete]);
 
   useEffect(() => {
     if (isStarted && !hasStartedRef.current) {
