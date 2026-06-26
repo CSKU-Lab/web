@@ -1,14 +1,12 @@
 "use client";
-import { scan } from "react-scan";
 import { useEffect } from "react";
 
 function ReactScan() {
   useEffect(() => {
-    scan({
-      enabled: true,
-    });
+    if (process.env.NODE_ENV !== "development") return;
+    void import("react-scan").then(({ scan }) => scan({ enabled: true }));
   }, []);
-  return <div></div>;
+  return null;
 }
 
 export default ReactScan;
