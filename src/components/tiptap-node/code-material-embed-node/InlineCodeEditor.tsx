@@ -31,6 +31,34 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [score, setScore] = useState<number | null>(null);
 
+  // Defer mounting the CodeMirror editor until its area scrolls into view.
+  // Safari scrolls the nearest scroll container to reveal a contenteditable
+  // the moment it's inserted into the DOM, so an off-screen editor mounting on
+  // page load yanks the page down to the first embed. Mounting only when the
+  // area is already visible avoids the jump (and is cheaper — each editor is a
+  // heavy CodeMirror + LSP instance).
+  const editorAreaRef = useRef<HTMLDivElement>(null);
+  const [editorVisible, setEditorVisible] = useState(false);
+  useEffect(() => {
+    const el = editorAreaRef.current;
+    if (!el || editorVisible) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setEditorVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setEditorVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [editorVisible]);
+
   // Track latest status without re-creating the hydration effect, so a
   // late-resolving hydration fetch never clobbers a fresh submission.
   const statusRef = useRef<SubmissionStatus>("idle");
@@ -261,22 +289,28 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
           )}
         </Button>
       </div>
-      <div className="h-[520px] flex flex-col">
-        <CodeEditor
-          files={editorFiles}
-          onFilesChange={handleFilesChange}
-          permissions={{
-            writeFiles: true,
-            modifyFiles: false,
-            codeExecution: true,
-            selectRunner: true,
-          }}
-          allowedRunners={allowedRunners}
-          initialSelectedRunner={selectedRunner}
-          onChangeSelectedRunner={handleRunnerChange}
-          isLoading={isLoading}
-          isReadonlyFile={(name) => resourceFileNames.has(name)}
-        />
+      <div ref={editorAreaRef} className="h-[520px] flex flex-col">
+        {editorVisible ? (
+          <CodeEditor
+            files={editorFiles}
+            onFilesChange={handleFilesChange}
+            permissions={{
+              writeFiles: true,
+              modifyFiles: false,
+              codeExecution: true,
+              selectRunner: true,
+            }}
+            allowedRunners={allowedRunners}
+            initialSelectedRunner={selectedRunner}
+            onChangeSelectedRunner={handleRunnerChange}
+            isLoading={isLoading}
+            isReadonlyFile={(name) => resourceFileNames.has(name)}
+          />
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-(--gray-10)">
+            <Loader2 size="1.25rem" className="animate-spin" />
+          </div>
+        )}
       </div>
     </div>
   );
