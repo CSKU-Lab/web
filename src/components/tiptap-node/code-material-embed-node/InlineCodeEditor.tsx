@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { CloudUpload, Loader2, CheckCircle2, XCircle, Clock } from "lucide-react";
@@ -30,6 +30,15 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [score, setScore] = useState<number | null>(null);
+
+  // Track latest status without re-creating the hydration effect, so a
+  // late-resolving hydration fetch never clobbers a fresh submission.
+  const statusRef = useRef<SubmissionStatus>("idle");
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
+  // Hydrate from server only once per mount.
+  const hydratedRef = useRef(false);
 
   const { data: material, isLoading } = useQuery<MaterialDetail<CoreCodeMaterial>>({
     queryKey: ["inline-code-material", materialID, sectionID, labID],
@@ -116,6 +125,47 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
     },
     [materialID, sectionID, labID, queryClient],
   );
+
+  // Restore submission state when the material is (re)opened. The material
+  // query only carries the latest status, not the achieved score or the
+  // submission id, so fetch the latest submission as the source of truth:
+  // terminal -> show result, in-flight -> resume listening for the grader.
+  useEffect(() => {
+    if (hydratedRef.current) return;
+    if (!material || !materialID || !sectionID || !labID) return;
+    hydratedRef.current = true;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res =
+          await coreSubmissionService.getSubmissionPagination<CodeSubmissionPayload>(
+            { page: 1, page_size: 1, sort_by: "created_at", sort_order: "desc" },
+            materialID,
+            labID,
+            sectionID,
+          );
+        const latest = res.data?.[0];
+        // Bail if there is no prior submission, or the user already submitted
+        // while this fetch was in flight (don't overwrite the live state).
+        if (cancelled || !latest || statusRef.current !== "idle") return;
+
+        if (latest.status === "passed" || latest.status === "failed") {
+          setStatus(latest.status);
+          setScore(latest.auto_score ?? null);
+        } else if (latest.status === "queued" || latest.status === "running") {
+          setStatus("grading");
+          listenForResult(latest.id);
+        }
+      } catch {
+        // Leave as idle on failure; the student can resubmit.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [material, materialID, sectionID, labID, listenForResult]);
 
   const submitMutation = useMutation({
     mutationFn: () =>
