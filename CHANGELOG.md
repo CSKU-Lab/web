@@ -1,3 +1,11 @@
+## [0.40.1](https://github.com/CSKU-Lab/web/compare/v0.40.0...v0.40.1) (2026-06-26)
+
+
+### Bug Fixes
+
+* **material:** defer inline editor mount to fix Safari scroll jump ([afff95b](https://github.com/CSKU-Lab/web/commit/afff95bd7a9d26845b91c06056aa68459962877a))
+* **submission:** reconstruct segments on Use This Code ([8988a27](https://github.com/CSKU-Lab/web/commit/8988a2749beaff684fec958587ee3a20ecf65afc))
+
 # [0.40.0](https://github.com/CSKU-Lab/web/compare/v0.39.0...v0.40.0) (2026-06-26)
 
 
