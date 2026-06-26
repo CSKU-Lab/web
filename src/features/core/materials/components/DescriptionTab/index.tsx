@@ -8,9 +8,15 @@ import {
   HardDrive,
   File,
   Network,
+  ChevronDown,
 } from "lucide-react";
 import { kiloToMegaBytes } from "~/components/Editor/utils/kilo-to-megabytes";
 import { Skeleton } from "~/components/ui/skeleton";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/ui/collapsible";
 
 interface LimitItemProps {
   icon: React.ReactNode;
@@ -65,8 +71,15 @@ function DescriptionTab() {
     <div className="p-4 space-y-4">
       {(isLoading || hasAnyLimits) && (
         <>
-          <div>
-            <h4 className="text-sm font-medium mb-3">Resource Limits</h4>
+          <Collapsible>
+            <CollapsibleTrigger className="group flex w-full items-center justify-between mb-3">
+              <h4 className="text-sm font-medium">Resource Limits</h4>
+              <ChevronDown
+                size="1rem"
+                className="text-(--gray-11) transition-transform group-data-[state=open]:rotate-180"
+              />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
             {isLoading ? (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <LimitItem
@@ -148,7 +161,8 @@ function DescriptionTab() {
                 )}
               </div>
             ) : null}
-          </div>
+            </CollapsibleContent>
+          </Collapsible>
 
           <div className="h-px bg-(--gray-6)" />
         </>
