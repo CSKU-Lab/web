@@ -1,4 +1,4 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useParams } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import TestcaseTable from "~/features/core/materials/components/SubmissionsTab/SubmissionDetail/TestcaseTable";
@@ -8,7 +8,11 @@ import Loading from "~/features/core/materials/components/SubmissionsTab/Submiss
 import CodePreview from "~/components/Editor/CodePreview";
 import { submissionAtom } from "~/globalStore/submissions";
 import useSubmissionDetail from "~/features/core/materials/hooks/submission-detail/useSubmissionDetail";
-import { submissionFilesAtom } from "~/features/core/materials/stores/submission.store";
+import {
+  submissionFilesAtom,
+  submissionTemplateFilesAtom,
+} from "~/features/core/materials/stores/submission.store";
+import { attachSolutionSegments } from "~/components/Editor/utils/segments";
 import type { CodeFile } from "~/components/Editor/types/editor";
 
 function SubmissionDetail() {
@@ -17,9 +21,13 @@ function SubmissionDetail() {
   const { data, isLoading, isError, refetch } =
     useSubmissionDetail(selectedSubmissionId);
   const setSubmissionFiles = useSetAtom(submissionFilesAtom);
+  const templateFiles = useAtomValue(submissionTemplateFilesAtom);
 
   const handleReplace = (files: CodeFile[]) => {
-    setSubmissionFiles(files);
+    // Submission files are flat content. Reconstruct segment structure from the
+    // selected runner's template so the editor can enforce readonly ranges and
+    // rebuild the submission payload. Files that can't be aligned stay plain.
+    setSubmissionFiles(attachSolutionSegments(files, templateFiles));
   };
 
   if (isLoading) return <Loading />;
