@@ -1,3 +1,15 @@
+# [0.40.0](https://github.com/CSKU-Lab/web/compare/v0.39.0...v0.40.0) (2026-06-26)
+
+
+### Bug Fixes
+
+* **web:** exclude react-scan from production bundle ([e8bbc21](https://github.com/CSKU-Lab/web/commit/e8bbc21a9fd50f8206db3984f646999a1296e52b))
+
+
+### Features
+
+* **analytics:** load self-hosted Umami tracker ([5fb3c7c](https://github.com/CSKU-Lab/web/commit/5fb3c7c645845ec073854ca8aa1741c061842951))
+
 # [0.39.0](https://github.com/CSKU-Lab/web/compare/v0.38.2...v0.39.0) (2026-06-26)
 
 
