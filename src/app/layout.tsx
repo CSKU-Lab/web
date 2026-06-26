@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Anuphan, Poppins } from "next/font/google";
 import localFont from "next/font/local";
-import Script from "next/script";
 import { Suspense } from "react";
 import { ClientEnv } from "~/lib/client-env";
 import { Toaster } from "~/components/ui/sonner";
@@ -87,22 +86,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Self-hosted Umami, served under /stats on the same domain. The tracker
-  // derives its collect endpoint (/stats/api/send) from this script's src.
-  // Empty id (no website created yet) → skip the script entirely.
-  const umamiWebsiteId = process.env.CLIENT_UMAMI_WEBSITE_ID;
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <ClientEnv />
-        {umamiWebsiteId ? (
-          <Script
-            src="/stats/script.js"
-            data-website-id={umamiWebsiteId}
-            strategy="afterInteractive"
-          />
-        ) : null}
       </head>
       <body
         className={`${onest.className} ${anuphan.variable} ${boon.variable}`}
