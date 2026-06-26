@@ -16,6 +16,7 @@ import { Button } from "~/components/commons/Button";
 import SettingsButton from "~/features/cms/materials/types/TypingMaterial/components/DetailSection/SettingsButton";
 import DeleteButton from "~/features/cms/materials/types/TypingMaterial/components/DetailSection/DeleteButton";
 import ForkMaterialButton from "~/features/cms/materials/components/ForkMaterialButton";
+import CloneMaterialButton from "~/features/cms/materials/components/CloneMaterialButton";
 
 function SaveStatus() {
   const saveStatus = useAtomValue(saveStatusAtom);
@@ -142,6 +143,7 @@ export default function TypingDetailSection() {
       </div>
       <div className="flex gap-2">
         <ForkMaterialButton />
+        <CloneMaterialButton />
         <ViewToggle />
         <SaveButton />
         <SettingsButton />

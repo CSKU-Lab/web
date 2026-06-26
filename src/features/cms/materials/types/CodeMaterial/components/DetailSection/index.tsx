@@ -8,6 +8,7 @@ import DeleteButton from "~/features/cms/materials/types/CodeMaterial/components
 import { Globe, Lock } from "lucide-react";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
 import ForkMaterialButton from "~/features/cms/materials/components/ForkMaterialButton";
+import CloneMaterialButton from "~/features/cms/materials/components/CloneMaterialButton";
 
 function DetailSection() {
   const { data: detail, isLoading } = useGetMaterial();
@@ -59,6 +60,7 @@ function DetailSection() {
 
       <div className="flex gap-2">
         <ForkMaterialButton />
+        <CloneMaterialButton />
         <SaveButton />
         <SettingsButton />
         <DeleteButton />

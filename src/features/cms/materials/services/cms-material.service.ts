@@ -45,6 +45,20 @@ class CMSMaterialService extends BaseService {
     return res.data.id;
   }
 
+  /**
+   * Clone a material within the same course, including all its config
+   * (e.g. code config). The clone's name gets a " (Clone)" suffix server-side.
+   */
+  async clone(courseID: string, sourceMaterialID: string) {
+    const res = await this.api.post<{ id: string }>(
+      `${this.materialsURL(courseID)}/clone`,
+      {
+        source_material_id: sourceMaterialID,
+      },
+    );
+    return res.data.id;
+  }
+
   async getById(courseID: string, id: string): Promise<CMSMaterial> {
     const res = await this.api.get<CMSMaterial>(
       `${this.materialsURL(courseID)}/${id}`,
