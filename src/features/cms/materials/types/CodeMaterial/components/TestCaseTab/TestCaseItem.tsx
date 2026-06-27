@@ -18,28 +18,20 @@ interface TestCaseItemProps {
   isOwner: boolean;
 }
 
-interface FieldLabelProps {
+function FieldLabel({
+  label,
+  hidden,
+  isOwner,
+  onToggle,
+}: {
   label: string;
   hidden: boolean;
   isOwner: boolean;
   onToggle: () => void;
-}
-
-// FieldLabel renders a field heading with an eye toggle (owner only) that
-// controls whether this field's value is returned to students. When hidden it
-// also shows an inline indicator for non-owners viewing the material.
-function FieldLabel({ label, hidden, isOwner, onToggle }: FieldLabelProps) {
+}) {
   return (
-    <div className="flex items-center justify-between mb-1">
-      <div className="flex items-center gap-1.5">
-        <p className="text-xs text-gray-10">{label}</p>
-        {hidden && (
-          <span className="inline-flex items-center gap-1 text-[10px] text-(--amber-11) bg-(--amber-3) px-1 py-0.5 rounded">
-            <EyeOff size="0.625rem" />
-            Hidden
-          </span>
-        )}
-      </div>
+    <div className="flex items-center gap-1.5 mb-1">
+      <p className="text-xs text-gray-10">{label}</p>
       {isOwner && (
         <button
           type="button"
@@ -51,8 +43,13 @@ function FieldLabel({ label, hidden, isOwner, onToggle }: FieldLabelProps) {
               : `${label} is visible to students. Click to hide.`
           }
         >
-          {hidden ? <EyeOff size="0.875rem" /> : <Eye size="0.875rem" />}
+          {hidden ? <EyeOff size="0.75rem" /> : <Eye size="0.75rem" />}
         </button>
+      )}
+      {hidden && (
+        <span className="inline-flex items-center text-[10px] text-(--amber-11) bg-(--amber-3) px-1 py-0.5 rounded">
+          Hidden
+        </span>
       )}
     </div>
   );
@@ -167,7 +164,7 @@ function TestCaseItem({
           <textarea
             value={inputValue}
             onChange={(e) => isOwner && handleInputChange(e.target.value)}
-            className={`w-full h-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5 ${!isOwner ? "bg-gray-1 cursor-not-allowed" : ""}`}
+            className={`w-full flex-1 min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5 ${!isOwner ? "bg-gray-1 cursor-not-allowed" : ""}`}
             placeholder="Enter input..."
             readOnly={!isOwner}
           />
@@ -188,7 +185,7 @@ function TestCaseItem({
           <textarea
             value={testCase.output}
             readOnly
-            className="w-full h-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md bg-gray-1 focus:outline-none"
+            className="w-full flex-1 min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md bg-gray-1 focus:outline-none"
             placeholder="Expected output..."
           />
         </div>
