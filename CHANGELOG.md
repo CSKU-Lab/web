@@ -1,3 +1,10 @@
+## [0.44.1](https://github.com/CSKU-Lab/web/compare/v0.44.0...v0.44.1) (2026-06-27)
+
+
+### Bug Fixes
+
+* **og:** use public URL in metadata, internal URL for server-side fetch ([dc38c94](https://github.com/CSKU-Lab/web/commit/dc38c942797f97f32afaa9630e9a376a5071019a))
+
 # [0.44.0](https://github.com/CSKU-Lab/web/compare/v0.43.0...v0.44.0) (2026-06-27)
 
 
