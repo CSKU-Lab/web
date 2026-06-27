@@ -1,3 +1,15 @@
+# [0.46.0](https://github.com/CSKU-Lab/web/compare/v0.45.0...v0.46.0) (2026-06-27)
+
+
+### Bug Fixes
+
+* **og:** use dedicated storage env vars instead of API URL ([81393ad](https://github.com/CSKU-Lab/web/commit/81393ade1a8fa5e2c070ec5a6678f611fc96b32e))
+
+
+### Features
+
+* **auth:** redirect signed-in users from sign-in to home ([46bc386](https://github.com/CSKU-Lab/web/commit/46bc3868f10841f0d9958723aa461ba50c8abd6e))
+
 # [0.45.0](https://github.com/CSKU-Lab/web/compare/v0.44.3...v0.45.0) (2026-06-27)
 
 
