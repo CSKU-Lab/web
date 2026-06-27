@@ -253,8 +253,6 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
     return null;
   };
 
-  const maxScore = material?.auto_score ?? 0;
-
   return (
     <div className="border rounded-lg my-4 flex flex-col">
       <div className="flex items-center justify-between px-4 py-2.5 bg-(--gray-2) border-b shrink-0">
@@ -262,7 +260,6 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
           <span className="text-sm font-medium text-(--gray-12)">
             {material?.name ?? "Code Problem"}
           </span>
-          <span className="text-xs text-(--gray-10)">{maxScore} pts</span>
           {renderStatus()}
         </div>
         <Button

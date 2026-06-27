@@ -24,7 +24,6 @@ export interface MaterialDetail<T> {
   name: string;
   type: MaterialType;
   status: SubmissionStatus;
-  auto_score: number;
   manual_score: number;
   payload: T;
 }
