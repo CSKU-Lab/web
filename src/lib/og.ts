@@ -1,5 +1,5 @@
-const PUBLIC_BASE = `${process.env.CLIENT_API_URL}/storage`;
-const INTERNAL_BASE = `${process.env.SERVER_API_URL}/storage`;
+const PUBLIC_BASE = process.env.STORAGE_PUBLIC_URL ?? '';
+const INTERNAL_BASE = process.env.STORAGE_INTERNAL_URL ?? '';
 
 const ogPath = {
   default: () => `/og/default.png`,
