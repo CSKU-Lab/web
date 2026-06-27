@@ -199,11 +199,11 @@ function StudentAllSubmissions() {
           <div className="ml-1.5">
             {allSubmissions?.map((submission, i) => (
               <SubmissionCard
-                key={submission.created_at}
+                key={submission.created_at || i}
                 submission={submission}
                 isSelected={currentIndex === i}
                 onClick={() => setCurrentIndex(i)}
-                onDelete={setSubmissionToDelete}
+                onDelete={submission.id ? setSubmissionToDelete : undefined}
               />
             ))}
             {isLoading && hasNextPage && (
