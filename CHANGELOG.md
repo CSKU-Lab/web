@@ -1,3 +1,10 @@
+# [0.43.0](https://github.com/CSKU-Lab/web/compare/v0.42.0...v0.43.0) (2026-06-27)
+
+
+### Features
+
+* **storage:** route file URLs through API proxy instead of direct S3 ([135b0fa](https://github.com/CSKU-Lab/web/commit/135b0facc3d86e09201d3116ce6ef80738c251b8))
+
 # [0.42.0](https://github.com/CSKU-Lab/web/compare/v0.41.1...v0.42.0) (2026-06-27)
 
 
