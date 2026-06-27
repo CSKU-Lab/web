@@ -1,6 +1,7 @@
 import {
   Book,
   CalendarDays,
+  ChartColumn,
   SquareChartGantt,
   Terminal,
   UserRound,
@@ -28,6 +29,11 @@ export const getSidebarMenus = (
     categories.push({
       category: "Management",
       menus: [
+        {
+          icon: <ChartColumn size="1rem" />,
+          label: "Analytics",
+          href: "/cms/analytics",
+        },
         {
           icon: <UserRound size="1rem" />,
           label: "Users Management",

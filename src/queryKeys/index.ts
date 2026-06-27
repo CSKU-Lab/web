@@ -1,6 +1,10 @@
 import type { AffectedType } from "~/types/cms-affected-entities";
 
 export const queryKeys = {
+  analytics: {
+    all: ["analytics"],
+    overview: (days: number) => [...queryKeys.analytics.all, "overview", days],
+  },
   user: {
     all: ["users"],
     allWithParams: (params: Record<string, any>) => [
