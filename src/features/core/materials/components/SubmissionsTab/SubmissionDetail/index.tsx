@@ -10,6 +10,7 @@ import { submissionAtom } from "~/globalStore/submissions";
 import useSubmissionDetail from "~/features/core/materials/hooks/submission-detail/useSubmissionDetail";
 import {
   submissionFilesAtom,
+  submissionFilesEpochAtom,
   submissionTemplateFilesAtom,
 } from "~/features/core/materials/stores/submission.store";
 import { attachSolutionSegments } from "~/components/Editor/utils/segments";
@@ -21,6 +22,7 @@ function SubmissionDetail() {
   const { data, isLoading, isError, refetch } =
     useSubmissionDetail(selectedSubmissionId);
   const setSubmissionFiles = useSetAtom(submissionFilesAtom);
+  const setSubmissionFilesEpoch = useSetAtom(submissionFilesEpochAtom);
   const templateFiles = useAtomValue(submissionTemplateFilesAtom);
 
   const handleReplace = (files: CodeFile[]) => {
@@ -28,6 +30,11 @@ function SubmissionDetail() {
     // selected runner's template so the editor can enforce readonly ranges and
     // rebuild the submission payload. Files that can't be aligned stay plain.
     setSubmissionFiles(attachSolutionSegments(files, templateFiles));
+    // Wholesale replacement — bump the epoch so the editor remounts and rebuilds
+    // its readonly ranges from the reconstructed segments. Without this the
+    // programmatic value reset is rejected by the readonly transaction filter
+    // (so the code never lands) and the ranges stay aligned to the old content.
+    setSubmissionFilesEpoch((e) => e + 1);
   };
 
   if (isLoading) return <Loading />;

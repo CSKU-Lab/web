@@ -10,8 +10,14 @@ import type { CoreCodeMaterial } from "~/types/core-code-material";
 function RightSection() {
   const { data: material, isLoading } = useGetCoreMaterial<CoreCodeMaterial>();
   const isReadonly = useIsLabReadonly();
-  const { files, selectedRunner, initRunner, persistFiles, handleRunnerChange } =
-    useSubmissionFiles();
+  const {
+    files,
+    filesEpoch,
+    selectedRunner,
+    initRunner,
+    persistFiles,
+    handleRunnerChange,
+  } = useSubmissionFiles();
 
   // Build the Runner[] list with initial_files as TemplateFile[].
   const allowedRunners = useMemo(
@@ -71,6 +77,7 @@ function RightSection() {
     <div className="flex-1 border-t-0 border-l-0 border flex flex-col min-h-0 min-w-[300px] overflow-hidden">
       <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
         <CodeEditor
+          resetKey={filesEpoch}
           files={editorFiles}
           onFilesChange={handleFilesChange}
           permissions={{

@@ -8,6 +8,13 @@ import type { TemplateFile } from "~/components/Editor/types/editor";
 
 export const submissionFilesAtom = atom<CodeFile[]>([]);
 
+// Bumped whenever submissionFilesAtom is replaced wholesale (runner load/switch,
+// "Use This Code") rather than edited via typing. The editor keys its CodeMirror
+// instance and readonly/segment extensions on this so they fully rebuild from the
+// new files. A keystroke-driven update must NOT bump this — that would remount the
+// editor mid-typing and reset the cursor.
+export const submissionFilesEpochAtom = atom<number>(0);
+
 // Original segment structure from the runner, used to build the submission payload.
 export const submissionTemplateFilesAtom = atom<TemplateFile[]>([]);
 

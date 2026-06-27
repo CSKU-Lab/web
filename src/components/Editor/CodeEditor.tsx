@@ -43,6 +43,13 @@ interface Props {
   runnerSelectAddon?: ReactNode;
   /** Paint readonly/exclude segment highlights (as in the Runners tab). Off by default. */
   showSegmentMarks?: boolean;
+  /**
+   * Bump to force a full editor rebuild when `files` is replaced wholesale
+   * (e.g. "Use This Code", runner switch) rather than edited via typing.
+   * Remounts CodeMirror and rebuilds the readonly/segment extensions so their
+   * ranges align to the new content. Leave undefined for callers that only edit.
+   */
+  resetKey?: number;
 }
 
 /**
@@ -89,6 +96,7 @@ function CodeEditor({
   canDeleteFile,
   runnerSelectAddon,
   showSegmentMarks = false,
+  resetKey = 0,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings, setSettings] =
@@ -184,13 +192,17 @@ function CodeEditor({
   );
 
   // Per-file readonly extension — recreated only when filename changes (segments are stable).
+  // Rebuild on filename change AND on resetKey bump (wholesale file replacement).
+  // NOT on currentFile.segments identity — that changes on every keystroke
+  // (syncEditableSegments returns a new array), which would reset the StateField
+  // mid-typing. resetKey only bumps on external replace, so editing is unaffected.
   const readOnlyResult = useMemo(
     () =>
       currentFile?.segments
         ? createStudentReadOnlyExtension(currentFile.segments)
         : null,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFile?.name],
+    [currentFile?.name, resetKey],
   );
 
   // Update listener: when doc changes, recompute editable segment contents using
@@ -226,7 +238,7 @@ function CodeEditor({
         ? [createSegmentMarksExtension(currentFile.segments)]
         : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFile?.name, showSegmentMarks],
+    [currentFile?.name, showSegmentMarks, resetKey],
   );
 
   return (
@@ -293,7 +305,7 @@ function CodeEditor({
             ) : fileExtension === "md" ? (
               mdTab === "edit" ? (
                 <CodeMirror
-                  key={currentFile.name}
+                  key={`${currentFile.name}:${resetKey}`}
                   readOnly={
                     (permissions ? !permissions.writeFiles : true) ||
                     (currentFile.readonly ?? false)
@@ -320,7 +332,7 @@ function CodeEditor({
               )
             ) : (
               <CodeMirror
-                key={currentFile.name}
+                key={`${currentFile.name}:${resetKey}`}
                 readOnly={
                   (permissions ? !permissions.writeFiles : true) ||
                   (currentFile.readonly ?? false)

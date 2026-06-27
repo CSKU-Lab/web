@@ -115,12 +115,19 @@ export function attachSolutionSegments(
     const template = runnerTemplateFiles.find((t) => t.name === file.name);
     if (!template) return file;
 
-    const hasNonEditable = template.segments.some(
+    // Normalize first so the reconstructed segment structure (and therefore the
+    // editable-segment indices read by buildSubmittedFiles) is identical to a
+    // fresh load via templateFileToCodeFile. Without this, a hidden segment
+    // followed by an editable that is exactly "\n" yields an extra empty editable
+    // segment here that the normal flow collapses — shifting every later index.
+    const templateSegments = normalizeHiddenSegments(template.segments);
+
+    const hasNonEditable = templateSegments.some(
       (s) => s.type !== "editable" && s.type !== "hidden",
     );
     if (!hasNonEditable) return file;
 
-    const segments = reconstructSolutionSegments(template.segments, file.content);
+    const segments = reconstructSolutionSegments(templateSegments, file.content);
     if (!segments) return file;
 
     return { ...file, segments };
