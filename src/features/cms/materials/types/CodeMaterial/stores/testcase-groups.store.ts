@@ -158,7 +158,7 @@ export const addTestCaseToGroupAtom = atom(
       order: group.test_cases.length + 1,
       input: "",
       output: "",
-      hide_input: false,
+      hide_input: true,
       hide_output: true,
     };
 
