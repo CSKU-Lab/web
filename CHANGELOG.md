@@ -1,3 +1,10 @@
+## [0.44.2](https://github.com/CSKU-Lab/web/compare/v0.44.1...v0.44.2) (2026-06-27)
+
+
+### Bug Fixes
+
+* **auth:** prevent infinite 401 retry loop on failed token refresh ([f3a0f06](https://github.com/CSKU-Lab/web/commit/f3a0f0685ebf004e920a355501d9f68f4fed5d6d))
+
 ## [0.44.1](https://github.com/CSKU-Lab/web/compare/v0.44.0...v0.44.1) (2026-06-27)
 
 
