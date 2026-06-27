@@ -1,3 +1,10 @@
+# [0.42.0](https://github.com/CSKU-Lab/web/compare/v0.41.1...v0.42.0) (2026-06-27)
+
+
+### Features
+
+* **material:** per-field testcase visibility toggles (CS-233) ([6d037df](https://github.com/CSKU-Lab/web/commit/6d037dfd88f44585f7e39cacd36cfba5a2a7d465))
+
 ## [0.41.1](https://github.com/CSKU-Lab/web/compare/v0.41.0...v0.41.1) (2026-06-27)
 
 
