@@ -5,6 +5,10 @@ const env = process.env.NODE_ENV;
 
 const isDev = env === "development";
 
+const storageHostname = process.env.WEB_URL
+  ? new URL(process.env.WEB_URL).hostname
+  : null;
+
 const remotePatterns: RemotePattern[] = isDev
   ? [
       {
@@ -24,6 +28,9 @@ const remotePatterns: RemotePattern[] = isDev
       {
         hostname: "lh3.googleusercontent.com",
       },
+      ...(storageHostname
+        ? [{ hostname: storageHostname, pathname: "/storage/**" }]
+        : []),
     ];
 
 const rewrites = async () => {
