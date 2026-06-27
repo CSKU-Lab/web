@@ -1,3 +1,10 @@
+## [0.44.3](https://github.com/CSKU-Lab/web/compare/v0.44.2...v0.44.3) (2026-06-27)
+
+
+### Bug Fixes
+
+* **test-case:** move eye toggle inline after field label ([6e5b637](https://github.com/CSKU-Lab/web/commit/6e5b637de344407799f747cc437d1927693b6aec))
+
 ## [0.44.2](https://github.com/CSKU-Lab/web/compare/v0.44.1...v0.44.2) (2026-06-27)
 
 
