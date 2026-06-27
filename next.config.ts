@@ -5,8 +5,8 @@ const env = process.env.NODE_ENV;
 
 const isDev = env === "development";
 
-const storageHostname = process.env.WEB_URL
-  ? new URL(process.env.WEB_URL).hostname
+const storageHostname = process.env.STORAGE_PUBLIC_URL
+  ? new URL(process.env.STORAGE_PUBLIC_URL).hostname
   : null;
 
 const remotePatterns: RemotePattern[] = isDev
