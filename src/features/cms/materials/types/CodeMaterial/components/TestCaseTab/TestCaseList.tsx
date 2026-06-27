@@ -19,7 +19,8 @@ interface TestCaseListProps {
     order: number;
     input: string;
     output: string;
-    isHidden?: boolean;
+    hide_input?: boolean;
+    hide_output?: boolean;
   }>;
   isOwner: boolean;
 }
@@ -30,7 +31,8 @@ interface SortableTestCaseItemProps {
     order: number;
     input: string;
     output: string;
-    isHidden?: boolean;
+    hide_input?: boolean;
+    hide_output?: boolean;
   };
   groupId: string;
   isSelected: boolean;

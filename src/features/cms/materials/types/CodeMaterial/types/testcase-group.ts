@@ -3,7 +3,8 @@ export interface TestCase {
   order: number;
   input: string;
   output: string;
-  isHidden?: boolean;
+  hide_input?: boolean;
+  hide_output?: boolean;
 }
 
 export interface TestCaseGroup {

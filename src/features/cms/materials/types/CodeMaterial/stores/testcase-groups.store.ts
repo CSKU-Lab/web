@@ -158,6 +158,8 @@ export const addTestCaseToGroupAtom = atom(
       order: group.test_cases.length + 1,
       input: "",
       output: "",
+      hide_input: false,
+      hide_output: true,
     };
 
     const updatedGroups = [...groups];
@@ -370,6 +372,40 @@ export const updateTestCaseAtom = atom(
       ...updatedTestCases[testCaseIndex],
       ...(payload.input !== undefined && { input: payload.input }),
       ...(payload.output !== undefined && { output: payload.output }),
+    };
+
+    const updatedGroups = [...groups];
+    updatedGroups[groupIndex] = {
+      ...group,
+      test_cases: updatedTestCases,
+    };
+    set(testCaseGroupsAtom, updatedGroups);
+    triggerUnSaved(get, set);
+  },
+);
+
+export const toggleTestCaseFieldVisibilityAtom = atom(
+  null,
+  (
+    get,
+    set,
+    payload: { groupId: string; testCaseId: string; field: "input" | "output" },
+  ) => {
+    const groups = get(testCaseGroupsAtom);
+    const groupIndex = groups.findIndex((g) => g.id === payload.groupId);
+    if (groupIndex === -1) return;
+
+    const group = groups[groupIndex];
+    const testCaseIndex = group.test_cases.findIndex(
+      (tc) => tc.id === payload.testCaseId,
+    );
+    if (testCaseIndex === -1) return;
+
+    const key = payload.field === "input" ? "hide_input" : "hide_output";
+    const updatedTestCases = [...group.test_cases];
+    updatedTestCases[testCaseIndex] = {
+      ...updatedTestCases[testCaseIndex],
+      [key]: !updatedTestCases[testCaseIndex][key],
     };
 
     const updatedGroups = [...groups];

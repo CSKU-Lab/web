@@ -1,11 +1,12 @@
 import { memo, useState } from "react";
-import { Trash2, Copy } from "lucide-react";
+import { Trash2, Copy, Eye, EyeOff } from "lucide-react";
 import { useSetAtom } from "jotai";
 import {
   removeTestCaseAtom,
   duplicateTestCaseAtom,
   updateTestCaseAtom,
   toggleTestCaseSelectionAtom,
+  toggleTestCaseFieldVisibilityAtom,
 } from "~/features/cms/materials/types/CodeMaterial/stores/testcase-groups.store";
 import type { TestCase } from "~/features/cms/materials/types/CodeMaterial/types/testcase-group";
 import { Button } from "~/components/commons/Button";
@@ -15,6 +16,46 @@ interface TestCaseItemProps {
   groupId: string;
   isSelected: boolean;
   isOwner: boolean;
+}
+
+interface FieldLabelProps {
+  label: string;
+  hidden: boolean;
+  isOwner: boolean;
+  onToggle: () => void;
+}
+
+// FieldLabel renders a field heading with an eye toggle (owner only) that
+// controls whether this field's value is returned to students. When hidden it
+// also shows an inline indicator for non-owners viewing the material.
+function FieldLabel({ label, hidden, isOwner, onToggle }: FieldLabelProps) {
+  return (
+    <div className="flex items-center justify-between mb-1">
+      <div className="flex items-center gap-1.5">
+        <p className="text-xs text-gray-10">{label}</p>
+        {hidden && (
+          <span className="inline-flex items-center gap-1 text-[10px] text-(--amber-11) bg-(--amber-3) px-1 py-0.5 rounded">
+            <EyeOff size="0.625rem" />
+            Hidden
+          </span>
+        )}
+      </div>
+      {isOwner && (
+        <button
+          type="button"
+          onClick={onToggle}
+          className="text-gray-10 hover:text-gray-12 transition-colors"
+          title={
+            hidden
+              ? `${label} is hidden from students. Click to show.`
+              : `${label} is visible to students. Click to hide.`
+          }
+        >
+          {hidden ? <EyeOff size="0.875rem" /> : <Eye size="0.875rem" />}
+        </button>
+      )}
+    </div>
+  );
 }
 
 function TestCaseItem({
@@ -29,6 +70,10 @@ function TestCaseItem({
   const onDuplicate = useSetAtom(duplicateTestCaseAtom);
   const onUpdateInput = useSetAtom(updateTestCaseAtom);
   const onToggleSelect = useSetAtom(toggleTestCaseSelectionAtom);
+  const onToggleFieldVisibility = useSetAtom(toggleTestCaseFieldVisibilityAtom);
+
+  const hideInput = testCase.hide_input ?? false;
+  const hideOutput = testCase.hide_output ?? false;
 
   const handleInputChange = (newInput: string) => {
     setInputValue(newInput);
@@ -107,7 +152,18 @@ function TestCaseItem({
       </div>
       <div className="flex gap-2 min-h-[150px]">
         <div className="flex-1 flex flex-col">
-          <p className="text-xs text-gray-10 mb-1">Input</p>
+          <FieldLabel
+            label="Input"
+            hidden={hideInput}
+            isOwner={isOwner}
+            onToggle={() =>
+              onToggleFieldVisibility({
+                groupId,
+                testCaseId: testCase.id,
+                field: "input",
+              })
+            }
+          />
           <textarea
             value={inputValue}
             onChange={(e) => isOwner && handleInputChange(e.target.value)}
@@ -117,7 +173,18 @@ function TestCaseItem({
           />
         </div>
         <div className="flex-1 flex flex-col">
-          <p className="text-xs text-gray-10 mb-1">Output</p>
+          <FieldLabel
+            label="Output"
+            hidden={hideOutput}
+            isOwner={isOwner}
+            onToggle={() =>
+              onToggleFieldVisibility({
+                groupId,
+                testCaseId: testCase.id,
+                field: "output",
+              })
+            }
+          />
           <textarea
             value={testCase.output}
             readOnly

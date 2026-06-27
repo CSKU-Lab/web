@@ -5,7 +5,8 @@ const testCaseSchema = z.object({
   order: z.number().describe("Execution order of the test case"),
   input: z.string().describe("Input string for the program"),
   output: z.string().describe("Expected output string"),
-  isHidden: z.boolean().optional().describe("Whether the test case is hidden"),
+  hide_input: z.boolean().optional().describe("Hide the test case input from students"),
+  hide_output: z.boolean().optional().describe("Hide the test case expected output from students"),
 });
 
 const testCaseGroupSchema = z.object({
