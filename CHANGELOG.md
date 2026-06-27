@@ -1,3 +1,10 @@
+# [0.44.0](https://github.com/CSKU-Lab/web/compare/v0.43.0...v0.44.0) (2026-06-27)
+
+
+### Features
+
+* **material:** default new test cases to fully hidden (CS-233) ([036b8a4](https://github.com/CSKU-Lab/web/commit/036b8a4b333ae58722f2ae05afd48d6d3589ac95))
+
 # [0.43.0](https://github.com/CSKU-Lab/web/compare/v0.42.0...v0.43.0) (2026-06-27)
 
 
