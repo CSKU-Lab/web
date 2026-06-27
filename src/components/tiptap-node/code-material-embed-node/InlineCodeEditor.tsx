@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { CloudUpload, Loader2, CheckCircle2, XCircle, Clock } from "lucide-react";
 import CodeEditor from "~/components/Editor/CodeEditor";
@@ -11,9 +12,14 @@ import { coreSubmissionService } from "~/services/core-submission.service";
 import type { CoreCodeMaterial } from "~/types/core-code-material";
 import type { Runner } from "~/components/Editor/types/runner";
 import type { CodeFile, SegmentType, TemplateFile } from "~/components/Editor/types/editor";
-import type { CodeSubmissionPayload } from "~/types/core-code-submission";
-import { templateFileToCodeFile, buildSubmittedFiles } from "~/components/Editor/utils/segments";
+import type { CodeSubmissionPayload, CodeSubmissionDetail } from "~/types/core-code-submission";
+import {
+  templateFileToCodeFile,
+  buildSubmittedFiles,
+  attachSolutionSegments,
+} from "~/components/Editor/utils/segments";
 import type { MaterialDetail } from "~/types/core-material";
+import { queryKeys } from "~/queryKeys";
 
 interface Props {
   materialID: string;
@@ -30,6 +36,15 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [score, setScore] = useState<number | null>(null);
+  // Bumped when `files` is replaced wholesale (hydrated submission, runner load)
+  // so CodeEditor remounts CodeMirror and rebuilds readonly ranges — a plain
+  // value swap after mount is rejected by the readonly transaction filter.
+  const [filesEpoch, setFilesEpoch] = useState(0);
+
+  // The page route is the parent DOCUMENT material; its query drives the
+  // document-level status pill, which aggregates these embeds server-side.
+  const params = useParams();
+  const documentMaterialID = params.materialID as string;
 
   // Defer mounting the CodeMirror editor until its area scrolls into view.
   // Safari scrolls the nearest scroll container to reveal a contenteditable
@@ -138,6 +153,11 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
               queryClient.invalidateQueries({
                 queryKey: ["inline-code-material", materialID, sectionID, labID],
               });
+              // Refresh the parent document's status pill, which aggregates the
+              // latest status of every embedded code block server-side.
+              queryClient.invalidateQueries({
+                queryKey: queryKeys.core.material.getById(documentMaterialID),
+              });
             }
           } catch {
             // ignore parse errors
@@ -151,7 +171,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
         setStatus("failed");
       }
     },
-    [materialID, sectionID, labID, queryClient],
+    [materialID, sectionID, labID, queryClient, documentMaterialID],
   );
 
   // Restore submission state when the material is (re)opened. The material
@@ -178,12 +198,34 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
         // while this fetch was in flight (don't overwrite the live state).
         if (cancelled || !latest || statusRef.current !== "idle") return;
 
+        // Load the student's submitted code back into the editor. Restoring only
+        // status/score leaves the editor showing the runner template, so the
+        // student sees the initial code instead of their latest submission.
+        // Submission files are flat content; reconstruct segment structure from
+        // the submission's runner template (mirrors the SubmissionDetail flow).
+        const restoreFiles = async () => {
+          const runner = allowedRunners.find(
+            (r) => r.id === latest.payload.runner_id,
+          );
+          if (!runner) return;
+          const detail =
+            await coreSubmissionService.getByID<CodeSubmissionDetail>(latest.id);
+          if (cancelled) return;
+          setSelectedRunner(runner);
+          setTemplateFiles(runner.initial_files);
+          setFiles(attachSolutionSegments(detail.payload.files, runner.initial_files));
+          // Wholesale replacement — remount the editor so readonly ranges rebuild.
+          setFilesEpoch((e) => e + 1);
+        };
+
         if (latest.status === "passed" || latest.status === "failed") {
           setStatus(latest.status);
           setScore(latest.auto_score ?? null);
+          await restoreFiles();
         } else if (latest.status === "queued" || latest.status === "running") {
           setStatus("grading");
           listenForResult(latest.id);
+          await restoreFiles();
         }
       } catch {
         // Leave as idle on failure; the student can resubmit.
@@ -193,7 +235,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [material, materialID, sectionID, labID, listenForResult]);
+  }, [material, materialID, sectionID, labID, listenForResult, allowedRunners]);
 
   const submitMutation = useMutation({
     mutationFn: () =>
@@ -211,6 +253,10 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
       setScore(null);
       toast.success("Submitted successfully");
       listenForResult(response.data.id);
+      // Flip the parent document pill to Grading right away.
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.core.material.getById(documentMaterialID),
+      });
     },
     onError: () => {
       toast.error("Submission failed");
@@ -302,6 +348,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
             onChangeSelectedRunner={handleRunnerChange}
             isLoading={isLoading}
             isReadonlyFile={(name) => resourceFileNames.has(name)}
+            resetKey={filesEpoch}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center text-(--gray-10)">

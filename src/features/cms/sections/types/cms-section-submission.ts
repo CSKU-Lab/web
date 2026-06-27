@@ -6,7 +6,8 @@ export type SubmissionStatus =
   | "failed"
   | "queued"
   | "running"
-  | "not_submitted";
+  | "not_submitted"
+  | "partial";
 
 export interface CMSSectionSubmissionStudent {
   id: string;

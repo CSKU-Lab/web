@@ -1,4 +1,4 @@
-import type { SubmissionStatus } from "~/types/core-submission";
+import type { MaterialStatus } from "~/types/core-submission";
 
 export interface Material {
   id: string;
@@ -23,7 +23,7 @@ export enum MaterialType {
 export interface MaterialDetail<T> {
   name: string;
   type: MaterialType;
-  status: SubmissionStatus;
+  status: MaterialStatus;
   manual_score: number;
   payload: T;
 }

@@ -4,7 +4,7 @@ import HeaderItem from "~/components/crafts/DetailSection/HeaderItem";
 import { renderStatus, type StatusType } from "~/features/core/materials/components/detail/DetailSection/renderStatus";
 import SubmitButton from "~/features/core/materials/components/detail/DetailSection/SubmitButton";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
-import type { SubmissionStatus } from "~/types/core-submission";
+import type { MaterialStatus } from "~/types/core-submission";
 import { useAtom } from "jotai";
 import { submissionStatusAtom } from "~/features/core/materials/stores/submission.store";
 
@@ -15,7 +15,7 @@ interface DetailSectionProps {
   showSubmit?: boolean;
 }
 
-function mapSubmissionStatus(status: SubmissionStatus | undefined): StatusType {
+function mapSubmissionStatus(status: MaterialStatus | undefined): StatusType {
   if (!status) return "NO_SUBMISSION";
 
   switch (status) {
@@ -26,6 +26,8 @@ function mapSubmissionStatus(status: SubmissionStatus | undefined): StatusType {
     case "queued":
     case "running":
       return "GRADING";
+    case "partial":
+      return "PARTIAL";
     default:
       return "NO_SUBMISSION";
   }

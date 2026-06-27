@@ -25,6 +25,10 @@ const statusConfig: Record<
     label: "Not Submitted",
     className: "bg-(--gray-2) text-(--gray-9) border-(--gray-5)",
   },
+  partial: {
+    label: "Partial",
+    className: "bg-(--orange-3) text-(--orange-11) border-(--orange-6)",
+  },
 };
 
 interface StatusBadgeProps {
