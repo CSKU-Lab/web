@@ -29,17 +29,22 @@ function extractEmbeds(nodes: TiptapNode[]): Array<{
   return result;
 }
 
-function DocumentSubmissionDetail({ material, auto_score, manual_score }: SubmissionRendererProps) {
+function DocumentSubmissionDetail({ material, payload: submissionPayload, auto_score, manual_score }: SubmissionRendererProps) {
   const embeds = useMemo(() => {
-    const payload = material.payload as { content?: string } | undefined;
-    if (!payload?.content) return [];
+    const matPayload = material.payload as { content?: string } | undefined;
+    if (!matPayload?.content) return [];
     try {
-      const doc: TiptapNode = JSON.parse(payload.content);
+      const doc: TiptapNode = JSON.parse(matPayload.content);
       return extractEmbeds(doc.content ?? []);
     } catch {
       return [];
     }
   }, [material.payload]);
+
+  const embedScores = useMemo(() => {
+    const p = submissionPayload as { embed_scores?: Record<string, number> } | null;
+    return p?.embed_scores ?? {};
+  }, [submissionPayload]);
 
   const totalMaxScore = embeds.reduce((sum, e) => sum + e.autoScore, 0);
 
@@ -72,20 +77,24 @@ function DocumentSubmissionDetail({ material, auto_score, manual_score }: Submis
       <h6 className="text-sm font-semibold text-(--gray-11)">Score Breakdown</h6>
 
       <div className="space-y-2">
-        {embeds.map((embed) => (
-          <div
-            key={embed.materialID}
-            className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-md bg-(--gray-2)"
-          >
-            <div className="flex items-center gap-2 min-w-0">
-              <Code2 size="0.875rem" className="text-(--gray-10) shrink-0" />
-              <span className="text-sm text-(--gray-12) truncate">{embed.title}</span>
+        {embeds.map((embed) => {
+          const studentScore = embedScores[embed.materialID];
+          const scoreLabel = studentScore !== undefined ? String(studentScore) : "—";
+          return (
+            <div
+              key={embed.materialID}
+              className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-md bg-(--gray-2)"
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <Code2 size="0.875rem" className="text-(--gray-10) shrink-0" />
+                <span className="text-sm text-(--gray-12) truncate">{embed.title}</span>
+              </div>
+              <span className="text-sm font-medium text-(--gray-11) shrink-0">
+                {scoreLabel} / {embed.autoScore} pts
+              </span>
             </div>
-            <span className="text-sm font-medium text-(--gray-11) shrink-0">
-              — / {embed.autoScore} pts
-            </span>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="flex items-center justify-between px-3 py-2.5 rounded-md bg-(--gray-3) font-medium">
