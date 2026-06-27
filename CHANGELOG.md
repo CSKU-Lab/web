@@ -1,3 +1,12 @@
+## [0.46.2](https://github.com/CSKU-Lab/web/compare/v0.46.1...v0.46.2) (2026-06-27)
+
+
+### Bug Fixes
+
+* **document-material:** hide delete button for synthetic submission entries ([07135ef](https://github.com/CSKU-Lab/web/commit/07135ef67e26b01d9a1be1392cae4f95e6e0e108))
+* **image:** allow storage hostname in Next.js remotePatterns ([8e3bdfe](https://github.com/CSKU-Lab/web/commit/8e3bdfe03072d9a4dce10c4f63632a3a51b8bd19))
+* **image:** derive storage hostname from STORAGE_PUBLIC_URL ([9caf107](https://github.com/CSKU-Lab/web/commit/9caf10765d96bac5a468709dc590f1f1bf08b31e))
+
 ## [0.46.1](https://github.com/CSKU-Lab/web/compare/v0.46.0...v0.46.1) (2026-06-27)
 
 
