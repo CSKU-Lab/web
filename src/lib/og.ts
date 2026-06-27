@@ -1,4 +1,4 @@
-const BASE = `${process.env.S3_FRONTEND_URL}/${process.env.S3_BUCKET}`;
+const BASE = `${process.env.SERVER_API_URL}/storage`;
 
 export const ogImages = {
   default: (): string => `${BASE}/og/default.png`,
