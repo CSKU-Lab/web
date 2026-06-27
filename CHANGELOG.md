@@ -1,3 +1,11 @@
+## [0.46.3](https://github.com/CSKU-Lab/web/compare/v0.46.2...v0.46.3) (2026-06-27)
+
+
+### Bug Fixes
+
+* **image:** pass STORAGE_PUBLIC_URL as build arg so Next.js bakes remotePatterns ([759ff67](https://github.com/CSKU-Lab/web/commit/759ff67a477426852d9956731927f0e7b4a1e87c))
+* **image:** replace next/image with plain img for storage banners ([72e0f27](https://github.com/CSKU-Lab/web/commit/72e0f27f50e91fec9c7a7724a18fec315dfc7938))
+
 ## [0.46.2](https://github.com/CSKU-Lab/web/compare/v0.46.1...v0.46.2) (2026-06-27)
 
 
