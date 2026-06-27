@@ -1,3 +1,10 @@
+## [0.41.1](https://github.com/CSKU-Lab/web/compare/v0.41.0...v0.41.1) (2026-06-27)
+
+
+### Bug Fixes
+
+* **material:** drop auto_score from student material view (CS-232) ([2221d2b](https://github.com/CSKU-Lab/web/commit/2221d2b11971e6f29bee95397d3a35480f8d1688))
+
 # [0.41.0](https://github.com/CSKU-Lab/web/compare/v0.40.1...v0.41.0) (2026-06-27)
 
 
