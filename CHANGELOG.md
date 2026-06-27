@@ -1,3 +1,10 @@
+# [0.45.0](https://github.com/CSKU-Lab/web/compare/v0.44.3...v0.45.0) (2026-06-27)
+
+
+### Features
+
+* **submission:** add partial status and document material score display ([1f6724f](https://github.com/CSKU-Lab/web/commit/1f6724f5f96edeadf116453130d1a1f9f855ecff))
+
 ## [0.44.3](https://github.com/CSKU-Lab/web/compare/v0.44.2...v0.44.3) (2026-06-27)
 
 
