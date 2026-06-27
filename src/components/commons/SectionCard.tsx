@@ -4,7 +4,6 @@ import type { ClassNameProps } from "~/types/classname-props";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
 import useResolvePath from "~/hooks/useResolvePath";
-import Image from "next/image";
 
 interface Props extends ClassNameProps {
   id: string;
@@ -29,11 +28,11 @@ export const PreviewCMSSectionCard = ({
     >
       <div className="absolute inset-0 bg-linear-to-br from-(--gray-3) to-(--gray-4)">
         {bannerImage !== null && (
-          <Image
+          <img
+            loading="lazy"
             src={bannerImage}
             alt={`Section ${name} banner image`}
-            fill
-            className="group-hover:scale-105 transition-transform object-cover"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform"
           />
         )}
       </div>
@@ -63,11 +62,11 @@ export const CMSSectionCard = ({
     >
       <div className="absolute inset-0 bg-linear-to-br from-(--gray-3) to-(--gray-4)">
         {bannerImage !== null && (
-          <Image
+          <img
+            loading="lazy"
             src={bannerImage}
             alt={`Section ${name} banner image`}
-            fill
-            className="group-hover:scale-105 transition-transform object-cover"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform"
           />
         )}
       </div>

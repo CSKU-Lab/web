@@ -46,11 +46,6 @@ COPY . .
 
 ENV NODE_ENV=production
 
-# Build-time env var so Next.js bakes the hostname into required-server-files.json.
-# Override with --build-arg STORAGE_PUBLIC_URL=... for other environments.
-ARG STORAGE_PUBLIC_URL=https://lab.cs.sci.ku.ac.th/storage
-ENV STORAGE_PUBLIC_URL=$STORAGE_PUBLIC_URL
-
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.

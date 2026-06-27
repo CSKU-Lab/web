@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 interface SectionBannerProps {
   banner?: string;
 }
@@ -9,11 +7,11 @@ export default function SectionBanner({ banner }: SectionBannerProps) {
     <div className="p-4">
       <div className="w-full h-[18rem] relative overflow-hidden rounded-xl">
         {banner ? (
-          <Image
-            fill
+          <img
+            loading="lazy"
             src={banner}
             alt="Banner"
-            className="w-full object-cover scale-105"
+            className="absolute inset-0 w-full h-full object-cover scale-105"
           />
         ) : (
           <div className="w-full h-full bg-linear-to-br from-(--gray-3) to-(--gray-4)" />

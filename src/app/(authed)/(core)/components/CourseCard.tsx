@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import useMyCourseInfPagination from "~/features/core/home/hooks/useMyCourseInfPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { Fragment } from "react/jsx-runtime";
@@ -53,11 +52,11 @@ const CourseCardItem = ({ course }: { course: MyCourse }) => {
       <div className="relative h-28 w-full overflow-hidden">
         {banner ? (
           <>
-            <Image
+            <img
+              loading="lazy"
               src={banner}
               alt={`${name} banner`}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div
               className={`absolute inset-0 bg-gradient-to-t ${
