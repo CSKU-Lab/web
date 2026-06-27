@@ -22,6 +22,12 @@ api.interceptors.response.use(
     }
 
     if (error.response?.status === 401) {
+      if (originalRequest._retry) {
+        window.location.href = "/auth/sign-in";
+        return new Promise(() => {});
+      }
+
+      originalRequest._retry = true;
       await axios.get(
         `/auth/refresh-token?redirect_to=${window.location.pathname}`,
       );
