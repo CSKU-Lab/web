@@ -1,3 +1,20 @@
+# [0.41.0](https://github.com/CSKU-Lab/web/compare/v0.40.1...v0.41.0) (2026-06-27)
+
+
+### Bug Fixes
+
+* **submission:** rebuild editor on Use This Code with readonly segments ([eefaedc](https://github.com/CSKU-Lab/web/commit/eefaedc8fd38170dae4a8a69e055612fadf6b4b4))
+
+
+### Features
+
+* **analytics:** admin CMS analytics dashboard ([d599b75](https://github.com/CSKU-Lab/web/commit/d599b7570c21bdfcb75ab4c77fbb6fcb0db44724))
+
+
+### Reverts
+
+* remove umami tracker script ([1156fe3](https://github.com/CSKU-Lab/web/commit/1156fe3e26baeefa6046125b9e0d8014460dd57d))
+
 ## [0.40.1](https://github.com/CSKU-Lab/web/compare/v0.40.0...v0.40.1) (2026-06-26)
 
 
