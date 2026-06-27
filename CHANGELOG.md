@@ -1,3 +1,10 @@
+## [0.46.1](https://github.com/CSKU-Lab/web/compare/v0.46.0...v0.46.1) (2026-06-27)
+
+
+### Bug Fixes
+
+* **document-material:** show per-embed scores in CMS submission detail ([3d16a8f](https://github.com/CSKU-Lab/web/commit/3d16a8fd8d22198baab8504f0bc56bd5151c671c))
+
 # [0.46.0](https://github.com/CSKU-Lab/web/compare/v0.45.0...v0.46.0) (2026-06-27)
 
 
