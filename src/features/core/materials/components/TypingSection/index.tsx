@@ -80,6 +80,9 @@ export default function TypingSection() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.core.material.getById(materialID),
       });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.sidebar.get(),
+      });
     },
   });
 
