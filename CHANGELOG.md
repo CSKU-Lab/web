@@ -1,3 +1,10 @@
+## [0.47.1](https://github.com/CSKU-Lab/web/compare/v0.47.0...v0.47.1) (2026-06-28)
+
+
+### Bug Fixes
+
+* **core:** invalidate sidebar on typing submission ([1b15301](https://github.com/CSKU-Lab/web/commit/1b153018eda51c9d17138dee0a031093980b1bb8))
+
 # [0.47.0](https://github.com/CSKU-Lab/web/compare/v0.46.3...v0.47.0) (2026-06-28)
 
 
