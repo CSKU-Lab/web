@@ -1,3 +1,15 @@
+# [0.47.0](https://github.com/CSKU-Lab/web/compare/v0.46.3...v0.47.0) (2026-06-28)
+
+
+### Bug Fixes
+
+* **core:** invalidate sidebar query on submission status change ([ba9b418](https://github.com/CSKU-Lab/web/commit/ba9b418831f45c7c0d9b795e8b6482a66116c2b1))
+
+
+### Features
+
+* **code-material-embed:** restore latest submission on initial load ([f47b8b8](https://github.com/CSKU-Lab/web/commit/f47b8b8e40d99171692f4a3edcc1e265dfd1f2ab))
+
 ## [0.46.3](https://github.com/CSKU-Lab/web/compare/v0.46.2...v0.46.3) (2026-06-27)
 
 
