@@ -36,7 +36,7 @@ function SidebarWrapper({ children }: Props) {
         <motion.nav
           initial={{ width: isCollapse ? 54 : SIDEBAR_WIDTH }}
           animate={{ width: isCollapse ? 54 : SIDEBAR_WIDTH }}
-          className="flex flex-col justify-between border-r border-(--gray-4) bg-(--gray-2) p-4"
+          className="flex flex-col justify-between border-r border-(--gray-4) bg-(--gray-2) p-4 min-h-0"
         >
           <ToggleButton toggleSidebar={toggleSidebar} />
           {!isCollapse && (
@@ -45,7 +45,7 @@ function SidebarWrapper({ children }: Props) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.25 }}
-                className="flex-1 overflow-y-auto pb-10"
+                className="flex-1 flex flex-col min-h-0"
               >
                 {children}
               </motion.section>
