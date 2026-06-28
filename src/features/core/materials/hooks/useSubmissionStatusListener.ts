@@ -106,6 +106,11 @@ export function useSubmissionStatusListener(materialID: string) {
                 queryKey: queryKeys.core.material.getById(materialID),
               });
 
+              // 3b. Invalidate sidebar so material status dot updates
+              queryClient.invalidateQueries({
+                queryKey: queryKeys.sidebar.get(),
+              });
+
               // 4. Close this EventSource
               eventSource.close();
 

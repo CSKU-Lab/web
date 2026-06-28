@@ -72,6 +72,11 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
       queryClient.invalidateQueries({
         queryKey: queryKeys.core.material.getPagination(materialID),
       });
+
+      // 5. Invalidate sidebar so material status dot reflects in-progress
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.sidebar.get(),
+      });
     },
     onError: () => {
       toast.error("Failed to create submission");
