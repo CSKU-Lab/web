@@ -31,7 +31,6 @@ function StudentImport({ value, onChange }: Props) {
       .filter((line) => line !== "");
     onChange(parsedStudents);
   }, [editorValue, onChange]);
-  console.log(editorValue);
 
   return (
     <div>

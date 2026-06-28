@@ -11,7 +11,7 @@ import {
 import UserAutoComplete, {
   type UserData,
 } from "~/components/commons/UserAutoComplete";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { cmsSectionService } from "~/services/cms-section.service";
 import { useParams } from "next/navigation";
@@ -25,18 +25,48 @@ function AddOrImportStudents() {
   const [autoCompleteStudents, setAutoCompleteStudents] = useState<UserData[]>(
     [],
   );
-  const clearRef = useRef(false);
+  const [importKey, setImportKey] = useState(0);
 
   const { sectionID } = useParams<{ sectionID: string }>();
   const queryClient = useQueryClient();
   const addStudent = useMutation({
     mutationFn: (studentUsernames: string[]) =>
       cmsSectionService.addStudents(sectionID, studentUsernames),
-    onSuccess: () => {
-      toast.success("Students added successfully");
-      setImportStudents([]);
+    onSuccess: (res, submittedUsernames) => {
+      const notFound = res.data.not_found ?? [];
+      const notStudents = res.data.not_students ?? [];
+      const alreadyAdded = res.data.already_added ?? [];
+      const addedCount =
+        submittedUsernames.length -
+        notFound.length -
+        notStudents.length -
+        alreadyAdded.length;
+
+      if (addedCount > 0) {
+        toast.success(`${addedCount} student(s) added successfully`);
+      }
+      if (notFound.length > 0) {
+        toast.error("Some usernames were not found and were skipped", {
+          description: notFound.join(", "),
+        });
+      }
+      if (notStudents.length > 0) {
+        toast.error("Some users are not students and were skipped", {
+          description: notStudents.join(", "),
+        });
+      }
+      if (alreadyAdded.length > 0) {
+        toast.warning("Some students are already in the section", {
+          description: alreadyAdded.join(", "),
+        });
+      }
+
+      // Keep the skipped-but-fixable usernames (not found / not a student) in
+      // the import list so the user can see and fix them; drop the rest.
+      setImportStudents([...notFound, ...notStudents]);
       setAutoCompleteStudents([]);
-      clearRef.current = true;
+      // Remount StudentImport so its editor reflects the remaining usernames.
+      setImportKey((key) => key + 1);
       queryClient.invalidateQueries({
         queryKey: queryKeys.section.getStudents(sectionID),
       });
@@ -60,7 +90,6 @@ function AddOrImportStudents() {
     ];
 
     addStudent.mutate(allStudentsToAdd);
-    clearRef.current = false;
   };
 
   return (
@@ -90,8 +119,7 @@ function AddOrImportStudents() {
             <h6 className="text-sm text-(--gray-11)">or import by username</h6>
           </div>
           <StudentImport
-            // eslint-disable-next-line react-hooks/refs
-            key={clearRef.current ? "clear" : "no-clear"}
+            key={importKey}
             value={importedStudents}
             onChange={setImportStudents}
           />

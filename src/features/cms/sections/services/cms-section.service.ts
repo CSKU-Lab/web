@@ -59,9 +59,17 @@ class SectionService extends BaseService {
   }
 
   async addStudents(sectionID: string, studentUsernames: string[]) {
-    return this.api.post(`${this._baseURL}/${sectionID}/students`, {
-      student_usernames: studentUsernames,
-    });
+    return this.api.post<{
+      message: string;
+      not_found: string[];
+      not_students: string[];
+      already_added: string[];
+    }>(
+      `${this._baseURL}/${sectionID}/students`,
+      {
+        student_usernames: studentUsernames,
+      },
+    );
   }
 
   async removeStudents(sectionID: string, studentIDs: string[]) {
