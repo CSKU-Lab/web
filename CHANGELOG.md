@@ -1,3 +1,17 @@
+# [0.48.0](https://github.com/CSKU-Lab/web/compare/v0.47.1...v0.48.0) (2026-06-28)
+
+
+### Bug Fixes
+
+* **editor:** block Enter at end of fully-readonly line ([24ec749](https://github.com/CSKU-Lab/web/commit/24ec749a70a54ce7180ffa90e973f816ce72dfd7))
+
+
+### Features
+
+* add scroll fade overlay on submissions tab ([eb7bbb7](https://github.com/CSKU-Lab/web/commit/eb7bbb7bc1c7e71899a8d8e7f3f5d22104e754de))
+* fixed sidebar header/search with scrollable courses + fade ([12b533f](https://github.com/CSKU-Lab/web/commit/12b533f6d9d5f0eb99a346fb502e12949b039f1d))
+* **sections:** keep skipped usernames and show why on add students ([c5b4e12](https://github.com/CSKU-Lab/web/commit/c5b4e12c60bdbe4fe6c9eafca6602147e3b56771))
+
 ## [0.47.1](https://github.com/CSKU-Lab/web/compare/v0.47.0...v0.47.1) (2026-06-28)
 
 
