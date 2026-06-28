@@ -17,6 +17,7 @@ import {
   templateFileToCodeFile,
   buildSubmittedFiles,
   attachSolutionSegments,
+  applyEditableSegments,
 } from "~/components/Editor/utils/segments";
 import type { MaterialDetail } from "~/types/core-material";
 import { queryKeys } from "~/queryKeys";
@@ -200,20 +201,45 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
 
         // Load the student's submitted code back into the editor. Restoring only
         // status/score leaves the editor showing the runner template, so the
-        // student sees the initial code instead of their latest submission.
-        // Submission files are flat content; reconstruct segment structure from
-        // the submission's runner template (mirrors the SubmissionDetail flow).
+        // student would see the initial code instead of their latest submission.
         const restoreFiles = async () => {
-          const runner = allowedRunners.find(
-            (r) => r.id === latest.payload.runner_id,
-          );
-          if (!runner) return;
           const detail =
             await coreSubmissionService.getByID<CodeSubmissionDetail>(latest.id);
           if (cancelled) return;
+
+          // Prefer the exact runner the submission used. Older submissions don't
+          // carry runner_id, so fall back to matching by file names (each
+          // runner's template is language-specific), then the first runner.
+          const submittedNames = detail.payload.files.map((f) => f.name);
+          const runner =
+            (detail.payload.runner_id
+              ? allowedRunners.find((r) => r.id === detail.payload.runner_id)
+              : undefined) ??
+            allowedRunners.find((r) =>
+              submittedNames.every((n) =>
+                r.initial_files.some((f) => f.name === n),
+              ),
+            ) ??
+            allowedRunners[0];
+          if (!runner) return;
+
+          // Rebuild each file from the runner template. When the backend
+          // persisted the student's indexed editable segments, splice them in for
+          // an exact restore (correct readonly ranges + resubmission). Older
+          // submissions only have flat content, so align that content instead.
+          const restored = detail.payload.files.map((file) => {
+            const template = runner.initial_files.find(
+              (t) => t.name === file.name,
+            );
+            if (template && file.editable_segments?.length) {
+              return applyEditableSegments(template, file.editable_segments);
+            }
+            return attachSolutionSegments([file], runner.initial_files)[0];
+          });
+
           setSelectedRunner(runner);
           setTemplateFiles(runner.initial_files);
-          setFiles(attachSolutionSegments(detail.payload.files, runner.initial_files));
+          setFiles(restored);
           // Wholesale replacement — remount the editor so readonly ranges rebuild.
           setFilesEpoch((e) => e + 1);
         };

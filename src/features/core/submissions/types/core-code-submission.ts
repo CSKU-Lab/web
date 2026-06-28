@@ -20,8 +20,19 @@ export interface CodeSubmissionOverview {
   total_test_cases: number;
 }
 
+export interface SubmissionDetailFile extends CodeFile {
+  /**
+   * The student's per-slot editable input, indexed to the runner template
+   * segments. Present for submissions saved after the backend started
+   * persisting it; absent for older submissions (fall back to flat content).
+   */
+  editable_segments?: SubmittedFileSegment[];
+}
+
 export interface CodeSubmissionDetail {
-  files: CodeFile[];
+  files: SubmissionDetailFile[];
+  /** Runner used for this submission; absent on older submissions. */
+  runner_id?: string;
   status: "RUN_PASSED" | "RUN_FAILED" | "COMPILE_ERROR" | "GRADER_ERROR";
   avg_wall_time: number;
   avg_memory: number;

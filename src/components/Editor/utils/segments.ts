@@ -160,6 +160,49 @@ export function templateFileToCodeFile(tf: TemplateFile): CodeFile {
 }
 
 /**
+ * Rebuild a CodeFile from a runner template and the student's indexed editable
+ * segments (as persisted by the backend at submit time). Mirrors
+ * `templateFileToCodeFile` — same hidden normalization and visible-content rule —
+ * but substitutes each editable segment's content by index. The result is
+ * structurally identical to a fresh template load with the student's edits
+ * applied, so readonly ranges, segment indices, and resubmission all behave
+ * exactly as the fresh-load flow.
+ *
+ * The segment indices match `buildSubmittedFiles` (both operate on the
+ * normalized segment array), so a value round-trips: submit -> store -> restore.
+ */
+export function applyEditableSegments(
+  tf: TemplateFile,
+  editableSegments: { index: number; content: string }[],
+): CodeFile {
+  const segments = normalizeHiddenSegments(tf.segments);
+  const contentByIndex = new Map(
+    editableSegments.map((s) => [s.index, s.content]),
+  );
+
+  const filled = segments.map((seg, i) =>
+    seg.type === "editable"
+      ? { ...seg, content: contentByIndex.get(i) ?? seg.content }
+      : seg,
+  );
+
+  let content = "";
+  for (const seg of filled) {
+    if (seg.type !== "hidden") content += seg.content;
+  }
+
+  const hasNonEditable = filled.some(
+    (s) => s.type !== "editable" && s.type !== "hidden",
+  );
+
+  return {
+    name: tf.name,
+    content,
+    segments: hasNonEditable ? filled : undefined,
+  };
+}
+
+/**
  * Build SubmittedFile[] for the submission payload.
  *
  * When a file has segments, CodeEditor keeps the editable segment contents
