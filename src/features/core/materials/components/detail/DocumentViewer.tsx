@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { Editor } from "@tiptap/react";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
@@ -13,6 +13,7 @@ function DocumentViewer() {
   const { data: material, isLoading } = useGetCoreMaterial();
   const { prevMaterial, nextMaterial } = useMaterialSiblings();
   const [editor, setEditor] = useState<Editor | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const content = useMemo(() => {
     if (isLoading) return null;
@@ -27,8 +28,15 @@ function DocumentViewer() {
   const headings = useMemo(() => extractHeadings(content), [content]);
 
   return (
-    <div className="flex-1 min-h-0 flex overflow-hidden">
-      <div className="flex-1 min-h-0 overflow-auto">
+    <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto flex">
+      {!isLoading && (
+        <DocumentToc
+          headings={headings}
+          editor={editor}
+          scrollContainer={scrollRef}
+        />
+      )}
+      <div className="flex-1 min-w-0">
         <SimpleEditor
           readOnly
           initialValue={content}
@@ -42,7 +50,6 @@ function DocumentViewer() {
           </div>
         )}
       </div>
-      {!isLoading && <DocumentToc headings={headings} editor={editor} />}
     </div>
   );
 }
