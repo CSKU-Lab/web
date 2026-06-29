@@ -1,3 +1,10 @@
+## [0.48.1](https://github.com/CSKU-Lab/web/compare/v0.48.0...v0.48.1) (2026-06-29)
+
+
+### Reverts
+
+* Revert "fix(editor): block Enter at end of fully-readonly line" ([b1b7172](https://github.com/CSKU-Lab/web/commit/b1b7172b0a4ee8e44f24e131d176b836603c19d1))
+
 # [0.48.0](https://github.com/CSKU-Lab/web/compare/v0.47.1...v0.48.0) (2026-06-28)
 
 
