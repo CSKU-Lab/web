@@ -4,9 +4,10 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { CloudUpload, Loader2, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import CodeEditor from "~/components/Editor/CodeEditor";
-import { Button } from "~/components/ui/button";
+import { SubmitCooldownButton } from "~/components/ui/submit-cooldown-button";
+import { useSubmitCooldown } from "~/hooks/useSubmitCooldown";
 import { coreMaterialService } from "~/services/core-material.service";
 import { coreSubmissionService } from "~/services/core-submission.service";
 import type { CoreCodeMaterial } from "~/types/core-code-material";
@@ -32,6 +33,7 @@ type SubmissionStatus = "idle" | "grading" | "passed" | "failed";
 
 export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
   const queryClient = useQueryClient();
+  const cooldown = useSubmitCooldown();
   const [files, setFiles] = useState<CodeFile[]>([]);
   const [templateFiles, setTemplateFiles] = useState<TemplateFile[]>([]);
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
@@ -302,6 +304,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
       toast.error("Please select a runner first");
       return;
     }
+    cooldown.start();
     submitMutation.mutate();
   };
 
@@ -342,29 +345,13 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
           </span>
           {renderStatus()}
         </div>
-        <Button
-          size="sm"
-          variant="outline"
+        <SubmitCooldownButton
           onClick={handleSubmit}
-          disabled={
-            submitMutation.isPending ||
-            status === "grading" ||
-            !selectedRunner?.id ||
-            isLoading
-          }
-        >
-          {submitMutation.isPending || status === "grading" ? (
-            <>
-              <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
-              Submitting...
-            </>
-          ) : (
-            <>
-              <CloudUpload className="mr-1.5 h-3 w-3" />
-              Submit
-            </>
-          )}
-        </Button>
+          cooldown={cooldown}
+          isSubmitting={submitMutation.isPending || status === "grading"}
+          disabled={!selectedRunner?.id || isLoading}
+          iconClassName="mr-1.5 h-3 w-3"
+        />
       </div>
       <div ref={editorAreaRef} className="h-[520px] flex flex-col">
         {editorVisible ? (

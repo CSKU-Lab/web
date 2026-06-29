@@ -1,10 +1,10 @@
 "use client";
 
 import { useAtomValue, useSetAtom } from "jotai";
-import { CloudUpload, Loader2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Button } from "~/components/ui/button";
+import { SubmitCooldownButton } from "~/components/ui/submit-cooldown-button";
+import { useSubmitCooldown } from "~/hooks/useSubmitCooldown";
 import { coreSubmissionService } from "~/services/core-submission.service";
 import { queryKeys } from "~/queryKeys";
 import {
@@ -37,6 +37,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   const setActiveSubmissions = useSetAtom(activeSubmissionsAtom);
   const setActiveLeftTab = useSetAtom(activeLeftTabAtom);
   const queryClient = useQueryClient();
+  const cooldown = useSubmitCooldown();
 
   const submitMutation = useMutation({
     mutationFn: () => {
@@ -88,6 +89,7 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
       toast.error("Please select a runner first");
       return;
     }
+    cooldown.start();
     submitMutation.mutate();
   };
 
@@ -96,24 +98,12 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
   }
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
+    <SubmitCooldownButton
       onClick={handleSubmit}
-      disabled={submitMutation.isPending || !selectedRunner?.id}
-    >
-      {submitMutation.isPending ? (
-        <>
-          <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-          Submitting...
-        </>
-      ) : (
-        <>
-          <CloudUpload className="mr-2 h-3 w-3" />
-          Submit
-        </>
-      )}
-    </Button>
+      cooldown={cooldown}
+      isSubmitting={submitMutation.isPending}
+      disabled={!selectedRunner?.id}
+    />
   );
 }
 
