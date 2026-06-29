@@ -1,3 +1,28 @@
+# [0.52.0](https://github.com/CSKU-Lab/web/compare/v0.51.0...v0.52.0) (2026-06-29)
+
+
+### Bug Fixes
+
+* **editor:** reveal code block language selector on hover ([5129116](https://github.com/CSKU-Lab/web/commit/5129116c607141a5baa1a1ed27ef8242e93ded45))
+* reset selected submission on material change + clean core query keys ([b50804b](https://github.com/CSKU-Lab/web/commit/b50804b8bf3a672c49182018ac0f5a087372601e))
+
+
+### Features
+
+* **cms:** add release note modal on new version ([657d570](https://github.com/CSKU-Lab/web/commit/657d570533d699c603f7d0697819b6fffaf1ce6e))
+* **cms:** group test cases in submission detail like core ([c99041c](https://github.com/CSKU-Lab/web/commit/c99041cd6de5b8c8ffd19935a1ea390887aacc75))
+* **cms:** show per-group score in submission detail test cases ([3f05b7e](https://github.com/CSKU-Lab/web/commit/3f05b7ef5abad82bda94346641413b723727df04))
+* **core:** blog-like header for document materials ([0ad9d7f](https://github.com/CSKU-Lab/web/commit/0ad9d7f46bb6ad238049115aaee891efed4a1133))
+* **editor:** bundle JetBrains Mono font ([dd62da2](https://github.com/CSKU-Lab/web/commit/dd62da2b96a9d10cbb6330f9ddf739944e3044bc))
+* **editor:** float code block language selector on hover ([72ea0e7](https://github.com/CSKU-Lab/web/commit/72ea0e7bbc821fcb1fc0175b14487d7ad3e8c086))
+* **materials:** add 5s submit cooldown for code materials ([4daf035](https://github.com/CSKU-Lab/web/commit/4daf035e7d90e19795a71c8f4116fae55ff7d355))
+* **materials:** add table-of-contents index to document material ([e2bb7f1](https://github.com/CSKU-Lab/web/commit/e2bb7f1a9c593811a84bf328b2f436b681b41e88))
+* **materials:** fire confetti when a student passes a material ([304a0c4](https://github.com/CSKU-Lab/web/commit/304a0c4d53f08bacd33a591760749fcbf7692953))
+* **materials:** make document TOC a left scrollspy rail ([2ffec74](https://github.com/CSKU-Lab/web/commit/2ffec74968a5fdd65324b16788362586bfafa1e8))
+* **submission:** distinct placeholder for hidden testcase fields ([87b531a](https://github.com/CSKU-Lab/web/commit/87b531a2a309ab5f0fd3fff70d1d390afab8d15b))
+* **submission:** relabel Output column to Expected Output ([4ce6a45](https://github.com/CSKU-Lab/web/commit/4ce6a459d84fd996d6699ca30501f037a631a62e))
+* **tiptap:** render mermaid diagrams in code blocks ([35e4053](https://github.com/CSKU-Lab/web/commit/35e40538264b8e64343b718f326f4b26f3f4fb67))
+
 # [0.51.0](https://github.com/CSKU-Lab/web/compare/v0.50.0...v0.51.0) (2026-06-29)
 
 
