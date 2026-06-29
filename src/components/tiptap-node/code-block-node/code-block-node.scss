@@ -17,12 +17,22 @@
   // Code block node view (wrapper around <pre> with a language selector)
   .code-block-node {
     position: relative;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
 
     &__toolbar {
       position: absolute;
-      top: calc(1.5em + 0.5rem);
+      top: 0.5rem;
       right: 0.5rem;
       z-index: 1;
+    }
+
+    // Spacing lives on the wrapper now, so neutralize the <pre> margins and
+    // reserve room at the top so the selector never covers the first line.
+    pre {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 2.5em;
     }
 
     &__language {
