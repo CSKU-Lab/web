@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  type Editor,
   type JSONContent,
   EditorContent,
   EditorContext,
@@ -209,6 +210,7 @@ interface Props extends ClassNameProps {
   isLoading?: boolean;
   readOnly?: boolean;
   courseID?: string;
+  onEditorReady?: (editor: Editor) => void;
 }
 
 export function SimpleEditor({
@@ -220,6 +222,7 @@ export function SimpleEditor({
   isLoading = false,
   readOnly = false,
   courseID,
+  onEditorReady,
 }: Props) {
   const isMobile = useIsMobile();
   const [mobileView, setMobileView] = React.useState<
@@ -259,6 +262,11 @@ export function SimpleEditor({
     if (!editor) return;
     editor.setEditable(!readOnly);
   }, [readOnly, editor]);
+
+  React.useEffect(() => {
+    if (!editor) return;
+    onEditorReady?.(editor);
+  }, [editor, onEditorReady]);
 
   const isSetInitialValue = React.useRef(false);
   React.useEffect(() => {
