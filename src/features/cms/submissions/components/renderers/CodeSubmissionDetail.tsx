@@ -136,7 +136,11 @@ function CodeSubmissionDetail({
       <CodePreview files={payload.files} className="h-140" />
 
       {/* Test cases — reuse the student (core) Testcases section so both stay aligned */}
-      <TestcaseTable isLoading={false} groups={payload.test_case_groups} />
+      <TestcaseTable
+        isLoading={false}
+        groups={payload.test_case_groups}
+        showGroupScore
+      />
     </div>
   );
 }

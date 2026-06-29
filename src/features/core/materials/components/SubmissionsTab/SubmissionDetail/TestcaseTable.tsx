@@ -8,6 +8,8 @@ import { getStatusConfig } from "~/features/core/materials/utils/submission-deta
 interface Props {
   isLoading: boolean;
   groups?: TestCaseGroup[];
+  // Show each group's score in its header. Used on the CMS (instructor) side only.
+  showGroupScore?: boolean;
 }
 
 const LoadingData = () => {
@@ -53,7 +55,7 @@ function ValueField({ label, value }: { label: string; value: string }) {
   );
 }
 
-function TestcaseTable({ isLoading, groups }: Props) {
+function TestcaseTable({ isLoading, groups, showGroupScore = false }: Props) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const toggleRow = (id: string) => {
@@ -81,11 +83,16 @@ function TestcaseTable({ isLoading, groups }: Props) {
         <div className="mt-2 space-y-3 pb-8">
           {groups?.map((group, groupIndex) => (
             <Fragment key={group.id}>
-              {hasMultipleGroups && (
-                <div className="px-1 pt-2">
+              {(hasMultipleGroups || showGroupScore) && (
+                <div className="flex items-center justify-between px-1 pt-2">
                   <span className="text-xs font-semibold text-(--gray-11)">
                     Group {groupIndex + 1}
                   </span>
+                  {showGroupScore && (
+                    <span className="text-xs text-(--gray-9)">
+                      Score: {group.score}
+                    </span>
+                  )}
                 </div>
               )}
               {group.results.map((result) => {
