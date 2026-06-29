@@ -63,6 +63,10 @@ function CodeMirror(props: CodeMirrorProps) {
           height: "100%",
           fontSize: `${fontSize}px`,
         },
+        ".cm-content, .cm-gutters": {
+          fontFamily: "var(--font-mono), monospace",
+          fontVariantLigatures: "none",
+        },
       }),
     [fontSize],
   );
@@ -104,6 +108,7 @@ function CodeMirror(props: CodeMirrorProps) {
     () =>
       githubDarkInit({
         settings: {
+          fontFamily: "var(--font-mono), monospace",
           background: "var(--gray-1)",
           caret: "var(--gray-11)",
           gutterBackground: "var(--gray-2)",
@@ -117,6 +122,7 @@ function CodeMirror(props: CodeMirrorProps) {
     () =>
       githubLightInit({
         settings: {
+          fontFamily: "var(--font-mono), monospace",
           background: "var(--gray-1)",
           caret: "var(--gray-12)",
           gutterBackground: "var(--gray-2)",

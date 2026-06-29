@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Anuphan, Poppins } from "next/font/google";
+import { Anuphan, JetBrains_Mono, Poppins } from "next/font/google";
 import localFont from "next/font/local";
 import { Suspense } from "react";
 import { ClientEnv } from "~/lib/client-env";
@@ -19,6 +19,12 @@ const anuphan = Anuphan({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700"],
   variable: "--font-anuphan",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-mono",
 });
 
 const boon = localFont({
@@ -92,7 +98,7 @@ export default function RootLayout({
         <ClientEnv />
       </head>
       <body
-        className={`${onest.className} ${anuphan.variable} ${boon.variable}`}
+        className={`${onest.className} ${anuphan.variable} ${boon.variable} ${jetbrainsMono.variable}`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ReactScan />
