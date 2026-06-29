@@ -1,5 +1,5 @@
 import { useState, Fragment } from "react";
-import { ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronRight, ChevronDown, Ghost } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
 import type { TestCaseGroup } from "~/types/core-code-submission";
@@ -37,6 +37,22 @@ const LoadingData = () => {
 const textareaClass =
   "w-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5";
 
+function ValueField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="space-y-1">
+      <span className="text-xs text-(--gray-11)">{label}</span>
+      {value ? (
+        <textarea value={value} readOnly disabled className={textareaClass} />
+      ) : (
+        <div className="flex flex-col items-center justify-center gap-1.5 w-full min-h-[120px] p-2 border border-dashed border-(--gray-5) rounded-md text-xs text-(--gray-9) italic">
+          <Ghost size="1.25rem" />
+          Hidden by instructor
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TestcaseTable({ isLoading, groups }: Props) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
@@ -62,7 +78,7 @@ function TestcaseTable({ isLoading, groups }: Props) {
       {isLoading ? (
         <LoadingData />
       ) : (
-        <div className="mt-2 space-y-3">
+        <div className="mt-2 space-y-3 pb-8">
           {groups?.map((group, groupIndex) => (
             <Fragment key={group.id}>
               {hasMultipleGroups && (
@@ -78,6 +94,9 @@ function TestcaseTable({ isLoading, groups }: Props) {
                 const hasMessage =
                   result.status !== "RUN_PASSED" && !!result.message;
                 const isExpanded = expandedRows.has(result.id);
+                // Backend withholds input/output when the creator hides them
+                // (empty string). When both are hidden, drop the grid entirely.
+                const hasIO = !!result.input || !!result.output;
 
                 return (
                   <div
@@ -123,28 +142,15 @@ function TestcaseTable({ isLoading, groups }: Props) {
                     </div>
 
                     {/* Input | Expected Output */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <span className="text-xs text-(--gray-11)">Input</span>
-                        <textarea
-                          value={result.input || "-"}
-                          readOnly
-                          disabled
-                          className={textareaClass}
+                    {hasIO && (
+                      <div className="grid grid-cols-2 gap-3">
+                        <ValueField label="Input" value={result.input} />
+                        <ValueField
+                          label="Expected Output"
+                          value={result.output}
                         />
                       </div>
-                      <div className="space-y-1">
-                        <span className="text-xs text-(--gray-11)">
-                          Expected Output
-                        </span>
-                        <textarea
-                          value={result.output || "-"}
-                          readOnly
-                          disabled
-                          className={textareaClass}
-                        />
-                      </div>
-                    </div>
+                    )}
 
                     {hasMessage && isExpanded && (
                       <pre className="text-xs text-(--gray-12) whitespace-pre-wrap font-mono bg-(--gray-3) p-3 rounded-md">
