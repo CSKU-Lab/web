@@ -74,7 +74,7 @@ function TestcaseTable({ isLoading, groups }: Props) {
           <TableRow>
             <TableHead>#</TableHead>
             <TableHead>Input</TableHead>
-            <TableHead>Output</TableHead>
+            <TableHead>Expected Output</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="w-[80px]">Time</TableHead>
             <TableHead className="w-[80px]">Memory</TableHead>
