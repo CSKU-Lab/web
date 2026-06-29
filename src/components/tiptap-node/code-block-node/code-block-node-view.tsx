@@ -4,6 +4,13 @@ import {
   NodeViewWrapper,
   type NodeViewProps,
 } from "@tiptap/react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select"
 
 // Values must match the languages registered with lowlight in
 // `~/components/tiptap-templates/simple/extensions.ts`.
@@ -26,23 +33,27 @@ export function CodeBlockNodeView({
   return (
     <NodeViewWrapper className="code-block-node">
       {editor.isEditable && (
-        <div className="code-block-node__toolbar" contentEditable={false}>
-          <select
-            className="code-block-node__language"
+        <div
+          className="code-block-node__toolbar"
+          contentEditable={false}
+          // Keep ProseMirror from hijacking pointer/selection on the control.
+          onMouseDown={(event) => event.stopPropagation()}
+        >
+          <Select
             value={language}
-            onChange={(event) =>
-              updateAttributes({ language: event.target.value })
-            }
-            // Keep ProseMirror from hijacking pointer/selection on the control.
-            onMouseDown={(event) => event.stopPropagation()}
-            contentEditable={false}
+            onValueChange={(value) => updateAttributes({ language: value })}
           >
-            {CODE_BLOCK_LANGUAGES.map((lang) => (
-              <option key={lang.value} value={lang.value}>
-                {lang.label}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger size="sm" className="code-block-node__language">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {CODE_BLOCK_LANGUAGES.map((lang) => (
+                <SelectItem key={lang.value} value={lang.value}>
+                  {lang.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       )}
       <pre>
