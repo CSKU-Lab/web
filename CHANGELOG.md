@@ -1,3 +1,15 @@
+# [0.50.0](https://github.com/CSKU-Lab/web/compare/v0.49.0...v0.50.0) (2026-06-29)
+
+
+### Bug Fixes
+
+* **cms:** make segmented file editor scroll in Runners tab ([33000c9](https://github.com/CSKU-Lab/web/commit/33000c9ce57f2867959068bbea02020a0bcc78e6))
+
+
+### Features
+
+* **code-material:** add restart-from-template button ([ab521c8](https://github.com/CSKU-Lab/web/commit/ab521c8953ccf60a998359ed4ce139f059a8d9df))
+
 # [0.49.0](https://github.com/CSKU-Lab/web/compare/v0.48.2...v0.49.0) (2026-06-29)
 
 
