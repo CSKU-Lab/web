@@ -11,6 +11,7 @@ import type { StatusType } from "~/features/core/materials/components/detail/Det
 import useMaterialSubmissionPagination from "~/features/core/materials/hooks/useMaterialSubmisionPagination";
 import { coreSubmissionService } from "~/services/core-submission.service";
 import { queryKeys } from "~/queryKeys";
+import { firePassConfetti } from "~/lib/confetti";
 import type { SubmissionStatus } from "~/types/core-submission";
 
 function mapSubmissionStatus(status: SubmissionStatus): StatusType {
@@ -76,6 +77,11 @@ export function useSubmissionStatusListener(materialID: string) {
             if (data.status === "passed" || data.status === "failed") {
               // 1. Update atom for immediate UI update
               setSubmissionStatus(mapSubmissionStatus(data.status));
+
+              // Celebrate a fresh pass (real-time result, not page hydration)
+              if (data.status === "passed") {
+                firePassConfetti();
+              }
 
               // 2. Update pagination cache (for SubmissionCard)
               queryClient.setQueryData(

@@ -10,6 +10,7 @@ import type { TypingSubmissionOverview } from "~/features/core/materials/compone
 import { coreSubmissionService } from "~/services/core-submission.service";
 import { coreMaterialService } from "~/services/core-material.service";
 import { queryKeys } from "~/queryKeys";
+import { firePassConfetti } from "~/lib/confetti";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
 import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 import { useTypingSession } from "~/features/core/materials/hooks/typing-section/useTypingSession";
@@ -71,6 +72,9 @@ export default function TypingSection() {
     onSuccess: (submission) => {
       setServerResults(submission.payload as TypingSubmissionOverview);
       setServerAutoScore(submission.auto_score);
+      if (submission.status === "passed") {
+        firePassConfetti();
+      }
       queryClient.invalidateQueries({
         queryKey: queryKeys.core.material.getPagination(materialID),
       });

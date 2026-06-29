@@ -8,6 +8,7 @@ import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import CodeEditor from "~/components/Editor/CodeEditor";
 import { SubmitCooldownButton } from "~/components/ui/submit-cooldown-button";
 import { useSubmitCooldown } from "~/hooks/useSubmitCooldown";
+import { firePassConfetti } from "~/lib/confetti";
 import { coreMaterialService } from "~/services/core-material.service";
 import { coreSubmissionService } from "~/services/core-submission.service";
 import type { CoreCodeMaterial } from "~/types/core-code-material";
@@ -157,6 +158,9 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
             const data = JSON.parse(event.data);
             if (data.status === "passed" || data.status === "failed") {
               setStatus(data.status === "passed" ? "passed" : "failed");
+              if (data.status === "passed") {
+                firePassConfetti();
+              }
               if (typeof data.auto_score === "number") {
                 setScore(data.auto_score);
               }
