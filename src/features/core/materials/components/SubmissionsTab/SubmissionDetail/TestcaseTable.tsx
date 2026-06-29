@@ -1,14 +1,6 @@
 import { useState, Fragment } from "react";
 import { ChevronRight, ChevronDown } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
 import { cn } from "~/lib/utils";
 import type { TestCaseGroup } from "~/types/core-code-submission";
 import { getStatusConfig } from "~/features/core/materials/utils/submission-detail/statusConfig";
@@ -20,32 +12,30 @@ interface Props {
 
 const LoadingData = () => {
   return (
-    <>
-      {Array.from({ length: 12 }).map((_, i) => (
-        <TableRow key={i}>
-          <TableCell>
-            <Skeleton className="w-6 h-6" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-24 h-6" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-24 h-6" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-24 h-6" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-16 h-6" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-16 h-6" />
-          </TableCell>
-        </TableRow>
+    <div className="mt-2 space-y-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          className="border border-(--gray-4) rounded-lg p-3 space-y-3"
+        >
+          <div className="flex items-center gap-4">
+            <Skeleton className="w-6 h-5" />
+            <Skeleton className="w-20 h-5" />
+            <Skeleton className="w-16 h-5" />
+            <Skeleton className="w-16 h-5" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Skeleton className="w-full h-[120px]" />
+            <Skeleton className="w-full h-[120px]" />
+          </div>
+        </div>
       ))}
-    </>
+    </div>
   );
 };
+
+const textareaClass =
+  "w-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5";
 
 function TestcaseTable({ isLoading, groups }: Props) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
@@ -69,105 +59,105 @@ function TestcaseTable({ isLoading, groups }: Props) {
           Testcases
         </h6>
       )}
-      <Table className="mt-2 overflow-visible">
-        <TableHeader>
-          <TableRow>
-            <TableHead>#</TableHead>
-            <TableHead>Input</TableHead>
-            <TableHead>Expected Output</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="w-[80px]">Time</TableHead>
-            <TableHead className="w-[80px]">Memory</TableHead>
-            <TableHead className="w-[32px]" />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {isLoading ? (
-            <LoadingData />
-          ) : (
-            groups?.map((group, groupIndex) => (
-              <Fragment key={group.id}>
-                {hasMultipleGroups && (
-                  <TableRow className="bg-(--gray-3) hover:bg-(--gray-3)">
-                    <TableCell colSpan={7} className="py-1.5 px-3">
-                      <span className="text-xs font-semibold text-(--gray-11)">
-                        Group {groupIndex + 1}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                )}
-                {group.results.map((result) => {
-                  const index = globalIndex++;
-                  const statusInfo = getStatusConfig(result.status);
-                  const hasMessage =
-                    result.status !== "RUN_PASSED" && !!result.message;
-                  const isExpanded = expandedRows.has(result.id);
+      {isLoading ? (
+        <LoadingData />
+      ) : (
+        <div className="mt-2 space-y-3">
+          {groups?.map((group, groupIndex) => (
+            <Fragment key={group.id}>
+              {hasMultipleGroups && (
+                <div className="px-1 pt-2">
+                  <span className="text-xs font-semibold text-(--gray-11)">
+                    Group {groupIndex + 1}
+                  </span>
+                </div>
+              )}
+              {group.results.map((result) => {
+                const index = globalIndex++;
+                const statusInfo = getStatusConfig(result.status);
+                const hasMessage =
+                  result.status !== "RUN_PASSED" && !!result.message;
+                const isExpanded = expandedRows.has(result.id);
 
-                  return (
-                    <Fragment key={result.id}>
-                      <TableRow
-                        className={cn(hasMessage && "cursor-pointer")}
-                        onClick={
-                          hasMessage ? () => toggleRow(result.id) : undefined
-                        }
+                return (
+                  <div
+                    key={result.id}
+                    className="border border-(--gray-4) rounded-lg p-3 space-y-3"
+                  >
+                    {/* Detail line */}
+                    <div className="flex items-center gap-4 text-xs">
+                      <span className="font-medium text-(--gray-12)">
+                        #{index + 1}
+                      </span>
+                      <span
+                        className={cn("font-medium", statusInfo.className)}
                       >
-                        <TableCell className="font-medium">{index + 1}</TableCell>
-                        <TableCell>
-                          <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
-                            {result.input || "-"}
-                          </code>
-                        </TableCell>
-                        <TableCell>
-                          <code className="text-xs bg-(--gray-4) px-1 py-0.5 rounded">
-                            {result.output || "-"}
-                          </code>
-                        </TableCell>
-                        <TableCell>
-                          <span
-                            className={cn(
-                              "text-xs font-medium",
-                              statusInfo.className,
-                            )}
-                          >
-                            {statusInfo.label}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-xs text-(--gray-11)">
-                          {result.wall_time > 0
-                            ? `${result.wall_time.toFixed(2)}ms`
-                            : "-"}
-                        </TableCell>
-                        <TableCell className="text-xs text-(--gray-11)">
-                          {result.memory > 0
-                            ? `${(result.memory / 1024).toFixed(2)}KB`
-                            : "-"}
-                        </TableCell>
-                        <TableCell className="p-0">
-                          {hasMessage &&
-                            (isExpanded ? (
-                              <ChevronDown size="0.875rem" className="text-(--gray-9)" />
-                            ) : (
-                              <ChevronRight size="0.875rem" className="text-(--gray-9)" />
-                            ))}
-                        </TableCell>
-                      </TableRow>
-                      {hasMessage && isExpanded && (
-                        <TableRow>
-                          <TableCell colSpan={7} className="bg-(--gray-3) p-3">
-                            <pre className="text-xs text-(--gray-12) whitespace-pre-wrap font-mono">
-                              {result.message}
-                            </pre>
-                          </TableCell>
-                        </TableRow>
+                        {statusInfo.label}
+                      </span>
+                      <span className="text-(--gray-11)">
+                        Time:{" "}
+                        {result.wall_time > 0
+                          ? `${result.wall_time.toFixed(2)}ms`
+                          : "-"}
+                      </span>
+                      <span className="text-(--gray-11)">
+                        Memory:{" "}
+                        {result.memory > 0
+                          ? `${(result.memory / 1024).toFixed(2)}KB`
+                          : "-"}
+                      </span>
+                      {hasMessage && (
+                        <button
+                          type="button"
+                          onClick={() => toggleRow(result.id)}
+                          className="ml-auto flex items-center gap-1 text-(--gray-9)"
+                        >
+                          {isExpanded ? "Hide details" : "Show details"}
+                          {isExpanded ? (
+                            <ChevronDown size="0.875rem" />
+                          ) : (
+                            <ChevronRight size="0.875rem" />
+                          )}
+                        </button>
                       )}
-                    </Fragment>
-                  );
-                })}
-              </Fragment>
-            ))
-          )}
-        </TableBody>
-      </Table>
+                    </div>
+
+                    {/* Input | Expected Output */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <span className="text-xs text-(--gray-11)">Input</span>
+                        <textarea
+                          value={result.input || "-"}
+                          readOnly
+                          disabled
+                          className={textareaClass}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-xs text-(--gray-11)">
+                          Expected Output
+                        </span>
+                        <textarea
+                          value={result.output || "-"}
+                          readOnly
+                          disabled
+                          className={textareaClass}
+                        />
+                      </div>
+                    </div>
+
+                    {hasMessage && isExpanded && (
+                      <pre className="text-xs text-(--gray-12) whitespace-pre-wrap font-mono bg-(--gray-3) p-3 rounded-md">
+                        {result.message}
+                      </pre>
+                    )}
+                  </div>
+                );
+              })}
+            </Fragment>
+          ))}
+        </div>
+      )}
     </>
   );
 }
