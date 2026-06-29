@@ -1,10 +1,10 @@
 "use client";
 
 import HeaderItem from "~/components/crafts/DetailSection/HeaderItem";
-import { renderStatus, type StatusType } from "~/features/core/materials/components/detail/DetailSection/renderStatus";
+import { renderStatus } from "~/features/core/materials/components/detail/DetailSection/renderStatus";
+import { mapSubmissionStatus } from "~/features/core/materials/components/detail/DetailSection/mapSubmissionStatus";
 import SubmitButton from "~/features/core/materials/components/detail/DetailSection/SubmitButton";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
-import type { MaterialStatus } from "~/types/core-submission";
 import { useAtom } from "jotai";
 import { submissionStatusAtom } from "~/features/core/materials/stores/submission.store";
 
@@ -12,28 +12,9 @@ interface DetailSectionProps {
   sectionID: string;
   labID: string;
   materialID: string;
-  showSubmit?: boolean;
 }
 
-function mapSubmissionStatus(status: MaterialStatus | undefined): StatusType {
-  if (!status) return "NO_SUBMISSION";
-
-  switch (status) {
-    case "passed":
-      return "PASSED";
-    case "failed":
-      return "FAILED";
-    case "queued":
-    case "running":
-      return "GRADING";
-    case "partial":
-      return "PARTIAL";
-    default:
-      return "NO_SUBMISSION";
-  }
-}
-
-function DetailSection({ sectionID, labID, materialID, showSubmit = true }: DetailSectionProps) {
+function DetailSection({ sectionID, labID, materialID }: DetailSectionProps) {
   const { data: material, isLoading } = useGetCoreMaterial();
   const [submissionStatus] = useAtom(submissionStatusAtom);
 
@@ -53,13 +34,11 @@ function DetailSection({ sectionID, labID, materialID, showSubmit = true }: Deta
           isLoading={isLoading}
         />
       </div>
-      {showSubmit && (
-        <SubmitButton
-          sectionID={sectionID}
-          labID={labID}
-          materialID={materialID}
-        />
-      )}
+      <SubmitButton
+        sectionID={sectionID}
+        labID={labID}
+        materialID={materialID}
+      />
     </div>
   );
 }

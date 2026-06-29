@@ -35,7 +35,6 @@ export default function MaterialTypeRouter({ children, initialType }: Props) {
   if (type === MaterialType.DOCUMENT) {
     return (
       <div className="flex flex-col h-full">
-        <DetailSection sectionID={sectionID} labID={labID} materialID={materialID} showSubmit={false} />
         <DocumentViewer />
       </div>
     );
