@@ -131,6 +131,14 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
     setFiles(runner.initial_files.map(templateFileToCodeFile));
   }, []);
 
+  // Restart: discard the student's edits and reload the current runner template.
+  const handleRestart = useCallback(() => {
+    if (!selectedRunner) return;
+    setFiles(selectedRunner.initial_files.map(templateFileToCodeFile));
+    // Wholesale replacement — remount the editor so readonly ranges rebuild.
+    setFilesEpoch((e) => e + 1);
+  }, [selectedRunner]);
+
   const handleFilesChange = useCallback(
     (newFiles: typeof editorFiles) => {
       setFiles(newFiles.filter((f) => !resourceFileNames.has(f.name)));
@@ -372,6 +380,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
             allowedRunners={allowedRunners}
             initialSelectedRunner={selectedRunner}
             onChangeSelectedRunner={handleRunnerChange}
+            onRestart={handleRestart}
             isLoading={isLoading}
             isReadonlyFile={(name) => resourceFileNames.has(name)}
             resetKey={filesEpoch}

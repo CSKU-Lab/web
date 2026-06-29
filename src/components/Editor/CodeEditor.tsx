@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef, useMemo, type ReactNode } from "react";
 import { generateId } from "~/utils/generate-id";
-import { FileCode, PanelLeftOpen } from "lucide-react";
+import { FileCode, PanelLeftOpen, RotateCcw } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
 import RunnerSelect from "./RunnerSelect";
@@ -18,6 +18,23 @@ import { createSegmentMarksExtension } from "./CodeMirror/extensions/segmentMark
 import { api } from "~/lib/api.client";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import MarkdownRenderer from "~/components/ui/markdown-renderer";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+import {
+  Dialog,
+  DialogBody,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/commons/Dialog";
+import { Button } from "~/components/commons/Button";
 
 interface Permission {
   modifyFiles?: boolean;
@@ -41,6 +58,11 @@ interface Props {
   canDeleteFile?: (name: string) => boolean;
   /** Optional element rendered immediately after the RunnerSelect dropdown */
   runnerSelectAddon?: ReactNode;
+  /**
+   * When provided, renders a "restart from template" button in the toolbar.
+   * Caller resets the editor files back to the selected runner's template.
+   */
+  onRestart?: () => void;
   /** Paint readonly/exclude segment highlights (as in the Runners tab). Off by default. */
   showSegmentMarks?: boolean;
   /**
@@ -95,6 +117,7 @@ function CodeEditor({
   isRequiredFile,
   canDeleteFile,
   runnerSelectAddon,
+  onRestart,
   showSegmentMarks = false,
   resetKey = 0,
 }: Props) {
@@ -105,6 +128,7 @@ function CodeEditor({
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [mdTab, setMdTab] = useState("edit");
   const [isFileTreeCollapsed, setIsFileTreeCollapsed] = useState(true);
+  const [isRestartOpen, setIsRestartOpen] = useState(false);
 
   const [previousFiles, setPreviousFiles] = useState<CodeFile[]>([]);
   if (previousFiles.length === 0 && files.length > 0) {
@@ -289,6 +313,52 @@ function CodeEditor({
                   <TabsTrigger value="edit">Edit</TabsTrigger>
                   <TabsTrigger value="preview">Preview</TabsTrigger>
                 </TabsList>
+              )}
+              {onRestart && (
+                <Dialog open={isRestartOpen} onOpenChange={setIsRestartOpen}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <DialogTrigger asChild>
+                        <button
+                          type="button"
+                          disabled={isLoading || selectedRunner === null}
+                          className="flex size-6 items-center justify-center rounded text-(--gray-10) hover:bg-(--gray-4) hover:text-(--gray-12) disabled:pointer-events-none disabled:opacity-50 transition-colors"
+                        >
+                          <RotateCcw size="1rem" />
+                        </button>
+                      </DialogTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Restart from template — discard your changes and reset the
+                      code to the original template
+                    </TooltipContent>
+                  </Tooltip>
+                  <DialogContent>
+                    <DialogHeader className="p-4">
+                      <DialogTitle>Restart from template?</DialogTitle>
+                    </DialogHeader>
+                    <DialogBody className="px-4 py-2">
+                      <DialogDescription className="text-(--gray-11)">
+                        This discards your current changes and resets the code to
+                        the original template. This cannot be undone.
+                      </DialogDescription>
+                    </DialogBody>
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button variant="ghost">Cancel</Button>
+                      </DialogClose>
+                      <Button
+                        variant="danger"
+                        onClick={() => {
+                          onRestart();
+                          setIsRestartOpen(false);
+                        }}
+                      >
+                        Restart
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               )}
               <EditorSettings
                 settings={settings}

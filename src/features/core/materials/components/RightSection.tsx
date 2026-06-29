@@ -19,6 +19,11 @@ function RightSection() {
     handleRunnerChange,
   } = useSubmissionFiles();
 
+  // Restart: discard the student's edits and reload the current runner template.
+  function handleRestart() {
+    if (selectedRunner) initRunner(selectedRunner);
+  }
+
   // Build the Runner[] list with initial_files as TemplateFile[].
   const allowedRunners = useMemo(
     () =>
@@ -89,6 +94,7 @@ function RightSection() {
           allowedRunners={allowedRunners}
           initialSelectedRunner={selectedRunner}
           onChangeSelectedRunner={handleRunnerChange}
+          onRestart={isReadonly ? undefined : handleRestart}
           isLoading={isLoading}
           isReadonlyFile={(name) => resourceFileNames.has(name)}
         />
