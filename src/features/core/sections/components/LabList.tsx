@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { LabItemExpanded } from "~/features/core/sections/components/LabItemExpanded";
+import { LabSection } from "~/features/core/sections/components/LabSection";
 import useCoreLabInfPagination from "~/features/core/sections/hooks/useCoreLabInfPagination";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { LabItemSkeleton } from "~/features/core/sections/components/LabItemSkeleton";
@@ -57,7 +57,7 @@ export default function LabList({ search, filters }: Props) {
         {isNoData ? (
           <NoDataAvailable />
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-10">
             {labPagination.pages.map((page) =>
               page.data.map(
                 ({
@@ -69,7 +69,7 @@ export default function LabList({ search, filters }: Props) {
                   total_materials,
                   completed_materials,
                 }) => (
-                  <LabItemExpanded
+                  <LabSection
                     key={id}
                     id={id}
                     name={name}
