@@ -1,3 +1,15 @@
+# [0.51.0](https://github.com/CSKU-Lab/web/compare/v0.50.0...v0.51.0) (2026-06-29)
+
+
+### Bug Fixes
+
+* anchor code block language selector to top-right ([f1922cd](https://github.com/CSKU-Lab/web/commit/f1922cd84f8852d827fa63c1b8d337f9c4282738))
+
+
+### Features
+
+* add prev/next material navigation to document material ([c948f8a](https://github.com/CSKU-Lab/web/commit/c948f8ad46a2f1355a82a6fbd8d9408fc45b0c9c))
+
 # [0.50.0](https://github.com/CSKU-Lab/web/compare/v0.49.0...v0.50.0) (2026-06-29)
 
 
