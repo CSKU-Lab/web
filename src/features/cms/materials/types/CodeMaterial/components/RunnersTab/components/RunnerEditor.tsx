@@ -83,7 +83,7 @@ function RunnerEditor({
         getDisplayName={getDisplayName}
       />
       <div className="flex-1 flex flex-col min-h-0 min-w-40">
-        <div className="border-b p-1 flex justify-end">
+        <div className="border-b p-1 flex justify-end shrink-0">
           <EditorSettings settings={settings} onChange={handleSettingsChange} />
         </div>
         {currentFile === undefined ? (
@@ -92,14 +92,16 @@ function RunnerEditor({
             <p className="text-sm">Click a file to start editing</p>
           </div>
         ) : currentTemplateFile !== null ? (
-          <SegmentedFileEditor
-            key={currentTemplateFile.name}
-            file={currentTemplateFile}
-            onChange={handleTemplateFileChange}
-            extension={fileExtension}
-            fontSize={settings.fontSize}
-            disabled={disabled}
-          />
+          <div className="flex-1 min-h-0">
+            <SegmentedFileEditor
+              key={currentTemplateFile.name}
+              file={currentTemplateFile}
+              onChange={handleTemplateFileChange}
+              extension={fileExtension}
+              fontSize={settings.fontSize}
+              disabled={disabled}
+            />
+          </div>
         ) : (
           <CodeMirror
             key={currentFile.name}
