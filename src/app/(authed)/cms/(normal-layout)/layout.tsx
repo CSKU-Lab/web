@@ -10,6 +10,7 @@ import BreadcrumbClient from "~/features/cms/layout/components/nav/BreadcrumbCli
 import { BreadcrumbProvider } from "~/features/cms/layout/components/nav/BreadcrumbProvider";
 import { getUser } from "~/lib/get-user";
 import { getSidebarMenus } from "~/features/cms/layout/configs/sidebar-menus";
+import ReleaseNoteDialog from "~/features/cms/release-notes/components/ReleaseNoteDialog";
 
 async function Layout({ children }: ChildrenProps) {
   const user = await getUser();
@@ -28,6 +29,7 @@ async function Layout({ children }: ChildrenProps) {
           {children}
         </BreadcrumbProvider>
       </CoreLayoutContent>
+      <ReleaseNoteDialog />
     </CoreLayout>
   );
 }

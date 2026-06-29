@@ -10,6 +10,7 @@ import SidebarMenus from "~/features/cms/layout/components/nav/SidebarMenus";
 import SearchBar from "~/features/cms/layout/components/nav/SearchBar";
 import { getUser } from "~/lib/get-user";
 import { getSidebarMenus } from "~/features/cms/layout/configs/sidebar-menus";
+import ReleaseNoteDialog from "~/features/cms/release-notes/components/ReleaseNoteDialog";
 
 async function Layout({ children }: ChildrenProps) {
   const user = await getUser();
@@ -30,6 +31,7 @@ async function Layout({ children }: ChildrenProps) {
           </div>
         </BreadcrumbProvider>
       </CoreLayoutContent>
+      <ReleaseNoteDialog />
     </CoreLayout>
   );
 }
