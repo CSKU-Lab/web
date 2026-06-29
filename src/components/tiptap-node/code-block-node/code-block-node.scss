@@ -16,37 +16,24 @@
     padding: 0.1em 0.2em;
   }
 
-  // Code block node view (wrapper around <pre> with a language selector)
+  // Code block node view: a <pre> with a Notion-style language selector that
+  // floats over the top-right corner and is revealed on hover.
   .code-block-node {
+    // Anchors the absolutely-positioned toolbar to this wrapper.
     position: relative;
     margin-top: 1.5em;
     margin-bottom: 1.5em;
 
-    // Float the language selector over the top-right corner. Hidden until the
-    // block is hovered (or the select is open/focused) so it never steals the
-    // first line's space.
-    &__toolbar {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      z-index: 1;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-      pointer-events: none;
-    }
-
-    &:hover &__toolbar,
-    &:focus-within &__toolbar,
-    &:has(&__language[data-state="open"]) &__toolbar {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    // Spacing lives on the wrapper now, so neutralize the <pre> margins. The
-    // selector floats on hover, so no top padding reservation is needed.
+    // Spacing lives on the wrapper, so neutralize the <pre> margins.
     pre {
       margin-top: 0;
       margin-bottom: 0;
+    }
+
+    // Hidden by default. The [contenteditable="true"] rule below floats it
+    // top-right and reveals it on hover only while the document is editable.
+    &__toolbar {
+      display: none;
     }
 
     &__language {
@@ -77,5 +64,45 @@
       -webkit-text-fill-color: inherit;
       color: inherit;
     }
+  }
+}
+
+// Language selector — floats over the top-right corner, revealed on hover, and
+// only while the document is editable. Gated on the live `contenteditable`
+// attribute ProseMirror sets on the editor root (not a render-time
+// editor.isEditable read, which can go stale under
+// shouldRerenderOnTransaction: false). The wrapper's `isolation: isolate`
+// guarantees it paints above the code rather than behind it.
+.tiptap.ProseMirror[contenteditable="true"] .code-block-node {
+  &__toolbar {
+    display: block;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+  }
+
+  // Reveal on hover / focus, and keep it up while the select dropdown is open.
+  // NOTE: use the literal `.code-block-node__toolbar` in the descendant slot,
+  // NOT `&__toolbar`. After a compound `&` (here `&:hover`), SCSS re-expands
+  // `&__toolbar` into the full parent compound again, producing a selector that
+  // requires an editor root nested inside a code block — so it never matched
+  // and the toolbar never revealed.
+  &:hover .code-block-node__toolbar {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &:focus-within .code-block-node__toolbar {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &:has(.code-block-node__language[data-state="open"]) .code-block-node__toolbar {
+    opacity: 1;
+    pointer-events: auto;
   }
 }

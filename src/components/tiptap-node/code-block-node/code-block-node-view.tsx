@@ -26,36 +26,38 @@ export const CODE_BLOCK_LANGUAGES = [
 export function CodeBlockNodeView({
   node,
   updateAttributes,
-  editor,
 }: NodeViewProps) {
   const language = (node.attrs.language as string) || "plaintext"
 
+  // The toolbar is always rendered; CSS gates its visibility on the live
+  // `contenteditable` attribute ProseMirror sets on the editor root, and reveals
+  // it on hover. Gating in CSS (rather than a render-time `editor.isEditable`
+  // read) keeps it correct even if editability flips after the node view mounts,
+  // since the editor runs with shouldRerenderOnTransaction: false.
   return (
     <NodeViewWrapper className="code-block-node">
-      {editor.isEditable && (
-        <div
-          className="code-block-node__toolbar"
-          contentEditable={false}
-          // Keep ProseMirror from hijacking pointer/selection on the control.
-          onMouseDown={(event) => event.stopPropagation()}
+      <div
+        className="code-block-node__toolbar"
+        contentEditable={false}
+        // Keep ProseMirror from hijacking pointer/selection on the control.
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <Select
+          value={language}
+          onValueChange={(value) => updateAttributes({ language: value })}
         >
-          <Select
-            value={language}
-            onValueChange={(value) => updateAttributes({ language: value })}
-          >
-            <SelectTrigger size="sm" className="code-block-node__language">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {CODE_BLOCK_LANGUAGES.map((lang) => (
-                <SelectItem key={lang.value} value={lang.value}>
-                  {lang.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
+          <SelectTrigger size="sm" className="code-block-node__language">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {CODE_BLOCK_LANGUAGES.map((lang) => (
+              <SelectItem key={lang.value} value={lang.value}>
+                {lang.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       <pre>
         <NodeViewContent<"code"> as="code" className={`language-${language}`} />
       </pre>
