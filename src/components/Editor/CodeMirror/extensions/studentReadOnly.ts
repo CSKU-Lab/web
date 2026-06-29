@@ -71,13 +71,14 @@ export function createStudentReadOnlyExtension(segments: FileSegment[]): Student
       if (blockAppendAtEnd && fromA >= docLength) {
         blocked = true;
       }
-      // Block pressing Enter at the end of a fully-readonly line. When an author
-      // marks a whole line readonly but leaves its trailing "\n" in the next
-      // (editable) segment, the readonly range ends exactly at line-end, so a
-      // newline inserted there sits on the boundary (fromA === r.to) and slips
-      // past the overlap check above — letting the student append a blank line
-      // to the readonly line. Catch that pure-insert-of-newline case here.
-      if (inserted.lines > 1 && fromA === toA) {
+      // Block any insertion appended to the end of a fully readonly/exclude
+      // line — typing a character OR pressing Enter. When an author marks a
+      // whole line non-editable but leaves its trailing "\n" in the next
+      // (editable) segment, the readonly range ends exactly at line-end, so an
+      // insert there sits on the boundary (fromA === r.to) and slips past the
+      // strict-overlap check above — letting the student append text or a blank
+      // line to the readonly line. Catch that pure-insert case here.
+      if (fromA === toA && inserted.length > 0) {
         const lineEnd = tr.startState.doc.lineAt(fromA).to;
         if (fromA === lineEnd && ranges.some((r) => r.to === fromA)) {
           blocked = true;
