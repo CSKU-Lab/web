@@ -189,7 +189,7 @@ export const queryKeys = {
     get: () => ["sidebar"],
   },
   core: {
-    all: "core",
+    all: ["core"],
     featuredCourses: {
       all: ["featuredCourses"],
       allWithParams: (params: Record<string, any>) => [
@@ -212,7 +212,7 @@ export const queryKeys = {
       ],
     },
     material: {
-      all: "materials",
+      all: ["materials"],
       getById: (materialID: string) => [...queryKeys.core.all, materialID],
       getSubmissionDetail: (submissionID: string) => [
         ...queryKeys.core.all,
@@ -233,7 +233,7 @@ export const queryKeys = {
       ],
     },
     submission: {
-      all: "submissions",
+      all: ["submissions"],
       getPagination: (
         materialID?: string,
         labID?: string,

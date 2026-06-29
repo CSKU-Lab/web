@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import { useSetAtom } from "jotai";
 import { useSubmissionStatusListener } from "~/features/core/materials/hooks/useSubmissionStatusListener";
+import { submissionAtom } from "~/globalStore/submissions";
 import {
   submissionFilesAtom,
   submissionTemplateFilesAtom,
@@ -27,6 +28,7 @@ export default function MaterialPageClient({
   const setSubmissionStatus = useSetAtom(submissionStatusAtom);
   const setActiveSubmissions = useSetAtom(activeSubmissionsAtom);
   const setActiveLeftTab = useSetAtom(activeLeftTabAtom);
+  const setSubmission = useSetAtom(submissionAtom);
 
   // Reset all material-specific state when materialID changes
   useEffect(() => {
@@ -36,6 +38,10 @@ export default function MaterialPageClient({
     setSubmissionStatus("NO_SUBMISSION");
     setActiveSubmissions(new Set());
     setActiveLeftTab("description");
+    // Clear the selected submission — it's a global atom keyed by submission id,
+    // so without this the detail view keeps showing the previous material's
+    // submission after switching materials.
+    setSubmission({ selectedSubmissionId: null });
   }, [
     materialID,
     setSubmissionFiles,
@@ -44,6 +50,7 @@ export default function MaterialPageClient({
     setSubmissionStatus,
     setActiveSubmissions,
     setActiveLeftTab,
+    setSubmission,
   ]);
 
   // Hook manages all EventSource connections
