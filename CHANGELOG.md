@@ -1,3 +1,10 @@
+## [0.48.2](https://github.com/CSKU-Lab/web/compare/v0.48.1...v0.48.2) (2026-06-29)
+
+
+### Bug Fixes
+
+* **editor:** block appending text to readonly/exclude line ends ([6a81dcd](https://github.com/CSKU-Lab/web/commit/6a81dcd02d6084772fe63000c0c9edb4238adc7d))
+
 ## [0.48.1](https://github.com/CSKU-Lab/web/compare/v0.48.0...v0.48.1) (2026-06-29)
 
 
