@@ -194,3 +194,11 @@
 .animate-subtle-scale {
   animation: subtle-scale 20s ease-in-out infinite;
 }
+
+/* Mermaid colors are themed via mermaid's `themeCSS` (see mermaid-diagram.tsx),
+   which injects into the SVG's own scoped <style> and tracks the app tokens for
+   both light and dark. Only diagram-independent layout lives here. */
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}

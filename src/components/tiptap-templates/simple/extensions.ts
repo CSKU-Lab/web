@@ -36,6 +36,10 @@ export const extensions = () => {
   // Register plaintext so the "Plain text" option highlights nothing instead
   // of falling back to lowlight.highlightAuto (which colors it like code).
   lowlight.register("plaintext", plaintext);
+  // Mermaid has no lowlight grammar; alias it to plaintext so the editable
+  // source stays uncolored instead of falling back to highlightAuto. The
+  // node view renders the diagram from this source in preview mode.
+  lowlight.register("mermaid", plaintext);
   return [
     StarterKit.configure({
       codeBlock: false,

@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm"
 
 import { cn } from "~/lib/utils"
 import { CopyButton } from "~/components/ui/copy-button"
+import { MermaidDiagram } from "~/components/tiptap-node/code-block-node/mermaid-diagram"
 
 interface MarkdownRendererProps {
   children: string
@@ -95,6 +96,14 @@ const CodeBlock = ({
     "overflow-x-scroll rounded-md border bg-background/50 p-4 font-mono text-sm [scrollbar-width:none]",
     className
   )
+
+  if (language === "mermaid") {
+    return (
+      <div className="bg-muted mb-4 rounded-md border p-4">
+        <MermaidDiagram source={code} />
+      </div>
+    )
+  }
 
   return (
     <div className="group/code relative mb-4">
