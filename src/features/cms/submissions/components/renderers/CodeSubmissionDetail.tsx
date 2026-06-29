@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState } from "react";
 import {
   ChevronRight,
   ChevronDown,
@@ -7,22 +7,13 @@ import {
   CircleDashed,
 } from "lucide-react";
 import { useParams } from "next/navigation";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
 import { Label } from "~/components/ui/label";
-import { cn } from "~/lib/utils";
 import CodePreview from "~/components/Editor/CodePreview";
 import type { CodeSubmissionData } from "~/types/cms-section-submission";
-import type { CodeSubmissionResultStatus } from "~/types/core-code-submission";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 import { CMSMaterial } from "~/types/cms-material";
 import ManualScoreInput from "~/features/cms/submissions/components/renderers/ManualScoreInput";
+import TestcaseTable from "~/features/core/materials/components/SubmissionsTab/SubmissionDetail/TestcaseTable";
 
 interface CodeSubmissionDetailProps {
   material: CMSMaterial;
@@ -30,29 +21,6 @@ interface CodeSubmissionDetailProps {
   payload: CodeSubmissionData | null;
   auto_score: number;
   manual_score: number;
-}
-
-const statusConfig: Record<
-  CodeSubmissionResultStatus,
-  { label: string; className: string }
-> = {
-  RUN_PASSED: { label: "Passed", className: "text-(--grass-11)" },
-  RUN_FAILED: { label: "Failed", className: "text-(--tomato-11)" },
-  COMPILE_FAILED: { label: "Compile Error", className: "text-(--tomato-11)" },
-  GRADER_ERROR: { label: "Grader Error", className: "text-(--tomato-11)" },
-  TIME_LIMIT_EXCEEDED: { label: "TLE", className: "text-(--yellow-11)" },
-  MEMORY_LIMIT_EXCEEDED: { label: "MLE", className: "text-(--yellow-11)" },
-  RUNTIME_ERROR: { label: "Runtime Error", className: "text-(--tomato-11)" },
-  SIGNAL_ERROR: { label: "Signal Error", className: "text-(--tomato-11)" },
-};
-
-function getStatusConfig(status: string) {
-  return (
-    statusConfig[status as CodeSubmissionResultStatus] ?? {
-      label: status,
-      className: "text-(--gray-11)",
-    }
-  );
 }
 
 function formatTime(ms: number): string {
@@ -78,17 +46,7 @@ function CodeSubmissionDetail({
   const labId = params.labID as string;
   const materialId = params.materialID as string;
 
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [isDescriptionOpen, setDescriptionOpen] = useState(false);
-
-  const toggleRow = (id: string) => {
-    setExpandedRows((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
 
   if (payload === null) {
     return (
@@ -98,9 +56,6 @@ function CodeSubmissionDetail({
       </div>
     );
   }
-
-  const groups = payload.test_case_groups ?? [];
-  const hasResults = groups.some((group) => group.results.length > 0);
 
   // Calculate max possible score from all test case groups
   const maxAutoScore =
@@ -180,128 +135,8 @@ function CodeSubmissionDetail({
       {/* Code Preview */}
       <CodePreview files={payload.files} className="h-140" />
 
-      {/* Test Cases — grouped, matching the student (core) submission view */}
-      {hasResults && (
-        <div className="space-y-4">
-          <h6 className="text-sm font-semibold text-(--gray-11)">Test Cases</h6>
-          {groups.map((group, groupIndex) => {
-            if (group.results.length === 0) return null;
-
-            // Continuous numbering across groups.
-            const startIndex = groups
-              .slice(0, groupIndex)
-              .reduce((n, g) => n + g.results.length, 0);
-
-            return (
-              <div key={group.id} className="space-y-2">
-                <div className="flex items-center justify-between px-1">
-                  <span className="text-xs font-semibold text-(--gray-11)">
-                    Group {groupIndex + 1}
-                  </span>
-                  <span className="text-xs text-(--gray-9)">
-                    Score: {group.score}
-                  </span>
-                </div>
-                <Table className="overflow-visible">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[40px]">#</TableHead>
-                      <TableHead>Input</TableHead>
-                      <TableHead>Output</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="w-[80px]">Time</TableHead>
-                      <TableHead className="w-[80px]">Memory</TableHead>
-                      <TableHead className="w-[32px]" />
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {group.results.map((result, i) => {
-                      const index = startIndex + i;
-                      const statusInfo = getStatusConfig(result.status);
-                      const hasMessage =
-                        result.status !== "RUN_PASSED" && !!result.message;
-                      const isExpanded = expandedRows.has(result.id);
-
-                      return (
-                        <Fragment key={result.id}>
-                          <TableRow
-                            className={cn(hasMessage && "cursor-pointer")}
-                            onClick={
-                              hasMessage ? () => toggleRow(result.id) : undefined
-                            }
-                          >
-                            <TableCell className="font-medium">
-                              {index + 1}
-                            </TableCell>
-                            <TableCell>
-                              <textarea
-                                value={result.input || "-"}
-                                readOnly
-                                disabled
-                                className="w-full h-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <textarea
-                                value={result.output || "-"}
-                                readOnly
-                                disabled
-                                className="w-full h-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <span
-                                className={cn(
-                                  "text-xs font-medium",
-                                  statusInfo.className,
-                                )}
-                              >
-                                {statusInfo.label}
-                              </span>
-                            </TableCell>
-                            <TableCell className="text-xs text-(--gray-11)">
-                              {formatTime(result.wall_time)}
-                            </TableCell>
-                            <TableCell className="text-xs text-(--gray-11)">
-                              {formatMemory(result.memory)}
-                            </TableCell>
-                            <TableCell className="p-0">
-                              {hasMessage &&
-                                (isExpanded ? (
-                                  <ChevronDown
-                                    size="0.875rem"
-                                    className="text-(--gray-9)"
-                                  />
-                                ) : (
-                                  <ChevronRight
-                                    size="0.875rem"
-                                    className="text-(--gray-9)"
-                                  />
-                                ))}
-                            </TableCell>
-                          </TableRow>
-                          {hasMessage && isExpanded && (
-                            <TableRow>
-                              <TableCell
-                                colSpan={7}
-                                className="bg-(--gray-3) p-3"
-                              >
-                                <pre className="text-xs text-(--gray-12) whitespace-pre-wrap font-mono">
-                                  {result.message}
-                                </pre>
-                              </TableCell>
-                            </TableRow>
-                          )}
-                        </Fragment>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {/* Test cases — reuse the student (core) Testcases section so both stay aligned */}
+      <TestcaseTable isLoading={false} groups={payload.test_case_groups} />
     </div>
   );
 }
