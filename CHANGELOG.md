@@ -1,3 +1,10 @@
+# [0.49.0](https://github.com/CSKU-Lab/web/compare/v0.48.2...v0.49.0) (2026-06-29)
+
+
+### Features
+
+* **core/sections:** replace collapsible lab cards with per-lab sections ([93d12f5](https://github.com/CSKU-Lab/web/commit/93d12f5a2d0d5c578556911f4bad1f6ac68d2478))
+
 ## [0.48.2](https://github.com/CSKU-Lab/web/compare/v0.48.1...v0.48.2) (2026-06-29)
 
 
