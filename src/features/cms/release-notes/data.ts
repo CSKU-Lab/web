@@ -51,6 +51,17 @@ const release052Highlights: ReleaseHighlight[] = [
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: "0.53.0",
+    date: "2026-06-30",
+    highlights: [
+      {
+        title: "A new CMS home",
+        description:
+          "The home page is now an overview: platform stats up top, then your courses with their sections grouped by semester — jump straight into your work.",
+      },
+    ],
+  },
+  {
     version: "0.52.1",
     date: "2026-06-30",
     highlights: release052Highlights,
