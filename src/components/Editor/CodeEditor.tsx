@@ -265,30 +265,35 @@ function CodeEditor({
     [currentFile?.name, showSegmentMarks, resetKey],
   );
 
+  // A single, fixed file has nothing to navigate or manage, so skip the file
+  // tree entirely. Authors who can add files keep it even with one file.
+  const showFileTree = files.length > 1 || (permissions?.modifyFiles ?? false);
+
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       <div className="flex-1 flex min-h-0">
-        {isFileTreeCollapsed ? (
-          <button
-            onClick={() => setIsFileTreeCollapsed(false)}
-            className="border-r flex flex-col items-center pt-2 px-1.5 hover:bg-(--gray-2) transition-colors text-(--gray-9) hover:text-(--gray-11)"
-            title="Expand file tree"
-          >
-            <PanelLeftOpen size="1rem" />
-          </button>
-        ) : (
-          <FileTree
-            allowModify={permissions?.modifyFiles ?? false}
-            files={files}
-            selectedFile={selectedFile}
-            onSelectFile={handleSelectFile}
-            onChange={onFilesChange}
-            isReadonlyFile={isReadonlyFile}
-            isRequiredFile={isRequiredFile}
-            canDeleteFile={canDeleteFile}
-            onCollapse={() => setIsFileTreeCollapsed(true)}
-          />
-        )}
+        {showFileTree &&
+          (isFileTreeCollapsed ? (
+            <button
+              onClick={() => setIsFileTreeCollapsed(false)}
+              className="border-r flex flex-col items-center pt-2 px-1.5 hover:bg-(--gray-2) transition-colors text-(--gray-9) hover:text-(--gray-11)"
+              title="Expand file tree"
+            >
+              <PanelLeftOpen size="1rem" />
+            </button>
+          ) : (
+            <FileTree
+              allowModify={permissions?.modifyFiles ?? false}
+              files={files}
+              selectedFile={selectedFile}
+              onSelectFile={handleSelectFile}
+              onChange={onFilesChange}
+              isReadonlyFile={isReadonlyFile}
+              isRequiredFile={isRequiredFile}
+              canDeleteFile={canDeleteFile}
+              onCollapse={() => setIsFileTreeCollapsed(true)}
+            />
+          ))}
         <Tabs
           value={mdTab}
           onValueChange={setMdTab}
