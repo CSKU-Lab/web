@@ -45,6 +45,10 @@ export const extensions = () => {
     StarterKit.configure({
       codeBlock: false,
       horizontalRule: false,
+      // Disable spellcheck squiggles inside inline code.
+      code: {
+        HTMLAttributes: { spellcheck: "false" },
+      },
       link: {
         openOnClick: false,
         enableClickSelection: true,
