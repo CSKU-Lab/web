@@ -5,10 +5,8 @@ import { FileCode } from "lucide-react";
 import { useAtom, useSetAtom } from "jotai";
 import { useParams } from "next/navigation";
 import CodeMirror from "~/components/Editor/CodeMirror";
-import EditorSettings from "~/components/Editor/EditorSettings";
 import FileTree from "~/components/Editor/FileTree";
-import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
-import type { IEditorSettings } from "~/components/Editor/types/editor";
+import { useEditorSettings } from "~/globalStore/settings";
 import RunnerPlayground from "./RunnerPlayground";
 import { runnerFilesAtom } from "../../stores/runner-files.store";
 import { saveStatusAtom } from "../../stores/save-status.store";
@@ -46,8 +44,7 @@ function RunnerEditor() {
   const [files, setFiles] = useAtom(runnerFilesAtom);
   const setSaveStatus = useSetAtom(saveStatusAtom);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [settings, setSettings] =
-    useState<IEditorSettings>(getEditorSettings());
+  const [settings] = useEditorSettings();
 
   const [runnerHasValue, setRunnerHasValue] = useState(false);
 
@@ -69,10 +66,6 @@ function RunnerEditor() {
   const currentFile = files.find((f) => f.name === selectedFile);
   const fileExtension = currentFile?.name.split(".").pop();
 
-  const handleSettingsChange = (newSettings: IEditorSettings) => {
-    setSettings(newSettings);
-    localStorage.setItem("editor-settings", JSON.stringify(newSettings));
-  };
 
   // Mark as unsaved when files change
   const handleFilesChange = useCallback(
@@ -119,12 +112,6 @@ function RunnerEditor() {
           getNewFilePath={(name) => `initial/${name}`}
         />
         <div className="flex-1 min-h-0 overflow-auto flex flex-col min-w-40">
-          <div className="border-b p-2 flex justify-end">
-            <EditorSettings
-              settings={settings}
-              onChange={handleSettingsChange}
-            />
-          </div>
           {isLoading || currentFile === undefined ? (
             <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
               <FileCode size="3rem" className="mb-3 opacity-50" />

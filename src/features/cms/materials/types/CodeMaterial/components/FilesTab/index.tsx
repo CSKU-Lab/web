@@ -3,9 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { FileCode, FileImage, FileText, ChevronDown, ChevronRight } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
-import EditorSettings from "~/components/Editor/EditorSettings";
-import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
-import type { IEditorSettings } from "~/components/Editor/types/editor";
+import { useEditorSettings } from "~/globalStore/settings";
 import FileTree from "~/components/Editor/FileTree";
 import type { CodeFile } from "~/components/Editor/types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
@@ -44,13 +42,8 @@ function FilesTab() {
   const isOwner = useAtomValue(isOwnerAtom);
   const isLoading = useAtomValue(isLoadingAtom);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [settings, setSettings] = useState<IEditorSettings>(getEditorSettings());
+  const [settings] = useEditorSettings();
   const [isExpanded, setIsExpanded] = useState(true);
-
-  const handleSettingsChange = (newSettings: IEditorSettings) => {
-    setSettings(newSettings);
-    localStorage.setItem("editor-settings", JSON.stringify(newSettings));
-  };
 
   const handleFilesChange = useCallback(
     (newFiles: CodeFile[]) => {
@@ -106,10 +99,6 @@ function FilesTab() {
           >
             {isExpanded ? <ChevronDown size="1rem" /> : <ChevronRight size="1rem" />}
           </button>
-          <EditorSettings
-            settings={settings}
-            onChange={handleSettingsChange}
-          />
         </div>
         {isExpanded && (
           currentFile === undefined ? (

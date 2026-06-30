@@ -1,5 +1,5 @@
 "use client";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Settings } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -10,7 +10,7 @@ import UserRole from "~/components/commons/UserRole";
 import SignoutButton from "./SignoutButton";
 import CMSButton from "./CMSButton";
 import BackToHomeButton from "./BackToHomeButton";
-import { ThemeToggle } from "~/components/commons/ThemeToggle";
+import { useOpenSettings } from "~/globalStore/settings";
 import { useSession } from "~/providers/SessionProvider";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
@@ -18,6 +18,7 @@ import { motion } from "motion/react";
 function UserSection() {
   const { user } = useSession();
   const pathname = usePathname();
+  const openSettings = useOpenSettings();
 
   const isCMS = pathname.startsWith("/cms");
   const hasCMSAccess =
@@ -63,12 +64,13 @@ function UserSection() {
         </div>
         <hr />
         <div className="p-2">
-          <div className="mb-2">
-            <span className="text-xs font-medium text-(--gray-10) px-2">
-              Theme
-            </span>
-            <ThemeToggle />
-          </div>
+          <button
+            onClick={() => openSettings()}
+            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm text-(--gray-11) hover:bg-(--gray-3) hover:text-(--gray-12) transition-colors"
+          >
+            <Settings className="size-4" />
+            <span>Settings</span>
+          </button>
         </div>
         <hr />
         <div className="p-2">

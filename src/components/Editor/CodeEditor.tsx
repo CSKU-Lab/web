@@ -4,14 +4,13 @@ import { FileCode, PanelLeftOpen, RotateCcw } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
 import RunnerSelect from "./RunnerSelect";
-import EditorSettings from "./EditorSettings";
-import { getEditorSettings } from "./utils/get-editor-settings";
+import { useEditorSettings } from "~/globalStore/settings";
 import type { Runner } from "./types/runner";
 import Playground, { type PlaygroundHandle } from "./Playground";
 import { EditorView } from "@codemirror/view";
 import { keymap } from "@codemirror/view";
 import { Prec } from "@codemirror/state";
-import type { CodeFile, FileSegment, IEditorSettings } from "./types/editor";
+import type { CodeFile, FileSegment } from "./types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
 import { createStudentReadOnlyExtension } from "./CodeMirror/extensions/studentReadOnly";
 import { createSegmentMarksExtension } from "./CodeMirror/extensions/segmentMarks";
@@ -122,8 +121,7 @@ function CodeEditor({
   resetKey = 0,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [settings, setSettings] =
-    useState<IEditorSettings>(getEditorSettings());
+  const [settings] = useEditorSettings();
   const [runnerSelectError, setRunnerSelectError] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [mdTab, setMdTab] = useState("edit");
@@ -183,11 +181,6 @@ function CodeEditor({
   currentFileRef.current = currentFile;
 
   const fileExtension = currentFile?.name.split(".").pop();
-
-  const handleSettingsChange = (newSettings: IEditorSettings) => {
-    setSettings(newSettings);
-    localStorage.setItem("editor-settings", JSON.stringify(newSettings));
-  };
 
   const handleSelectRunner = (runner: Runner) => {
     setSelectedRunner(runner);
@@ -365,10 +358,6 @@ function CodeEditor({
                   </DialogContent>
                 </Dialog>
               )}
-              <EditorSettings
-                settings={settings}
-                onChange={handleSettingsChange}
-              />
             </div>
           </div>
           <div className="flex-1 min-h-0 overflow-auto">

@@ -7,10 +7,8 @@ import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import CodeMirror from "~/components/Editor/CodeMirror";
-import EditorSettings from "~/components/Editor/EditorSettings";
 import FileTree from "~/components/Editor/FileTree";
-import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
-import type { IEditorSettings } from "~/components/Editor/types/editor";
+import { useEditorSettings } from "~/globalStore/settings";
 import ComparePlayground from "./ComparePlayground";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import MarkdownRenderer from "~/components/ui/markdown-renderer";
@@ -63,8 +61,7 @@ function CompareEditor() {
   const testRunning = useAtomValue(compareTestRunningAtom);
   const [, setRunName] = useAtom(compareRunNameAtom);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [settings, setSettings] =
-    useState<IEditorSettings>(getEditorSettings());
+  const [settings] = useEditorSettings();
   const [mdTab, setMdTab] = useState("edit");
 
   const [compareHasValue, setCompareHasValue] = useState(false);
@@ -88,10 +85,6 @@ function CompareEditor() {
   const fileExtension = currentFile?.name.split(".").pop();
   const isOutputFile = currentFile?.name === "sandbox/compare_result.txt";
 
-  const handleSettingsChange = (newSettings: IEditorSettings) => {
-    setSettings(newSettings);
-    localStorage.setItem("editor-settings", JSON.stringify(newSettings));
-  };
 
   // Mark as unsaved when files change
   const handleFilesChange = useCallback(
@@ -199,10 +192,6 @@ function CompareEditor() {
                   <TabsTrigger value="preview">Preview</TabsTrigger>
                 </TabsList>
               )}
-              <EditorSettings
-                settings={settings}
-                onChange={handleSettingsChange}
-              />
               {/* 3-dots menu for additional options */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

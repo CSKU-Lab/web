@@ -3,9 +3,8 @@
 import { useState, useCallback, useMemo } from "react";
 import { FileCode } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
-import EditorSettings from "~/components/Editor/EditorSettings";
-import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
-import type { IEditorSettings, TemplateFile, CodeFile } from "~/components/Editor/types/editor";
+import { useEditorSettings } from "~/globalStore/settings";
+import type { TemplateFile, CodeFile } from "~/components/Editor/types/editor";
 import FileTree from "~/components/Editor/FileTree";
 import SegmentedFileEditor from "./SegmentedFileEditor";
 
@@ -25,7 +24,7 @@ function RunnerEditor({
   disabled = false,
 }: RunnerEditorProps) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [settings, setSettings] = useState<IEditorSettings>(getEditorSettings());
+  const [settings] = useEditorSettings();
 
   // FileTree needs CodeFile[]; derive flat content from segments.
   const allFiles = useMemo<CodeFile[]>(() => {
@@ -41,11 +40,6 @@ function RunnerEditor({
     }
     return files;
   }, [buildScript, runScript, initialFiles]);
-
-  const handleSettingsChange = (newSettings: IEditorSettings) => {
-    setSettings(newSettings);
-    localStorage.setItem("editor-settings", JSON.stringify(newSettings));
-  };
 
   const isReadonlyFile = (name: string) => name.startsWith("scripts/");
   const getDisplayName = (name: string) => name.replace(/^(scripts|initial)\//, "");
@@ -83,9 +77,6 @@ function RunnerEditor({
         getDisplayName={getDisplayName}
       />
       <div className="flex-1 flex flex-col min-h-0 min-w-40">
-        <div className="border-b p-1 flex justify-end shrink-0">
-          <EditorSettings settings={settings} onChange={handleSettingsChange} />
-        </div>
         {currentFile === undefined ? (
           <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
             <FileCode size="3rem" className="mb-3 opacity-50" />

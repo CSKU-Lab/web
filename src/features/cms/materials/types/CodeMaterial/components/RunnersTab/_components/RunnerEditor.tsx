@@ -3,9 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { FileCode } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
-import EditorSettings from "~/components/Editor/EditorSettings";
-import { getEditorSettings } from "~/components/Editor/utils/get-editor-settings";
-import type { IEditorSettings } from "~/components/Editor/types/editor";
+import { useEditorSettings } from "~/globalStore/settings";
 import FileTree from "~/components/Editor/FileTree";
 import type { CodeFile } from "~/components/Editor/types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
@@ -26,8 +24,7 @@ function RunnerEditor({
   disabled = false,
 }: RunnerEditorProps) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [settings, setSettings] =
-    useState<IEditorSettings>(getEditorSettings());
+  const [settings] = useEditorSettings();
 
   const allFiles = useMemo<CodeFile[]>(() => {
     const files: CodeFile[] = [
@@ -40,10 +37,6 @@ function RunnerEditor({
     return files;
   }, [buildScript, runScript, initialFiles]);
 
-  const handleSettingsChange = (newSettings: IEditorSettings) => {
-    setSettings(newSettings);
-    localStorage.setItem("editor-settings", JSON.stringify(newSettings));
-  };
 
   const handleInitialFilesChange = useCallback(
     (newFiles: CodeFile[]) => {
@@ -99,9 +92,6 @@ function RunnerEditor({
         getDisplayName={getDisplayName}
       />
       <div className="flex-1 flex flex-col min-h-0 min-w-40">
-        <div className="border-b p-1 flex justify-end">
-          <EditorSettings settings={settings} onChange={handleSettingsChange} />
-        </div>
         {currentFile === undefined ? (
           <div className="h-full flex flex-col items-center justify-center text-(--gray-11)">
             <FileCode size="3rem" className="mb-3 opacity-50" />
