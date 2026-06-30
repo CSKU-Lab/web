@@ -51,6 +51,27 @@ const release052Highlights: ReleaseHighlight[] = [
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: "0.54.0",
+    date: "2026-06-30",
+    highlights: [
+      {
+        title: "Settings dialog",
+        description:
+          "A new settings dialog lets you tweak editor preferences, switch theme, and toggle easter eggs from one place.",
+      },
+      {
+        title: "Resizable tables in the editor",
+        description:
+          "Drag table column borders to resize them while editing document materials.",
+      },
+      {
+        title: "Sidebar & navigation polish",
+        description:
+          "Material nav titles now clamp to two lines, the footer keeps its bottom margin, and the sidebar scroll fade no longer floats below a short course list.",
+      },
+    ],
+  },
+  {
     version: "0.53.0",
     date: "2026-06-30",
     highlights: [
