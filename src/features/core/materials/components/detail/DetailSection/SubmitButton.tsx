@@ -54,8 +54,6 @@ function SubmitButton({ sectionID, labID, materialID }: SubmitButtonProps) {
     onSuccess: (response) => {
       const newSubmissionId = response.data.id;
 
-      toast.success("Submission created successfully");
-
       // 1. Set status to GRADING immediately
       setSubmissionStatus("GRADING");
 

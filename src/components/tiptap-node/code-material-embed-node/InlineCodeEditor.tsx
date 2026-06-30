@@ -291,7 +291,6 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
     onSuccess: (response) => {
       setStatus("grading");
       setScore(null);
-      toast.success("Submitted successfully");
       listenForResult(response.data.id);
       // Flip the parent document pill to Grading right away.
       queryClient.invalidateQueries({
