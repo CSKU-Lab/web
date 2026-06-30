@@ -66,7 +66,9 @@ export const extensions = () => {
     Superscript,
     Subscript,
     Selection,
-    TableKit,
+    TableKit.configure({
+      table: { resizable: true },
+    }),
     MathInlineNode,
     MathBlockNode,
     CodeMaterialEmbedNode,
