@@ -29,7 +29,7 @@ function PageControl({ nextPage, prevPage }: Props) {
           <h5 className="text-sm text-(--gray-11) group-hover:text-(--gray-10)">
             Previous
           </h5>
-          <h2 className="text-lg font-medium group-hover:text-(--gray-11) text-(--gray-12) truncate">
+          <h2 className="text-lg font-medium group-hover:text-(--gray-11) text-(--gray-12) line-clamp-2">
             {prevPage.title}
           </h2>
         </Link>
@@ -42,7 +42,7 @@ function PageControl({ nextPage, prevPage }: Props) {
           <h5 className="text-sm text-(--gray-11) group-hover:text-(--gray-10)">
             Next
           </h5>
-          <h2 className="text-lg font-medium group-hover:text-(--gray-11) text-(--gray-12) truncate">
+          <h2 className="text-lg font-medium group-hover:text-(--gray-11) text-(--gray-12) line-clamp-2 text-right">
             {nextPage.title}
           </h2>
         </Link>

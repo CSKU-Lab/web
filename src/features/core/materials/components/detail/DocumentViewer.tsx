@@ -71,7 +71,7 @@ function DocumentViewer() {
           className="px-6 pb-6 max-w-4xl mx-auto"
         />
         {!isLoading && (prevMaterial || nextMaterial) && (
-          <div className="px-6 max-w-4xl mx-auto">
+          <div className="px-6 pb-8 max-w-4xl mx-auto">
             <PageControl prevPage={prevMaterial} nextPage={nextMaterial} />
           </div>
         )}
