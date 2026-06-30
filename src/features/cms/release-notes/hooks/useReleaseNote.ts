@@ -26,21 +26,24 @@ export function useReleaseNote() {
   useEffect(() => {
     const lastSeen = localStorage.getItem(STORAGE_KEY);
 
-    // First-ever visit: seed silently, no modal.
+    let unseen: ReleaseNote[];
     if (lastSeen === null) {
-      persistSeen();
-      return;
+      // No stored version yet: either a brand-new user or an existing user on
+      // the release that first shipped this feature. Show only the current
+      // version's note (not the whole backlog) so the upgrade isn't silent.
+      unseen = releaseNotes.filter(
+        (note) => compareVersion(note.version, currentVersion) === 0,
+      );
+    } else {
+      // Already up to date.
+      if (compareVersion(currentVersion, lastSeen) <= 0) return;
+      unseen = releaseNotes.filter(
+        (note) => compareVersion(note.version, lastSeen) > 0,
+      );
     }
 
-    // Already up to date.
-    if (compareVersion(currentVersion, lastSeen) <= 0) return;
-
-    const unseen = releaseNotes.filter(
-      (note) => compareVersion(note.version, lastSeen) > 0,
-    );
-
     if (unseen.length === 0) {
-      // Upgraded but nothing curated to show — keep storage current.
+      // Nothing curated to show — keep storage current.
       persistSeen();
       return;
     }
