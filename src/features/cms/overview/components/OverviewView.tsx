@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useSession } from "~/providers/SessionProvider";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
@@ -10,9 +11,28 @@ import OverviewStats from "./OverviewStats";
 
 const STATS_RANGE_DAYS = 30;
 
+const SUBTITLES = [
+  "A glance at the platform, then jump into your courses.",
+  "Here's how things are looking today.",
+  "Your courses are waiting. Let's get to it.",
+  "The numbers up top, your work down below.",
+  "Ready when you are.",
+  "Another day, another batch of submissions.",
+  "Pick up where you left off.",
+  "Everything you teach, in one place.",
+];
+
 function OverviewView() {
   const { user } = useSession();
   const firstName = user.displayName?.split(" ")[0] ?? "there";
+
+  // Empty on the server and first client render (so they match — no hydration
+  // mismatch), then pick a random subtitle once mounted on the client.
+  const [subtitle, setSubtitle] = useState("");
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only random reveal after hydration
+    setSubtitle(SUBTITLES[Math.floor(Math.random() * SUBTITLES.length)]);
+  }, []);
 
   const { data: overview, isLoading: isStatsLoading } =
     useCMSOverview(STATS_RANGE_DAYS);
@@ -45,9 +65,7 @@ function OverviewView() {
           <h5 className="text-2xl font-medium text-(--gray-12)">
             Welcome back, {firstName}
           </h5>
-          <p className="text-sm text-(--gray-10)">
-            Platform activity at a glance, then jump into your courses.
-          </p>
+          <p className="text-sm text-(--gray-10)">{subtitle}</p>
         </header>
 
         <section>
