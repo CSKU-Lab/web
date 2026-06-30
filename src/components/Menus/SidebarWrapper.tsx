@@ -49,7 +49,9 @@ function SidebarWrapper({ children }: Props) {
               >
                 {children}
               </motion.section>
-              <UserSection />
+              <div className="relative z-10 w-full shrink-0 bg-(--gray-2)">
+                <UserSection />
+              </div>
             </>
           )}
         </motion.nav>
