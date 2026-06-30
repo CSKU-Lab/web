@@ -28,7 +28,7 @@ function Sidebar() {
             />
           ))}
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-(--gray-2) to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-(--gray-2) to-(--gray-2)/0 pointer-events-none" />
       </div>
     </div>
   );
