@@ -7,7 +7,6 @@ import { Toaster } from "~/components/ui/sonner";
 import ReactScan from "~/react-scan";
 import { ThemeProvider } from "~/providers/ThemeProvider";
 import SettingsHost from "~/components/Settings/SettingsHost";
-import "highlight.js/styles/github-dark.css";
 
 import "./globals.css";
 

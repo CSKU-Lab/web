@@ -54,9 +54,22 @@
   }
 
   // Code blocks
+  // Mirrors the app's CodeMirror code editor (@uiw/codemirror-theme-github):
+  // `--gray-1` surface plus the stock GitHub Light/Dark syntax palette. Token
+  // colors are exposed as local vars (light defaults, overridden under `.dark`)
+  // so the block re-themes with the editor.
   pre {
-    background-color: var(--muted);
-    color: var(--foreground);
+    --hl-fg: #24292e;
+    --hl-keyword: #d73a49;
+    --hl-string: #032f62;
+    --hl-comment: #6a737d;
+    --hl-number: #005cc5;
+    --hl-function: #6f42c1;
+    --hl-atom: #e36209;
+    --hl-deletion: #cb2431;
+
+    background-color: var(--gray-1);
+    color: var(--hl-fg);
     border: 1px solid var(--border);
     margin-top: 1.5em;
     margin-bottom: 1.5em;
@@ -74,7 +87,87 @@
       -webkit-text-fill-color: inherit;
       color: inherit;
     }
+
+    // Syntax tokens (lowlight / highlight.js) mapped to the GitHub palette the
+    // CodeMirror editor uses. Colors come from the local `--hl-*` vars so the
+    // `.dark` override below swaps the whole set at once.
+    .hljs-comment,
+    .hljs-quote {
+      color: var(--hl-comment);
+      font-style: italic;
+    }
+
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-type,
+    .hljs-section,
+    .hljs-doctag {
+      color: var(--hl-keyword);
+    }
+
+    .hljs-string,
+    .hljs-regexp,
+    .hljs-meta .hljs-string,
+    .hljs-addition {
+      color: var(--hl-string);
+    }
+
+    .hljs-number,
+    .hljs-built_in,
+    .hljs-builtin-name,
+    .hljs-variable,
+    .hljs-operator,
+    .hljs-symbol,
+    .hljs-template-variable,
+    .hljs-link {
+      color: var(--hl-number);
+    }
+
+    .hljs-title,
+    .hljs-function .hljs-title,
+    .hljs-class .hljs-title,
+    .hljs-name,
+    .hljs-property {
+      color: var(--hl-function);
+    }
+
+    .hljs-literal,
+    .hljs-attr,
+    .hljs-attribute,
+    .hljs-params,
+    .hljs-bullet {
+      color: var(--hl-atom);
+    }
+
+    .hljs-deletion {
+      color: var(--hl-deletion);
+    }
+
+    .hljs-meta {
+      color: var(--hl-comment);
+    }
+
+    .hljs-emphasis {
+      font-style: italic;
+    }
+
+    .hljs-strong {
+      font-weight: 700;
+    }
   }
+}
+
+// Dark-mode token palette — mirrors CodeMirror's GitHub Dark theme. Scoped to
+// the `.dark` ancestor class that next-themes toggles.
+.dark .tiptap.ProseMirror pre {
+  --hl-fg: #c9d1d9;
+  --hl-keyword: #ff7b72;
+  --hl-string: #a5d6ff;
+  --hl-comment: #8b949e;
+  --hl-number: #79c0ff;
+  --hl-function: #d2a8ff;
+  --hl-atom: #ffab70;
+  --hl-deletion: #f97583;
 }
 
 // Language selector — floats over the top-right corner, revealed on hover, and

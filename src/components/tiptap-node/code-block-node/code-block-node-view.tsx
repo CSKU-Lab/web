@@ -26,8 +26,17 @@ export const CODE_BLOCK_LANGUAGES = [
   { label: "Mermaid", value: "mermaid" },
 ] as const
 
+// Aliases that highlight correctly via lowlight but aren't their own select
+// option — fold them onto the canonical value so the dropdown shows a match.
+const LANGUAGE_ALIASES: Record<string, string> = {
+  py: "python",
+  js: "javascript",
+  "c++": "cpp",
+}
+
 export function CodeBlockNodeView({ node, updateAttributes }: NodeViewProps) {
-  const language = (node.attrs.language as string) || "plaintext"
+  const rawLanguage = (node.attrs.language as string) || "plaintext"
+  const language = LANGUAGE_ALIASES[rawLanguage] ?? rawLanguage
   const isMermaid = language === "mermaid"
 
   // Mermaid blocks open in edit mode (an empty diagram shows nothing); the
@@ -87,8 +96,8 @@ export function CodeBlockNodeView({ node, updateAttributes }: NodeViewProps) {
           <MermaidDiagram source={node.textContent} />
         </div>
       ) : (
-        <pre>
-          <NodeViewContent<"code"> as="code" className={`language-${language}`} />
+        <pre spellCheck={false}>
+          <NodeViewContent<"code"> as="code" className={`language-${language}`} spellCheck={false} />
         </pre>
       )}
     </NodeViewWrapper>

@@ -29,6 +29,7 @@ export const extensions = () => {
   lowlight.register("go", go);
   lowlight.register("c", c);
   lowlight.register("python", python);
+  lowlight.register("py", python);
   lowlight.register("javascript", javascript);
   lowlight.register("js", javascript);
   lowlight.register("cpp", cpp);
