@@ -1,3 +1,17 @@
+# [0.55.0](https://github.com/CSKU-Lab/web/compare/v0.54.0...v0.55.0) (2026-06-30)
+
+
+### Bug Fixes
+
+* **sidebar:** opaque footer wrapper for user section ([8feb255](https://github.com/CSKU-Lab/web/commit/8feb2559cbc110810a9d49e5d048356cf214b80d))
+
+
+### Features
+
+* **settings:** font ligatures toggle + settings UI polish ([689fd53](https://github.com/CSKU-Lab/web/commit/689fd5357b95898249ac214f8b120e0d0847ae28))
+* **tiptap:** boost string/number contrast, disable inline code spellcheck ([adaa1ce](https://github.com/CSKU-Lab/web/commit/adaa1cef240b73d0c3b1afbf0a1da05f52b1ec8c)), closes [#22863a](https://github.com/CSKU-Lab/web/issues/22863a) [#7ee787](https://github.com/CSKU-Lab/web/issues/7ee787)
+* **tiptap:** match code block to editor theme, fix contrast & py support ([c59c0f9](https://github.com/CSKU-Lab/web/commit/c59c0f99becd238c0a17747ee23de3f7d0caa181))
+
 # [0.54.0](https://github.com/CSKU-Lab/web/compare/v0.53.0...v0.54.0) (2026-06-30)
 
 
