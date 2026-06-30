@@ -1,3 +1,17 @@
+# [0.54.0](https://github.com/CSKU-Lab/web/compare/v0.53.0...v0.54.0) (2026-06-30)
+
+
+### Bug Fixes
+
+* **core:** 2-line clamp material nav titles, restore footer bottom margin ([837f669](https://github.com/CSKU-Lab/web/commit/837f6693f2efaf98d330274eef12353c20c65be6))
+* **sidebar:** remove floating fade smudge below course list ([6831b27](https://github.com/CSKU-Lab/web/commit/6831b27f53bb621a687ffe153fd1a3ddc8826598))
+
+
+### Features
+
+* **editor:** enable resizable tables in tiptap ([512303b](https://github.com/CSKU-Lab/web/commit/512303ba26a58b1e214afc9af1bc4338e429af3d))
+* global settings dialog (editor, theme, easter eggs) ([af19d1d](https://github.com/CSKU-Lab/web/commit/af19d1da2c2992ac8e902c7aed5ffc9147b879c3))
+
 # [0.53.0](https://github.com/CSKU-Lab/web/compare/v0.52.1...v0.53.0) (2026-06-30)
 
 
