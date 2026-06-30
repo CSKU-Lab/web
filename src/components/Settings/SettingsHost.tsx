@@ -25,8 +25,15 @@ const KONAMI_SEQUENCE = [
  */
 function SettingsHost() {
   const openSettings = useOpenSettings();
-  const konamiEnabled = useSettingsValue().easterEggs.konami;
+  const settings = useSettingsValue();
+  const konamiEnabled = settings.easterEggs.konami;
+  const ligatures = settings.editor.ligatures;
   const progress = useRef(0);
+
+  // Drive the global --code-ligatures var consumed by every mono code surface.
+  useEffect(() => {
+    document.documentElement.dataset.codeLigatures = ligatures ? "on" : "off";
+  }, [ligatures]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {

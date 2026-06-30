@@ -65,7 +65,7 @@ function CodeMirror(props: CodeMirrorProps) {
         },
         ".cm-content, .cm-gutters": {
           fontFamily: "var(--font-mono), monospace",
-          fontVariantLigatures: "none",
+          fontVariantLigatures: "var(--code-ligatures)",
         },
       }),
     [fontSize],

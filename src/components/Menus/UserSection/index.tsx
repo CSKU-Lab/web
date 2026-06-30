@@ -14,11 +14,15 @@ import { useOpenSettings } from "~/globalStore/settings";
 import { useSession } from "~/providers/SessionProvider";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
+import { Kbd, KbdGroup } from "~/components/ui/kbd";
+import { isMac } from "~/lib/tiptap-utils";
 
 function UserSection() {
   const { user } = useSession();
   const pathname = usePathname();
   const openSettings = useOpenSettings();
+
+  const mac = isMac();
 
   const isCMS = pathname.startsWith("/cms");
   const hasCMSAccess =
@@ -66,10 +70,14 @@ function UserSection() {
         <div className="p-2">
           <button
             onClick={() => openSettings()}
-            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm text-(--gray-11) hover:bg-(--gray-3) hover:text-(--gray-12) transition-colors"
+            className="flex items-center gap-1 hover:bg-(--gray-2) w-full pl-1.5 pr-4 py-2 rounded-lg"
           >
-            <Settings className="size-4" />
-            <span>Settings</span>
+            <Settings size="1rem" />
+            <h6 className="text-sm flex-1 text-left">Settings</h6>
+            <KbdGroup>
+              <Kbd>{mac ? "⌘" : "Ctrl"}</Kbd>
+              <Kbd>,</Kbd>
+            </KbdGroup>
           </button>
         </div>
         <hr />

@@ -1,6 +1,7 @@
 export interface IEditorSettings {
   fontSize: number;
   vimMode: boolean;
+  ligatures: boolean;
 }
 
 export interface CodeFile {

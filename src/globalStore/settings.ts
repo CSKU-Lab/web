@@ -28,7 +28,7 @@ export const SETTINGS_KEY = "cs-lab-settings";
 const LEGACY_EDITOR_KEY = "editor-settings";
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  editor: { fontSize: 14, vimMode: false },
+  editor: { fontSize: 14, vimMode: false, ligatures: false },
   // Default-on so behaviour is unchanged for existing users.
   easterEggs: { confetti: true, konami: true },
 };
@@ -87,16 +87,16 @@ export const settingsAtom = atom(
   },
 );
 
-export type SettingsTab = "appearance" | "editor" | "fun";
+export type SettingsTab = "general" | "editor" | "fun";
 
 export const settingsDialogAtom = atom<{ open: boolean; tab: SettingsTab }>({
   open: false,
-  tab: "appearance",
+  tab: "general",
 });
 
 /** Write-only helper: open the settings dialog, optionally on a given tab. */
 export const openSettingsAtom = atom(null, (_get, set, tab?: SettingsTab) =>
-  set(settingsDialogAtom, { open: true, tab: tab ?? "appearance" }),
+  set(settingsDialogAtom, { open: true, tab: tab ?? "general" }),
 );
 
 export function useAppSettings() {

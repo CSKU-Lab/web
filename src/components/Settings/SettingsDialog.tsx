@@ -64,31 +64,47 @@ function Row({
   );
 }
 
-function AppearanceTab() {
+function GeneralTab() {
   const { theme, setTheme } = useTheme();
+  const [settings, setSettings] = useAppSettings();
+  const { ligatures } = settings.editor;
+
+  const setEditor = (next: Partial<typeof settings.editor>) =>
+    setSettings({ ...settings, editor: { ...settings.editor, ...next } });
 
   return (
-    <div className="space-y-2">
-      <Label>Theme</Label>
-      <div className="grid grid-cols-3 gap-2">
-        {THEMES.map(({ value, label, icon: Icon }) => {
-          const active = theme === value;
-          return (
-            <button
-              key={value}
-              onClick={() => setTheme(value)}
-              className={`flex flex-col items-center gap-2 rounded-lg border p-3 text-sm transition-colors ${
-                active
-                  ? "border-(--gray-8) bg-(--gray-3) text-(--gray-12)"
-                  : "border-(--gray-5) text-(--gray-11) hover:bg-(--gray-3) hover:text-(--gray-12)"
-              }`}
-            >
-              <Icon className="size-5" />
-              <span>{label}</span>
-            </button>
-          );
-        })}
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <Label>Theme</Label>
+        <div className="grid grid-cols-3 gap-2">
+          {THEMES.map(({ value, label, icon: Icon }) => {
+            const active = theme === value;
+            return (
+              <button
+                key={value}
+                onClick={() => setTheme(value)}
+                className={`flex flex-col items-center gap-2 rounded-lg border p-3 text-sm transition-colors ${
+                  active
+                    ? "border-(--gray-8) bg-(--gray-3) text-(--gray-12)"
+                    : "border-(--gray-5) text-(--gray-11) hover:bg-(--gray-3) hover:text-(--gray-12)"
+                }`}
+              >
+                <Icon className="size-5" />
+                <span>{label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
+      <Row
+        label="Font Ligatures"
+        hint="Render combined glyphs for sequences like => and != across code blocks."
+      >
+        <Switch
+          checked={ligatures}
+          onCheckedChange={(v) => setEditor({ ligatures: v })}
+        />
+      </Row>
     </div>
   );
 }
@@ -193,8 +209,8 @@ function SettingsDialog() {
           className="p-4 gap-4"
         >
           <TabsList className="w-full">
-            <TabsTrigger value="appearance" className="flex-1">
-              Appearance
+            <TabsTrigger value="general" className="flex-1">
+              General
             </TabsTrigger>
             <TabsTrigger value="editor" className="flex-1">
               Editor
@@ -203,8 +219,8 @@ function SettingsDialog() {
               Fun
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="appearance">
-            <AppearanceTab />
+          <TabsContent value="general">
+            <GeneralTab />
           </TabsContent>
           <TabsContent value="editor">
             <EditorTab />

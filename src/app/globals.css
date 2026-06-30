@@ -68,6 +68,16 @@
 }
 
 :root {
+  /* Toggled by editor settings; consumed by all JetBrains Mono code surfaces. */
+  --code-ligatures: none;
+}
+
+:root[data-code-ligatures="on"] {
+  --code-ligatures: normal;
+}
+
+:root {
+
   --info: var(--blue-9);
   --info-foreground: white;
 
