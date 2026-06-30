@@ -1,3 +1,10 @@
+## [0.52.1](https://github.com/CSKU-Lab/web/compare/v0.52.0...v0.52.1) (2026-06-30)
+
+
+### Bug Fixes
+
+* **cms:** show release note for users seeded by silent upgrade ([120e8df](https://github.com/CSKU-Lab/web/commit/120e8dfb5000e46b31ab72057e5c2168bbf09c96))
+
 # [0.52.0](https://github.com/CSKU-Lab/web/compare/v0.51.0...v0.52.0) (2026-06-29)
 
 
