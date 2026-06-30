@@ -1,3 +1,12 @@
+# [0.53.0](https://github.com/CSKU-Lab/web/compare/v0.52.1...v0.53.0) (2026-06-30)
+
+
+### Features
+
+* **cms:** randomize overview subtitle per load ([9887a98](https://github.com/CSKU-Lab/web/commit/9887a98eb438f79eb766462a8189ce11b5a03ccf))
+* **cms:** replace home with instructor overview page ([ba1e11a](https://github.com/CSKU-Lab/web/commit/ba1e11a34b9f8503c04f76b62f24a55fd2353963))
+* **editor:** hide file tree for single-file editors ([6ec3980](https://github.com/CSKU-Lab/web/commit/6ec3980f2719339ef890d5f96553d214c789b919))
+
 ## [0.52.1](https://github.com/CSKU-Lab/web/compare/v0.52.0...v0.52.1) (2026-06-30)
 
 
