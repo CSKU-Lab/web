@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import ChatHome from "~/features/cms/layout/components/ChatHome";
+import { OverviewView } from "~/features/cms/overview";
 
 export const metadata: Metadata = { title: "CMS | CS Lab" };
 
 function CMSMainPage() {
-  return <ChatHome />;
+  return <OverviewView />;
 }
 
 export default CMSMainPage;

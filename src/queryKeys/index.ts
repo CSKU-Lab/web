@@ -4,6 +4,11 @@ export const queryKeys = {
   analytics: {
     all: ["analytics"],
     overview: (days: number) => [...queryKeys.analytics.all, "overview", days],
+    cmsOverview: (days: number) => [
+      ...queryKeys.analytics.all,
+      "cms-overview",
+      days,
+    ],
   },
   user: {
     all: ["users"],
@@ -24,6 +29,10 @@ export const queryKeys = {
       params,
     ],
     getById: (courseId: string) => [...queryKeys.course.all, courseId],
+    sections: (courseId: string) => [
+      ...queryKeys.course.getById(courseId),
+      "sections",
+    ],
   },
   section: {
     all: ["sections"],
