@@ -12,6 +12,7 @@ function OverviewStats({ summary }: Props) {
   const items = [
     { label: "submissions today", value: summary.submissions_today.toLocaleString() },
     { label: "active today", value: summary.active_users_today.toLocaleString() },
+    { label: "active now", value: summary.currently_active_users.toLocaleString() },
     {
       label: "pass rate",
       value: `${(summary.pass_rate_of_graded * 100).toFixed(0)}%`,

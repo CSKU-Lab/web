@@ -15,6 +15,10 @@ function SummaryCards({ summary }: Props) {
       value: summary.active_users_today.toLocaleString(),
     },
     {
+      label: "Active Now",
+      value: summary.currently_active_users.toLocaleString(),
+    },
+    {
       label: "Submissions Today",
       value: summary.submissions_today.toLocaleString(),
     },
@@ -29,7 +33,7 @@ function SummaryCards({ summary }: Props) {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
       {cards.map((card) => (
         <Card key={card.label}>
           <CardHeader>

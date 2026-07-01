@@ -1,6 +1,8 @@
 export interface AnalyticsSummary {
   total_users: number;
   active_users_today: number;
+  /** Distinct users seen within the trailing "currently active" window (~15 min). */
+  currently_active_users: number;
   submissions_today: number;
   /** Fraction in [0, 1] of graded (passed/failed) submissions that passed. */
   pass_rate_of_graded: number;
