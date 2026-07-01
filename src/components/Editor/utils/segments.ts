@@ -122,9 +122,7 @@ export function attachSolutionSegments(
     // segment here that the normal flow collapses — shifting every later index.
     const templateSegments = normalizeHiddenSegments(template.segments);
 
-    const hasNonEditable = templateSegments.some(
-      (s) => s.type !== "editable" && s.type !== "hidden",
-    );
+    const hasNonEditable = templateSegments.some((s) => s.type !== "editable");
     if (!hasNonEditable) return file;
 
     const segments = reconstructSolutionSegments(templateSegments, file.content);
@@ -148,9 +146,7 @@ export function templateFileToCodeFile(tf: TemplateFile): CodeFile {
     if (seg.type !== "hidden") content += seg.content;
   }
 
-  const hasNonEditable = segments.some(
-    (s) => s.type !== "editable" && s.type !== "hidden",
-  );
+  const hasNonEditable = segments.some((s) => s.type !== "editable");
 
   return {
     name: tf.name,
@@ -191,9 +187,7 @@ export function applyEditableSegments(
     if (seg.type !== "hidden") content += seg.content;
   }
 
-  const hasNonEditable = filled.some(
-    (s) => s.type !== "editable" && s.type !== "hidden",
-  );
+  const hasNonEditable = filled.some((s) => s.type !== "editable");
 
   return {
     name: tf.name,
