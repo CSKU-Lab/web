@@ -22,6 +22,7 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 
 import { MathInlineNode, MathBlockNode } from "~/components/tiptap-node/math-node"
 import { CodeMaterialEmbedNode } from "~/components/tiptap-node/code-material-embed-node/code-material-embed-node-extension"
+import { InputEmbedNode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension"
 
 export const extensions = () => {
   const lowlight = createLowlight();
@@ -77,6 +78,7 @@ export const extensions = () => {
     MathInlineNode,
     MathBlockNode,
     CodeMaterialEmbedNode,
+    InputEmbedNode,
   ];
 };
 

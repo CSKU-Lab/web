@@ -18,6 +18,15 @@ export type UpdateMaterialPayload = Partial<CreateMaterialPayload> & {
 
 export type GetMaterialPaginationParams = PaginationRequestParams<CMSMaterial>;
 
+export interface CMSInputSubmission {
+  user_id: string;
+  node_id: string;
+  value: string;
+  passed: boolean;
+  score: number;
+  created_at: string;
+}
+
 class CMSMaterialService extends BaseService {
   constructor() {
     super("/cms/courses");
@@ -76,6 +85,16 @@ class CMSMaterialService extends BaseService {
 
   async getPagination(courseID: string, params: GetMaterialPaginationParams) {
     return this._getPagination<CMSMaterial>(params, `/${courseID}/materials`);
+  }
+
+  async getInputSubmissions(
+    courseID: string,
+    id: string,
+  ): Promise<CMSInputSubmission[]> {
+    const res = await this.api.get<CMSInputSubmission[]>(
+      `${this.materialsURL(courseID)}/${id}/input-submissions`,
+    );
+    return res.data ?? [];
   }
 
   async uploadAsset(

@@ -75,6 +75,7 @@ import { TablePopover } from "~/components/tiptap-ui/table-button";
 import { TableContextMenu } from "~/components/tiptap-ui/table-context-menu";
 import { MathDropdownMenu } from "~/components/tiptap-ui/math-popover";
 import { EmbedCodeMaterialButton } from "~/components/tiptap-node/code-material-embed-node/EmbedCodeMaterialButton";
+import { InsertInputEmbedButton } from "~/components/tiptap-node/input-embed-node/InsertInputEmbedButton";
 
 // --- Icons ---
 import { ArrowLeftIcon } from "~/components/tiptap-icons/arrow-left-icon";
@@ -164,6 +165,7 @@ const MainToolbarContent = ({
       <ToolbarGroup>
         <ImageUploadButton text="Add" />
         {courseID && <EmbedCodeMaterialButton courseID={courseID} />}
+        {courseID && <InsertInputEmbedButton courseID={courseID} />}
       </ToolbarGroup>
 
       <Spacer />
