@@ -1,3 +1,10 @@
+## [0.56.1](https://github.com/CSKU-Lab/web/compare/v0.56.0...v0.56.1) (2026-07-01)
+
+
+### Bug Fixes
+
+* **editor:** assemble student code into hidden-only templates ([f5b2dcf](https://github.com/CSKU-Lab/web/commit/f5b2dcf1eca90fa99ceb677ff0773fc66c04881f))
+
 # [0.56.0](https://github.com/CSKU-Lab/web/compare/v0.55.0...v0.56.0) (2026-07-01)
 
 
