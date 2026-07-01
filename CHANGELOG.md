@@ -1,3 +1,15 @@
+# [0.56.0](https://github.com/CSKU-Lab/web/compare/v0.55.0...v0.56.0) (2026-07-01)
+
+
+### Bug Fixes
+
+* clear auth cookies with matching domain on sign-out ([828fcdc](https://github.com/CSKU-Lab/web/commit/828fcdca6f527cc25a40db2539bd5c4ef8491513))
+
+
+### Features
+
+* inline input embed node in document editor (CS-212) ([1d8829b](https://github.com/CSKU-Lab/web/commit/1d8829b2f3113d5d726f1804140f645e559cbe95))
+
 # [0.55.0](https://github.com/CSKU-Lab/web/compare/v0.54.0...v0.55.0) (2026-06-30)
 
 
