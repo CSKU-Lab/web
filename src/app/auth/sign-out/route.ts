@@ -2,8 +2,9 @@ import { cookies } from "next/headers";
 
 export const POST = async () => {
   const cookieJar = await cookies();
-  cookieJar.delete("access_token");
-  cookieJar.delete("refresh_token");
+  const domain = process.env.COOKIE_DOMAIN;
+  cookieJar.delete({ name: "access_token", path: "/", domain });
+  cookieJar.delete({ name: "refresh_token", path: "/", domain });
 
   return Response.json({ success: true }, { status: 200 });
 };
