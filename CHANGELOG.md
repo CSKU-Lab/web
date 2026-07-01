@@ -1,3 +1,10 @@
+# [0.57.0](https://github.com/CSKU-Lab/web/compare/v0.56.1...v0.57.0) (2026-07-01)
+
+
+### Features
+
+* **analytics:** show currently-active-users metric ([cf3230e](https://github.com/CSKU-Lab/web/commit/cf3230e9a6670096d3f13a047a691625c43cc0c8))
+
 ## [0.56.1](https://github.com/CSKU-Lab/web/compare/v0.56.0...v0.56.1) (2026-07-01)
 
 
