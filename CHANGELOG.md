@@ -1,3 +1,10 @@
+# [0.58.0](https://github.com/CSKU-Lab/web/compare/v0.57.0...v0.58.0) (2026-07-04)
+
+
+### Features
+
+* **mobile:** dedicated mobile view for student core app ([b3495ab](https://github.com/CSKU-Lab/web/commit/b3495ab393ee0f192d96b6c3cb9b8f45742455c3))
+
 # [0.57.0](https://github.com/CSKU-Lab/web/compare/v0.56.1...v0.57.0) (2026-07-01)
 
 
