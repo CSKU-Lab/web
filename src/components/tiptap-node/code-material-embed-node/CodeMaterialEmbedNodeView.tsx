@@ -4,6 +4,8 @@ import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import { useParams } from "next/navigation";
 import { ExternalLink, Code2, Trash2 } from "lucide-react";
 import { InlineCodeEditor } from "~/components/tiptap-node/code-material-embed-node/InlineCodeEditor";
+import { getDocumentReview } from "~/components/tiptap-node/document-review/document-review-extension";
+import { ReviewCodeEmbed } from "~/features/cms/submissions/components/renderers/ReviewCodeEmbed";
 
 export function CodeMaterialEmbedNodeView({
   node,
@@ -18,8 +20,23 @@ export function CodeMaterialEmbedNodeView({
 
   const params = useParams();
   const isEditable = editor.isEditable;
+  const review = getDocumentReview(editor.storage);
 
   if (!isEditable) {
+    // Instructor submission review: show the selected student's submitted code.
+    if (review) {
+      return (
+        <NodeViewWrapper>
+          <ReviewCodeEmbed
+            materialID={materialID}
+            title={title}
+            autoScore={autoScore}
+            review={review}
+          />
+        </NodeViewWrapper>
+      );
+    }
+
     // Student view: full inline code editor
     const sectionID = params.sectionID as string;
     const labID = (params.slug ?? params.labID) as string;

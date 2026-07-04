@@ -4,6 +4,8 @@ import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import { useParams } from "next/navigation";
 import { FormInput, Trash2 } from "lucide-react";
 import { InlineInputEditor } from "~/components/tiptap-node/input-embed-node/InlineInputEditor";
+import { getDocumentReview } from "~/components/tiptap-node/document-review/document-review-extension";
+import { ReviewInputEmbed } from "~/features/cms/submissions/components/renderers/ReviewInputEmbed";
 
 export function InputEmbedNodeView({
   node,
@@ -20,8 +22,25 @@ export function InputEmbedNodeView({
 
   const params = useParams();
   const isEditable = editor.isEditable;
+  const review = getDocumentReview(editor.storage);
 
   if (!isEditable) {
+    // Instructor submission review: show the selected student's submitted value.
+    if (review) {
+      return (
+        <NodeViewWrapper>
+          <ReviewInputEmbed
+            courseID={params.courseID as string}
+            documentMaterialID={params.materialID as string}
+            nodeID={nodeID}
+            label={label}
+            score={score}
+            studentID={review.studentID}
+          />
+        </NodeViewWrapper>
+      );
+    }
+
     // Student view: inline scorable input
     const sectionID = params.sectionID as string;
     const labID = (params.slug ?? params.labID) as string;

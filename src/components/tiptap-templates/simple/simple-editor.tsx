@@ -74,6 +74,10 @@ import { UndoRedoButton } from "~/components/tiptap-ui/undo-redo-button";
 import { TablePopover } from "~/components/tiptap-ui/table-button";
 import { TableContextMenu } from "~/components/tiptap-ui/table-context-menu";
 import { MathDropdownMenu } from "~/components/tiptap-ui/math-popover";
+import {
+  DocumentReviewExtension,
+  type DocumentReviewValue,
+} from "~/components/tiptap-node/document-review/document-review-extension";
 import { EmbedCodeMaterialButton } from "~/components/tiptap-node/code-material-embed-node/EmbedCodeMaterialButton";
 import { InsertInputEmbedButton } from "~/components/tiptap-node/input-embed-node/InsertInputEmbedButton";
 
@@ -213,6 +217,8 @@ interface Props extends ClassNameProps {
   readOnly?: boolean;
   courseID?: string;
   onEditorReady?: (editor: Editor) => void;
+  /** When set, embed nodes render the given student's submitted content read-only. */
+  review?: DocumentReviewValue | null;
 }
 
 export function SimpleEditor({
@@ -225,6 +231,7 @@ export function SimpleEditor({
   readOnly = false,
   courseID,
   onEditorReady,
+  review = null,
 }: Props) {
   const isMobile = useIsMobile();
   const [mobileView, setMobileView] = React.useState<
@@ -246,6 +253,7 @@ export function SimpleEditor({
     },
     extensions: [
       ...ext,
+      DocumentReviewExtension.configure({ review }),
       ImageUploadNode.configure({
         accept: "image/*",
         maxSize: maxFileUploadSize,
