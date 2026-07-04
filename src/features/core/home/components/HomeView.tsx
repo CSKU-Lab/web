@@ -12,8 +12,8 @@ function HomeView() {
 
   return (
     <div className="@container bg-(--gray-1) h-full p-4 gap-6 flex flex-col w-full overflow-y-auto overflow-x-hidden">
-      <div className="flex justify-between items-center gap-4">
-        <h4 className="text-3xl font-semibold">My Courses</h4>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <h4 className="text-2xl sm:text-3xl font-semibold">My Courses</h4>
         <SearchInput
           value={search}
           onChange={setSearch}

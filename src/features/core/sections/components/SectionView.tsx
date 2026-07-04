@@ -17,8 +17,8 @@ function SectionView() {
     <div className="flex flex-col h-full overflow-y-auto overflow-x-hidden">
       <SectionHeader />
       <div className="px-4 lg:px-12 pb-4 flex flex-col flex-1">
-        <div className="flex justify-between items-center gap-4 mt-6">
-          <h4 className="font-semibold text-2xl h-fit">Labs</h4>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-6">
+          <h4 className="font-semibold text-xl sm:text-2xl h-fit">Labs</h4>
           <SearchInput
             value={search}
             onChange={setSearch}

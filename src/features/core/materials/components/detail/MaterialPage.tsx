@@ -1,14 +1,12 @@
 import LeftSection from "~/features/core/materials/components/LeftSection";
 import RightSection from "~/features/core/materials/components/RightSection";
-import { headers } from "next/headers";
-import { isFromMobile } from "~/lib/isFromMobile";
-import LottieComp from "~/components/commons/Lottie";
-import floating from "~/assets/lotties/foating.json";
 import { type Metadata } from "next";
 import { ogImages } from "~/lib/og";
 import DetailSection from "~/features/core/materials/components/detail/DetailSection";
 import MaterialPageClient from "~/features/core/materials/components/detail/MaterialPageClient";
 import MaterialTypeRouter from "~/features/core/materials/components/detail/MaterialTypeRouter";
+import MobileMaterialView from "~/features/core/materials/components/detail/MobileMaterialView";
+import { getIsMobile } from "~/lib/get-is-mobile";
 import { coreMaterialService } from "~/services/core-material.service";
 export const generateMetadata = async ({
   params,
@@ -38,20 +36,17 @@ export async function MaterialPage(props: {
 }) {
   const params = await props.params;
   const { sectionID, slug: labID, materialID } = params;
-  const userAgent = (await headers()).get("User-Agent");
-
-  if (isFromMobile(userAgent)) {
-    return (
-      <div className="fixed inset-0 h-screen flex flex-col justify-center items-center gap-12">
-        <LottieComp animationData={floating} width={300} height={300} />
-        <h2 className="text-center text-sm">
-          Sorry but this page doesn&apos;t support on mobile devices.
-        </h2>
-      </div>
-    );
-  }
+  const isMobile = await getIsMobile();
 
   const material = await coreMaterialService.getById(materialID, sectionID, labID);
+
+  if (isMobile) {
+    return (
+      <MaterialPageClient materialID={materialID}>
+        <MobileMaterialView initialType={material.type} />
+      </MaterialPageClient>
+    );
+  }
 
   return (
     <MaterialPageClient materialID={materialID}>
