@@ -1,3 +1,10 @@
+# [0.59.0](https://github.com/CSKU-Lab/web/compare/v0.58.0...v0.59.0) (2026-07-04)
+
+
+### Features
+
+* **cms:** render document submission like student view for instructors ([669a06b](https://github.com/CSKU-Lab/web/commit/669a06b7b6844845dfd9606fc0bace46d21e467d))
+
 # [0.58.0](https://github.com/CSKU-Lab/web/compare/v0.57.0...v0.58.0) (2026-07-04)
 
 
