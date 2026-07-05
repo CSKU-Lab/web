@@ -149,7 +149,7 @@ function EditorTab() {
 
 function FunTab() {
   const [settings, setSettings] = useAppSettings();
-  const { confetti, konami } = settings.easterEggs;
+  const { confetti, glitch, konami } = settings.easterEggs;
 
   const setEgg = (next: Partial<typeof settings.easterEggs>) =>
     setSettings({
@@ -169,6 +169,15 @@ function FunTab() {
         />
       </Row>
       <Row
+        label="Fail Glitch"
+        hint="Glitch the screen — RGB split, jitter, scanlines — when you fail a material."
+      >
+        <Switch
+          checked={glitch}
+          onCheckedChange={(v) => setEgg({ glitch: v })}
+        />
+      </Row>
+      <Row
         label="Konami Code"
         hint="↑ ↑ ↓ ↓ ← → ← → B A — you know what to do."
       >
@@ -178,7 +187,7 @@ function FunTab() {
         />
       </Row>
       <p className="text-xs text-(--gray-10)">
-        Confetti respects your system&apos;s reduced-motion setting.
+        These effects respect your system&apos;s reduced-motion setting.
       </p>
     </div>
   );

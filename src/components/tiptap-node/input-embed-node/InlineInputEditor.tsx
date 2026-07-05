@@ -8,6 +8,7 @@ import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { firePassConfetti } from "~/lib/confetti";
+import { fireFailGlitch } from "~/lib/glitch";
 import { inputEmbedService } from "~/services/input-embed.service";
 import { queryKeys } from "~/queryKeys";
 
@@ -94,6 +95,8 @@ export function InlineInputEditor({
       setScore(res.score);
       if (res.passed) {
         firePassConfetti();
+      } else {
+        fireFailGlitch();
       }
       // Refresh the parent document's status pill, which aggregates the latest
       // status of every embedded block server-side.

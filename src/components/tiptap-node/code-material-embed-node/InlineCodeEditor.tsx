@@ -9,6 +9,7 @@ import CodeEditor from "~/components/Editor/CodeEditor";
 import { SubmitCooldownButton } from "~/components/ui/submit-cooldown-button";
 import { useSubmitCooldown } from "~/hooks/useSubmitCooldown";
 import { firePassConfetti } from "~/lib/confetti";
+import { fireFailGlitch } from "~/lib/glitch";
 import { coreMaterialService } from "~/services/core-material.service";
 import { coreSubmissionService } from "~/services/core-submission.service";
 import type { CoreCodeMaterial } from "~/types/core-code-material";
@@ -160,6 +161,8 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
               setStatus(data.status === "passed" ? "passed" : "failed");
               if (data.status === "passed") {
                 firePassConfetti();
+              } else {
+                fireFailGlitch();
               }
               if (typeof data.auto_score === "number") {
                 setScore(data.auto_score);
