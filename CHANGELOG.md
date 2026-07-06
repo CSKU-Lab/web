@@ -1,3 +1,10 @@
+## [0.60.1](https://github.com/CSKU-Lab/web/compare/v0.60.0...v0.60.1) (2026-07-06)
+
+
+### Bug Fixes
+
+* **cms:** live-update submissions list after Regrade All ([2205bb3](https://github.com/CSKU-Lab/web/commit/2205bb370db62e83c59f64ec00f984121a45bdb9))
+
 # [0.60.0](https://github.com/CSKU-Lab/web/compare/v0.59.0...v0.60.0) (2026-07-06)
 
 
