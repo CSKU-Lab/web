@@ -39,12 +39,43 @@ const LoadingData = () => {
 const textareaClass =
   "w-full min-h-[120px] p-2 resize-none font-mono text-sm border border-gray-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-5";
 
+// Cap how much text we mount in a single field. A runaway submission can store
+// tens of MB of program output; dumping that whole string into a textarea/pre
+// freezes or crashes the browser tab. Older submissions (graded before the
+// server-side output cap) still hold oversized blobs, so guard at render time.
+const MAX_DISPLAY_CHARS = 50_000;
+
+// truncateForDisplay caps s and reports whether it was cut and by how much.
+function truncateForDisplay(s: string): {
+  text: string;
+  truncated: boolean;
+  hiddenChars: number;
+} {
+  if (s.length <= MAX_DISPLAY_CHARS) {
+    return { text: s, truncated: false, hiddenChars: 0 };
+  }
+  return {
+    text: s.slice(0, MAX_DISPLAY_CHARS),
+    truncated: true,
+    hiddenChars: s.length - MAX_DISPLAY_CHARS,
+  };
+}
+
 function ValueField({ label, value }: { label: string; value: string }) {
+  const { text, truncated, hiddenChars } = truncateForDisplay(value ?? "");
   return (
     <div className="space-y-1">
       <span className="text-xs text-(--gray-11)">{label}</span>
       {value ? (
-        <textarea value={value} readOnly disabled className={textareaClass} />
+        <>
+          <textarea value={text} readOnly disabled className={textareaClass} />
+          {truncated && (
+            <span className="text-xs text-(--gray-9) italic">
+              Output truncated — {hiddenChars.toLocaleString()} more characters
+              hidden
+            </span>
+          )}
+        </>
       ) : (
         <div className="flex flex-col items-center justify-center gap-1.5 w-full min-h-[120px] p-2 border border-dashed border-(--gray-5) rounded-md text-xs text-(--gray-9) italic">
           <Ghost size="1.25rem" />
@@ -161,7 +192,7 @@ function TestcaseTable({ isLoading, groups, showGroupScore = false }: Props) {
 
                     {hasMessage && isExpanded && (
                       <pre className="text-xs text-(--gray-12) whitespace-pre-wrap font-mono bg-(--gray-3) p-3 rounded-md">
-                        {result.message}
+                        {truncateForDisplay(result.message).text}
                       </pre>
                     )}
                   </div>
