@@ -26,5 +26,17 @@ export function useAllStudentsLatestSubmissions({
       );
     },
     enabled: !!sectionID && !!labID && !!materialID,
+    // Regrade re-queues submissions asynchronously (the API returns 202 and a
+    // background job flips each row to "queued", then the grader drives it to a
+    // terminal state). This list has no live stream, so poll while any submission
+    // is still in flight and stop once everything is terminal.
+    refetchInterval: (query) => {
+      const data = query.state.data;
+      if (!data) return false;
+      const inFlight = data.some(
+        (s) => s.status === "queued" || s.status === "running",
+      );
+      return inFlight ? 2500 : false;
+    },
   });
 }

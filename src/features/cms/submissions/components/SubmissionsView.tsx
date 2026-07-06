@@ -14,11 +14,12 @@ import { FuzzySearchPanel } from "~/features/cms/submissions/components/fuzzy-se
 import { useAllStudentsLatestSubmissions } from "~/features/cms/submissions/hooks/useStudentSubmissions";
 import { useGetMaterial } from "~/features/cms/submissions/hooks/useGetMaterial";
 import LeftPanel from "~/features/cms/submissions/components/LeftPanel";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { cmsSubmissionService } from "~/services/cms-submission.service";
 import { toast } from "sonner";
 import { Button } from "~/components/commons/Button";
 import { MaterialType } from "~/types/cms-material";
+import { queryKeys } from "~/queryKeys";
 
 interface PageParams {
   [key: string]: string;
@@ -49,11 +50,27 @@ function SubmissionsView() {
   const isLoading = isStudentsLoading || isMaterialLoading;
   const isError = (isStudentsError && !isStudentsFetching) || isMaterialError;
 
+  const queryClient = useQueryClient();
+
   const regradeAll = useMutation({
     mutationFn: () =>
       cmsSubmissionService.regradeAll(sectionID, labID, materialID),
     onSuccess: () => {
       toast.success("Regrading in progress");
+      // The API returns 202 and flips submissions to "queued" in a background
+      // job, so the list is still terminal at this point. Re-fetch on a short
+      // stagger to catch the async flip — once any row shows queued/running the
+      // list query self-sustains its polling until everything is terminal again.
+      const submissionsKey = queryKeys.section.submissions(
+        sectionID,
+        labID,
+        materialID,
+      );
+      const invalidate = () =>
+        queryClient.invalidateQueries({ queryKey: submissionsKey });
+      invalidate();
+      setTimeout(invalidate, 1500);
+      setTimeout(invalidate, 4000);
     },
     onError: () => {
       toast.error("Failed to trigger regrade");
