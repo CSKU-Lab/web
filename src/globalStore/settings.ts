@@ -15,6 +15,8 @@ import type { IEditorSettings } from "~/components/Editor/types/editor";
 export interface EasterEggSettings {
   /** Celebratory confetti when a student passes a material. */
   confetti: boolean;
+  /** Screen-glitch (RGB split, jitter, scanlines) when a student fails. */
+  glitch: boolean;
   /** Hidden Konami code (↑↑↓↓←→←→ B A) confetti storm. */
   konami: boolean;
 }
@@ -29,8 +31,9 @@ const LEGACY_EDITOR_KEY = "editor-settings";
 
 export const DEFAULT_SETTINGS: AppSettings = {
   editor: { fontSize: 14, vimMode: false, ligatures: false },
-  // Default-on so behaviour is unchanged for existing users.
-  easterEggs: { confetti: true, konami: true },
+  // Confetti/konami default-on so behaviour is unchanged for existing users.
+  // Fail glitch is opt-in (default off) — it deliberately "breaks" the page.
+  easterEggs: { confetti: true, glitch: false, konami: true },
 };
 
 function loadInitial(): AppSettings {

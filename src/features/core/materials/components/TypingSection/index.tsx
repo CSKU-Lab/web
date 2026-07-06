@@ -11,6 +11,7 @@ import { coreSubmissionService } from "~/services/core-submission.service";
 import { coreMaterialService } from "~/services/core-material.service";
 import { queryKeys } from "~/queryKeys";
 import { firePassConfetti } from "~/lib/confetti";
+import { fireFailGlitch } from "~/lib/glitch";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
 import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 import { useTypingSession } from "~/features/core/materials/hooks/typing-section/useTypingSession";
@@ -74,6 +75,8 @@ export default function TypingSection() {
       setServerAutoScore(submission.auto_score);
       if (submission.status === "passed") {
         firePassConfetti();
+      } else if (submission.status === "failed") {
+        fireFailGlitch();
       }
       queryClient.invalidateQueries({
         queryKey: queryKeys.core.material.getPagination(materialID),
