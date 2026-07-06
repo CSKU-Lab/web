@@ -10,6 +10,13 @@ interface Props {
   groups?: TestCaseGroup[];
   // Show each group's score in its header. Used on the CMS (instructor) side only.
   showGroupScore?: boolean;
+  // Instructor (CMS) view. On the student side the backend replaces `output`
+  // with the task's expected output and blanks fields hidden by the creator, so
+  // the column reads "Expected Output" and empties render as "Hidden by
+  // instructor". On the CMS side the backend returns the student's actual
+  // program output with no visibility filter, so label it "Output" and treat an
+  // empty value as genuinely empty output.
+  instructorView?: boolean;
 }
 
 const LoadingData = () => {
@@ -61,7 +68,18 @@ function truncateForDisplay(s: string): {
   };
 }
 
-function ValueField({ label, value }: { label: string; value: string }) {
+function ValueField({
+  label,
+  value,
+  emptyText,
+}: {
+  label: string;
+  value: string;
+  // Placeholder shown when value is empty. On the student side this is "Hidden
+  // by instructor" (empty means withheld); on the CMS side an empty value is
+  // genuinely empty output, so it reads "No output".
+  emptyText: string;
+}) {
   const { text, truncated, hiddenChars } = truncateForDisplay(value ?? "");
   return (
     <div className="space-y-1">
@@ -79,14 +97,19 @@ function ValueField({ label, value }: { label: string; value: string }) {
       ) : (
         <div className="flex flex-col items-center justify-center gap-1.5 w-full min-h-[120px] p-2 border border-dashed border-(--gray-5) rounded-md text-xs text-(--gray-9) italic">
           <Ghost size="1.25rem" />
-          Hidden by instructor
+          {emptyText}
         </div>
       )}
     </div>
   );
 }
 
-function TestcaseTable({ isLoading, groups, showGroupScore = false }: Props) {
+function TestcaseTable({
+  isLoading,
+  groups,
+  showGroupScore = false,
+  instructorView = false,
+}: Props) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const toggleRow = (id: string) => {
@@ -179,13 +202,26 @@ function TestcaseTable({ isLoading, groups, showGroupScore = false }: Props) {
                       )}
                     </div>
 
-                    {/* Input | Expected Output */}
+                    {/* Input | Output. On the student side `output` is the
+                        expected output; on the CMS side it is the student's
+                        actual program output. */}
                     {hasIO && (
                       <div className="grid grid-cols-2 gap-3">
-                        <ValueField label="Input" value={result.input} />
                         <ValueField
-                          label="Expected Output"
+                          label="Input"
+                          value={result.input}
+                          emptyText={
+                            instructorView ? "No input" : "Hidden by instructor"
+                          }
+                        />
+                        <ValueField
+                          label={instructorView ? "Output" : "Expected Output"}
                           value={result.output}
+                          emptyText={
+                            instructorView
+                              ? "No output"
+                              : "Hidden by instructor"
+                          }
                         />
                       </div>
                     )}

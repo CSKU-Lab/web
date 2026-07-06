@@ -140,6 +140,7 @@ function CodeSubmissionDetail({
         isLoading={false}
         groups={payload.test_case_groups}
         showGroupScore
+        instructorView
       />
     </div>
   );
