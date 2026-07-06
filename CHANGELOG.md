@@ -1,3 +1,10 @@
+## [0.60.2](https://github.com/CSKU-Lab/web/compare/v0.60.1...v0.60.2) (2026-07-06)
+
+
+### Bug Fixes
+
+* **cms:** label instructor testcase output as actual "Output" ([ced51f6](https://github.com/CSKU-Lab/web/commit/ced51f6e2235f13f4873f720b7373dc62f7fae97))
+
 ## [0.60.1](https://github.com/CSKU-Lab/web/compare/v0.60.0...v0.60.1) (2026-07-06)
 
 
