@@ -1,3 +1,15 @@
+# [0.60.0](https://github.com/CSKU-Lab/web/compare/v0.59.0...v0.60.0) (2026-07-06)
+
+
+### Bug Fixes
+
+* **submissions:** truncate large test-case output to stop detail page crash ([07386c5](https://github.com/CSKU-Lab/web/commit/07386c5f9b8030c1b013404c88dafa33b9aea946))
+
+
+### Features
+
+* **materials:** glitch the page when a student fails a material (default off) ([6aa6b88](https://github.com/CSKU-Lab/web/commit/6aa6b88368740a5457227b393ad3608b6b8c746c))
+
 # [0.59.0](https://github.com/CSKU-Lab/web/compare/v0.58.0...v0.59.0) (2026-07-04)
 
 
