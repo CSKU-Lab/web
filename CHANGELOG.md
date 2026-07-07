@@ -1,3 +1,16 @@
+# [0.61.0](https://github.com/CSKU-Lab/web/compare/v0.60.2...v0.61.0) (2026-07-07)
+
+
+### Bug Fixes
+
+* **cms:** reset selected submission on material change ([ddf86e4](https://github.com/CSKU-Lab/web/commit/ddf86e4da7eff01a50c6d73c8167b976881ff543))
+* render mermaid diagram in read-only document view ([b3ae2e2](https://github.com/CSKU-Lab/web/commit/b3ae2e2dad7b22e4787c222ef8600a84c8377051))
+
+
+### Features
+
+* **submissions:** show failure reason on student test case cards ([66d90d6](https://github.com/CSKU-Lab/web/commit/66d90d6b415a388fbb5ddb4d0845d5a88f81fc4a))
+
 ## [0.60.2](https://github.com/CSKU-Lab/web/compare/v0.60.1...v0.60.2) (2026-07-06)
 
 
