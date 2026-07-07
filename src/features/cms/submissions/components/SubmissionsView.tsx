@@ -20,6 +20,9 @@ import { toast } from "sonner";
 import { Button } from "~/components/commons/Button";
 import { MaterialType } from "~/types/cms-material";
 import { queryKeys } from "~/queryKeys";
+import { useEffect } from "react";
+import { useSetAtom } from "jotai";
+import { selectedSubmissionAtom } from "~/features/cms/submissions/stores/selected-submission.store";
 
 interface PageParams {
   [key: string]: string;
@@ -31,6 +34,17 @@ interface PageParams {
 
 function SubmissionsView() {
   const { courseID, sectionID, labID, materialID } = useParams<PageParams>();
+
+  // selectedSubmissionAtom is a global jotai atom that outlives client-side
+  // navigation between materials (Next reuses this component across [materialID]
+  // changes). Clear it when the material changes so a stale submission from the
+  // previous material's type is never fed into the new material's renderer,
+  // which would crash on the mismatched payload shape. StudentList re-selects
+  // the first student once the new list loads.
+  const setSelectedSubmission = useSetAtom(selectedSubmissionAtom);
+  useEffect(() => {
+    setSelectedSubmission(null);
+  }, [materialID, setSelectedSubmission]);
 
   const {
     data: students,
