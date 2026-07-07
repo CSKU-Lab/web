@@ -34,7 +34,11 @@ const LANGUAGE_ALIASES: Record<string, string> = {
   "c++": "cpp",
 }
 
-export function CodeBlockNodeView({ node, updateAttributes }: NodeViewProps) {
+export function CodeBlockNodeView({
+  node,
+  updateAttributes,
+  editor,
+}: NodeViewProps) {
   const rawLanguage = (node.attrs.language as string) || "plaintext"
   const language = LANGUAGE_ALIASES[rawLanguage] ?? rawLanguage
   const isMermaid = language === "mermaid"
@@ -44,6 +48,11 @@ export function CodeBlockNodeView({ node, updateAttributes }: NodeViewProps) {
   // React state change, so the preview reads the current `node.textContent`
   // even though the editor runs with shouldRerenderOnTransaction: false.
   const [showPreview, setShowPreview] = React.useState(false)
+
+  // Read-only viewers (students) can't reach the Preview toggle, so a mermaid
+  // block would otherwise render as raw source text. Force the rendered diagram
+  // whenever the editor isn't editable.
+  const renderPreview = isMermaid && (showPreview || !editor.isEditable)
 
   // The toolbar is always rendered; CSS gates its visibility on the live
   // `contenteditable` attribute ProseMirror sets on the editor root, and reveals
@@ -91,7 +100,7 @@ export function CodeBlockNodeView({ node, updateAttributes }: NodeViewProps) {
         )}
       </div>
 
-      {isMermaid && showPreview ? (
+      {renderPreview ? (
         <div contentEditable={false} className="code-block-node__preview">
           <MermaidDiagram source={node.textContent} />
         </div>
