@@ -154,6 +154,15 @@ function TestcaseTable({
                 const statusInfo = getStatusConfig(result.status);
                 const hasMessage =
                   result.status !== "RUN_PASSED" && !!result.message;
+                // On the student side the raw message is withheld for hidden
+                // test cases, so the expandable details (and the "why") vanish.
+                // Fall back to a status-derived reason — safe because it carries
+                // no program output. Instructors keep the full message details.
+                const showReason =
+                  !instructorView &&
+                  result.status !== "RUN_PASSED" &&
+                  !hasMessage &&
+                  !!statusInfo.description;
                 const isExpanded = expandedRows.has(result.id);
                 // Backend withholds input/output when the creator hides them
                 // (empty string). When both are hidden, drop the grid entirely.
@@ -201,6 +210,12 @@ function TestcaseTable({
                         </button>
                       )}
                     </div>
+
+                    {showReason && (
+                      <p className="text-xs text-(--gray-11)">
+                        {statusInfo.description}
+                      </p>
+                    )}
 
                     {/* Input | Output. On the student side `output` is the
                         expected output; on the CMS side it is the student's
