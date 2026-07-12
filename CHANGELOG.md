@@ -1,3 +1,15 @@
+# [0.63.0](https://github.com/CSKU-Lab/web/compare/v0.62.0...v0.63.0) (2026-07-12)
+
+
+### Bug Fixes
+
+* **editor:** add settings gear to CodeEditor toolbar ([e43633f](https://github.com/CSKU-Lab/web/commit/e43633f2e97bac0e1e48f7fa5fe39db3fb3af7ce))
+
+
+### Features
+
+* **cms:** manual grading UI for input embed nodes ([0217af0](https://github.com/CSKU-Lab/web/commit/0217af08a113e7e85464d771c732100988a3f108))
+
 # [0.62.0](https://github.com/CSKU-Lab/web/compare/v0.61.0...v0.62.0) (2026-07-12)
 
 
