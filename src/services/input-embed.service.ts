@@ -11,6 +11,7 @@ export interface InputEmbedSubmitParams {
 export interface InputEmbedSubmitResult {
   passed: boolean;
   score: number;
+  graded: boolean;
 }
 
 export interface InputEmbedMyResultParams {
@@ -24,6 +25,7 @@ export interface InputEmbedMyResult {
   submitted: boolean;
   passed: boolean;
   score: number;
+  graded: boolean;
   value: string;
 }
 

@@ -2,12 +2,15 @@ import { mergeAttributes, Node } from "@tiptap/react";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { InputEmbedNodeView } from "~/components/tiptap-node/input-embed-node/InputEmbedNodeView";
 
+export type InputEmbedMode = "exact" | "regex" | "manual";
+
 declare module "@tiptap/react" {
   interface Commands<ReturnType> {
     inputEmbed: {
       insertInputEmbed: (attrs: {
         nodeID: string;
         label: string;
+        mode: InputEmbedMode;
         pattern: string;
         score: number;
         caseInsensitive: boolean;
@@ -19,7 +22,9 @@ declare module "@tiptap/react" {
 export const InputEmbedNode = Node.create({
   name: "inputEmbed",
 
-  group: "block",
+  group: "inline",
+
+  inline: true,
 
   atom: true,
 
@@ -31,6 +36,8 @@ export const InputEmbedNode = Node.create({
     return {
       nodeID: { default: null },
       label: { default: "" },
+      // Scoring mode: exact (strict equality) | regex | manual (pending review).
+      mode: { default: "exact" },
       pattern: { default: "" },
       score: { default: 0 },
       caseInsensitive: { default: false },
@@ -38,17 +45,33 @@ export const InputEmbedNode = Node.create({
   },
 
   parseHTML() {
-    return [{ tag: 'div[data-type="input-embed"]' }];
+    return [
+      {
+        tag: 'span[data-type="input-embed"]',
+        getAttrs: (dom) => {
+          const el = dom as HTMLElement;
+          return {
+            nodeID: el.getAttribute("data-node-id"),
+            label: el.getAttribute("data-label") ?? "",
+            mode: el.getAttribute("data-mode") ?? "exact",
+            pattern: el.getAttribute("data-pattern") ?? "",
+            score: Number(el.getAttribute("data-score") ?? 0),
+            caseInsensitive: el.getAttribute("data-case-insensitive") === "true",
+          };
+        },
+      },
+    ];
   },
 
   renderHTML({ node, HTMLAttributes }) {
     return [
-      "div",
+      "span",
       mergeAttributes(
         {
           "data-type": "input-embed",
           "data-node-id": node.attrs.nodeID,
           "data-label": node.attrs.label,
+          "data-mode": node.attrs.mode,
           "data-pattern": node.attrs.pattern,
           "data-score": node.attrs.score,
           "data-case-insensitive": node.attrs.caseInsensitive,

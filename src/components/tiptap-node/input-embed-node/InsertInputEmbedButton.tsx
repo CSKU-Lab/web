@@ -13,8 +13,16 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Button as UIButton } from "~/components/ui/button";
 import { Button } from "~/components/tiptap-ui-primitive/button";
+import type { InputEmbedMode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
 
 interface Props {
   courseID: string;
@@ -26,12 +34,14 @@ export function InsertInputEmbedButton(_props: Props) {
   const { editor } = useCurrentEditor();
   const [open, setOpen] = useState(false);
   const [label, setLabel] = useState("");
+  const [mode, setMode] = useState<InputEmbedMode>("exact");
   const [pattern, setPattern] = useState("");
   const [score, setScore] = useState("0");
   const [caseInsensitive, setCaseInsensitive] = useState(false);
 
   const reset = () => {
     setLabel("");
+    setMode("exact");
     setPattern("");
     setScore("0");
     setCaseInsensitive(false);
@@ -42,9 +52,11 @@ export function InsertInputEmbedButton(_props: Props) {
     editor.commands.insertInputEmbed({
       nodeID: crypto.randomUUID(),
       label,
-      pattern,
+      mode,
+      // Manual inputs are graded by hand, so no answer/pattern is stored.
+      pattern: mode === "manual" ? "" : pattern,
       score: Number(score) || 0,
-      caseInsensitive,
+      caseInsensitive: mode === "regex" ? caseInsensitive : false,
     });
     setOpen(false);
     reset();
@@ -79,15 +91,36 @@ export function InsertInputEmbedButton(_props: Props) {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="input-embed-pattern">Pattern (regex)</Label>
-              <Input
-                id="input-embed-pattern"
-                value={pattern}
-                onChange={(e) => setPattern(e.target.value)}
-                placeholder="^answer$"
-                className="font-mono"
-              />
+              <Label htmlFor="input-embed-mode">Scoring mode</Label>
+              <Select
+                value={mode}
+                onValueChange={(v) => setMode(v as InputEmbedMode)}
+              >
+                <SelectTrigger id="input-embed-mode">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="exact">Exact match (auto)</SelectItem>
+                  <SelectItem value="regex">Regex (auto)</SelectItem>
+                  <SelectItem value="manual">Manual grading</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+
+            {mode !== "manual" && (
+              <div className="space-y-1.5">
+                <Label htmlFor="input-embed-pattern">
+                  {mode === "exact" ? "Expected value" : "Regex pattern"}
+                </Label>
+                <Input
+                  id="input-embed-pattern"
+                  value={pattern}
+                  onChange={(e) => setPattern(e.target.value)}
+                  placeholder={mode === "exact" ? "answer" : "^answer$"}
+                  className="font-mono"
+                />
+              </div>
+            )}
 
             <div className="space-y-1.5">
               <Label htmlFor="input-embed-score">Score</Label>
@@ -100,16 +133,18 @@ export function InsertInputEmbedButton(_props: Props) {
               />
             </div>
 
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="input-embed-ci"
-                checked={caseInsensitive}
-                onCheckedChange={(checked) =>
-                  setCaseInsensitive(checked === true)
-                }
-              />
-              <Label htmlFor="input-embed-ci">Case insensitive</Label>
-            </div>
+            {mode === "regex" && (
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="input-embed-ci"
+                  checked={caseInsensitive}
+                  onCheckedChange={(checked) =>
+                    setCaseInsensitive(checked === true)
+                  }
+                />
+                <Label htmlFor="input-embed-ci">Case insensitive</Label>
+              </div>
+            )}
           </div>
 
           <DialogFooter>

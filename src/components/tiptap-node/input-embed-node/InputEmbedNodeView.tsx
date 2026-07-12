@@ -4,17 +4,25 @@ import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import { useParams } from "next/navigation";
 import { FormInput, Trash2 } from "lucide-react";
 import { InlineInputEditor } from "~/components/tiptap-node/input-embed-node/InlineInputEditor";
+import type { InputEmbedMode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
 import { getDocumentReview } from "~/components/tiptap-node/document-review/document-review-extension";
 import { ReviewInputEmbed } from "~/features/cms/submissions/components/renderers/ReviewInputEmbed";
+
+const MODE_LABEL: Record<InputEmbedMode, string> = {
+  exact: "Exact",
+  regex: "Regex",
+  manual: "Manual",
+};
 
 export function InputEmbedNodeView({
   node,
   editor,
   deleteNode,
 }: NodeViewProps) {
-  const { nodeID, label, pattern, score } = node.attrs as {
+  const { nodeID, label, mode, pattern, score } = node.attrs as {
     nodeID: string;
     label: string;
+    mode: InputEmbedMode;
     pattern: string;
     score: number;
     caseInsensitive: boolean;
@@ -28,12 +36,13 @@ export function InputEmbedNodeView({
     // Instructor submission review: show the selected student's submitted value.
     if (review) {
       return (
-        <NodeViewWrapper>
+        <NodeViewWrapper as="span" className="inline-block align-middle">
           <ReviewInputEmbed
             courseID={params.courseID as string}
             documentMaterialID={params.materialID as string}
             nodeID={nodeID}
             label={label}
+            mode={mode}
             score={score}
             studentID={review.studentID}
           />
@@ -46,10 +55,11 @@ export function InputEmbedNodeView({
     const labID = (params.slug ?? params.labID) as string;
 
     return (
-      <NodeViewWrapper>
+      <NodeViewWrapper as="span" className="inline-block align-middle">
         <InlineInputEditor
           nodeID={nodeID}
           label={label}
+          mode={mode}
           score={score}
           sectionID={sectionID}
           labID={labID}
@@ -58,36 +68,37 @@ export function InputEmbedNodeView({
     );
   }
 
-  // CMS editor view: static config card
+  // CMS editor view: compact inline config chip
   return (
-    <NodeViewWrapper>
-      <div
+    <NodeViewWrapper as="span" className="inline-block align-middle">
+      <span
         contentEditable={false}
-        className="flex items-center justify-between gap-3 border rounded-lg p-3 bg-(--gray-2) my-2 select-none"
+        className="inline-flex items-center gap-1.5 border rounded-md px-1.5 py-0.5 bg-(--gray-2) select-none align-middle"
       >
-        <div className="flex items-center gap-2 min-w-0">
-          <FormInput size="1rem" className="text-(--gray-10) shrink-0" />
-          <span className="text-sm font-medium text-(--gray-12) truncate">
-            {label || "Input Field"}
-          </span>
-          {pattern && (
-            <code className="text-xs font-mono text-(--gray-10) truncate max-w-[16rem]">
-              {pattern}
-            </code>
-          )}
-          <span className="text-xs text-(--gray-10) shrink-0">{score} pts</span>
-        </div>
-        <div className="flex items-center gap-1 shrink-0">
-          <button
-            type="button"
-            onClick={deleteNode}
-            className="p-1 rounded hover:bg-(--tomato-3) text-(--gray-10) hover:text-(--tomato-11) transition-colors"
-            title="Remove input"
-          >
-            <Trash2 size="0.875rem" />
-          </button>
-        </div>
-      </div>
+        <FormInput size="0.875rem" className="text-(--gray-10) shrink-0" />
+        <span className="text-xs font-medium text-(--gray-12) truncate max-w-[10rem]">
+          {label || "Input Field"}
+        </span>
+        <span className="text-[0.625rem] uppercase tracking-wide text-(--gray-10) shrink-0">
+          {MODE_LABEL[mode] ?? mode}
+        </span>
+        {mode !== "manual" && pattern && (
+          <code className="text-[0.625rem] font-mono text-(--gray-10) truncate max-w-[10rem]">
+            {pattern}
+          </code>
+        )}
+        <span className="text-[0.625rem] text-(--gray-10) shrink-0">
+          {score} pts
+        </span>
+        <button
+          type="button"
+          onClick={deleteNode}
+          className="p-0.5 rounded hover:bg-(--tomato-3) text-(--gray-10) hover:text-(--tomato-11) transition-colors shrink-0"
+          title="Remove input"
+        >
+          <Trash2 size="0.75rem" />
+        </button>
+      </span>
     </NodeViewWrapper>
   );
 }

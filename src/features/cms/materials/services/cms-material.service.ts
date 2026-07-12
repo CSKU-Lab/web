@@ -19,11 +19,13 @@ export type UpdateMaterialPayload = Partial<CreateMaterialPayload> & {
 export type GetMaterialPaginationParams = PaginationRequestParams<CMSMaterial>;
 
 export interface CMSInputSubmission {
+  id: string;
   user_id: string;
   node_id: string;
   value: string;
   passed: boolean;
   score: number;
+  graded: boolean;
   created_at: string;
 }
 
@@ -95,6 +97,19 @@ class CMSMaterialService extends BaseService {
       `${this.materialsURL(courseID)}/${id}/input-submissions`,
     );
     return res.data ?? [];
+  }
+
+  /** Assign an instructor score to a manual-mode input submission. */
+  async gradeInputSubmission(
+    courseID: string,
+    materialID: string,
+    submissionID: string,
+    score: number,
+  ) {
+    return this.api.post(
+      `${this.materialsURL(courseID)}/${materialID}/input-submissions/grade`,
+      { submission_id: submissionID, score },
+    );
   }
 
   async uploadAsset(

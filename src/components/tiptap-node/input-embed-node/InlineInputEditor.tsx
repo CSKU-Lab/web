@@ -4,27 +4,30 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { firePassConfetti } from "~/lib/confetti";
 import { fireFailGlitch } from "~/lib/glitch";
 import { inputEmbedService } from "~/services/input-embed.service";
+import type { InputEmbedMode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
 import { queryKeys } from "~/queryKeys";
 
 interface Props {
   nodeID: string;
   label: string;
+  mode: InputEmbedMode;
   score: number;
   sectionID: string;
   labID: string;
 }
 
-type SubmissionStatus = "idle" | "grading" | "passed" | "failed";
+type SubmissionStatus = "idle" | "grading" | "passed" | "failed" | "pending";
 
 export function InlineInputEditor({
   nodeID,
   label,
+  mode,
   score: maxScore,
   sectionID,
   labID,
@@ -33,6 +36,7 @@ export function InlineInputEditor({
   const [value, setValue] = useState("");
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [score, setScore] = useState<number | null>(null);
+  const isManual = mode === "manual";
 
   // The page route is the parent DOCUMENT material; its query drives the
   // document-level status pill, which aggregates these embeds server-side.
@@ -72,10 +76,16 @@ export function InlineInputEditor({
     if (statusRef.current !== "idle") return;
     if (myResult.submitted) {
       setValue(myResult.value);
-      setStatus(myResult.passed ? "passed" : "failed");
-      setScore(myResult.score);
+      // Manual inputs stay pending until an instructor grades them (graded=true).
+      if (isManual && !myResult.graded) {
+        setStatus("pending");
+        setScore(null);
+      } else {
+        setStatus(myResult.passed ? "passed" : "failed");
+        setScore(myResult.score);
+      }
     }
-  }, [myResult]);
+  }, [myResult, isManual]);
 
   const submitMutation = useMutation({
     mutationFn: () =>
@@ -91,12 +101,17 @@ export function InlineInputEditor({
       setScore(null);
     },
     onSuccess: (res) => {
-      setStatus(res.passed ? "passed" : "failed");
-      setScore(res.score);
-      if (res.passed) {
-        firePassConfetti();
+      if (isManual) {
+        setStatus("pending");
+        setScore(null);
       } else {
-        fireFailGlitch();
+        setStatus(res.passed ? "passed" : "failed");
+        setScore(res.score);
+        if (res.passed) {
+          firePassConfetti();
+        } else {
+          fireFailGlitch();
+        }
       }
       // Refresh the parent document's status pill, which aggregates the latest
       // status of every embedded block server-side.
@@ -121,67 +136,73 @@ export function InlineInputEditor({
   const renderStatus = () => {
     if (status === "grading") {
       return (
-        <div className="flex items-center gap-1.5 text-xs text-(--yellow-11)">
+        <span className="inline-flex items-center gap-1 text-xs text-(--yellow-11)">
           <Loader2 size="0.75rem" className="animate-spin" />
-          <span>Grading...</span>
-        </div>
+          {isManual ? "Submitting..." : "Grading..."}
+        </span>
+      );
+    }
+    if (status === "pending") {
+      return (
+        <span className="inline-flex items-center gap-1 text-xs text-(--blue-11)">
+          <Clock size="0.75rem" />
+          Pending review
+        </span>
       );
     }
     if (status === "passed") {
       return (
-        <div className="flex items-center gap-1.5 text-xs text-(--grass-11)">
+        <span className="inline-flex items-center gap-1 text-xs text-(--grass-11)">
           <CheckCircle2 size="0.75rem" />
-          <span>Passed{score !== null ? ` · ${score} pts` : ""}</span>
-        </div>
+          Passed{score !== null ? ` · ${score} pts` : ""}
+        </span>
       );
     }
     if (status === "failed") {
       return (
-        <div className="flex items-center gap-1.5 text-xs text-(--tomato-11)">
+        <span className="inline-flex items-center gap-1 text-xs text-(--tomato-11)">
           <XCircle size="0.75rem" />
-          <span>Failed{score !== null ? ` · ${score} pts` : ""}</span>
-        </div>
+          Failed{score !== null ? ` · ${score} pts` : ""}
+        </span>
       );
     }
     return null;
   };
 
   return (
-    <div className="border rounded-lg my-4 p-4 flex flex-col gap-2">
-      <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-medium text-(--gray-12)">
-          {label || "Input"}
-        </span>
-        <div className="flex items-center gap-3">
-          {renderStatus()}
-          <span className="text-xs text-(--gray-10)">{maxScore} pts</span>
-        </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <Input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleSubmit();
-            }
-          }}
-          placeholder="Your answer..."
-          className="flex-1"
-        />
-        <Button
-          type="button"
-          onClick={handleSubmit}
-          disabled={submitMutation.isPending || status === "grading"}
-        >
-          {submitMutation.isPending || status === "grading" ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            "Submit"
-          )}
-        </Button>
-      </div>
-    </div>
+    <span className="inline-flex items-center gap-1.5 align-middle">
+      {label && (
+        <span className="text-sm text-(--gray-12)">{label}</span>
+      )}
+      <Input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleSubmit();
+          }
+        }}
+        placeholder="Answer..."
+        className="inline-block h-7 w-40 px-2 py-1 text-sm"
+      />
+      <Button
+        type="button"
+        size="sm"
+        onClick={handleSubmit}
+        disabled={submitMutation.isPending || status === "grading"}
+        className="h-7"
+      >
+        {submitMutation.isPending || status === "grading" ? (
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        ) : (
+          "Submit"
+        )}
+      </Button>
+      {renderStatus()}
+      {status === "idle" && (
+        <span className="text-xs text-(--gray-10)">{maxScore} pts</span>
+      )}
+    </span>
   );
 }
