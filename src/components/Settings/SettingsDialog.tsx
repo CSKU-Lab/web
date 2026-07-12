@@ -37,6 +37,7 @@ import {
 } from "~/globalStore/settings";
 
 const FONT_SIZES = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
+const INDENT_SIZES = [2, 4];
 
 const THEMES: { value: string; label: string; icon: LucideIcon }[] = [
   { value: "light", label: "Light", icon: Sun },
@@ -111,7 +112,7 @@ function GeneralTab() {
 
 function EditorTab() {
   const [settings, setSettings] = useAppSettings();
-  const { fontSize, vimMode } = settings.editor;
+  const { fontSize, vimMode, indentSize } = settings.editor;
 
   const setEditor = (next: Partial<typeof settings.editor>) =>
     setSettings({ ...settings, editor: { ...settings.editor, ...next } });
@@ -132,6 +133,25 @@ function EditorTab() {
             {FONT_SIZES.map((size) => (
               <SelectItem key={size} value={size.toString()}>
                 {size}px
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>Indentation</Label>
+        <Select
+          value={indentSize.toString()}
+          onValueChange={(v) => setEditor({ indentSize: parseInt(v, 10) })}
+        >
+          <SelectTrigger className="w-full h-10">
+            <SelectValue placeholder="Select indentation" />
+            <ChevronDown size="1rem" className="text-(--gray-11)" />
+          </SelectTrigger>
+          <SelectContent>
+            {INDENT_SIZES.map((size) => (
+              <SelectItem key={size} value={size.toString()}>
+                {size} spaces
               </SelectItem>
             ))}
           </SelectContent>

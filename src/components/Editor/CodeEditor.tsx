@@ -377,6 +377,7 @@ function CodeEditor({
                   className="h-full"
                   extension={fileExtension}
                   fontSize={settings.fontSize}
+                  indentSize={settings.indentSize}
                   vimMode={settings.vimMode}
                   value={currentFile.content}
                   onChange={handleCodeChange}

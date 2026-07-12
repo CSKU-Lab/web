@@ -5,6 +5,7 @@ import {
 } from "@codemirror/view";
 import { basicSetup } from "codemirror";
 import { EditorState, type Extension } from "@codemirror/state";
+import { indentUnit } from "@codemirror/language";
 import { useMemo } from "react";
 import { getLangFromExtension } from "./utils/getLang";
 import { getLspLang } from "./utils/getLspLang";
@@ -15,7 +16,7 @@ import { getReadOnlyRanges } from "./utils/getReadOnlyRanges";
 import { highlightExtension } from "./extensions/highlightRanges";
 import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import { indentWithTab } from "./extensions/indentWithTab";
+import { createIndentWithTab } from "./extensions/indentWithTab";
 import { useTheme } from "next-themes";
 import { env } from "~/lib/env";
 
@@ -30,6 +31,8 @@ interface CodeMirrorProps {
   readOnly?: boolean;
   placeholder?: string;
   fontSize?: number;
+  /** Indentation width in spaces (Tab key + auto-indent). Defaults to 4. */
+  indentSize?: number;
   className?: string;
   style?: React.CSSProperties;
   sessionId?: string;
@@ -46,6 +49,7 @@ function CodeMirror(props: CodeMirrorProps) {
     initialCode = "",
     placeholder,
     fontSize = 14,
+    indentSize = 4,
     sessionId,
     lspToken,
     extensions: extraExtensions = [],
@@ -141,10 +145,12 @@ function CodeMirror(props: CodeMirrorProps) {
       extensions={[
         basicSetup,
         theme,
+        indentUnit.of(" ".repeat(indentSize)),
+        EditorState.tabSize.of(indentSize),
         ...(currentTheme === "light" ? [lightSelectionTheme] : []),
         ...mergedExtensions,
         ...extraExtensions,
-        indentWithTab,
+        createIndentWithTab(indentSize),
         EditorView.updateListener.of((update) => {
           if (update.docChanged && onChange) {
             onChange(update.state.doc.toString());

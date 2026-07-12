@@ -7,7 +7,10 @@ import { basicSetup } from "codemirror";
 import { getLangFromExtension } from "~/components/Editor/CodeMirror/utils/getLang";
 import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
 import { useTheme } from "next-themes";
-import { indentWithTab } from "~/components/Editor/CodeMirror/extensions/indentWithTab";
+import { indentUnit } from "@codemirror/language";
+import { EditorState } from "@codemirror/state";
+import { createIndentWithTab } from "~/components/Editor/CodeMirror/extensions/indentWithTab";
+import { useEditorSettings } from "~/globalStore/settings";
 import {
   segmentMarksExtension,
   segmentRangesField,
@@ -123,6 +126,16 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
   const [hasSelection, setHasSelection] = useState(false);
   const [tab, setTab] = useState("edit");
   const { resolvedTheme } = useTheme();
+  const [{ indentSize }] = useEditorSettings();
+
+  const indentExtensions = useMemo(
+    () => [
+      indentUnit.of(" ".repeat(indentSize)),
+      EditorState.tabSize.of(indentSize),
+      createIndentWithTab(indentSize),
+    ],
+    [indentSize],
+  );
 
   const initialContent = useMemo(() => segmentsToContent(file.segments), []);
 
@@ -241,9 +254,9 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
       ...(langExtension ? [langExtension] : []),
       segmentMarksExtension,
       selectionChangeExtension,
-      indentWithTab,
+      ...indentExtensions,
     ],
-    [customTheme, langExtension, selectionChangeExtension],
+    [customTheme, langExtension, selectionChangeExtension, indentExtensions],
   );
 
   const previewContent = useMemo(() => studentContent(file.segments), [file.segments]);
@@ -268,9 +281,9 @@ function SegmentedFileEditor({ file, onChange, extension, fontSize = 14, disable
       customTheme,
       ...(langExtension ? [langExtension] : []),
       previewReadOnlyExtension,
-      indentWithTab,
+      ...indentExtensions,
     ],
-    [customTheme, langExtension, previewReadOnlyExtension],
+    [customTheme, langExtension, previewReadOnlyExtension, indentExtensions],
   );
 
   return (

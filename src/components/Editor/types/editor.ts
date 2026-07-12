@@ -2,6 +2,8 @@ export interface IEditorSettings {
   fontSize: number;
   vimMode: boolean;
   ligatures: boolean;
+  /** Indentation width in spaces (Tab key + auto-indent). */
+  indentSize: number;
 }
 
 export interface CodeFile {

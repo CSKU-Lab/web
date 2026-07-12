@@ -30,7 +30,7 @@ export const SETTINGS_KEY = "cs-lab-settings";
 const LEGACY_EDITOR_KEY = "editor-settings";
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  editor: { fontSize: 14, vimMode: false, ligatures: false },
+  editor: { fontSize: 14, vimMode: false, ligatures: false, indentSize: 4 },
   // Confetti/konami default-on so behaviour is unchanged for existing users.
   // Fail glitch is opt-in (default off) — it deliberately "breaks" the page.
   easterEggs: { confetti: true, glitch: false, konami: true },
