@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect, useRef, useMemo, type ReactNode } from "react";
 import { generateId } from "~/utils/generate-id";
-import { FileCode, PanelLeftOpen, RotateCcw } from "lucide-react";
+import { FileCode, PanelLeftOpen, RotateCcw, Settings } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
 import RunnerSelect from "./RunnerSelect";
-import { useEditorSettings } from "~/globalStore/settings";
+import { useEditorSettings, useOpenSettings } from "~/globalStore/settings";
 import type { Runner } from "./types/runner";
 import Playground, { type PlaygroundHandle } from "./Playground";
 import { EditorView } from "@codemirror/view";
@@ -122,6 +122,7 @@ function CodeEditor({
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings] = useEditorSettings();
+  const openSettings = useOpenSettings();
   const [runnerSelectError, setRunnerSelectError] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [mdTab, setMdTab] = useState("edit");
@@ -312,6 +313,18 @@ function CodeEditor({
                   <TabsTrigger value="preview">Preview</TabsTrigger>
                 </TabsList>
               )}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => openSettings("editor")}
+                    className="flex size-6 items-center justify-center rounded text-(--gray-10) hover:bg-(--gray-4) hover:text-(--gray-12) transition-colors"
+                  >
+                    <Settings size="1rem" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Editor settings</TooltipContent>
+              </Tooltip>
               {onRestart && (
                 <Dialog open={isRestartOpen} onOpenChange={setIsRestartOpen}>
                   <Tooltip>
@@ -405,6 +418,7 @@ function CodeEditor({
                 className="h-full"
                 extension={fileExtension}
                 fontSize={settings.fontSize}
+                indentSize={settings.indentSize}
                 vimMode={settings.vimMode}
                 value={currentFile.content}
                 onChange={handleCodeChange}
