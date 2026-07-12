@@ -1,3 +1,11 @@
+# [0.62.0](https://github.com/CSKU-Lab/web/compare/v0.61.0...v0.62.0) (2026-07-12)
+
+
+### Features
+
+* **editor:** configurable indentation, default 4 spaces ([fb4aeb7](https://github.com/CSKU-Lab/web/commit/fb4aeb70130cd01ffc7b89922bc44459826456b7))
+* show test case group name in submission Test Cases section ([495bded](https://github.com/CSKU-Lab/web/commit/495bdedf310b0b388807832d99655b27110b51a4))
+
 # [0.61.0](https://github.com/CSKU-Lab/web/compare/v0.60.2...v0.61.0) (2026-07-07)
 
 
