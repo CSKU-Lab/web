@@ -61,6 +61,7 @@ export interface TestCaseResult {
 
 export interface TestCaseGroup {
   id: string;
+  name: string;
   score: number;
   results: TestCaseResult[];
 }

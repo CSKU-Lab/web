@@ -140,7 +140,7 @@ function TestcaseTable({
               {(hasMultipleGroups || showGroupScore) && (
                 <div className="flex items-center justify-between px-1 pt-2">
                   <span className="text-xs font-semibold text-(--gray-11)">
-                    Group {groupIndex + 1}
+                    {group.name || `Group ${groupIndex + 1}`}
                   </span>
                   {showGroupScore && (
                     <span className="text-xs text-(--gray-9)">
