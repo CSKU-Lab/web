@@ -37,7 +37,9 @@ export const InputEmbedNode = Node.create({
       nodeID: { default: null },
       label: { default: "" },
       // Scoring mode: exact (strict equality) | regex | manual (pending review).
-      mode: { default: "exact" },
+      // Legacy nodes predate this attr and were regex-graded, so absent mode
+      // resolves to "regex". New inserts always pass an explicit mode.
+      mode: { default: "regex" },
       pattern: { default: "" },
       score: { default: 0 },
       caseInsensitive: { default: false },
@@ -53,7 +55,7 @@ export const InputEmbedNode = Node.create({
           return {
             nodeID: el.getAttribute("data-node-id"),
             label: el.getAttribute("data-label") ?? "",
-            mode: el.getAttribute("data-mode") ?? "exact",
+            mode: el.getAttribute("data-mode") ?? "regex",
             pattern: el.getAttribute("data-pattern") ?? "",
             score: Number(el.getAttribute("data-score") ?? 0),
             caseInsensitive: el.getAttribute("data-case-insensitive") === "true",
