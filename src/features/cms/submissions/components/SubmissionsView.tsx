@@ -91,6 +91,24 @@ function SubmissionsView() {
     },
   });
 
+  const regradeInputs = useMutation({
+    mutationFn: () => cmsSubmissionService.regradeInputs(courseID, materialID),
+    onSuccess: (res) => {
+      toast.success(
+        `Regraded ${res.regraded} submission${res.regraded === 1 ? "" : "s"}` +
+          (res.skipped > 0 ? ` · ${res.skipped} skipped` : ""),
+      );
+      // Regrade is synchronous and already terminal, so a single invalidate
+      // refreshes the list with the new scores.
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.section.submissions(sectionID, labID, materialID),
+      });
+    },
+    onError: () => {
+      toast.error("Failed to regrade");
+    },
+  });
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -107,6 +125,17 @@ function SubmissionsView() {
             className="mr-4 h-8 text-sm"
             disabled={regradeAll.isPending}
             onClick={() => regradeAll.mutate()}
+          >
+            <RefreshCw size="0.875rem" />
+            Regrade All
+          </Button>
+        )}
+        {material?.type === MaterialType.DOCUMENT && (
+          <Button
+            variant="ghost"
+            className="mr-4 h-8 text-sm"
+            disabled={regradeInputs.isPending}
+            onClick={() => regradeInputs.mutate()}
           >
             <RefreshCw size="0.875rem" />
             Regrade All

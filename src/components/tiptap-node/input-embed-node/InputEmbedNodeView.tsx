@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import { useParams } from "next/navigation";
-import { FormInput, Trash2 } from "lucide-react";
+import { FormInput, Pencil, Trash2 } from "lucide-react";
 import { InlineInputEditor } from "~/components/tiptap-node/input-embed-node/InlineInputEditor";
+import { InputEmbedDialog } from "~/components/tiptap-node/input-embed-node/InputEmbedDialog";
 import type { InputEmbedMode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
 import { getDocumentReview } from "~/components/tiptap-node/document-review/document-review-extension";
 import { ReviewInputEmbed } from "~/features/cms/submissions/components/renderers/ReviewInputEmbed";
@@ -18,17 +20,20 @@ export function InputEmbedNodeView({
   node,
   editor,
   deleteNode,
+  updateAttributes,
 }: NodeViewProps) {
-  const { nodeID, label, mode, pattern, score } = node.attrs as {
-    nodeID: string;
-    label: string;
-    mode: InputEmbedMode;
-    pattern: string;
-    score: number;
-    caseInsensitive: boolean;
-  };
+  const { nodeID, label, mode, pattern, score, caseInsensitive } =
+    node.attrs as {
+      nodeID: string;
+      label: string;
+      mode: InputEmbedMode;
+      pattern: string;
+      score: number;
+      caseInsensitive: boolean;
+    };
 
   const params = useParams();
+  const [editOpen, setEditOpen] = useState(false);
   const isEditable = editor.isEditable;
   const review = getDocumentReview(editor.storage);
 
@@ -92,6 +97,14 @@ export function InputEmbedNodeView({
         </span>
         <button
           type="button"
+          onClick={() => setEditOpen(true)}
+          className="p-0.5 rounded hover:bg-(--gray-4) text-(--gray-10) hover:text-(--gray-12) transition-colors shrink-0"
+          title="Edit input"
+        >
+          <Pencil size="0.75rem" />
+        </button>
+        <button
+          type="button"
           onClick={deleteNode}
           className="p-0.5 rounded hover:bg-(--tomato-3) text-(--gray-10) hover:text-(--tomato-11) transition-colors shrink-0"
           title="Remove input"
@@ -99,6 +112,17 @@ export function InputEmbedNodeView({
           <Trash2 size="0.75rem" />
         </button>
       </span>
+
+      <InputEmbedDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        title="Edit Input Field"
+        submitLabel="Save"
+        initial={{ label, mode, pattern, score, caseInsensitive }}
+        // updateAttributes mutates the node in place, preserving nodeID so
+        // existing submissions stay linked and can be rescored via Regrade All.
+        onSubmit={(values) => updateAttributes(values)}
+      />
     </NodeViewWrapper>
   );
 }

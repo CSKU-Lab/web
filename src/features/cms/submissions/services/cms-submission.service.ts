@@ -17,6 +17,15 @@ class CMSSubmissionService extends BaseService {
     );
   }
 
+  // Re-evaluates auto-mode input embed submissions of a document material
+  // against its current node config. Synchronous — returns per-material counts.
+  async regradeInputs(courseID: string, materialID: string) {
+    const res = await this.api.post<{ regraded: number; skipped: number }>(
+      `/cms/courses/${courseID}/materials/${materialID}/input-submissions/regrade`,
+    );
+    return res.data;
+  }
+
   async deleteSubmission(submissionID: string) {
     return this.api.delete(`/cms/submissions/${submissionID}`);
   }
