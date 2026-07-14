@@ -98,10 +98,14 @@ function SubmissionsView() {
         `Regraded ${res.regraded} submission${res.regraded === 1 ? "" : "s"}` +
           (res.skipped > 0 ? ` · ${res.skipped} skipped` : ""),
       );
-      // Regrade is synchronous and already terminal, so a single invalidate
-      // refreshes the list with the new scores.
+      // Regrade is synchronous and already terminal, so no polling is needed —
+      // just invalidate both the student-list statuses and the per-node input
+      // submissions that drive the open document detail's pass/fail + scores.
       queryClient.invalidateQueries({
         queryKey: queryKeys.section.submissions(sectionID, labID, materialID),
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["cms-input-submissions", courseID, materialID],
       });
     },
     onError: () => {
