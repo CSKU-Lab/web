@@ -34,7 +34,9 @@ export async function CourseMaterialView({
   const isInstructor = user.roles.includes("instructor") && !user.roles.includes("admin");
   const isCourseCreator = course?.creators?.some((c) => c.id === user.sub);
   const isRestrictedInstructor = isInstructor && !isCourseCreator;
-  const isOwner = !isRestrictedInstructor && material.created_by.id === user.sub;
+  const isOwner =
+    !isRestrictedInstructor &&
+    (material.created_by.id === user.sub || material.visibility === "public");
 
   if (material.type === "code") {
     return <CodeMaterial isOwner={isOwner} />;
