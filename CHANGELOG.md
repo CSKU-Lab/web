@@ -1,3 +1,10 @@
+# [0.64.0](https://github.com/CSKU-Lab/web/compare/v0.63.1...v0.64.0) (2026-07-14)
+
+
+### Features
+
+* **input-embed:** edit node config + regrade from submissions list ([9ff76c4](https://github.com/CSKU-Lab/web/commit/9ff76c488aa14b819c6472e2bf6e5569942a8ade))
+
 ## [0.63.1](https://github.com/CSKU-Lab/web/compare/v0.63.0...v0.63.1) (2026-07-14)
 
 
