@@ -1,3 +1,11 @@
+## [0.63.1](https://github.com/CSKU-Lab/web/compare/v0.63.0...v0.63.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **input-embed:** default legacy nodes to regex mode ([93c5c4c](https://github.com/CSKU-Lab/web/commit/93c5c4c95fd708abded27c0862f9a2a0a92e1ff8))
+* **materials:** let course creators and admins manage public material ([055cfb2](https://github.com/CSKU-Lab/web/commit/055cfb21a1fd3cc3301e5282e282d4254e51f020))
+
 # [0.63.0](https://github.com/CSKU-Lab/web/compare/v0.62.0...v0.63.0) (2026-07-12)
 
 
