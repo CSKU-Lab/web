@@ -1,3 +1,10 @@
+## [0.64.1](https://github.com/CSKU-Lab/web/compare/v0.64.0...v0.64.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **input-embed:** refresh document detail scores after regrade ([2ee5784](https://github.com/CSKU-Lab/web/commit/2ee5784c280dcb44ed07710c8b9d0e01d6c48faa))
+
 # [0.64.0](https://github.com/CSKU-Lab/web/compare/v0.63.1...v0.64.0) (2026-07-14)
 
 
