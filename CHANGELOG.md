@@ -1,3 +1,10 @@
+## [0.64.2](https://github.com/CSKU-Lab/web/compare/v0.64.1...v0.64.2) (2026-07-19)
+
+
+### Bug Fixes
+
+* number code testcases per group instead of globally ([06dcb28](https://github.com/CSKU-Lab/web/commit/06dcb28fc90bff64aae9b26b67ab14b1298758d5)), closes [1..#n](https://github.com/1../issues/n)
+
 ## [0.64.1](https://github.com/CSKU-Lab/web/compare/v0.64.0...v0.64.1) (2026-07-14)
 
 
