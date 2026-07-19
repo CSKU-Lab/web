@@ -122,7 +122,6 @@ function TestcaseTable({
   };
 
   const hasMultipleGroups = (groups?.length ?? 0) > 1;
-  let globalIndex = 0;
 
   return (
     <>
@@ -149,8 +148,7 @@ function TestcaseTable({
                   )}
                 </div>
               )}
-              {group.results.map((result) => {
-                const index = globalIndex++;
+              {group.results.map((result, index) => {
                 const statusInfo = getStatusConfig(result.status);
                 const hasMessage =
                   result.status !== "RUN_PASSED" && !!result.message;
