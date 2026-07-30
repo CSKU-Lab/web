@@ -1,3 +1,10 @@
+# [0.65.0](https://github.com/CSKU-Lab/web/compare/v0.64.2...v0.65.0) (2026-07-30)
+
+
+### Features
+
+* add test case view dialog for code embed material ([1af0279](https://github.com/CSKU-Lab/web/commit/1af02798e14f27553fda615d51295a8bae0e8387))
+
 ## [0.64.2](https://github.com/CSKU-Lab/web/compare/v0.64.1...v0.64.2) (2026-07-19)
 
 
