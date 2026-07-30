@@ -6,6 +6,23 @@ export const api = axios.create({
   withCredentials: true,
 });
 
+// Single-flight refresh: when several requests 401 at once (e.g. polling hooks
+// after the access token expires), they must share ONE refresh call. Firing a
+// refresh per request races the backend token rotation — only the first wins,
+// the rest fail the replay check and get bounced to sign-in mid-session.
+let refreshPromise: Promise<unknown> | null = null;
+
+function refreshSession() {
+  if (!refreshPromise) {
+    refreshPromise = axios
+      .get(`/auth/refresh-token?redirect_to=${window.location.pathname}`)
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+  return refreshPromise;
+}
+
 api.interceptors.response.use(
   function onFulfilled(response) {
     return response;
@@ -28,9 +45,12 @@ api.interceptors.response.use(
       }
 
       originalRequest._retry = true;
-      await axios.get(
-        `/auth/refresh-token?redirect_to=${window.location.pathname}`,
-      );
+      try {
+        await refreshSession();
+      } catch {
+        window.location.href = "/auth/sign-in";
+        return new Promise(() => {});
+      }
 
       return api(originalRequest);
     }
