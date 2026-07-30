@@ -7,6 +7,7 @@ import { cmsSectionService } from "~/services/cms-section.service";
 import { queryKeys } from "~/queryKeys";
 import type { CodeSubmissionData } from "~/types/cms-section-submission";
 import type { DocumentReviewValue } from "~/components/tiptap-node/document-review/document-review-extension";
+import { TestcaseDialog } from "~/features/core/materials/components/SubmissionsTab/SubmissionDetail/TestcaseDialog";
 
 interface Props {
   materialID: string;
@@ -78,6 +79,13 @@ export function ReviewCodeEmbed({ materialID, title, autoScore, review }: Props)
             {title || "Code Problem"}
           </span>
           {renderStatus()}
+          {submission?.payload?.test_case_groups?.length ? (
+            <TestcaseDialog
+              groups={submission.payload.test_case_groups}
+              instructorView
+              showGroupScore
+            />
+          ) : null}
         </div>
         <span className="text-sm font-medium text-(--gray-11) shrink-0">
           {submission ? submission.auto_score : "—"} / {autoScore} pts

@@ -16,6 +16,7 @@ import type { CoreCodeMaterial } from "~/types/core-code-material";
 import type { Runner } from "~/components/Editor/types/runner";
 import type { CodeFile, SegmentType, TemplateFile } from "~/components/Editor/types/editor";
 import type { CodeSubmissionPayload, CodeSubmissionDetail } from "~/types/core-code-submission";
+import type { SubmissionResult } from "~/types/core-submission";
 import {
   templateFileToCodeFile,
   buildSubmittedFiles,
@@ -24,6 +25,7 @@ import {
 } from "~/components/Editor/utils/segments";
 import type { MaterialDetail } from "~/types/core-material";
 import { queryKeys } from "~/queryKeys";
+import { TestcaseDialog } from "~/features/core/materials/components/SubmissionsTab/SubmissionDetail/TestcaseDialog";
 
 interface Props {
   materialID: string;
@@ -41,6 +43,12 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [score, setScore] = useState<number | null>(null);
+  // Latest submission id; drives the test-case dialog fetch. Set on hydration
+  // and after each new submission.
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+  // Fetch the test-case detail only once the student opens the dialog — each
+  // document can embed many code blocks, so avoid a detail request per embed.
+  const [testcasesRequested, setTestcasesRequested] = useState(false);
   // Bumped when `files` is replaced wholesale (hydrated submission, runner load)
   // so CodeEditor remounts CodeMirror and rebuilds readonly ranges — a plain
   // value swap after mount is rejected by the readonly transaction filter.
@@ -93,6 +101,16 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
     queryFn: () => coreMaterialService.getById<CoreCodeMaterial>(materialID, sectionID, labID),
     enabled: !!materialID && !!sectionID && !!labID,
   });
+
+  // Test-case results for the latest submission. Enabled lazily once the dialog
+  // is opened; re-keyed by submissionId so a fresh submission refetches.
+  const { data: submissionDetail, isLoading: isTestcasesLoading } =
+    useQuery<SubmissionResult<CodeSubmissionDetail>>({
+      queryKey: ["inline-code-submission-detail", submissionId],
+      queryFn: () =>
+        coreSubmissionService.getByID<CodeSubmissionDetail>(submissionId!),
+      enabled: !!submissionId && testcasesRequested,
+    });
 
   const allowedRunners = useMemo(
     () =>
@@ -216,6 +234,8 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
         // while this fetch was in flight (don't overwrite the live state).
         if (cancelled || !latest || statusRef.current !== "idle") return;
 
+        setSubmissionId(latest.id);
+
         // Load the student's submitted code back into the editor. Restoring only
         // status/score leaves the editor showing the runner template, so the
         // student would see the initial code instead of their latest submission.
@@ -294,6 +314,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
     onSuccess: (response) => {
       setStatus("grading");
       setScore(null);
+      setSubmissionId(response.data.id);
       listenForResult(response.data.id);
       // Flip the parent document pill to Grading right away.
       queryClient.invalidateQueries({
@@ -350,6 +371,15 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
             {material?.name ?? "Code Problem"}
           </span>
           {renderStatus()}
+          {(status === "passed" || status === "failed") && submissionId && (
+            <TestcaseDialog
+              groups={submissionDetail?.payload.test_case_groups}
+              isLoading={isTestcasesLoading}
+              onOpenChange={(open) => {
+                if (open) setTestcasesRequested(true);
+              }}
+            />
+          )}
         </div>
         <SubmitCooldownButton
           onClick={handleSubmit}
