@@ -1,3 +1,10 @@
+## [0.65.2](https://github.com/CSKU-Lab/web/compare/v0.65.1...v0.65.2) (2026-08-11)
+
+
+### Bug Fixes
+
+* hide readonly embedded material submissions ([829acf5](https://github.com/CSKU-Lab/web/commit/829acf596a26052ffa93db71a0e9391bac1bee7c))
+
 ## [0.65.1](https://github.com/CSKU-Lab/web/compare/v0.65.0...v0.65.1) (2026-08-11)
 
 
