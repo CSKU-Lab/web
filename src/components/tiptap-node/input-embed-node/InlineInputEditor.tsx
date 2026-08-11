@@ -12,6 +12,7 @@ import { fireFailGlitch } from "~/lib/glitch";
 import { inputEmbedService } from "~/services/input-embed.service";
 import type { InputEmbedMode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
 import { queryKeys } from "~/queryKeys";
+import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 
 interface Props {
   nodeID: string;
@@ -32,6 +33,7 @@ export function InlineInputEditor({
   sectionID,
   labID,
 }: Props) {
+	const isReadonly = useIsLabReadonly();
   const queryClient = useQueryClient();
   const [value, setValue] = useState("");
   const [status, setStatus] = useState<SubmissionStatus>("idle");
@@ -126,6 +128,7 @@ export function InlineInputEditor({
   });
 
   const handleSubmit = () => {
+	if (isReadonly) return;
     if (!value.trim()) {
       toast.error("Please enter an answer");
       return;
@@ -185,12 +188,13 @@ export function InlineInputEditor({
         }}
         placeholder="Answer..."
         className="inline-block h-7 w-40 px-2 py-1 text-sm"
+		disabled={isReadonly}
       />
       <Button
         type="button"
         size="sm"
         onClick={handleSubmit}
-        disabled={submitMutation.isPending || status === "grading"}
+        disabled={isReadonly || submitMutation.isPending || status === "grading"}
         className="h-7"
       >
         {submitMutation.isPending || status === "grading" ? (

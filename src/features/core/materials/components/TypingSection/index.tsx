@@ -48,7 +48,7 @@ export default function TypingSection() {
     materialID,
     labID,
     sectionID,
-    enabled: !isMaterialLoading && !!text,
+    enabled: !isMaterialLoading && !!text && !isReadonly,
   });
 
   const submitMutation = useMutation({

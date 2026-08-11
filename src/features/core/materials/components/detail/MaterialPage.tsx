@@ -8,6 +8,8 @@ import MaterialTypeRouter from "~/features/core/materials/components/detail/Mate
 import MobileMaterialView from "~/features/core/materials/components/detail/MobileMaterialView";
 import { getIsMobile } from "~/lib/get-is-mobile";
 import { coreMaterialService } from "~/services/core-material.service";
+import { isAxiosError } from "axios";
+import { notFound } from "next/navigation";
 export const generateMetadata = async ({
   params,
 }: {
@@ -38,7 +40,12 @@ export async function MaterialPage(props: {
   const { sectionID, slug: labID, materialID } = params;
   const isMobile = await getIsMobile();
 
-  const material = await coreMaterialService.getById(materialID, sectionID, labID);
+  const material = await coreMaterialService.getById(materialID, sectionID, labID).catch((error) => {
+    if (isAxiosError(error) && error.response?.status === 404) {
+      notFound();
+    }
+    throw error;
+  });
 
   if (isMobile) {
     return (
