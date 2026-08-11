@@ -24,6 +24,7 @@ export interface MaterialDetail<T> {
   name: string;
   type: MaterialType;
   status: MaterialStatus;
+  lab_status: "hidden" | "open" | "readonly" | "disabled";
   manual_score: number;
   payload: T;
 }

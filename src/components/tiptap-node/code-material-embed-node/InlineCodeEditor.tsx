@@ -26,6 +26,7 @@ import {
 import type { MaterialDetail } from "~/types/core-material";
 import { queryKeys } from "~/queryKeys";
 import { TestcaseDialog } from "~/features/core/materials/components/SubmissionsTab/SubmissionDetail/TestcaseDialog";
+import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 
 interface Props {
   materialID: string;
@@ -36,6 +37,7 @@ interface Props {
 type SubmissionStatus = "idle" | "grading" | "passed" | "failed";
 
 export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
+  const isReadonly = useIsLabReadonly();
   const queryClient = useQueryClient();
   const cooldown = useSubmitCooldown();
   const [files, setFiles] = useState<CodeFile[]>([]);
@@ -381,13 +383,15 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
             />
           )}
         </div>
-        <SubmitCooldownButton
-          onClick={handleSubmit}
-          cooldown={cooldown}
-          isSubmitting={submitMutation.isPending || status === "grading"}
-          disabled={!selectedRunner?.id || isLoading}
-          iconClassName="mr-1.5 h-3 w-3"
-        />
+        {!isReadonly && (
+          <SubmitCooldownButton
+            onClick={handleSubmit}
+            cooldown={cooldown}
+            isSubmitting={submitMutation.isPending || status === "grading"}
+            disabled={!selectedRunner?.id || isLoading}
+            iconClassName="mr-1.5 h-3 w-3"
+          />
+        )}
       </div>
       <div ref={editorAreaRef} className="h-[520px] flex flex-col">
         {editorVisible ? (

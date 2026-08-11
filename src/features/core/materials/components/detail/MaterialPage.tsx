@@ -49,14 +49,14 @@ export async function MaterialPage(props: {
 
   if (isMobile) {
     return (
-      <MaterialPageClient materialID={materialID}>
+      <MaterialPageClient materialID={materialID} initialLabStatus={material.lab_status}>
         <MobileMaterialView initialType={material.type} />
       </MaterialPageClient>
     );
   }
 
   return (
-    <MaterialPageClient materialID={materialID}>
+    <MaterialPageClient materialID={materialID} initialLabStatus={material.lab_status}>
       <MaterialTypeRouter initialType={material.type}>
         <DetailSection
           sectionID={sectionID}

@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import { useSetAtom } from "jotai";
 import { useSubmissionStatusListener } from "~/features/core/materials/hooks/useSubmissionStatusListener";
+import { InitialLabStatusProvider } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 import { submissionAtom } from "~/globalStore/submissions";
 import {
   submissionFilesAtom,
@@ -15,11 +16,13 @@ import {
 
 interface MaterialPageClientProps {
   materialID: string;
+  initialLabStatus: "hidden" | "open" | "readonly" | "disabled";
   children: ReactNode;
 }
 
 export default function MaterialPageClient({
   materialID,
+  initialLabStatus,
   children,
 }: MaterialPageClientProps) {
   const setSubmissionFiles = useSetAtom(submissionFilesAtom);
@@ -57,5 +60,9 @@ export default function MaterialPageClient({
   useSubmissionStatusListener(materialID);
 
   // Just render children
-  return <>{children}</>;
+  return (
+    <InitialLabStatusProvider status={initialLabStatus}>
+      {children}
+    </InitialLabStatusProvider>
+  );
 }

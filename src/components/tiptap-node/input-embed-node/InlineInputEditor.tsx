@@ -188,21 +188,23 @@ export function InlineInputEditor({
         }}
         placeholder="Answer..."
         className="inline-block h-7 w-40 px-2 py-1 text-sm"
-		disabled={isReadonly}
+        disabled={isReadonly}
       />
-      <Button
-        type="button"
-        size="sm"
-        onClick={handleSubmit}
-        disabled={isReadonly || submitMutation.isPending || status === "grading"}
-        className="h-7"
-      >
-        {submitMutation.isPending || status === "grading" ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-        ) : (
-          "Submit"
-        )}
-      </Button>
+      {!isReadonly && (
+        <Button
+          type="button"
+          size="sm"
+          onClick={handleSubmit}
+          disabled={submitMutation.isPending || status === "grading"}
+          className="h-7"
+        >
+          {submitMutation.isPending || status === "grading" ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            "Submit"
+          )}
+        </Button>
+      )}
       {renderStatus()}
       {status === "idle" && (
         <span className="text-xs text-(--gray-10)">{maxScore} pts</span>
