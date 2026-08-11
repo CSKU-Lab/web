@@ -1,3 +1,10 @@
+## [0.65.1](https://github.com/CSKU-Lab/web/compare/v0.65.0...v0.65.1) (2026-08-11)
+
+
+### Bug Fixes
+
+* show disabled lab materials as not found ([8838db3](https://github.com/CSKU-Lab/web/commit/8838db3282409964d23e28861cc0ba73135d0180))
+
 # [0.65.0](https://github.com/CSKU-Lab/web/compare/v0.64.2...v0.65.0) (2026-07-30)
 
 
