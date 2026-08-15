@@ -1,3 +1,10 @@
+## [0.65.3](https://github.com/CSKU-Lab/web/compare/v0.65.2...v0.65.3) (2026-08-15)
+
+
+### Bug Fixes
+
+* **cms:** update submission score selection ([c446029](https://github.com/CSKU-Lab/web/commit/c446029c6d8df81d3a70adbac730ad1f1d74a34c))
+
 ## [0.65.2](https://github.com/CSKU-Lab/web/compare/v0.65.1...v0.65.2) (2026-08-11)
 
 
