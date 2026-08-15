@@ -5,6 +5,7 @@ import { cn } from "~/lib/utils";
 import type { MaterialType } from "~/types/cms-material";
 import type { FuseResultMatch } from "fuse.js";
 import { selectedStudentAtom } from "~/features/cms/submissions/stores/selected-student.store";
+import { selectedSubmissionAtom } from "~/features/cms/submissions/stores/selected-submission.store";
 import { fuzzySearchOpenAtom } from "~/features/cms/submissions/stores/fuzzy-search.store";
 import { StudentBlock } from "~/features/cms/submissions/components/fuzzy-search/StudentBlock";
 import { ContentBlock } from "~/features/cms/submissions/components/fuzzy-search/ContentBlock";
@@ -24,10 +25,12 @@ export function ResultCard({
   isSelected,
 }: ResultCardProps) {
   const setSelectedStudent = useSetAtom(selectedStudentAtom);
+  const setSelectedSubmission = useSetAtom(selectedSubmissionAtom);
   const [, setIsOpen] = useAtom(fuzzySearchOpenAtom);
 
   const handleClick = () => {
     setSelectedStudent(submission.student);
+    setSelectedSubmission(submission);
     setIsOpen(false);
   };
 

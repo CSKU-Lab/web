@@ -46,21 +46,31 @@ function StudentList() {
   });
 
   const setSelectedSubmission = useSetAtom(selectedSubmissionAtom);
+  const selectStudent = (index: number) => {
+    const studentSubmission = filteredStudents[index];
+    if (!studentSubmission) return;
+
+    setCurrentIndex(index);
+    setSelectedSubmission(studentSubmission);
+  };
+
   useEffect(() => {
-    if (!filteredStudents[currentIndex]) return;
-    setSelectedSubmission(filteredStudents[currentIndex]);
+    const studentSubmission = filteredStudents[currentIndex];
+    if (!studentSubmission) return;
+    setSelectedSubmission(studentSubmission);
   }, [currentIndex, filteredStudents, setSelectedSubmission]);
 
   useEffect(() => {
-    if (!listRef.current || !students) return;
+    if (!listRef.current) return;
 
-    const selectedStudent = students[currentIndex];
+    const selectedStudent = filteredStudents[currentIndex];
+    if (!selectedStudent) return;
 
     const studentEl = listRef.current.querySelector(
       `[data-student-id="${selectedStudent.id}"]`,
     );
     studentEl?.scrollIntoView({ block: "center" });
-  }, [currentIndex, students]);
+  }, [currentIndex, filteredStudents]);
 
   return (
     <div className="flex flex-col h-full">
@@ -101,7 +111,7 @@ function StudentList() {
               key={studentSubmission.student.id}
               studentSubmission={studentSubmission}
               isSelected={currentIndex === i}
-              onClick={() => setCurrentIndex(i)}
+              onClick={() => selectStudent(i)}
             />
           ))
         )}
