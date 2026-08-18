@@ -54,7 +54,7 @@ function StudentCard({
           </span>
           <span className="text-xs text-(--gray-8)">|</span>
           <span className="text-xs text-(--gray-11)">
-            {auto_score}/{manual_score}
+            A: {auto_score} | M: {manual_score}
           </span>
           {ip && (
             <>
