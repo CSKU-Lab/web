@@ -1,3 +1,10 @@
+## [0.65.4](https://github.com/CSKU-Lab/web/compare/v0.65.3...v0.65.4) (2026-08-18)
+
+
+### Bug Fixes
+
+* **cms:** clarify submission score labels ([451d000](https://github.com/CSKU-Lab/web/commit/451d000586dee2a2ed3cdc1c090572caac538b06))
+
 ## [0.65.3](https://github.com/CSKU-Lab/web/compare/v0.65.2...v0.65.3) (2026-08-15)
 
 
