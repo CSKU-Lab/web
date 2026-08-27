@@ -21,7 +21,7 @@ import { Button } from "~/components/commons/Button";
 import { MaterialType } from "~/types/cms-material";
 import { queryKeys } from "~/queryKeys";
 import { useEffect } from "react";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { selectedSubmissionAtom } from "~/features/cms/submissions/stores/selected-submission.store";
 
 interface PageParams {
@@ -42,6 +42,7 @@ function SubmissionsView() {
   // which would crash on the mismatched payload shape. StudentList re-selects
   // the first student once the new list loads.
   const setSelectedSubmission = useSetAtom(selectedSubmissionAtom);
+  const selectedSubmission = useAtomValue(selectedSubmissionAtom);
   useEffect(() => {
     setSelectedSubmission(null);
   }, [materialID, setSelectedSubmission]);
@@ -53,6 +54,16 @@ function SubmissionsView() {
     refetch: refetchStudents,
     isFetching: isStudentsFetching,
   } = useAllStudentsLatestSubmissions({ sectionID, labID, materialID });
+
+  useEffect(() => {
+    const selectedSubmissionStillExists = students?.some(
+      (student) => student.id === selectedSubmission?.id,
+    );
+
+    if (students?.length && !selectedSubmissionStillExists) {
+      setSelectedSubmission(students[0]);
+    }
+  }, [students, selectedSubmission?.id, setSelectedSubmission]);
 
   const {
     data: material,

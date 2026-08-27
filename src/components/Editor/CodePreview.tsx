@@ -17,7 +17,7 @@ interface CodePreviewProps {
 function CodePreview({ files, runner, className, onReplace }: CodePreviewProps) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
-  const [isFileTreeCollapsed, setIsFileTreeCollapsed] = useState(false);
+  const [isFileTreeCollapsed, setIsFileTreeCollapsed] = useState(true);
 
   if (files.length > 0 && selectedFile === null) {
     setSelectedFile(files[0].name);
