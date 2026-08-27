@@ -111,40 +111,50 @@ export function FuzzySearchPanel({
         {/* Full-screen content container — no panel background */}
         <DialogPrimitive.Content
           aria-describedby={undefined}
+          onPointerDown={(e) => {
+            if (
+              !(e.target instanceof Element) ||
+              !e.target.closest("[data-fuzzy-search-panel]")
+            ) {
+              handleOpenChange(false);
+            }
+          }}
           className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 flex flex-col items-center overflow-y-auto px-6 pt-[20vh] pb-10 duration-200"
         >
           <DialogPrimitive.Title className="sr-only">
             Fuzzy Search Submissions
           </DialogPrimitive.Title>
 
-          {/* Input + kbd hints — fixed width, sits at ~20% from top */}
-          <div className="w-full max-w-2xl shrink-0">
-            <SearchInput
-              query={query}
-              onChange={handleQueryChange}
-              onClear={() => handleQueryChange("")}
-              resultCount={results.length}
-              inputRef={inputRef}
-            />
-          </div>
+          <div data-fuzzy-search-panel className="w-full max-w-2xl">
+            {/* Input + kbd hints — fixed width, sits at ~20% from top */}
+            <div className="w-full shrink-0">
+              <SearchInput
+                query={query}
+                onChange={handleQueryChange}
+                onClear={() => handleQueryChange("")}
+                resultCount={results.length}
+                inputRef={inputRef}
+              />
+            </div>
 
-          {/* Results — same width, cards have their own white bg */}
-          <div ref={resultsRef} className="w-full max-w-2xl mt-4 space-y-3">
-            {results.length === 0 && query ? (
-              <div className="py-10">
-                <NoDataAvailable />
-              </div>
-            ) : (
-              results.map((result, index) => (
-                <ResultCard
-                  key={result.item.student.id}
-                  submission={result.item}
-                  materialType={materialType}
-                  matches={result.matches}
-                  isSelected={index === selectedIndex}
-                />
-              ))
-            )}
+            {/* Results — same width, cards have their own white bg */}
+            <div ref={resultsRef} className="w-full mt-4 space-y-3">
+              {results.length === 0 && query ? (
+                <div className="py-10">
+                  <NoDataAvailable />
+                </div>
+              ) : (
+                results.map((result, index) => (
+                  <ResultCard
+                    key={result.item.student.id}
+                    submission={result.item}
+                    materialType={materialType}
+                    matches={result.matches}
+                    isSelected={index === selectedIndex}
+                  />
+                ))
+              )}
+            </div>
           </div>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
