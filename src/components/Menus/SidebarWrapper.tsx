@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { PanelLeft } from "lucide-react";
 import { SIDEBAR_WIDTH } from "~/constants";
 import UserSection from "./UserSection";
+import { cn } from "~/lib/utils";
 
 const ToggleButton = ({ toggleSidebar }: { toggleSidebar: () => void }) => (
   <button
@@ -19,8 +20,9 @@ const ToggleButton = ({ toggleSidebar }: { toggleSidebar: () => void }) => (
 
 interface Props {
   children: ReactNode;
+  collapsedChildren?: ReactNode;
 }
-function SidebarWrapper({ children }: Props) {
+function SidebarWrapper({ children, collapsedChildren }: Props) {
   const [{ isCollapse }, setSidebar] = useAtom(sidebarAtom);
 
   const toggleSidebar = () => {
@@ -36,10 +38,19 @@ function SidebarWrapper({ children }: Props) {
         <motion.nav
           initial={{ width: isCollapse ? 54 : SIDEBAR_WIDTH }}
           animate={{ width: isCollapse ? 54 : SIDEBAR_WIDTH }}
-          className="flex flex-col justify-between border-r border-(--gray-4) bg-(--gray-2) p-4 min-h-0"
+          className={cn(
+            "flex flex-col border-r border-(--gray-4) bg-(--gray-2) p-4 min-h-0",
+            isCollapse ? "justify-start" : "justify-between",
+          )}
         >
           <ToggleButton toggleSidebar={toggleSidebar} />
-          {!isCollapse && (
+          {isCollapse ? (
+            collapsedChildren && (
+              <section className="mt-2 flex flex-col items-center gap-2">
+                {collapsedChildren}
+              </section>
+            )
+          ) : (
             <>
               <motion.section
                 initial={{ opacity: 0 }}

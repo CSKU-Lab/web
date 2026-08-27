@@ -18,7 +18,10 @@ async function Layout({ children }: ChildrenProps) {
 
   return (
     <CoreLayout homePath="/cms">
-      <CoreLayoutSidebar homePath="/cms">
+      <CoreLayoutSidebar
+        homePath="/cms"
+        collapsedChildren={<SidebarMenus config={sidebarMenus} collapsed />}
+      >
         <h6 className="text-(--gray-11) text-xs font-light py-2">CMS</h6>
         <SearchBar />
         <SidebarMenus config={sidebarMenus} />

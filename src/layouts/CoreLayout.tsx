@@ -33,11 +33,12 @@ export function CoreLayoutContent({ className, children }: ContentProps) {
 
 interface SidebarProps extends ChildrenProps {
   homePath?: string;
+  collapsedChildren?: ReactNode;
 }
 
-export function CoreLayoutSidebar({ children, homePath = "/" }: SidebarProps) {
+export function CoreLayoutSidebar({ children, homePath = "/", collapsedChildren }: SidebarProps) {
   return (
-    <SidebarWrapper>
+    <SidebarWrapper collapsedChildren={collapsedChildren}>
       <div className="mb-2 leading-none">
         <Link href={homePath} className="text-(--gray-12) font-medium hover:text-(--accent-9) transition-colors inline-block">
           CS Lab
