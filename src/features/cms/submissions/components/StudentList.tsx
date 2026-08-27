@@ -67,7 +67,7 @@ function StudentList() {
     if (!selectedStudent) return;
 
     const studentEl = listRef.current.querySelector(
-      `[data-student-id="${selectedStudent.id}"]`,
+      `[data-student-id="${selectedStudent.student.id}"]`,
     );
     studentEl?.scrollIntoView({ block: "center" });
   }, [currentIndex, filteredStudents]);
