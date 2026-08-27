@@ -1,6 +1,6 @@
 {
   "name": "cs-lab",
-  "version": "0.65.4",
+  "version": "0.66.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

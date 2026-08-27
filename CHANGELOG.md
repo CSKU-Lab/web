@@ -1,3 +1,10 @@
+# [0.66.0](https://github.com/CSKU-Lab/web/compare/v0.65.4...v0.66.0) (2026-08-27)
+
+
+### Features
+
+* show collapsed sidebar menu icons ([3bb8c05](https://github.com/CSKU-Lab/web/commit/3bb8c058f75c6eaef6d6d2577eff38f87516e311))
+
 ## [0.65.4](https://github.com/CSKU-Lab/web/compare/v0.65.3...v0.65.4) (2026-08-18)
 
 
