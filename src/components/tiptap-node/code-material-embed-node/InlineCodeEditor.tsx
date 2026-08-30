@@ -139,6 +139,11 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
     [material],
   );
 
+  const getFilePriority = useCallback(
+    (name: string) => (resourceFileNames.has(name) ? 1 : 0),
+    [resourceFileNames],
+  );
+
   const editorFiles = useMemo(() => [...files, ...resourceFiles], [files, resourceFiles]);
 
   useEffect(() => {
@@ -410,6 +415,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
             onRestart={handleRestart}
             isLoading={isLoading}
             isReadonlyFile={(name) => resourceFileNames.has(name)}
+            getFilePriority={getFilePriority}
             resetKey={filesEpoch}
           />
         ) : (

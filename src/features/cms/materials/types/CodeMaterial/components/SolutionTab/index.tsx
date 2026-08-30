@@ -129,6 +129,11 @@ function EditorSection() {
     [resourceFileNames],
   );
 
+  const getFilePriority = useCallback(
+    (name: string) => (resourceFileNames.has(name) ? 1 : 0),
+    [resourceFileNames],
+  );
+
   const isRequiredFile = useCallback(
     (name: string) => !resourceFileNames.has(name) && solutionFileNames.has(name),
     [resourceFileNames, solutionFileNames],
@@ -209,6 +214,7 @@ function EditorSection() {
         onChangeSelectedRunner={handleOnChangeSelectedRunner}
         isReadonlyFile={isReadonlyFile}
         isRequiredFile={isRequiredFile}
+        getFilePriority={getFilePriority}
         canDeleteFile={(name) => isOwner && name.endsWith(".bak")}
         runnerSelectAddon={
           showBanner ? (

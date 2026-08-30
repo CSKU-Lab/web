@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import CodeEditor from "~/components/Editor/CodeEditor";
 import useGetCoreMaterial from "~/features/core/materials/hooks/useGetCoreMaterial";
 import useSubmissionFiles from "~/features/core/materials/hooks/useSubmissionFiles";
@@ -56,6 +56,11 @@ function RightSection() {
     [material],
   );
 
+  const getFilePriority = useCallback(
+    (name: string) => (resourceFileNames.has(name) ? 1 : 0),
+    [resourceFileNames],
+  );
+
   // Auto-select the first runner (and load its files) once material arrives.
   useEffect(() => {
     if (!material || selectedRunner !== null || allowedRunners.length === 0) {
@@ -97,6 +102,7 @@ function RightSection() {
           onRestart={isReadonly ? undefined : handleRestart}
           isLoading={isLoading}
           isReadonlyFile={(name) => resourceFileNames.has(name)}
+          getFilePriority={getFilePriority}
         />
       </div>
     </div>

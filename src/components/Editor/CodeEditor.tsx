@@ -71,6 +71,7 @@ interface Props {
    * ranges align to the new content. Leave undefined for callers that only edit.
    */
   resetKey?: number;
+  getFilePriority?: (name: string) => number;
 }
 
 /**
@@ -119,6 +120,7 @@ function CodeEditor({
   onRestart,
   showSegmentMarks = false,
   resetKey = 0,
+  getFilePriority,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings] = useEditorSettings();
@@ -286,6 +288,7 @@ function CodeEditor({
               isRequiredFile={isRequiredFile}
               canDeleteFile={canDeleteFile}
               onCollapse={() => setIsFileTreeCollapsed(true)}
+              getFilePriority={getFilePriority}
             />
           ))}
         <Tabs

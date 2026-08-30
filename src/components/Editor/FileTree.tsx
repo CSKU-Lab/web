@@ -56,13 +56,18 @@ interface FileTreeProps {
   getDisplayName?: (name: string) => string;
   getNewFilePath?: (name: string) => string;
   onCollapse?: () => void;
+  /** Lower values are shown first among files in the same folder. */
+  getFilePriority?: (name: string) => number;
 }
 
 type TreeNode =
   | { type: "folder"; name: string; path: string; children: TreeNode[] }
   | { type: "file"; name: string; path: string; file: CodeFile };
 
-function buildTree(files: CodeFile[]): TreeNode[] {
+function buildTree(
+  files: CodeFile[],
+  getFilePriority: (name: string) => number,
+): TreeNode[] {
   const root: TreeNode[] = [];
 
   files.forEach((file) => {
@@ -100,8 +105,21 @@ function buildTree(files: CodeFile[]): TreeNode[] {
 
   const sortNodes = (nodes: TreeNode[]): TreeNode[] => {
     return nodes.sort((a, b) => {
+      const getNodePriority = (node: TreeNode): number =>
+        node.type === "file"
+          ? getFilePriority(node.path)
+          : node.children.length > 0
+            ? Math.min(...node.children.map(getNodePriority))
+            : 0;
+      const priorityDifference = getNodePriority(a) - getNodePriority(b);
+      if (priorityDifference !== 0) return priorityDifference;
       if (a.type === "folder" && b.type === "file") return -1;
       if (a.type === "file" && b.type === "folder") return 1;
+      if (a.type === "file" && b.type === "file") {
+        const priorityDifference =
+          getFilePriority(a.path) - getFilePriority(b.path);
+        if (priorityDifference !== 0) return priorityDifference;
+      }
       return a.name.localeCompare(b.name);
     }).map((node) => {
       if (node.type === "folder") {
@@ -129,6 +147,7 @@ function FileTree({
   getDisplayName,
   getNewFilePath,
   onCollapse,
+  getFilePriority = () => 0,
 }: FileTreeProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
@@ -148,7 +167,10 @@ function FileTree({
     direction: "horizontal",
   });
 
-  const tree = useMemo(() => buildTree(files), [files]);
+  const tree = useMemo(
+    () => buildTree(files, getFilePriority),
+    [files, getFilePriority],
+  );
 
   const toggleFolder = (path: string) => {
     setExpandedFolders((prev) => {
