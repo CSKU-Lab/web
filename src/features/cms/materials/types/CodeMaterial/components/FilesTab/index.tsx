@@ -90,6 +90,14 @@ function FilesTab() {
         onSelectFile={setSelectedFile}
         onChange={handleFilesChange}
         allowModify={isOwner && !isLoading}
+        isHiddenFile={(name) => files.find((file) => file.name === name)?.hidden ?? false}
+        onToggleHiddenFile={(name) =>
+          setFiles(
+            files.map((file) =>
+              file.name === name ? { ...file, hidden: !file.hidden } : file,
+            ),
+          )
+        }
       />
       <div className="flex-1 flex flex-col min-h-0 min-w-40">
         <div className="border-b p-1 flex items-center justify-between">

@@ -19,6 +19,7 @@ export interface AllowedRunner {
 export interface CoreCodeResourceFile {
   name: string;
   content: string;
+  hidden?: boolean;
 }
 
 export interface CodeMaterialLimits {

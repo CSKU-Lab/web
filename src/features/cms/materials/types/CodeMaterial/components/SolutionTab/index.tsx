@@ -213,6 +213,7 @@ function EditorSection() {
         initialSelectedRunner={initialSelectedRunner}
         onChangeSelectedRunner={handleOnChangeSelectedRunner}
         isReadonlyFile={isReadonlyFile}
+        isHiddenFile={(name) => resourceFiles.find((file) => file.name === name)?.hidden ?? false}
         isRequiredFile={isRequiredFile}
         getFilePriority={getFilePriority}
         canDeleteFile={(name) => isOwner && name.endsWith(".bak")}

@@ -13,6 +13,8 @@ import {
   ChevronRight,
   ChevronDown,
   PanelLeftClose,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import {
   Dialog,
@@ -58,6 +60,8 @@ interface FileTreeProps {
   onCollapse?: () => void;
   /** Lower values are shown first among files in the same folder. */
   getFilePriority?: (name: string) => number;
+  isHiddenFile?: (name: string) => boolean;
+  onToggleHiddenFile?: (name: string) => void;
 }
 
 type TreeNode =
@@ -148,6 +152,8 @@ function FileTree({
   getNewFilePath,
   onCollapse,
   getFilePriority = () => 0,
+  isHiddenFile,
+  onToggleHiddenFile,
 }: FileTreeProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
@@ -359,6 +365,7 @@ const isDuplicateName = files.some((f) => {
     const isReadonly = isReadonlyFile?.(node.path);
     const isRequired = isRequiredFile?.(node.path);
     const canModify = allowModify && !isReadonly && !isRequired;
+    const isHidden = isHiddenFile?.(node.path) ?? false;
     const canDeleteOnly = !canModify && (canDeleteFile?.(node.path) ?? false);
 
     return (
@@ -383,6 +390,9 @@ const isDuplicateName = files.some((f) => {
           )}
           {isRequired && !isReadonly && (
             <span className="text-xs text-(--gray-9)">(required)</span>
+          )}
+          {isHidden && (
+            <span className="text-xs text-(--gray-9)">(hidden)</span>
           )}
         </button>
         {canModify && (
@@ -413,6 +423,12 @@ const isDuplicateName = files.some((f) => {
                 <Trash2 size="1rem" />
                 Delete
               </DropdownMenuItem>
+              {onToggleHiddenFile && (
+                <DropdownMenuItem onSelect={() => onToggleHiddenFile(node.path)}>
+                  {isHidden ? <Eye size="1rem" /> : <EyeOff size="1rem" />}
+                  {isHidden ? "Show file" : "Hide file"}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         )}

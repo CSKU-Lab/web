@@ -49,7 +49,7 @@ function RightSection() {
   // Resource files merged into the editor as read-only entries.
   const resourceFiles = useMemo(
     () =>
-      (material?.payload.resource_files ?? []).map((f) => ({
+      (material?.payload.resource_files ?? []).filter((f) => !f.hidden).map((f) => ({
         ...f,
         readonly: true,
       })),
@@ -103,6 +103,7 @@ function RightSection() {
           isLoading={isLoading}
           isReadonlyFile={(name) => resourceFileNames.has(name)}
           getFilePriority={getFilePriority}
+          playgroundFiles={[...files, ...resourceFiles]}
         />
       </div>
     </div>

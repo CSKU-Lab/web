@@ -72,6 +72,8 @@ interface Props {
    */
   resetKey?: number;
   getFilePriority?: (name: string) => number;
+  playgroundFiles?: CodeFile[];
+  isHiddenFile?: (name: string) => boolean;
 }
 
 /**
@@ -121,6 +123,8 @@ function CodeEditor({
   showSegmentMarks = false,
   resetKey = 0,
   getFilePriority,
+  playgroundFiles,
+  isHiddenFile,
 }: Props) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [settings] = useEditorSettings();
@@ -289,6 +293,7 @@ function CodeEditor({
               canDeleteFile={canDeleteFile}
               onCollapse={() => setIsFileTreeCollapsed(true)}
               getFilePriority={getFilePriority}
+              isHiddenFile={isHiddenFile}
             />
           ))}
         <Tabs
@@ -441,7 +446,7 @@ function CodeEditor({
 
       <Playground
         ref={playgroundRef}
-        files={files}
+        files={playgroundFiles ?? files}
         runnerID={selectedRunner?.id ?? ""}
         onError={() => setRunnerSelectError(true)}
         disabled={!permissions?.codeExecution}

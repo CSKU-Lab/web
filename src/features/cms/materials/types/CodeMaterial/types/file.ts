@@ -6,4 +6,5 @@ export interface CodeMaterialSolutionFile {
 export interface CodeMaterialResourceFile {
   name: string;
   content: string;
+  hidden?: boolean;
 }

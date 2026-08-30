@@ -135,7 +135,9 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
   );
 
   const resourceFiles = useMemo(
-    () => (material?.payload.resource_files ?? []).map((f) => ({ ...f, readonly: true })),
+    () => (material?.payload.resource_files ?? [])
+      .filter((f) => !f.hidden)
+      .map((f) => ({ ...f, readonly: true })),
     [material],
   );
 
@@ -417,6 +419,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
             isReadonlyFile={(name) => resourceFileNames.has(name)}
             getFilePriority={getFilePriority}
             resetKey={filesEpoch}
+            playgroundFiles={[...files, ...resourceFiles]}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center text-(--gray-10)">
