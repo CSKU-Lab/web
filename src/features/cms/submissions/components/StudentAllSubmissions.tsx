@@ -10,7 +10,7 @@ import { useStudentSubmissions } from "~/features/cms/submissions/hooks/useViewA
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import useVimMotion from "~/features/cms/submissions/hooks/useVimMotion";
 import useGetUser from "~/hooks/useGetUser";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { selectedSubmissionAtom } from "~/features/cms/submissions/stores/selected-submission.store";
 import useOnElementAppear from "~/hooks/useOnElementAppear";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -116,7 +116,10 @@ function StudentAllSubmissions() {
     enabled: hasNextPage,
   });
 
-  const allSubmissions = submissions.pages.flatMap((page) => page.data);
+  const allSubmissions = useMemo(
+    () => submissions.pages.flatMap((page) => page.data),
+    [submissions.pages],
+  );
 
   const router = useRouter();
   const handleBackToAll = () => {
