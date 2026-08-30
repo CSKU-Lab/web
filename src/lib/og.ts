@@ -10,14 +10,14 @@ const ogPath = {
 
 export const ogImages = {
   default: (): string => `${PUBLIC_BASE}${ogPath.default()}`,
-  section: (id: string): string => `${PUBLIC_BASE}${ogPath.section(id)}`,
-  material: (id: string): string => `${PUBLIC_BASE}${ogPath.material(id)}`,
-  course: (id: string): string => `${PUBLIC_BASE}${ogPath.course(id)}`,
+  section: (_id: string): string => `${PUBLIC_BASE}${ogPath.default()}`,
+  material: (_id: string): string => `${PUBLIC_BASE}${ogPath.default()}`,
+  course: (_id: string): string => `${PUBLIC_BASE}${ogPath.default()}`,
 };
 
 export const ogImagesFetch = {
   default: (): string => `${INTERNAL_BASE}${ogPath.default()}`,
-  section: (id: string): string => `${INTERNAL_BASE}${ogPath.section(id)}`,
-  material: (id: string): string => `${INTERNAL_BASE}${ogPath.material(id)}`,
-  course: (id: string): string => `${INTERNAL_BASE}${ogPath.course(id)}`,
+  section: (_id: string): string => `${INTERNAL_BASE}${ogPath.default()}`,
+  material: (_id: string): string => `${INTERNAL_BASE}${ogPath.default()}`,
+  course: (_id: string): string => `${INTERNAL_BASE}${ogPath.default()}`,
 };

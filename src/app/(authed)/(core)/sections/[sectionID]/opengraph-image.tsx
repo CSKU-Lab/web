@@ -8,10 +8,10 @@ export default async function Image({
 }: {
   params: Promise<{ sectionID: string }>;
 }) {
-  const { sectionID } = await params;
+  await params;
 
   try {
-    const res = await fetch(ogImagesFetch.section(sectionID), {
+    const res = await fetch(ogImagesFetch.default(), {
       signal: AbortSignal.timeout(5000),
     });
     if (res.ok) {
