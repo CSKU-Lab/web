@@ -1,3 +1,10 @@
+# [0.67.0](https://github.com/CSKU-Lab/web/compare/v0.66.0...v0.67.0) (2026-08-30)
+
+
+### Features
+
+* show explicit playground execution status ([c2f5b37](https://github.com/CSKU-Lab/web/commit/c2f5b3728ce56e2879e2e6c3737631a40ad870e1))
+
 # [0.66.0](https://github.com/CSKU-Lab/web/compare/v0.65.4...v0.66.0) (2026-08-27)
 
 
