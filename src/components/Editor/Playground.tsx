@@ -18,6 +18,53 @@ import { env } from "~/lib/env";
 import type { CodeFile } from "~/types/code-material";
 import { kiloToMegaBytes } from "./utils/kilo-to-megabytes";
 
+const statusConfig = {
+  STATUS_UNSPECIFIED: {
+    label: "Unknown",
+    className: "bg-(--gray-3) text-(--gray-11) border-(--gray-6)",
+  },
+  STATUS_COMPILE_FAILED: {
+    label: "Compile failed",
+    className: "bg-(--tomato-3) text-(--tomato-11) border-(--tomato-6)",
+  },
+  STATUS_RUN_PASSED: {
+    label: "Passed",
+    className: "bg-(--grass-3) text-(--grass-11) border-(--grass-6)",
+  },
+  STATUS_RUN_FAILED: {
+    label: "Run failed",
+    className: "bg-(--tomato-3) text-(--tomato-11) border-(--tomato-6)",
+  },
+  STATUS_TIME_LIMIT_EXCEEDED: {
+    label: "Time limit exceeded",
+    className: "bg-(--amber-3) text-(--amber-11) border-(--amber-6)",
+  },
+  STATUS_MEMORY_LIMIT_EXCEEDED: {
+    label: "Memory limit exceeded",
+    className: "bg-(--amber-3) text-(--amber-11) border-(--amber-6)",
+  },
+  STATUS_RUNTIME_ERROR: {
+    label: "Runtime error",
+    className: "bg-(--tomato-3) text-(--tomato-11) border-(--tomato-6)",
+  },
+  STATUS_SIGNAL_ERROR: {
+    label: "Signal error",
+    className: "bg-(--tomato-3) text-(--tomato-11) border-(--tomato-6)",
+  },
+  STATUS_GRADER_ERROR: {
+    label: "Grader error",
+    className: "bg-(--tomato-3) text-(--tomato-11) border-(--tomato-6)",
+  },
+  STATUS_QUEUED: {
+    label: "Queued",
+    className: "bg-(--gray-3) text-(--gray-11) border-(--gray-6)",
+  },
+  STATUS_RUNNING: {
+    label: "Running",
+    className: "bg-(--amber-3) text-(--amber-11) border-(--amber-6)",
+  },
+} as const;
+
 export interface PlaygroundHandle {
   run: () => void;
 }
@@ -60,6 +107,9 @@ const Playground = forwardRef<PlaygroundHandle, Props>(function Playground(
     isPending ||
     result?.status === "STATUS_RUNNING" ||
     result?.status === "STATUS_QUEUED";
+  const statusInfo = result
+    ? statusConfig[result.status] ?? statusConfig.STATUS_UNSPECIFIED
+    : null;
 
   const handleRunCodeRef = useRef<() => void>(() => {});
 
@@ -160,7 +210,12 @@ const Playground = forwardRef<PlaygroundHandle, Props>(function Playground(
       <div className="bg-(--gray-1) border-b p-4 flex justify-between items-center z-10">
         <h4 className="text-xs text-(--gray-11)">Playground</h4>
         {result !== null && !isRunning && (
-          <div className="flex gap-2">
+          <div className="flex items-center gap-3">
+            <span
+              className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${statusInfo?.className}`}
+            >
+              {statusInfo?.label}
+            </span>
             <div className="flex items-center gap-1">
               <Clock size="1rem" />
               <span className="text-xs">{result?.wall_time ?? 0} s</span>
