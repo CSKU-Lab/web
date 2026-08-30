@@ -1,3 +1,10 @@
+# [0.68.0](https://github.com/CSKU-Lab/web/compare/v0.67.0...v0.68.0) (2026-08-30)
+
+
+### Features
+
+* **web:** order runner files before resources ([b90654d](https://github.com/CSKU-Lab/web/commit/b90654d6a947c7ee469f19a1feba6f6157e69d79))
+
 # [0.67.0](https://github.com/CSKU-Lab/web/compare/v0.66.0...v0.67.0) (2026-08-30)
 
 
