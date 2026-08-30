@@ -1,3 +1,10 @@
+# [0.69.0](https://github.com/CSKU-Lab/web/compare/v0.68.0...v0.69.0) (2026-08-30)
+
+
+### Features
+
+* **web:** manage resource visibility ([f560eae](https://github.com/CSKU-Lab/web/commit/f560eae74e93071e57468ac6dfcc91792eb82b4f))
+
 # [0.68.0](https://github.com/CSKU-Lab/web/compare/v0.67.0...v0.68.0) (2026-08-30)
 
 
