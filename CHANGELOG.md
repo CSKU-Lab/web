@@ -1,3 +1,10 @@
+## [0.69.1](https://github.com/CSKU-Lab/web/compare/v0.69.0...v0.69.1) (2026-09-08)
+
+
+### Bug Fixes
+
+* **web:** preserve historical submission selection ([5f56332](https://github.com/CSKU-Lab/web/commit/5f56332a598e6dae1e2469fc151e1b6d8e74f0ac))
+
 # [0.69.0](https://github.com/CSKU-Lab/web/compare/v0.68.0...v0.69.0) (2026-08-30)
 
 
