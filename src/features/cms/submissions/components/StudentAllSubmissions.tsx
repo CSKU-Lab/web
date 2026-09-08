@@ -205,7 +205,10 @@ function StudentAllSubmissions() {
                 key={submission.created_at || i}
                 submission={submission}
                 isSelected={currentIndex === i}
-                onClick={() => setCurrentIndex(i)}
+                onClick={() => {
+                  setCurrentIndex(i);
+                  setSelectedSubmission(submission);
+                }}
                 onDelete={submission.id ? setSubmissionToDelete : undefined}
               />
             ))}

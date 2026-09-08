@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { ArrowLeft, RefreshCw, ServerCrash } from "lucide-react";
 import Link from "next/link";
 import PageTitle from "~/components/commons/PageTitle";
@@ -34,6 +34,8 @@ interface PageParams {
 
 function SubmissionsView() {
   const { courseID, sectionID, labID, materialID } = useParams<PageParams>();
+  const searchParams = useSearchParams();
+  const isViewingStudentSubmissions = searchParams.has("student_id");
 
   // selectedSubmissionAtom is a global jotai atom that outlives client-side
   // navigation between materials (Next reuses this component across [materialID]
@@ -60,10 +62,19 @@ function SubmissionsView() {
       (student) => student.id === selectedSubmission?.id,
     );
 
-    if (students?.length && !selectedSubmissionStillExists) {
+    if (
+      !isViewingStudentSubmissions &&
+      students?.length &&
+      !selectedSubmissionStillExists
+    ) {
       setSelectedSubmission(students[0]);
     }
-  }, [students, selectedSubmission?.id, setSelectedSubmission]);
+  }, [
+    isViewingStudentSubmissions,
+    students,
+    selectedSubmission?.id,
+    setSelectedSubmission,
+  ]);
 
   const {
     data: material,
