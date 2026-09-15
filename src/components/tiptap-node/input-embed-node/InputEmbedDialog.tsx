@@ -19,11 +19,15 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Button as UIButton } from "~/components/ui/button";
-import type { InputEmbedMode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
+import type {
+  InputEmbedMode,
+  InputEmbedType,
+} from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
 
 export interface InputEmbedFormValues {
   label: string;
   mode: InputEmbedMode;
+  inputType: InputEmbedType;
   pattern: string;
   score: number;
   caseInsensitive: boolean;
@@ -48,6 +52,7 @@ export function InputEmbedDialog({
 }: Props) {
   const [label, setLabel] = useState("");
   const [mode, setMode] = useState<InputEmbedMode>("exact");
+  const [inputType, setInputType] = useState<InputEmbedType>("text");
   const [pattern, setPattern] = useState("");
   const [score, setScore] = useState("0");
   const [caseInsensitive, setCaseInsensitive] = useState(false);
@@ -58,6 +63,7 @@ export function InputEmbedDialog({
     if (!open) return;
     setLabel(initial?.label ?? "");
     setMode(initial?.mode ?? "exact");
+    setInputType(initial?.inputType ?? "text");
     setPattern(initial?.pattern ?? "");
     setScore(String(initial?.score ?? 0));
     setCaseInsensitive(initial?.caseInsensitive ?? false);
@@ -67,6 +73,7 @@ export function InputEmbedDialog({
     onSubmit({
       label,
       mode,
+      inputType,
       // Manual inputs are graded by hand, so no answer/pattern is stored.
       pattern: mode === "manual" ? "" : pattern,
       score: Number(score) || 0,
@@ -114,18 +121,45 @@ export function InputEmbedDialog({
             </p>
           </div>
 
+          <div className="space-y-1.5">
+            <Label htmlFor="input-embed-type">Answer field</Label>
+            <Select
+              value={inputType}
+              onValueChange={(value) => setInputType(value as InputEmbedType)}
+            >
+              <SelectTrigger id="input-embed-type">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="text">Single line</SelectItem>
+                <SelectItem value="textarea">Textarea (multiline)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {mode !== "manual" && (
             <div className="space-y-1.5">
               <Label htmlFor="input-embed-pattern">
                 {mode === "exact" ? "Expected value" : "Regex pattern"}
               </Label>
-              <Input
-                id="input-embed-pattern"
-                value={pattern}
-                onChange={(e) => setPattern(e.target.value)}
-                placeholder={mode === "exact" ? "answer" : "^answer$"}
-                className="font-mono"
-              />
+              {inputType === "textarea" ? (
+                <textarea
+                  id="input-embed-pattern"
+                  value={pattern}
+                  onChange={(e) => setPattern(e.target.value)}
+                  placeholder={mode === "exact" ? "answer" : "^answer$"}
+                  rows={3}
+                  className="flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm font-mono shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                />
+              ) : (
+                <Input
+                  id="input-embed-pattern"
+                  value={pattern}
+                  onChange={(e) => setPattern(e.target.value)}
+                  placeholder={mode === "exact" ? "answer" : "^answer$"}
+                  className="font-mono"
+                />
+              )}
             </div>
           )}
 

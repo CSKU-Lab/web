@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import type { KeyboardEvent } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
@@ -10,7 +11,10 @@ import { Button } from "~/components/ui/button";
 import { firePassConfetti } from "~/lib/confetti";
 import { fireFailGlitch } from "~/lib/glitch";
 import { inputEmbedService } from "~/services/input-embed.service";
-import type { InputEmbedMode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
+import type {
+  InputEmbedMode,
+  InputEmbedType,
+} from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
 import { queryKeys } from "~/queryKeys";
 import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabReadonly";
 
@@ -18,6 +22,7 @@ interface Props {
   nodeID: string;
   label: string;
   mode: InputEmbedMode;
+  inputType: InputEmbedType;
   score: number;
   sectionID: string;
   labID: string;
@@ -29,6 +34,7 @@ export function InlineInputEditor({
   nodeID,
   label,
   mode,
+  inputType,
   score: maxScore,
   sectionID,
   labID,
@@ -172,24 +178,38 @@ export function InlineInputEditor({
     return null;
   };
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && (inputType === "text" || e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
     <span className="inline-flex items-center gap-1.5 align-middle">
       {label && (
         <span className="text-sm text-(--gray-12)">{label}</span>
       )}
-      <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            handleSubmit();
-          }
-        }}
-        placeholder="Answer..."
-        className="inline-block h-7 w-40 px-2 py-1 text-sm"
-        disabled={isReadonly}
-      />
+      {inputType === "textarea" ? (
+        <textarea
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Answer..."
+          rows={3}
+          className="inline-block min-h-20 w-64 resize-y rounded-md border border-input bg-transparent px-2 py-1 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 align-top"
+          disabled={isReadonly}
+        />
+      ) : (
+        <Input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Answer..."
+          className="inline-block h-7 w-40 px-2 py-1 text-sm"
+          disabled={isReadonly}
+        />
+      )}
       {!isReadonly && (
         <Button
           type="button"

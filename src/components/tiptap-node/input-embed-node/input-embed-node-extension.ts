@@ -3,6 +3,7 @@ import { ReactNodeViewRenderer } from "@tiptap/react";
 import { InputEmbedNodeView } from "~/components/tiptap-node/input-embed-node/InputEmbedNodeView";
 
 export type InputEmbedMode = "exact" | "regex" | "manual";
+export type InputEmbedType = "text" | "textarea";
 
 declare module "@tiptap/react" {
   interface Commands<ReturnType> {
@@ -11,6 +12,7 @@ declare module "@tiptap/react" {
         nodeID: string;
         label: string;
         mode: InputEmbedMode;
+        inputType: InputEmbedType;
         pattern: string;
         score: number;
         caseInsensitive: boolean;
@@ -40,6 +42,9 @@ export const InputEmbedNode = Node.create({
       // Legacy nodes predate this attr and were regex-graded, so absent mode
       // resolves to "regex". New inserts always pass an explicit mode.
       mode: { default: "regex" },
+      // Input presentation: text preserves the original single-line field;
+      // textarea enables multiline answers without changing scoring.
+      inputType: { default: "text" },
       pattern: { default: "" },
       score: { default: 0 },
       caseInsensitive: { default: false },
@@ -56,6 +61,7 @@ export const InputEmbedNode = Node.create({
             nodeID: el.getAttribute("data-node-id"),
             label: el.getAttribute("data-label") ?? "",
             mode: el.getAttribute("data-mode") ?? "regex",
+            inputType: el.getAttribute("data-input-type") ?? "text",
             pattern: el.getAttribute("data-pattern") ?? "",
             score: Number(el.getAttribute("data-score") ?? 0),
             caseInsensitive: el.getAttribute("data-case-insensitive") === "true",
@@ -74,6 +80,7 @@ export const InputEmbedNode = Node.create({
           "data-node-id": node.attrs.nodeID,
           "data-label": node.attrs.label,
           "data-mode": node.attrs.mode,
+          "data-input-type": node.attrs.inputType,
           "data-pattern": node.attrs.pattern,
           "data-score": node.attrs.score,
           "data-case-insensitive": node.attrs.caseInsensitive,

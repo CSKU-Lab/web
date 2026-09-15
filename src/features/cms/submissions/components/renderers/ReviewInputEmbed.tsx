@@ -7,7 +7,10 @@ import { FormInput, CheckCircle2, XCircle, Clock, Loader2 } from "lucide-react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { cmsMaterialService } from "~/services/cms-material.service";
-import type { InputEmbedMode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
+import type {
+  InputEmbedMode,
+  InputEmbedType,
+} from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
 
 interface Props {
   courseID: string;
@@ -15,6 +18,7 @@ interface Props {
   nodeID: string;
   label: string;
   mode: InputEmbedMode;
+  inputType?: InputEmbedType;
   score: number;
   studentID: string;
 }
@@ -31,6 +35,7 @@ export function ReviewInputEmbed({
   nodeID,
   label,
   mode,
+  inputType = "text",
   score,
   studentID,
 }: Props) {
@@ -61,7 +66,13 @@ export function ReviewInputEmbed({
       )}
       {result ? (
         <>
-          <code className="text-xs font-mono text-(--gray-11) truncate max-w-[12rem]">
+          <code
+            className={
+              inputType === "textarea"
+                ? "max-w-64 whitespace-pre-wrap break-words text-xs font-mono text-(--gray-11)"
+                : "max-w-[12rem] truncate text-xs font-mono text-(--gray-11)"
+            }
+          >
             {result.value || "(empty)"}
           </code>
           {isManual && !result.graded ? (

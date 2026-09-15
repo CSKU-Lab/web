@@ -6,7 +6,10 @@ import { useParams } from "next/navigation";
 import { FormInput, Pencil, Trash2 } from "lucide-react";
 import { InlineInputEditor } from "~/components/tiptap-node/input-embed-node/InlineInputEditor";
 import { InputEmbedDialog } from "~/components/tiptap-node/input-embed-node/InputEmbedDialog";
-import type { InputEmbedMode } from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
+import type {
+  InputEmbedMode,
+  InputEmbedType,
+} from "~/components/tiptap-node/input-embed-node/input-embed-node-extension";
 import { getDocumentReview } from "~/components/tiptap-node/document-review/document-review-extension";
 import { ReviewInputEmbed } from "~/features/cms/submissions/components/renderers/ReviewInputEmbed";
 
@@ -22,11 +25,12 @@ export function InputEmbedNodeView({
   deleteNode,
   updateAttributes,
 }: NodeViewProps) {
-  const { nodeID, label, mode, pattern, score, caseInsensitive } =
+  const { nodeID, label, mode, inputType, pattern, score, caseInsensitive } =
     node.attrs as {
       nodeID: string;
       label: string;
       mode: InputEmbedMode;
+      inputType: InputEmbedType;
       pattern: string;
       score: number;
       caseInsensitive: boolean;
@@ -48,6 +52,7 @@ export function InputEmbedNodeView({
             nodeID={nodeID}
             label={label}
             mode={mode}
+            inputType={inputType}
             score={score}
             studentID={review.studentID}
           />
@@ -65,6 +70,7 @@ export function InputEmbedNodeView({
           nodeID={nodeID}
           label={label}
           mode={mode}
+          inputType={inputType}
           score={score}
           sectionID={sectionID}
           labID={labID}
@@ -118,7 +124,7 @@ export function InputEmbedNodeView({
         onOpenChange={setEditOpen}
         title="Edit Input Field"
         submitLabel="Save"
-        initial={{ label, mode, pattern, score, caseInsensitive }}
+        initial={{ label, mode, inputType, pattern, score, caseInsensitive }}
         // updateAttributes mutates the node in place, preserving nodeID so
         // existing submissions stay linked and can be rescored via Regrade All.
         onSubmit={(values) => updateAttributes(values)}
