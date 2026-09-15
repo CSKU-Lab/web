@@ -1,3 +1,10 @@
+# [0.70.0](https://github.com/CSKU-Lab/web/compare/v0.69.1...v0.70.0) (2026-09-15)
+
+
+### Features
+
+* text area type input in tiptap editor ([6d254ed](https://github.com/CSKU-Lab/web/commit/6d254ed755612a8984cecd13586ef2b2641a91ba))
+
 ## [0.69.1](https://github.com/CSKU-Lab/web/compare/v0.69.0...v0.69.1) (2026-09-08)
 
 
