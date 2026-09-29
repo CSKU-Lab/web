@@ -1,3 +1,10 @@
+## [0.70.1](https://github.com/CSKU-Lab/web/compare/v0.70.0...v0.70.1) (2026-09-29)
+
+
+### Bug Fixes
+
+* use real pagination to search material in embed code ([9c0172b](https://github.com/CSKU-Lab/web/commit/9c0172bfdd758786dac06e20c4d932e47562d633))
+
 # [0.70.0](https://github.com/CSKU-Lab/web/compare/v0.69.1...v0.70.0) (2026-09-15)
 
 
