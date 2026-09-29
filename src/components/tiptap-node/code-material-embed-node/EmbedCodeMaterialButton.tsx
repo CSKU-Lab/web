@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useCurrentEditor } from "@tiptap/react";
 import { Code2, Search } from "lucide-react";
 import {
@@ -14,6 +13,10 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/tiptap-ui-primitive/button";
 import { cmsMaterialService } from "~/services/cms-material.service";
 import type { CMSMaterial } from "~/types/cms-material";
+import useInfinitePagination from "~/hooks/useInfinitePagination";
+import useInputDebounce from "~/hooks/useInputDebounce";
+import useOnElementAppear from "~/hooks/useOnElementAppear";
+import { queryKeys } from "~/queryKeys";
 
 interface Props {
   courseID: string;
@@ -23,13 +26,21 @@ export function EmbedCodeMaterialButton({ courseID }: Props) {
   const { editor } = useCurrentEditor();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useInputDebounce(search, 300);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["cms-code-materials", courseID],
-    queryFn: () =>
+  const { data, isFetching, fetchNextPage, hasNextPage } = useInfinitePagination({
+    queryKey: queryKeys.material.allWithParams(courseID, {
+      type: "code",
+      search: debouncedSearch,
+      embedSelector: true,
+    }),
+    queryFn: ({ pageParam }) =>
       cmsMaterialService.getPagination(courseID, {
-        page: 1,
-        page_size: 100,
+        page: pageParam,
+        page_size: 20,
+        search: debouncedSearch,
+        sort_by: "name",
+        sort_order: "asc",
         filters: [
           {
             field: { display: "Type", value: "type" },
@@ -42,23 +53,27 @@ export function EmbedCodeMaterialButton({ courseID }: Props) {
     enabled: open,
   });
 
+  const materials = useMemo(
+    () => data.pages.flatMap((page) => page.data),
+    [data.pages],
+  );
+
+  const bottomRef = useOnElementAppear({
+    onAppear: () => fetchNextPage(),
+    enabled: open && hasNextPage && !isFetching,
+  });
+
+  const editorDocument = editor?.state.doc;
   const embeddedIDs = useMemo(() => {
-    if (!editor) return new Set<string>();
+    if (!editorDocument) return new Set<string>();
     const ids = new Set<string>();
-    editor.state.doc.descendants((node) => {
+    editorDocument.descendants((node) => {
       if (node.type.name === "codeMaterialEmbed" && node.attrs.materialID) {
         ids.add(node.attrs.materialID as string);
       }
     });
     return ids;
-  }, [editor?.state]);
-
-  const filtered = useMemo(() => {
-    const items = data?.data ?? [];
-    if (!search.trim()) return items;
-    const lower = search.toLowerCase();
-    return items.filter((m) => m.name.toLowerCase().includes(lower));
-  }, [data, search]);
+  }, [editorDocument]);
 
   const handleEmbed = (material: CMSMaterial) => {
     if (!editor) return;
@@ -102,17 +117,17 @@ export function EmbedCodeMaterialButton({ courseID }: Props) {
           </div>
 
           <div className="max-h-72 overflow-y-auto space-y-1">
-            {isLoading && (
+            {isFetching && materials.length === 0 && (
               <p className="text-sm text-(--gray-10) py-4 text-center">
                 Loading...
               </p>
             )}
-            {!isLoading && filtered.length === 0 && (
+            {!isFetching && materials.length === 0 && (
               <p className="text-sm text-(--gray-10) py-4 text-center">
                 No code problems found.
               </p>
             )}
-            {filtered.map((material) => {
+            {materials.map((material) => {
               const isEmbedded = embeddedIDs.has(material.id);
               return (
                 <button
@@ -138,6 +153,12 @@ export function EmbedCodeMaterialButton({ courseID }: Props) {
                 </button>
               );
             })}
+            <div ref={bottomRef} className="h-4" />
+            {isFetching && materials.length > 0 && (
+              <p className="text-sm text-(--gray-10) py-2 text-center">
+                Loading more...
+              </p>
+            )}
           </div>
         </DialogContent>
       </Dialog>
