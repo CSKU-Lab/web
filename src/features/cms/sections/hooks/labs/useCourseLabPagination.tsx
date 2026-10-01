@@ -12,11 +12,7 @@ const useCourseLabPagination = (params: Params) => {
   const { course_id, args } = params;
   return usePagination({
     queryKey: queryKeys.lab.allWithParams(params),
-    queryFn: ({ pageParam }) =>
-      cmsCourseService.getLabByCoursePagination(course_id, {
-        ...args,
-        page: pageParam,
-      }),
+    queryFn: () => cmsCourseService.getLabByCoursePagination(course_id, args),
   });
 };
 
