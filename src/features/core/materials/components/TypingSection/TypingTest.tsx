@@ -5,6 +5,7 @@ import { History, RotateCcw } from "lucide-react";
 import { useTypingTest, type TypingResults, type Keystroke } from "~/features/core/materials/components/TypingSection/useTypingTest";
 import TypingDisplay from "~/features/core/materials/components/TypingSection/TypingDisplay";
 import { Button } from "~/components/commons/Button";
+import { formatTypingScore } from "~/lib/typing-score";
 
 interface Props {
   text: string;
@@ -13,6 +14,8 @@ interface Props {
   onStarted?: () => void;
   onRetry?: () => void;
   onViewSubmissions?: () => void;
+  isExam?: boolean;
+  autoScore?: number | null;
 }
 
 export default function TypingTest({
@@ -22,6 +25,8 @@ export default function TypingTest({
   onStarted,
   onRetry,
   onViewSubmissions,
+  isExam = false,
+  autoScore = null,
 }: Props) {
   const {
     chars,
@@ -103,6 +108,12 @@ export default function TypingTest({
             <span className="text-xs uppercase tracking-widest text-(--gray-9)">time</span>
             <span className="text-2xl text-(--gray-12)">{results.duration}s</span>
           </div>
+          {isExam && autoScore !== null && (
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-xs uppercase tracking-widest text-(--gray-9)">score</span>
+              <span className="text-2xl text-(--gray-12)">{formatTypingScore(autoScore)}</span>
+            </div>
+          )}
         </div>
 
         <div className="w-full max-w-3xl">

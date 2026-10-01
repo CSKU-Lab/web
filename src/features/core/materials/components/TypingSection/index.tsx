@@ -166,6 +166,8 @@ export default function TypingSection() {
               onResults={() => {}}
               onRetry={handleRetry}
               onViewSubmissions={() => setView("submissions")}
+              isExam={material?.payload.typing_type === "exam"}
+              autoScore={serverAutoScore}
             />
           </motion.div>
         ) : (
