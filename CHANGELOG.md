@@ -1,3 +1,11 @@
+# [0.71.0](https://github.com/CSKU-Lab/web/compare/v0.70.2...v0.71.0) (2026-10-01)
+
+
+### Features
+
+* display decimal typing scores ([66269a0](https://github.com/CSKU-Lab/web/commit/66269a05247755bccfdb8e0a2a5eab33cae949da))
+* show exam score after typing ([45f87be](https://github.com/CSKU-Lab/web/commit/45f87bee48a1e1134bf554ceaafa174c9258f6b3))
+
 ## [0.70.2](https://github.com/CSKU-Lab/web/compare/v0.70.1...v0.70.2) (2026-10-01)
 
 
