@@ -1,3 +1,10 @@
+## [0.70.2](https://github.com/CSKU-Lab/web/compare/v0.70.1...v0.70.2) (2026-10-01)
+
+
+### Bug Fixes
+
+* **web:** pass pagination page when adding labs ([feb35e0](https://github.com/CSKU-Lab/web/commit/feb35e082362efb2610b9bd418c89b7af3c34abb))
+
 ## [0.70.1](https://github.com/CSKU-Lab/web/compare/v0.70.0...v0.70.1) (2026-09-29)
 
 
