@@ -92,6 +92,7 @@ function CourseDetailView() {
                       )}
                       bannerImage={section.banner}
                       semester={data.semester.name}
+                      cmsPath={section.cms_path}
                     />
                   ))}
                 </div>

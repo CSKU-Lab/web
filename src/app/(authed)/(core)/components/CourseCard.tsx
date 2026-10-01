@@ -7,10 +7,11 @@ import { Fragment } from "react/jsx-runtime";
 import NoDataAvailable from "~/components/commons/NoDataAvailable";
 import ErrorFallback from "~/components/commons/Error/ErrorFallback";
 import Error from "~/components/commons/Error";
-import { ServerCrash } from "lucide-react";
+import { ExternalLink, ServerCrash } from "lucide-react";
 import UserProfileImage from "~/components/Menus/UserProfileImage";
 import { Skeleton } from "~/components/ui/skeleton";
 import type { Creator, MyCourse } from "~/types/core-course";
+import { Button } from "~/components/ui/button";
 
 interface Props {
   search: string;
@@ -44,10 +45,11 @@ const CourseCardItem = ({ course }: { course: MyCourse }) => {
   const isPrivate = visibility === "private";
 
   return (
-    <Link
-      href={isPrivate ? `/sections/${id}` : `/courses/${id}`}
-      className="rounded-xl overflow-hidden border border-(--gray-5) bg-(--gray-1) hover:border-(--gray-7) hover:shadow-lg shadow-black/10 transition-all duration-200 block group"
-    >
+    <div className="space-y-2">
+      <Link
+        href={isPrivate ? `/sections/${id}` : `/courses/${id}`}
+        className="rounded-xl overflow-hidden border border-(--gray-5) bg-(--gray-1) hover:border-(--gray-7) hover:shadow-lg shadow-black/10 transition-all duration-200 block group"
+      >
       {/* Banner strip */}
       <div className="relative h-28 w-full overflow-hidden">
         {banner ? (
@@ -107,7 +109,16 @@ const CourseCardItem = ({ course }: { course: MyCourse }) => {
           {renderCreators(instructors)}
         </div>
       </div>
-    </Link>
+      </Link>
+      {course.cms_path && (
+        <Button asChild variant="outline" size="sm" className="w-full">
+          <Link href={course.cms_path}>
+            <ExternalLink />
+            Open in CMS
+          </Link>
+        </Button>
+      )}
+    </div>
   );
 };
 

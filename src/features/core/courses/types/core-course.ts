@@ -20,6 +20,7 @@ export interface MyCourse {
   instructors: Creator[];
   section_name?: string;
   semester?: MyCourseSemester;
+  cms_path?: string;
 }
 
 export interface Creator {

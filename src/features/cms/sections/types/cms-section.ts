@@ -11,6 +11,7 @@ export interface Section {
   banner: string;
   instructors: Instructor[];
   semester: { id: string; name: string; type: string };
+  cms_path?: string;
 }
 
 export interface CMSSection {

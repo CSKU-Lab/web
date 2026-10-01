@@ -11,6 +11,7 @@ interface Props extends ClassNameProps {
   instructors: string[];
   semester: string;
   bannerImage: string | null;
+  cmsPath?: string;
 }
 
 export const PreviewCMSSectionCard = ({
@@ -50,11 +51,12 @@ export const CMSSectionCard = ({
   instructors = [],
   bannerImage,
   id,
+  cmsPath,
 }: Props) => {
   const generatePath = useResolvePath();
   return (
     <Link
-      href={generatePath(`/cms/courses/:courseID/sections/${id}`)}
+      href={cmsPath ?? generatePath(`/cms/courses/:courseID/sections/${id}`)}
       className={cn(
         "relative rounded-xl overflow-hidden aspect-video border border-(--gray-4) block group",
         className,
