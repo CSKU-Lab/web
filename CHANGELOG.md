@@ -1,3 +1,11 @@
+# [0.72.0](https://github.com/CSKU-Lab/web/compare/v0.71.0...v0.72.0) (2026-10-01)
+
+
+### Features
+
+* add instructor CMS course navigation ([211a3d6](https://github.com/CSKU-Lab/web/commit/211a3d65afe0bf091de71d17ba2b4aade5f05f3a))
+* **sidebar:** load navigation levels on demand ([03e421f](https://github.com/CSKU-Lab/web/commit/03e421fbf6529ab83e10f7e11fe8a73bcceb1305))
+
 # [0.71.0](https://github.com/CSKU-Lab/web/compare/v0.70.2...v0.71.0) (2026-10-01)
 
 
