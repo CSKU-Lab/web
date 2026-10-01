@@ -8,8 +8,9 @@ interface NavChevronProps {
   _icon?: React.ReactNode;
   name: string;
   subtitle?: string;
+  onOpenChange?: (isOpen: boolean) => void;
 }
-const NavChevron = ({ href, _icon, name, subtitle, children }: NavChevronProps) => {
+const NavChevron = ({ href, _icon, name, subtitle, children, onOpenChange }: NavChevronProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const hasChildren = Boolean(children);
 
@@ -48,7 +49,10 @@ const NavChevron = ({ href, _icon, name, subtitle, children }: NavChevronProps) 
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setIsOpen((prev) => !prev);
+              setIsOpen((prev) => {
+                onOpenChange?.(!prev);
+                return !prev;
+              });
             }}
             className="
               text-(--gray-10) w-6 h-6 rounded-md

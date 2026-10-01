@@ -196,6 +196,13 @@ export const queryKeys = {
   },
   sidebar: {
     get: () => ["sidebar"],
+    labs: (sectionID: string) => ["sidebar", "labs", sectionID],
+    materials: (sectionID: string, labID: string) => [
+      "sidebar",
+      "materials",
+      sectionID,
+      labID,
+    ],
   },
   core: {
     all: ["core"],

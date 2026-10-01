@@ -2,12 +2,30 @@
 import Course from "./Course";
 import SearchBar from "./SearchBar";
 import { useSidebar } from "~/hooks/useSidebar";
+import { Skeleton } from "~/components/ui/skeleton";
+
+function SidebarSkeleton() {
+  return (
+    <div className="flex-1 min-h-0 flex flex-col">
+      <Skeleton className="h-9 w-full rounded-md" />
+      <Skeleton className="h-3 w-20 mt-5" />
+      <div className="flex flex-col gap-5 mt-4">
+        {[0, 1, 2, 3].map((item) => (
+          <div key={item} className="space-y-2">
+            <Skeleton className="h-4 w-4/5" />
+            <Skeleton className="h-3 w-1/2" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function Sidebar() {
   const { data: sidebarData, isLoading, isError } = useSidebar();
 
   if (isLoading) {
-    return <div>Loading sidebar...</div>;
+    return <SidebarSkeleton />;
   }
   if (isError || !sidebarData) {
     return <div>Error loading sidebar.</div>;
