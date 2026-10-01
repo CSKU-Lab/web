@@ -66,7 +66,7 @@ function StudentAllSubmissionsSkeleton() {
   );
 }
 
-function StudentAllSubmissions() {
+function StudentAllSubmissions({ isTyping = false }: { isTyping?: boolean }) {
   const { sectionID, labID, materialID } = useParams<{
     sectionID: string;
     labID: string;
@@ -210,6 +210,7 @@ function StudentAllSubmissions() {
                   setSelectedSubmission(submission);
                 }}
                 onDelete={submission.id ? setSubmissionToDelete : undefined}
+                isTyping={isTyping}
               />
             ))}
             {isLoading && hasNextPage && (

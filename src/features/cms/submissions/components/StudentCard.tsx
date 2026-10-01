@@ -4,17 +4,20 @@ import StatusBadge from "~/features/cms/submissions/components/StatusBadge";
 import { Button } from "~/components/commons/Button";
 import { useRouter } from "next/navigation";
 import { CMSSectionStudentLatestSubmission } from "~/types/cms-section-submission";
+import { formatTypingScore } from "~/lib/typing-score";
 
 interface StudentCardProps {
   studentSubmission: CMSSectionStudentLatestSubmission;
   isSelected?: boolean;
   onClick?: () => void;
+  isTyping?: boolean;
 }
 
 function StudentCard({
   studentSubmission,
   isSelected,
   onClick,
+  isTyping = false,
 }: StudentCardProps) {
   const { student, auto_score, manual_score, ip, status } = studentSubmission;
 
@@ -54,7 +57,7 @@ function StudentCard({
           </span>
           <span className="text-xs text-(--gray-8)">|</span>
           <span className="text-xs text-(--gray-11)">
-            A: {auto_score} | M: {manual_score}
+            A: {isTyping ? formatTypingScore(auto_score) : auto_score} | M: {manual_score}
           </span>
           {ip && (
             <>

@@ -12,7 +12,7 @@ import { useAllStudentsLatestSubmissions } from "~/features/cms/submissions/hook
 import useVimMotion from "~/features/cms/submissions/hooks/useVimMotion";
 import { selectedSubmissionAtom } from "~/features/cms/submissions/stores/selected-submission.store";
 
-function StudentList() {
+function StudentList({ isTyping = false }: { isTyping?: boolean }) {
   const [search, setSearch] = useState("");
   const setFuzzySearchOpen = useSetAtom(fuzzySearchOpenAtom);
   const listRef = useRef<HTMLDivElement>(null);
@@ -112,6 +112,7 @@ function StudentList() {
               studentSubmission={studentSubmission}
               isSelected={currentIndex === i}
               onClick={() => selectStudent(i)}
+              isTyping={isTyping}
             />
           ))
         )}

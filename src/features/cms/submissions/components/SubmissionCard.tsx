@@ -2,15 +2,17 @@ import { CMSSectionSubmission } from "~/types/cms-section-submission";
 import StatusBadge from "~/features/cms/submissions/components/StatusBadge";
 import { cn } from "~/lib/utils";
 import { Trash2 } from "lucide-react";
+import { formatTypingScore } from "~/lib/typing-score";
 
 interface Props {
   submission: CMSSectionSubmission;
   isSelected?: boolean;
   onClick?: () => void;
   onDelete?: (submission: CMSSectionSubmission) => void;
+  isTyping?: boolean;
 }
 
-function SubmissionCard({ submission, isSelected, onClick, onDelete }: Props) {
+function SubmissionCard({ submission, isSelected, onClick, onDelete, isTyping = false }: Props) {
   const { id, order, status, auto_score, manual_score, ip, created_at } =
     submission;
 
@@ -36,7 +38,7 @@ function SubmissionCard({ submission, isSelected, onClick, onDelete }: Props) {
           </span>
           <span className="text-xs text-(--gray-8)">|</span>
           <span className="text-xs text-(--gray-11)">
-            A: {auto_score} | M: {manual_score}
+            A: {isTyping ? formatTypingScore(auto_score) : auto_score} | M: {manual_score}
           </span>
           {ip && (
             <>

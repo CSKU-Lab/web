@@ -5,6 +5,7 @@ import { Label } from "~/components/ui/label";
 import type { TypingSubmissionData } from "~/types/cms-section-submission";
 import { CMSMaterial } from "~/types/cms-material";
 import ManualScoreInput from "~/features/cms/submissions/components/renderers/ManualScoreInput";
+import { formatTypingScore } from "~/lib/typing-score";
 
 interface TypingSubmissionDetailProps {
   id: string;
@@ -87,7 +88,7 @@ function TypingSubmissionDetail({
               Auto Score:
             </Label>
             <span className="text-sm font-semibold text-(--gray-12)">
-              {auto_score} / {material.auto_score}
+              {formatTypingScore(auto_score)} / 100.00
             </span>
           </div>
         )}

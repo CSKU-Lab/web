@@ -209,7 +209,7 @@ function SubmissionsView() {
             initialRatio={0.35}
             minRatio={0.2}
             maxRatio={0.6}
-            left={<LeftPanel />}
+            left={<LeftPanel isTyping={material?.type === MaterialType.TYPE} />}
             right={
               <Loading
                 isLoading={isLoading}

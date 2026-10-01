@@ -21,6 +21,7 @@ import { coreMaterialService } from "~/services/core-material.service";
 import { queryKeys } from "~/queryKeys";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { formatTypingScore } from "~/lib/typing-score";
 
 dayjs.extend(relativeTime);
 
@@ -138,7 +139,7 @@ function ResultsSummary({
     { label: "Accuracy", value: `${(100 - results.error_rate).toFixed(2)}%` },
     { label: "Error Rate", value: `${results.error_rate.toFixed(2)}%` },
     { label: "Duration", value: `${Math.round(results.duration)}s` },
-    ...(isExam && autoScore !== null ? [{ label: "Score", value: `${autoScore}` }] : []),
+    ...(isExam && autoScore !== null ? [{ label: "Score", value: formatTypingScore(autoScore) }] : []),
   ];
 
   return (
@@ -364,7 +365,7 @@ export default function TypingSubmissionsList({
                         {isExam && (
                           <td className="px-3 py-2.5 text-right font-mono text-xs">
                             {submission.auto_score > 0 ? (
-                              <span className="text-(--grass-11) font-medium">{submission.auto_score}</span>
+                              <span className="text-(--grass-11) font-medium">{formatTypingScore(submission.auto_score)}</span>
                             ) : (
                               <span className="text-(--tomato-11)">0</span>
                             )}
