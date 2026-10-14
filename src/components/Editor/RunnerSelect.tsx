@@ -47,13 +47,14 @@ function RunnerSelect({
           {(filteredRunners) => (
             <>
               {filteredRunners.map((runner) => (
-                <div
+                <button
+                  type="button"
                   key={runner.id}
                   onClick={() => onSelect(runner)}
-                  className="px-2 py-1.5 text-sm cursor-pointer hover:bg-(--gray-3) rounded-sm"
+                  className="w-full px-2 py-1.5 text-sm text-left cursor-pointer hover:bg-(--gray-3) rounded-sm"
                 >
                   {runner.name}
-                </div>
+                </button>
               ))}
             </>
           )}

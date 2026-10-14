@@ -86,7 +86,10 @@ function SearchSelect<T extends { id: string; name: string }>({
   const isEmpty = !isLoading && filteredOptions.length === 0;
 
   return (
-    <Popover open={isOpen && !disabled}>
+    <Popover
+      open={isOpen && !disabled}
+      onOpenChange={(open) => setIsOpen(open)}
+    >
       <PopoverTrigger
         ref={triggerRef}
         disabled={disabled}
@@ -96,7 +99,7 @@ function SearchSelect<T extends { id: string; name: string }>({
           disabled && "opacity-50 cursor-not-allowed bg-(--gray-2)",
           className,
         )}
-        onClick={() => !disabled && setIsOpen(!isOpen)}
+        onClick={() => !disabled && setIsOpen((open) => !open)}
       >
         {value !== null && value !== undefined ? (
           <h5 className="text-sm w-10/12 truncate">

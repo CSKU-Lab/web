@@ -184,7 +184,12 @@ function CodeEditor({
     setSelectedFile(name);
   };
 
-  const currentFile = files.find((f) => f.name === selectedFile);
+  // A runner change replaces the file list. Keep the editor on a valid file
+  // when runners use different filenames (especially for single-file runners).
+  const activeSelectedFile = files.some((f) => f.name === selectedFile)
+    ? selectedFile
+    : (files[0]?.name ?? null);
+  const currentFile = files.find((f) => f.name === activeSelectedFile);
   currentFileRef.current = currentFile;
 
   const fileExtension = currentFile?.name.split(".").pop();
@@ -282,10 +287,10 @@ function CodeEditor({
               <PanelLeftOpen size="1rem" />
             </button>
           ) : (
-            <FileTree
+              <FileTree
               allowModify={permissions?.modifyFiles ?? false}
               files={files}
-              selectedFile={selectedFile}
+                selectedFile={activeSelectedFile}
               onSelectFile={handleSelectFile}
               onChange={onFilesChange}
               isReadonlyFile={isReadonlyFile}
