@@ -8,7 +8,8 @@ import { useIsLabReadonly } from "~/features/core/sections/hooks/labs/useIsLabRe
 import type { CoreCodeMaterial } from "~/types/core-code-material";
 
 function RightSection() {
-  const { data: material, isLoading } = useGetCoreMaterial<CoreCodeMaterial>();
+  const { data: material, isLoading, isPlaceholderData } =
+    useGetCoreMaterial<CoreCodeMaterial>();
   const isReadonly = useIsLabReadonly();
   const {
     files,
@@ -63,11 +64,16 @@ function RightSection() {
 
   // Auto-select the first runner (and load its files) once material arrives.
   useEffect(() => {
-    if (!material || selectedRunner !== null || allowedRunners.length === 0) {
+    if (
+      !material ||
+      isPlaceholderData ||
+      selectedRunner !== null ||
+      allowedRunners.length === 0
+    ) {
       return;
     }
     initRunner(allowedRunners[0]);
-  }, [material, selectedRunner, allowedRunners, initRunner]);
+  }, [material, isPlaceholderData, selectedRunner, allowedRunners, initRunner]);
 
   // Merge submission files with read-only resource files for the editor.
   const editorFiles = useMemo(

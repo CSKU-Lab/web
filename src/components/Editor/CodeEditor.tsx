@@ -1,4 +1,11 @@
-import { useState, useCallback, useEffect, useRef, useMemo, type ReactNode } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useMemo,
+  type ReactNode,
+} from "react";
 import { generateId } from "~/utils/generate-id";
 import { FileCode, PanelLeftOpen, RotateCcw, Settings } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
@@ -94,7 +101,8 @@ function syncEditableSegments(
     if (r.from > pos) editableRegions.push({ from: pos, to: r.from });
     pos = r.to;
   }
-  if (pos < content.length) editableRegions.push({ from: pos, to: content.length });
+  if (pos < content.length)
+    editableRegions.push({ from: pos, to: content.length });
 
   // Walk original segments (including hidden), assign editable content by slot.
   let slot = 0;
@@ -167,16 +175,23 @@ function CodeEditor({
     [],
   );
 
-  useEffect(() => {
-    api
-      .get<{ token: string }>("/api/v1/lsp/token")
-      .then((res) => setLspToken(res.data.token))
-      .catch(() => {
-        // LSP service unavailable — editor works without it
-      });
-  }, []);
+  // disable LSP for now, as it is not stable and can cause issues with the editor
+  // useEffect(() => {
+  //   api
+  //     .get<{ token: string }>("/api/v1/lsp/token")
+  //     .then((res) => setLspToken(res.data.token))
+  //     .catch(() => {
+  //       // LSP service unavailable — editor works without it
+  //     });
+  // }, []);
 
-  if (initialSelectedRunner && selectedRunner === null) {
+  const hasInitialSelectedRunner =
+    initialSelectedRunner !== undefined && initialSelectedRunner !== null;
+  const isSameAsCurrentSelectedRunner =
+    hasInitialSelectedRunner &&
+    selectedRunner !== null &&
+    initialSelectedRunner.id === selectedRunner.id;
+  if (initialSelectedRunner && (!hasInitialSelectedRunner || !isSameAsCurrentSelectedRunner)) {
     setSelectedRunner(initialSelectedRunner);
   }
 
@@ -247,8 +262,16 @@ function CodeEditor({
 
         const content = update.state.doc.toString();
         const ranges = update.state.field(rangesField, false) ?? [];
-        const updatedSegments = syncEditableSegments(content, ranges, cf.segments);
-        const updatedFile: CodeFile = { ...cf, content, segments: updatedSegments };
+        const updatedSegments = syncEditableSegments(
+          content,
+          ranges,
+          cf.segments,
+        );
+        const updatedFile: CodeFile = {
+          ...cf,
+          content,
+          segments: updatedSegments,
+        };
         const newFiles = filesRef.current.map((f) =>
           f.name === cf.name ? updatedFile : f,
         );
@@ -287,10 +310,10 @@ function CodeEditor({
               <PanelLeftOpen size="1rem" />
             </button>
           ) : (
-              <FileTree
+            <FileTree
               allowModify={permissions?.modifyFiles ?? false}
               files={files}
-                selectedFile={activeSelectedFile}
+              selectedFile={activeSelectedFile}
               onSelectFile={handleSelectFile}
               onChange={onFilesChange}
               isReadonlyFile={isReadonlyFile}
@@ -363,8 +386,8 @@ function CodeEditor({
                     </DialogHeader>
                     <DialogBody className="px-4 py-2">
                       <DialogDescription className="text-(--gray-11)">
-                        This discards your current changes and resets the code to
-                        the original template. This cannot be undone.
+                        This discards your current changes and resets the code
+                        to the original template. This cannot be undone.
                       </DialogDescription>
                     </DialogBody>
                     <DialogFooter>
