@@ -1,3 +1,11 @@
+## [0.72.1](https://github.com/CSKU-Lab/web/compare/v0.72.0...v0.72.1) (2026-10-14)
+
+
+### Bug Fixes
+
+* allow selecting multiple code runners ([1db1e27](https://github.com/CSKU-Lab/web/commit/1db1e2793909acb5539c6c3b20cc75faf4fb966d))
+* set initial runners follow material first allowed runners ([3907be0](https://github.com/CSKU-Lab/web/commit/3907be0783adcdb7746c518eee6985df5962557b))
+
 # [0.72.0](https://github.com/CSKU-Lab/web/compare/v0.71.0...v0.72.0) (2026-10-01)
 
 
