@@ -213,6 +213,16 @@ const isDuplicateName = files.some((f) => {
         { name: fileName, content: "", readonly: false },
       ];
       onChange(newFiles);
+      onSelectFile(fileName);
+      // Expand ancestor folders so the newly selected file is visible.
+      const parts = fileName.split("/").slice(0, -1);
+      if (parts.length > 0) {
+        setExpandedFolders((prev) => {
+          const next = new Set(prev);
+          parts.forEach((_, i) => next.add(parts.slice(0, i + 1).join("/")));
+          return next;
+        });
+      }
       setNewFileName("");
       setFolderForNewFile(null);
       setIsDialogOpen(false);
