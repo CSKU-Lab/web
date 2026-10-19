@@ -10,7 +10,7 @@ interface Props {
 
 export default function TypingDisplay({ chars, currentIndex }: Props) {
   return (
-    <p className="font-mono text-2xl leading-relaxed tracking-wide select-none whitespace-pre-wrap break-words">
+    <p className="font-mono text-2xl leading-relaxed tracking-wide select-none whitespace-pre-wrap break-words [font-feature-settings:'liga'_0,'calt'_0]">
       {chars.map((c, i) => {
         const isNewline = c.char === "\n";
         const isTab = c.char === "\t";
