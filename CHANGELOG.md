@@ -1,3 +1,10 @@
+## [0.72.2](https://github.com/CSKU-Lab/web/compare/v0.72.1...v0.72.2) (2026-10-19)
+
+
+### Bug Fixes
+
+* disable ligatures in typing display ([c57cf32](https://github.com/CSKU-Lab/web/commit/c57cf325fbab924d8ddeccf83b2a26a0980b66d0))
+
 ## [0.72.1](https://github.com/CSKU-Lab/web/compare/v0.72.0...v0.72.1) (2026-10-14)
 
 
