@@ -1,5 +1,6 @@
 import { useState, Fragment } from "react";
-import { ChevronRight, ChevronDown, Ghost } from "lucide-react";
+import { ChevronRight, ChevronDown, Ghost, FileDiff } from "lucide-react";
+import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
 import type { TestCaseGroup } from "~/types/core-code-submission";
@@ -211,18 +212,16 @@ function TestcaseTable({
                       </span>
                       <div className="ml-auto flex items-center gap-4">
                         {canDiff && (
-                          <button
+                          <Button
                             type="button"
+                            variant={isDiffOpen ? "secondary" : "outline"}
+                            size="sm"
                             onClick={() => toggleDiff(result.id)}
-                            className="flex items-center gap-1 text-(--gray-9)"
+                            className="h-6 px-2 has-[>svg]:px-2 gap-1 text-xs"
                           >
+                            <FileDiff className="size-3.5" />
                             {isDiffOpen ? "Hide diff" : "Show diff"}
-                            {isDiffOpen ? (
-                              <ChevronDown size="0.875rem" />
-                            ) : (
-                              <ChevronRight size="0.875rem" />
-                            )}
-                          </button>
+                          </Button>
                         )}
                         {hasMessage && (
                           <button
