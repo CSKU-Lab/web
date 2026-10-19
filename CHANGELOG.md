@@ -1,3 +1,10 @@
+# [0.75.0](https://github.com/CSKU-Lab/web/compare/v0.74.0...v0.75.0) (2026-10-19)
+
+
+### Features
+
+* **cms:** split-view output diff with button toggle ([dc13568](https://github.com/CSKU-Lab/web/commit/dc1356837978c28fbbdd5ae6c33b2312f92e5e07))
+
 # [0.74.0](https://github.com/CSKU-Lab/web/compare/v0.73.0...v0.74.0) (2026-10-19)
 
 
