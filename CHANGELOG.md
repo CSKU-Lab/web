@@ -1,3 +1,15 @@
+# [0.73.0](https://github.com/CSKU-Lab/web/compare/v0.72.3...v0.73.0) (2026-10-19)
+
+
+### Bug Fixes
+
+* preserve hidden state of resource files on add/rename/delete ([1b89bc1](https://github.com/CSKU-Lab/web/commit/1b89bc1c3e37d6e471405b32cad7189a00770d98))
+
+
+### Features
+
+* select newly created file in file tree ([8a5bd56](https://github.com/CSKU-Lab/web/commit/8a5bd56a2c9179c97b777b1104c394cd5dca4dbe))
+
 ## [0.72.3](https://github.com/CSKU-Lab/web/compare/v0.72.2...v0.72.3) (2026-10-19)
 
 
