@@ -1,3 +1,10 @@
+## [0.72.3](https://github.com/CSKU-Lab/web/compare/v0.72.2...v0.72.3) (2026-10-19)
+
+
+### Bug Fixes
+
+* apply ligature setting globally via body cascade ([2a7788f](https://github.com/CSKU-Lab/web/commit/2a7788f18b8c0f12bcfd3573592ea640c06446f6))
+
 ## [0.72.2](https://github.com/CSKU-Lab/web/compare/v0.72.1...v0.72.2) (2026-10-19)
 
 
