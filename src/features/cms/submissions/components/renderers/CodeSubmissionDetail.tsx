@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ChevronRight,
   ChevronDown,
@@ -14,6 +14,7 @@ import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor
 import { CMSMaterial } from "~/types/cms-material";
 import ManualScoreInput from "~/features/cms/submissions/components/renderers/ManualScoreInput";
 import TestcaseTable from "~/features/core/materials/components/SubmissionsTab/SubmissionDetail/TestcaseTable";
+import type { CodeMaterialResponse } from "~/features/cms/materials/types/CodeMaterial/types/code-material-response";
 
 interface CodeSubmissionDetailProps {
   material: CMSMaterial;
@@ -47,6 +48,19 @@ function CodeSubmissionDetail({
   const materialId = params.materialID as string;
 
   const [isDescriptionOpen, setDescriptionOpen] = useState(false);
+
+  // Expected output per test case, for the per-result diff. The CMS material
+  // response already carries the task's test cases, so no extra request.
+  const expectedOutputs = useMemo(() => {
+    const groups =
+      (material.payload as CodeMaterialResponse | null)?.test_case_groups ??
+      [];
+    const map: Record<string, string> = {};
+    for (const group of groups) {
+      for (const tc of group.test_cases) map[tc.id] = tc.output;
+    }
+    return map;
+  }, [material.payload]);
 
   if (payload === null) {
     return (
@@ -141,6 +155,7 @@ function CodeSubmissionDetail({
         groups={payload.test_case_groups}
         showGroupScore
         instructorView
+        expectedOutputs={expectedOutputs}
       />
     </div>
   );

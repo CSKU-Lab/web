@@ -4,6 +4,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
 import type { TestCaseGroup } from "~/types/core-code-submission";
 import { getStatusConfig } from "~/features/core/materials/utils/submission-detail/statusConfig";
+import OutputDiff from "~/features/core/materials/components/SubmissionsTab/SubmissionDetail/OutputDiff";
 
 interface Props {
   isLoading: boolean;
@@ -17,6 +18,9 @@ interface Props {
   // program output with no visibility filter, so label it "Output" and treat an
   // empty value as genuinely empty output.
   instructorView?: boolean;
+  // Expected output per test case ID. When given, each result gets a "Show
+  // diff" toggle comparing it to the student's output. CMS (instructor) only.
+  expectedOutputs?: Record<string, string>;
 }
 
 const LoadingData = () => {
@@ -109,17 +113,23 @@ function TestcaseTable({
   groups,
   showGroupScore = false,
   instructorView = false,
+  expectedOutputs,
 }: Props) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [diffRows, setDiffRows] = useState<Set<string>>(new Set());
 
-  const toggleRow = (id: string) => {
-    setExpandedRows((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
+  const toggleIn =
+    (setter: typeof setExpandedRows) =>
+    (id: string) => {
+      setter((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        return next;
+      });
+    };
+  const toggleRow = toggleIn(setExpandedRows);
+  const toggleDiff = toggleIn(setDiffRows);
 
   const hasMultipleGroups = (groups?.length ?? 0) > 1;
 
@@ -165,6 +175,12 @@ function TestcaseTable({
                 // Backend withholds input/output when the creator hides them
                 // (empty string). When both are hidden, drop the grid entirely.
                 const hasIO = !!result.input || !!result.output;
+                const expectedOutput = expectedOutputs?.[result.id];
+                // Diff only failing results; a passing one has nothing to show.
+                const canDiff =
+                  result.status !== "RUN_PASSED" &&
+                  expectedOutput !== undefined;
+                const isDiffOpen = canDiff && diffRows.has(result.id);
 
                 return (
                   <div
@@ -193,20 +209,36 @@ function TestcaseTable({
                           ? `${(result.memory / 1024).toFixed(2)}KB`
                           : "-"}
                       </span>
-                      {hasMessage && (
-                        <button
-                          type="button"
-                          onClick={() => toggleRow(result.id)}
-                          className="ml-auto flex items-center gap-1 text-(--gray-9)"
-                        >
-                          {isExpanded ? "Hide details" : "Show details"}
-                          {isExpanded ? (
-                            <ChevronDown size="0.875rem" />
-                          ) : (
-                            <ChevronRight size="0.875rem" />
-                          )}
-                        </button>
-                      )}
+                      <div className="ml-auto flex items-center gap-4">
+                        {canDiff && (
+                          <button
+                            type="button"
+                            onClick={() => toggleDiff(result.id)}
+                            className="flex items-center gap-1 text-(--gray-9)"
+                          >
+                            {isDiffOpen ? "Hide diff" : "Show diff"}
+                            {isDiffOpen ? (
+                              <ChevronDown size="0.875rem" />
+                            ) : (
+                              <ChevronRight size="0.875rem" />
+                            )}
+                          </button>
+                        )}
+                        {hasMessage && (
+                          <button
+                            type="button"
+                            onClick={() => toggleRow(result.id)}
+                            className="flex items-center gap-1 text-(--gray-9)"
+                          >
+                            {isExpanded ? "Hide details" : "Show details"}
+                            {isExpanded ? (
+                              <ChevronDown size="0.875rem" />
+                            ) : (
+                              <ChevronRight size="0.875rem" />
+                            )}
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {showReason && (
@@ -237,6 +269,14 @@ function TestcaseTable({
                           }
                         />
                       </div>
+                    )}
+
+                    {/* Mounted only when opened, so the diff is computed lazily. */}
+                    {isDiffOpen && (
+                      <OutputDiff
+                        expected={truncateForDisplay(expectedOutput).text}
+                        actual={truncateForDisplay(result.output ?? "").text}
+                      />
                     )}
 
                     {hasMessage && isExpanded && (
