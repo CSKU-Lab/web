@@ -1,3 +1,10 @@
+# [0.74.0](https://github.com/CSKU-Lab/web/compare/v0.73.0...v0.74.0) (2026-10-19)
+
+
+### Features
+
+* **cms:** show output diff for failed testcases ([db0b978](https://github.com/CSKU-Lab/web/commit/db0b978c022eaaf1d035507011036608017a96b6))
+
 # [0.73.0](https://github.com/CSKU-Lab/web/compare/v0.72.3...v0.73.0) (2026-10-19)
 
 
