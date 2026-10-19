@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { FileCode, FileImage, FileText, ChevronDown, ChevronRight } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import { useEditorSettings } from "~/globalStore/settings";
@@ -11,6 +11,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { resourceFilesAtom } from "~/features/cms/materials/types/CodeMaterial/stores/resource-files.store";
 import { isOwnerAtom } from "~/features/cms/materials/types/CodeMaterial/stores/owner.store";
 import { isLoadingAtom } from "~/features/cms/materials/types/CodeMaterial/stores/loading.store";
+import type { CodeMaterialResourceFile } from "~/features/cms/materials/types/CodeMaterial/types/file";
 
 const TEXT_EXTENSIONS = new Set([
   "txt", "md", "json", "xml", "csv", "yaml", "yml", "toml", "ini", "cfg",
@@ -47,19 +48,18 @@ function FilesTab() {
 
   const handleFilesChange = useCallback(
     (newFiles: CodeFile[]) => {
+      // FileTree spreads existing entries on rename, so `hidden` rides along at runtime.
       const transformedFiles = newFiles.map((f) => ({
         name: f.name,
         content: f.content,
+        hidden: (f as CodeMaterialResourceFile).hidden,
       }));
       setFiles(transformedFiles);
     },
     [setFiles],
   );
 
-  const codeFiles: CodeFile[] = useMemo(
-    () => files.map((f) => ({ name: f.name, content: f.content })),
-    [files],
-  );
+  const codeFiles: CodeFile[] = files;
 
   const currentFile = codeFiles.find((f) => f.name === selectedFile);
   const fileExtension = currentFile?.name.split(".").pop();
