@@ -76,6 +76,10 @@
   --code-ligatures: normal;
 }
 
+body {
+  font-variant-ligatures: var(--code-ligatures);
+}
+
 :root {
 
   --info: var(--blue-9);
