@@ -1,3 +1,10 @@
+## [0.75.1](https://github.com/CSKU-Lab/web/compare/v0.75.0...v0.75.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **deps:** bump next to 16.4.2 to patch vulnerability ([e8be558](https://github.com/CSKU-Lab/web/commit/e8be558e49a6c6f1c9ccc5338cf0cc8a32a10bdc))
+
 # [0.75.0](https://github.com/CSKU-Lab/web/compare/v0.74.0...v0.75.0) (2026-10-19)
 
 
