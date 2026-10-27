@@ -1,3 +1,10 @@
+## [0.75.2](https://github.com/CSKU-Lab/web/compare/v0.75.1...v0.75.2) (2026-10-27)
+
+
+### Bug Fixes
+
+* **docker:** bump Node.js image to 24.22.1 to patch vulnerabilities ([ec8f930](https://github.com/CSKU-Lab/web/commit/ec8f93067abc566332ef73d5eab0cc57f3654af3))
+
 ## [0.75.1](https://github.com/CSKU-Lab/web/compare/v0.75.0...v0.75.1) (2026-10-21)
 
 
