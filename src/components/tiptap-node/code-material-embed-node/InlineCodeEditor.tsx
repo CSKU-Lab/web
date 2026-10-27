@@ -66,7 +66,7 @@ export function InlineCodeEditor({ materialID, sectionID, labID }: Props) {
   // the moment it's inserted into the DOM, so an off-screen editor mounting on
   // page load yanks the page down to the first embed. Mounting only when the
   // area is already visible avoids the jump (and is cheaper — each editor is a
-  // heavy CodeMirror + LSP instance).
+  // heavy CodeMirror instance).
   const editorAreaRef = useRef<HTMLDivElement>(null);
   const [editorVisible, setEditorVisible] = useState(false);
   useEffect(() => {

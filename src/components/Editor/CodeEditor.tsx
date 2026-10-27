@@ -1,12 +1,10 @@
 import {
   useState,
   useCallback,
-  useEffect,
   useRef,
   useMemo,
   type ReactNode,
 } from "react";
-import { generateId } from "~/utils/generate-id";
 import { FileCode, PanelLeftOpen, RotateCcw, Settings } from "lucide-react";
 import CodeMirror from "~/components/Editor/CodeMirror";
 import FileTree from "./FileTree";
@@ -21,7 +19,6 @@ import type { CodeFile, FileSegment } from "./types/editor";
 import { useDebouncedCallback } from "~/hooks/useDebouncedCallback";
 import { createStudentReadOnlyExtension } from "./CodeMirror/extensions/studentReadOnly";
 import { createSegmentMarksExtension } from "./CodeMirror/extensions/segmentMarks";
-import { api } from "~/lib/api.client";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import MarkdownRenderer from "~/components/ui/markdown-renderer";
 import {
@@ -149,8 +146,6 @@ function CodeEditor({
     setPreviousFiles(files);
   }
 
-  const [sessionId] = useState<string>(() => generateId());
-  const [lspToken, setLspToken] = useState<string | null>(null);
   const playgroundRef = useRef<PlaygroundHandle>(null);
 
   // Stable refs so closures inside memoized extensions always see latest values.
@@ -174,16 +169,6 @@ function CodeEditor({
       ),
     [],
   );
-
-  // disable LSP for now, as it is not stable and can cause issues with the editor
-  // useEffect(() => {
-  //   api
-  //     .get<{ token: string }>("/api/v1/lsp/token")
-  //     .then((res) => setLspToken(res.data.token))
-  //     .catch(() => {
-  //       // LSP service unavailable — editor works without it
-  //     });
-  // }, []);
 
   const hasInitialSelectedRunner =
     initialSelectedRunner !== undefined && initialSelectedRunner !== null;
@@ -430,8 +415,6 @@ function CodeEditor({
                   vimMode={settings.vimMode}
                   value={currentFile.content}
                   onChange={handleCodeChange}
-                  sessionId={sessionId}
-                  lspToken={lspToken}
                   extensions={[
                     editorRunKeymap,
                     ...readOnlyExtensions,
@@ -458,8 +441,6 @@ function CodeEditor({
                 vimMode={settings.vimMode}
                 value={currentFile.content}
                 onChange={handleCodeChange}
-                sessionId={sessionId}
-                lspToken={lspToken}
                 extensions={[
                   editorRunKeymap,
                   ...readOnlyExtensions,
